@@ -106,6 +106,11 @@ class StringsTr extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Sil';
   @override String get settingsDeleteCancel => 'İptal';
 
+  @override String get consentTitle => 'Analitik ve Hata Raporları';
+  @override String get consentMessage => 'Anonim kullanım verileri ve hata raporları paylaşarak Gloo\'yu geliştirmemize yardım edin. Bunu istediğiniz zaman Ayarlar\'dan değiştirebilirsiniz.';
+  @override String get consentAccept => 'İzin Ver';
+  @override String get consentDecline => 'Hayır';
+
   @override String get leaderboardTitle => 'Sıralama';
   @override String get leaderboardComingSoon => 'Çevrimiçi sıralama yakında';
   @override String get leaderboardTabClassic => 'Klasik';

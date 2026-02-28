@@ -138,6 +138,12 @@ abstract class AppStrings {
   String get settingsDeleteConfirmAction;
   String get settingsDeleteCancel;
 
+  // GDPR Consent Dialog
+  String get consentTitle;
+  String get consentMessage;
+  String get consentAccept;
+  String get consentDecline;
+
   // Sıralama
   String get leaderboardTitle;
   String get leaderboardComingSoon;

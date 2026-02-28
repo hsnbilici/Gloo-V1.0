@@ -106,6 +106,11 @@ class StringsEs extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Eliminar';
   @override String get settingsDeleteCancel => 'Cancelar';
 
+  @override String get consentTitle => 'Análisis e informes de errores';
+  @override String get consentMessage => 'Ayúdanos a mejorar Gloo compartiendo datos de uso anónimos e informes de errores. Puedes cambiarlo en cualquier momento en Configuración.';
+  @override String get consentAccept => 'Permitir';
+  @override String get consentDecline => 'No gracias';
+
   @override String get leaderboardTitle => 'Clasificación';
   @override String get leaderboardComingSoon => 'Clasificación en línea próximamente';
   @override String get shopTitle => 'Tienda';

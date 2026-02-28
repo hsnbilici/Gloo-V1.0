@@ -29,6 +29,8 @@ build/
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
+**/android/**/*.keystore
+**/android/**/*.jks
 
 # iOS
 **/ios/**/*.mode1v3

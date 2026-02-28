@@ -113,9 +113,9 @@ void main() {
   // ─── Analytics ──────────────────────────────────────────────────────────
 
   group('Analytics', () {
-    test('defaults to true', () async {
+    test('defaults to false (GDPR opt-in)', () async {
       repo = await createRepo();
-      expect(repo.getAnalyticsEnabled(), isTrue);
+      expect(repo.getAnalyticsEnabled(), isFalse);
     });
 
     test('setAnalyticsEnabled persists', () async {

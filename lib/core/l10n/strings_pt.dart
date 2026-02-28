@@ -106,6 +106,11 @@ class StringsPt extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Excluir';
   @override String get settingsDeleteCancel => 'Cancelar';
 
+  @override String get consentTitle => 'Análises e relatórios de falhas';
+  @override String get consentMessage => 'Ajude-nos a melhorar o Gloo compartilhando dados de uso anônimos e relatórios de falhas. Você pode alterar isso a qualquer momento nas Configurações.';
+  @override String get consentAccept => 'Permitir';
+  @override String get consentDecline => 'Não obrigado';
+
   @override String get leaderboardTitle => 'Ranking';
   @override String get leaderboardComingSoon => 'Ranking online em breve';
   @override String get leaderboardTabClassic => 'Clássico';

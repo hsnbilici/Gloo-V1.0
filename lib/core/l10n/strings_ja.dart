@@ -106,6 +106,11 @@ class StringsJa extends AppStrings {
   @override String get settingsDeleteConfirmAction => '削除';
   @override String get settingsDeleteCancel => 'キャンセル';
 
+  @override String get consentTitle => '分析とクラッシュレポート';
+  @override String get consentMessage => '匿名の使用データとクラッシュレポートを共有して、Glooの改善にご協力ください。設定からいつでも変更できます。';
+  @override String get consentAccept => '許可する';
+  @override String get consentDecline => 'いいえ';
+
   @override String get leaderboardTitle => 'ランキング';
   @override String get leaderboardComingSoon => 'オンラインランキング近日公開';
   @override String get shopTitle => 'ショップ';

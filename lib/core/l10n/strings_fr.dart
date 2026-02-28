@@ -106,6 +106,11 @@ class StringsFr extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Supprimer';
   @override String get settingsDeleteCancel => 'Annuler';
 
+  @override String get consentTitle => 'Analyses et rapports de plantage';
+  @override String get consentMessage => 'Aidez-nous à améliorer Gloo en partageant des données d\'utilisation anonymes et des rapports de plantage. Vous pouvez modifier cela à tout moment dans les Paramètres.';
+  @override String get consentAccept => 'Autoriser';
+  @override String get consentDecline => 'Non merci';
+
   @override String get leaderboardTitle => 'Classement';
   @override String get leaderboardComingSoon => 'Classement en ligne bientôt disponible';
   @override String get leaderboardTabClassic => 'Classique';

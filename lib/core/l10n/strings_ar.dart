@@ -106,6 +106,11 @@ class StringsAr extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'حذف';
   @override String get settingsDeleteCancel => 'إلغاء';
 
+  @override String get consentTitle => 'التحليلات وتقارير الأعطال';
+  @override String get consentMessage => 'ساعدنا في تحسين Gloo من خلال مشاركة بيانات الاستخدام المجهولة وتقارير الأعطال. يمكنك تغيير هذا في أي وقت من الإعدادات.';
+  @override String get consentAccept => 'السماح';
+  @override String get consentDecline => 'لا شكراً';
+
   @override String get leaderboardTitle => 'الترتيب';
   @override String get leaderboardComingSoon => 'الترتيب عبر الإنترنت قريباً';
   @override String get shopTitle => 'المتجر';

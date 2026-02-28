@@ -106,6 +106,11 @@ class StringsHi extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'हटाएं';
   @override String get settingsDeleteCancel => 'रद्द करें';
 
+  @override String get consentTitle => 'एनालिटिक्स और क्रैश रिपोर्ट';
+  @override String get consentMessage => 'गुमनाम उपयोग डेटा और क्रैश रिपोर्ट साझा करके Gloo को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी सेटिंग्स में बदल सकते हैं।';
+  @override String get consentAccept => 'अनुमति दें';
+  @override String get consentDecline => 'नहीं';
+
   @override String get leaderboardTitle => 'लीडरबोर्ड';
   @override String get leaderboardComingSoon => 'ऑनलाइन लीडरबोर्ड जल्द आ रहा है';
   @override String get leaderboardTabClassic => 'क्लासिक';

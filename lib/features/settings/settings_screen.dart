@@ -7,6 +7,7 @@ import '../../core/constants/ui_constants.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
+import '../../data/remote/remote_repository.dart';
 import '../../services/analytics_service.dart';
 
 // kColorChef: dil bölümü için vurgu rengi (neon mint)
@@ -133,7 +134,9 @@ class SettingsScreen extends ConsumerWidget {
                 cancelLabel: l.settingsDeleteCancel,
                 onDelete: () async {
                   final repo = await ref.read(localRepositoryProvider.future);
+                  await RemoteRepository().deleteUserData();
                   await repo.clearAllData();
+                  AnalyticsService().setEnabled(false);
                   ref.invalidate(audioSettingsProvider);
                   if (context.mounted) context.go('/onboarding');
                 },

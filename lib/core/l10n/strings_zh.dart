@@ -106,6 +106,11 @@ class StringsZh extends AppStrings {
   @override String get settingsDeleteConfirmAction => '删除';
   @override String get settingsDeleteCancel => '取消';
 
+  @override String get consentTitle => '分析与崩溃报告';
+  @override String get consentMessage => '通过分享匿名使用数据和崩溃报告帮助我们改进 Gloo。您可以随时在设置中更改此选项。';
+  @override String get consentAccept => '允许';
+  @override String get consentDecline => '不了';
+
   @override String get leaderboardTitle => '排行榜';
   @override String get leaderboardComingSoon => '在线排行榜即将推出';
   @override String get shopTitle => '商店';

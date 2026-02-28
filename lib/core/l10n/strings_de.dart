@@ -106,6 +106,11 @@ class StringsDe extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Löschen';
   @override String get settingsDeleteCancel => 'Abbrechen';
 
+  @override String get consentTitle => 'Analysen & Absturzberichte';
+  @override String get consentMessage => 'Helfen Sie uns, Gloo zu verbessern, indem Sie anonyme Nutzungsdaten und Absturzberichte teilen. Sie können dies jederzeit in den Einstellungen ändern.';
+  @override String get consentAccept => 'Erlauben';
+  @override String get consentDecline => 'Nein danke';
+
   @override String get leaderboardTitle => 'Rangliste';
   @override String get leaderboardComingSoon => 'Online-Rangliste demnächst';
   @override String get shopTitle => 'Shop';

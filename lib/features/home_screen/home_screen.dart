@@ -1,3 +1,7 @@
+import 'dart:io' show Platform;
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/widgets/glow_orb.dart';
+import '../../data/local/local_repository.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -37,13 +42,59 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         context.go('/onboarding');
         return;
       }
-      // 2) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
+      // 2) GDPR consent henüz gösterilmemişse dialog aç
+      if (!repo.getConsentShown()) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _showConsentDialog(repo);
+        });
+        return;
+      }
+      // 3) iOS ATT izni iste (consent kabul edildiyse)
+      _requestATTIfNeeded();
+      // 4) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
       if (!repo.getColorblindPromptShown()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _showColorblindDialog(repo);
         });
       }
     });
+  }
+
+  Future<void> _showConsentDialog(LocalRepository repo) async {
+    final l = ref.read(stringsProvider);
+    if (!mounted) return;
+    final accepted = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.65),
+      builder: (ctx) => _ConsentDialog(
+        title: l.consentTitle,
+        message: l.consentMessage,
+        acceptLabel: l.consentAccept,
+        declineLabel: l.consentDecline,
+      ),
+    );
+    final enabled = accepted == true;
+    await repo.setAnalyticsEnabled(enabled);
+    await repo.setConsentShown();
+    ref.read(audioSettingsProvider.notifier).setAnalyticsEnabled(enabled: enabled);
+    AnalyticsService().setEnabled(enabled);
+    // ATT izni (iOS) — consent kabul edildiyse
+    if (enabled) _requestATTIfNeeded();
+    // Sonraki adım: renk körü prompt
+    if (mounted && !repo.getColorblindPromptShown()) {
+      _showColorblindDialog(repo);
+    }
+  }
+
+  Future<void> _requestATTIfNeeded() async {
+    if (kIsWeb) return;
+    if (!Platform.isIOS) return;
+    try {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    } catch (_) {
+      // ATT kullanılamıyor — sessizce atla
+    }
   }
 
   Future<void> _showColorblindDialog(dynamic repo) async {
@@ -957,6 +1008,96 @@ class _ColorblindPromptDialog extends StatelessWidget {
               color: kMuted,
               filled: false,
               onTap: onSkip,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ConsentDialog extends StatelessWidget {
+  const _ConsentDialog({
+    required this.title,
+    required this.message,
+    required this.acceptLabel,
+    required this.declineLabel,
+  });
+
+  final String title;
+  final String message;
+  final String acceptLabel;
+  final String declineLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(28),
+        decoration: BoxDecoration(
+          color: kBgDark,
+          borderRadius: BorderRadius.circular(UIConstants.radiusXxl),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.60),
+              blurRadius: 48,
+              spreadRadius: 8,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: kCyan.withValues(alpha: 0.10),
+                shape: BoxShape.circle,
+                border: Border.all(color: kCyan.withValues(alpha: 0.30)),
+              ),
+              child: const Icon(
+                Icons.analytics_outlined,
+                color: kCyan,
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.60),
+                fontSize: 13,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _DialogBtn(
+              label: acceptLabel,
+              color: kCyan,
+              filled: true,
+              onTap: () => Navigator.of(context).pop(true),
+            ),
+            const SizedBox(height: 10),
+            _DialogBtn(
+              label: declineLabel,
+              color: kMuted,
+              filled: false,
+              onTap: () => Navigator.of(context).pop(false),
             ),
           ],
         ),

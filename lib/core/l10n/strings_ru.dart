@@ -106,6 +106,11 @@ class StringsRu extends AppStrings {
   @override String get settingsDeleteConfirmAction => 'Удалить';
   @override String get settingsDeleteCancel => 'Отмена';
 
+  @override String get consentTitle => 'Аналитика и отчёты о сбоях';
+  @override String get consentMessage => 'Помогите нам улучшить Gloo, делясь анонимными данными об использовании и отчётами о сбоях. Вы можете изменить это в любое время в Настройках.';
+  @override String get consentAccept => 'Разрешить';
+  @override String get consentDecline => 'Нет';
+
   @override String get leaderboardTitle => 'Рейтинг';
   @override String get leaderboardComingSoon => 'Онлайн-рейтинг скоро';
   @override String get shopTitle => 'Магазин';

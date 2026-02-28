@@ -384,4 +384,23 @@ class RemoteRepository {
       return null;
     }
   }
+
+  // ── GDPR: Uzak Veri Silme ───────────────────────────────────────────────
+
+  /// Kullaniciya ait tum uzak verileri siler (GDPR Right to Erasure).
+  Future<void> deleteUserData() async {
+    if (!isConfigured) return;
+    final uid = _userId;
+    if (uid == null) return;
+    try {
+      await _client.from('meta_states').delete().eq('user_id', uid);
+      await _client.from('scores').delete().eq('user_id', uid);
+      await _client.from('daily_tasks').delete().eq('user_id', uid);
+      await _client.from('pvp_obstacles').delete().eq('sender_id', uid);
+      await _client.from('profiles').delete().eq('id', uid);
+      debugPrint('RemoteRepository.deleteUserData: all data deleted for $uid');
+    } catch (e) {
+      debugPrint('RemoteRepository.deleteUserData error: $e');
+    }
+  }
 }

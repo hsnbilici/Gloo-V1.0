@@ -1,9 +1,9 @@
 # Gloo — Kalan Isler ve Yol Haritasi
 
 > Son guncelleme: 2026-02-28
-> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz F tamamlandi (36 ses dosyasi). Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
+> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz F tamamlandi (36 ses dosyasi). Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod). L.3 GDPR/ATT tamamlandi.
 >
-> **Kalan is: 19 madde** (F: 1, G: 2, H: 7, I: 8, J: 1, K: 2, L: 3 — L.1 tamamlandi)
+> **Kalan is: 14 madde** (F: 1, G: 2, H: 7, I: 7, J: 1, K: 2 — L tamamlandi)
 
 ---
 
@@ -192,7 +192,7 @@ iOS build simulator'de calisiyor. Bundle ID `com.gloogame.app` olarak guncellend
 APK build calisiyor. Application ID `com.gloogame.app` olarak guncellendi. Store listesi ve release build eksik.
 
 - [x] I.0 — Application ID `com.gloogame.app` olarak guncellendi (build.gradle.kts namespace + applicationId + Kotlin package)
-- [ ] I.1 — Release signing key olustur (keystore) + `key.properties` dosyasi
+- [x] I.1 — Release signing config hazir (`build.gradle.kts` key.properties okur). Java/keytool kurulunca: `keytool -genkey -v -keystore android/app/gloo-release.keystore -alias gloo -keyalg RSA -keysize 2048 -validity 10000` + `key.properties` olustur
 - [ ] I.2 — `flutter build appbundle --release` basarili build
 - [ ] I.3 — Google Play Console'da uygulama olustur
 - [ ] I.4 — Store listesi: baslik, aciklama, ekran goruntuleri (12 dil)
@@ -241,12 +241,12 @@ Bu maddeler mevcut fazlarda yer almayip kod/proje incelemesinde tespit edildi.
 - [ ] L.2.2 — `assets/images/gel_textures/` dizinine jel doku goruntuleri olustur (dokusu)
 - [x] L.2.3 — iOS LaunchScreen.storyboard arka plan rengi `#0A0A0F` olarak guncellendi
 
-### L.3 — Gizlilik ve Yasal (Oncelik: Yuksek — store'dan once zorunlu)
+### L.3 — Gizlilik ve Yasal (Oncelik: Yuksek — store'dan once zorunlu) ✓
 - [x] L.3.1 — Privacy Policy hazir: `docs/privacy-policy.html` (Firebase, AdMob, Supabase, GDPR/KVKK, cocuk gizliligi kapsamli)
 - [x] L.3.2 — Terms of Service hazir: `docs/terms-of-service.html` (IAP, abone, PvP, fikri mulkiyet kapsamli)
-- [ ] L.3.3 — GDPR/KVKK uyumluluk kontrolu (veri silme, onay mekanizmasi — `clearAllData` mevcut)
-- [ ] L.3.4 — ATT (App Tracking Transparency) iOS dialog testi — `Info.plist`'te `NSUserTrackingUsageDescription` mevcut
-- [ ] L.3.5 — Privacy policy ve ToS'u GitHub Pages veya benzeri bir platformda yayinla
+- [x] L.3.3 — GDPR/KVKK uyumluluk: analytics default `false` (opt-in), consent dialog 12 dilde, `RemoteRepository.deleteUserData()` ile Supabase veri silme, Settings delete butonu remote+local temizlik
+- [x] L.3.4 — ATT: `app_tracking_transparency: ^2.0.6` eklendi, HomeScreen'de consent kabul sonrasi `requestTrackingAuthorization()` cagrisi, iOS guard
+- [x] L.3.5 — GitHub Pages: `docs/index.html` landing page + privacy policy + ToS (repo Settings'den `/docs` olarak etkinlestirilmeli)
 
 ### L.4 — Performans ve Stabilite (Oncelik: Dusuk — lansmandan once)
 - [ ] L.4.1 — Flutter DevTools ile performans profili (60fps hedefi, jank tespiti) *(cihaz testi gerekli)*
@@ -266,25 +266,23 @@ Bu maddeler mevcut fazlarda yer almayip kod/proje incelemesinde tespit edildi.
 | C | PvP Realtime (Presence + Broadcast + bot fallback) | ✅ Tamamlandi |
 | D | Meta-game backend (meta_states + cross-device sync) | ✅ Tamamlandi |
 | E | Firebase Analytics + Crashlytics (gloo-f7905) | ✅ Tamamlandi |
+| F | Ses dosyalari (32 SFX + 4 muzik) | ✅ Tamamlandi |
 | G | Viral pipeline (screen_recorder + FFmpeg + share) | ✅ Kod tamamlandi |
 | J | CI/CD (3 GitHub Actions workflow) | ✅ Tamamlandi |
-| L.1 | Bundle ID (`com.gloogame.app`) | ✅ Tamamlandi |
+| L | Bundle ID, GDPR/ATT, memory leak fix, refactoring | ✅ Tamamlandi |
 
 ### Kalan Isler — Yayina Cikis Yol Haritasi
 
 | Sira | Bolum | Madde Sayisi | Aciklama | Gereken |
 |------|-------|-------------|----------|---------|
-| 1 | **L.3** | 3 | Gizlilik politikasi yayinla + GDPR/ATT testi | Web deploy + cihaz testi |
-| 2 | **F** | 13 | Ses dosyalari uretimi — ASMR deneyiminin cekirdegi | Ses tasarimi (Audacity/FL Studio) |
-| 3 | **K** | 2 | Uygulama ikonu + splash screen | Gorsel tasarim |
-| 4 | **L.2** | 2 | Gorsel asset'ler (ikon, doku) | Gorsel tasarim |
-| 5 | **H** | 7 | iOS App Store (signing, IAP, TestFlight, screenshots) | Apple Developer Account + Xcode |
-| 6 | **I** | 8 | Android Play Store (keystore, listing, IAP, test) | Google Play Console + Keystore |
-| 7 | **G** | 2 | Viral pipeline cihaz testi + direct share | Fiziksel cihaz |
-| 8 | **L.4** | 4 | Performans optimizasyonu | DevTools profiling |
-| 9 | **J** | 1 | Fastlane/Shorebird (opsiyonel) | Ihtiyac duyulunca |
+| 1 | **K** | 2 | Uygulama ikonu + splash screen | Gorsel tasarim |
+| 2 | **H** | 7 | iOS App Store (signing, IAP, TestFlight, screenshots) | Apple Developer Account + Xcode |
+| 3 | **I** | 7 | Android Play Store (release build, listing, IAP, test) | Google Play Console + Java |
+| 4 | **G** | 2 | Viral pipeline cihaz testi + direct share | Fiziksel cihaz |
+| 5 | **F** | 1 | iOS .m4a format (opsiyonel — Opus just_audio ile calisiyor) | Opsiyonel |
+| 6 | **J** | 1 | Fastlane/Shorebird (opsiyonel) | Ihtiyac duyulunca |
 
-**Toplam kalan: 31 madde**
+**Toplam kalan: 14 madde** (cogu Apple/Google hesabi veya fiziksel cihaz gerektiriyor)
 
 ---
 

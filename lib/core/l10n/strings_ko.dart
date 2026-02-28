@@ -106,6 +106,11 @@ class StringsKo extends AppStrings {
   @override String get settingsDeleteConfirmAction => '삭제';
   @override String get settingsDeleteCancel => '취소';
 
+  @override String get consentTitle => '분석 및 충돌 보고서';
+  @override String get consentMessage => '익명의 사용 데이터와 충돌 보고서를 공유하여 Gloo 개선에 도움을 주세요. 설정에서 언제든지 변경할 수 있습니다.';
+  @override String get consentAccept => '허용';
+  @override String get consentDecline => '아니요';
+
   @override String get leaderboardTitle => '순위';
   @override String get leaderboardComingSoon => '온라인 순위 곧 출시';
   @override String get shopTitle => '상점';

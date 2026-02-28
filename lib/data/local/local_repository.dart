@@ -55,10 +55,16 @@ class LocalRepository {
 
   // ─── Gizlilik & Analitik ─────────────────────────────────────────────────
 
-  bool getAnalyticsEnabled() => _prefs.getBool('analytics_enabled') ?? true;
+  bool getAnalyticsEnabled() => _prefs.getBool('analytics_enabled') ?? false;
 
   Future<void> setAnalyticsEnabled(bool value) async {
     await _prefs.setBool('analytics_enabled', value);
+  }
+
+  bool getConsentShown() => _prefs.getBool('consent_shown') ?? false;
+
+  Future<void> setConsentShown() async {
+    await _prefs.setBool('consent_shown', true);
   }
 
   /// GDPR: tüm yerel kullanıcı verilerini siler.

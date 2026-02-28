@@ -10,7 +10,7 @@ class AnalyticsService {
   FirebaseAnalytics? _analytics;
   FirebaseCrashlytics? _crashlytics;
 
-  bool _enabled = true;
+  bool _enabled = false;
 
   /// Lazy accessor — returns null when Firebase is not initialized (e.g. tests).
   FirebaseAnalytics? get _safeAnalytics {
