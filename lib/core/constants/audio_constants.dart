@@ -1,81 +1,76 @@
+import 'package:flutter/foundation.dart';
+
 abstract final class AudioPaths {
   static const String _sfx = 'assets/audio/sfx';
   static const String _music = 'assets/audio/music';
 
-  /// iOS AVAudioPlayer .ogg'yi native desteklemez. just_audio codec
-  /// çeviricisi kullanır ama latency riski var. Ses dosyaları üretilirken
-  /// hem .ogg hem .m4a formatında üretilmeli. iOS'ta .m4a, Android'de .ogg
-  /// kullanılacak. Web'de her iki format da desteklenir.
-  ///
-  /// Mevcut haliyle tüm yollar .ogg — ses dosyaları henüz üretilmediği için
-  /// iOS platformunda just_audio'nun .ogg desteğine güvenilir. Ses dosyaları
-  /// üretildiğinde [_sfxExt] getter'ı ile platform bazlı uzantı seçimi
-  /// aktifleştirilebilir.
-  // static String get _sfxExt => Platform.isIOS ? 'm4a' : 'ogg';
+  /// iOS AVAudioPlayer .ogg'yi native desteklemez — software decoding
+  /// latency ve batarya maliyeti yaratir. iOS'ta .m4a (AAC), digerlerde .ogg.
+  static String get _sfxExt =>
+      defaultTargetPlatform == TargetPlatform.iOS ? 'm4a' : 'ogg';
 
-  // Yerleştirme sesleri
-  static const String gelPlace = '$_sfx/gel_place.ogg';
-  static const String gelPlaceSoft = '$_sfx/gel_place_soft.ogg';
+  // Yerlestirme sesleri
+  static String get gelPlace => '$_sfx/gel_place.$_sfxExt';
+  static String get gelPlaceSoft => '$_sfx/gel_place_soft.$_sfxExt';
 
-  // Birleşim sesleri
-  static const String gelMergeSmall = '$_sfx/gel_merge_small.ogg';
-  static const String gelMergeMedium = '$_sfx/gel_merge_medium.ogg';
-  static const String gelMergeLarge = '$_sfx/gel_merge_large.ogg';
+  // Birlesim sesleri
+  static String get gelMergeSmall => '$_sfx/gel_merge_small.$_sfxExt';
+  static String get gelMergeMedium => '$_sfx/gel_merge_medium.$_sfxExt';
+  static String get gelMergeLarge => '$_sfx/gel_merge_large.$_sfxExt';
 
   // Patlama sesleri
-  static const String lineClear = '$_sfx/line_clear.ogg';
-  static const String lineClearCrystal = '$_sfx/line_clear_crystal.ogg';
+  static String get lineClear => '$_sfx/line_clear.$_sfxExt';
+  static String get lineClearCrystal => '$_sfx/line_clear_crystal.$_sfxExt';
 
   // Kombo sesleri
-  static const String comboSmall = '$_sfx/combo_small.ogg';
-  static const String comboMedium = '$_sfx/combo_medium.ogg';
-  static const String comboLarge = '$_sfx/combo_large.ogg';
-  static const String comboEpic = '$_sfx/combo_epic.ogg';
+  static String get comboSmall => '$_sfx/combo_small.$_sfxExt';
+  static String get comboMedium => '$_sfx/combo_medium.$_sfxExt';
+  static String get comboLarge => '$_sfx/combo_large.$_sfxExt';
+  static String get comboEpic => '$_sfx/combo_epic.$_sfxExt';
 
   // UI sesleri
-  static const String buttonTap = '$_sfx/button_tap.ogg';
-  static const String levelComplete = '$_sfx/level_complete.ogg';
-  static const String gameOver = '$_sfx/game_over.ogg';
-  static const String nearMissTension = '$_sfx/near_miss_tension.ogg';
-  static const String nearMissRelief = '$_sfx/near_miss_relief.ogg';
+  static String get buttonTap => '$_sfx/button_tap.$_sfxExt';
+  static String get levelComplete => '$_sfx/level_complete.$_sfxExt';
+  static String get gameOver => '$_sfx/game_over.$_sfxExt';
+  static String get nearMissTension => '$_sfx/near_miss_tension.$_sfxExt';
+  static String get nearMissRelief => '$_sfx/near_miss_relief.$_sfxExt';
 
-  // Arka plan müziği
+  // Arka plan muzigi
   static const String bgMenuLofi = '$_music/menu_lofi.mp3';
   static const String bgGameRelax = '$_music/game_relax.mp3';
   static const String bgGameTension = '$_music/game_tension.mp3';
   static const String bgZenMode = '$_music/zen_ambient.mp3';
 
-  // ─── Faz 4: Yeni ses yolları ────────────────────────────────────────────
-
-  // Buz kırılması
-  static const String iceBreak = '$_sfx/ice_break.ogg';
-  static const String iceCrack = '$_sfx/ice_crack.ogg';
+  // Buz kirilmasi
+  static String get iceBreak => '$_sfx/ice_break.$_sfxExt';
+  static String get iceCrack => '$_sfx/ice_crack.$_sfxExt';
 
   // Power-up sesleri
-  static const String powerupActivate = '$_sfx/powerup_activate.ogg';
-  static const String bombExplosion = '$_sfx/bomb_explosion.ogg';
-  static const String rotateClick = '$_sfx/rotate_click.ogg';
-  static const String undoWhoosh = '$_sfx/undo_whoosh.ogg';
-  static const String freezeChime = '$_sfx/freeze_chime.ogg';
+  static String get powerupActivate => '$_sfx/powerup_activate.$_sfxExt';
+  static String get bombExplosion => '$_sfx/bomb_explosion.$_sfxExt';
+  static String get rotateClick => '$_sfx/rotate_click.$_sfxExt';
+  static String get undoWhoosh => '$_sfx/undo_whoosh.$_sfxExt';
+  static String get freezeChime => '$_sfx/freeze_chime.$_sfxExt';
 
-  // Yerçekimi düşüş
-  static const String gravityDrop = '$_sfx/gravity_drop.ogg';
+  // Yercekimi dusus
+  static String get gravityDrop => '$_sfx/gravity_drop.$_sfxExt';
 
   // Renk sentezi
-  static const String colorSynth = '$_sfx/color_synth.ogg';
-  static const String colorSynthesis = '$_sfx/color_synthesis.ogg';
+  static String get colorSynth => '$_sfx/color_synth.$_sfxExt';
+  static String get colorSynthesis => '$_sfx/color_synthesis.$_sfxExt';
 
   // PvP sesleri
-  static const String pvpObstacleSent = '$_sfx/pvp_obstacle_sent.ogg';
-  static const String pvpObstacleReceived = '$_sfx/pvp_obstacle_received.ogg';
-  static const String pvpVictory = '$_sfx/pvp_victory.ogg';
-  static const String pvpDefeat = '$_sfx/pvp_defeat.ogg';
+  static String get pvpObstacleSent => '$_sfx/pvp_obstacle_sent.$_sfxExt';
+  static String get pvpObstacleReceived =>
+      '$_sfx/pvp_obstacle_received.$_sfxExt';
+  static String get pvpVictory => '$_sfx/pvp_victory.$_sfxExt';
+  static String get pvpDefeat => '$_sfx/pvp_defeat.$_sfxExt';
 
   // Seviye tamamlama
-  static const String levelCompleteNew = '$_sfx/level_complete_new.ogg';
+  static String get levelCompleteNew => '$_sfx/level_complete_new.$_sfxExt';
 
-  // Jel Özü kazanma
-  static const String gelOzuEarn = '$_sfx/gel_ozu_earn.ogg';
+  // Jel Ozu kazanma
+  static String get gelOzuEarn => '$_sfx/gel_ozu_earn.$_sfxExt';
 }
 
 abstract final class AudioConfig {
@@ -84,30 +79,30 @@ abstract final class AudioConfig {
   static const double musicVolume = 0.4;
   static const int maxConcurrentSfxChannels = 8;
 
-  // Pitch varyasyon aralığı — tekrar hissi azaltır
+  // Pitch varyasyon araligi — tekrar hissi azaltir
   static const double pitchVarianceMin = 0.92;
   static const double pitchVarianceMax = 1.08;
 
   // ─── Faz 4: ASMR Ses Frekans Haritalama ───────────────────────────────
 
-  /// Jel Yerleştirme: 200-400Hz temel, 800-1200Hz harmonik
+  /// Jel Yerlestirme: 200-400Hz temel, 800-1200Hz harmonik
   /// Reverb tail: 300-500ms
   /// Format: WAV 48kHz, mono, -6dBFS normalize
 
-  /// Satır Temizleme: Ascending arpeggio C4→E4→G4→C5 (400ms)
-  /// Her hücre için 35ms stagger (burst animasyonuyla senkron)
+  /// Satir Temizleme: Ascending arpeggio C4→E4→G4→C5 (400ms)
+  /// Her hucre icin 35ms stagger (burst animasyonuyla senkron)
   /// Crystal chime overlay: 2000-4000Hz
 
   /// Kombo Zincirleri:
   /// Small: Tek nota ping (E5, 1500Hz)
-  /// Medium: 2 nota (E5→G5), reverb artışı
+  /// Medium: 2 nota (E5→G5), reverb artisi
   /// Large: 3 nota arpeggio + sub-bass hit (60-80Hz)
   /// Epic: Tam akor + reversed cymbal swell + heavy sub-bass
 
-  /// Renk Sentezi: Bubble merge efekti 150-300Hz → pitch slide yukarı 800Hz
+  /// Renk Sentezi: Bubble merge efekti 150-300Hz → pitch slide yukari 800Hz
   /// Harmonik buzzing: 100ms
 
-  // Yerleştirme-Temizleme Senkronizasyonu:
-  // t+0ms: Haptic + SFX + Görsel (aynı frame'de < 5ms)
+  // Yerlestirme-Temizleme Senkronizasyonu:
+  // t+0ms: Haptic + SFX + Gorsel (ayni frame'de < 5ms)
   // Stagger: 35ms per cell
 }

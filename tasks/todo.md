@@ -1,11 +1,11 @@
 # Gloo — Kalan Isler
 
-> Son guncelleme: 2026-02-28
-> **Kalan: 16 madde** | Harici hesap/cihaz: 14 | Performans: 2 (LOW)
+> Son guncelleme: 2026-03-01
+> **Kalan: 13 madde** | Harici hesap/cihaz: 13 | Performans: 0
 
 ---
 
-## 1. Performans Optimizasyonu — Tamamlanan (15/17)
+## 1. Performans Optimizasyonu — Tamamlanan (33/33)
 
 - [x] 1.1 — **[CRITICAL] GelCellPainter.shouldRepaint()** — `breathPhase` kontrolu eklendi + shader cache + blur paint cache
 - [x] 1.2 — **[CRITICAL] PvP stream subscription leak** — `_cancelSubscriptions()` metodu, handleGameOver + dispose'da cagriliyor
@@ -45,10 +45,10 @@
 - [x] P.4 — **[MEDIUM] GelShape.at()/rotated() collection-for** — `.map().toList()` → `[for ...]`, kSmall/Medium/LargeShapes da duzeltildi
 - [x] P.5 — **[MEDIUM] findRecipes() static cache** — `_recipeCache.putIfAbsent()` ile tek seferlik hesaplama
 
-### Kalan Performans (LOW — opsiyonel)
+### Tur 4 Tamamlanan (2/2)
 
-- [ ] 2.3 — **[LOW] OGG software decoding** — `.m4a` ikili format uret (6.1 ile birlikte)
-- [ ] 3.7 — **[LOW] split-per-abi** — AAB zaten otomatik hallediyor, ek islem gerekmiyor
+- [x] 2.3 — **[LOW] OGG → M4A ikili format** — 32 .ogg dosya .m4a'ya donusturuldu, `_sfxExt` getter aktif (iOS → .m4a, diger → .ogg)
+- [x] 3.7 — **[LOW] split-per-abi** — AAB zaten otomatik hallediyor, ek islem gerekmiyor
 
 ---
 
@@ -84,7 +84,7 @@
 
 ## 4. Diger Kalan Isler
 
-- [ ] 4.1 — iOS `.m4a` ikili format uret (opsiyonel)
+- [x] 4.1 — iOS `.m4a` ikili format uret — 32 dosya FFmpeg ile donusturuldu
 - [ ] 4.2 — Viral pipeline end-to-end cihaz testi
 - [ ] 4.3 — TikTok/Instagram direct share
 - [ ] 4.4 — Uygulama ikonu tasarla
@@ -109,4 +109,4 @@
 | J | CI/CD (3 GitHub Actions workflow) |
 | K | Kod kalitesi (refactoring, rename, README, GDD) |
 | L | Bundle ID, GDPR/ATT, memory leak fix, dosya refactoring |
-| M | Performans optimizasyonu: 31/33 duzeltildi (4 CRITICAL + 8 HIGH + 15 MEDIUM + 4 LOW) |
+| M | Performans optimizasyonu: 33/33 tamamlandi (4 CRITICAL + 8 HIGH + 15 MEDIUM + 4 LOW + 2 LOW opsiyonel) |
