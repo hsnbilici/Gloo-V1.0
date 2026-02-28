@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 CREATE TABLE IF NOT EXISTS scores (
   id BIGSERIAL PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES auth.users(id),
+  user_id UUID NOT NULL REFERENCES profiles(id),
   mode TEXT NOT NULL,
   score INTEGER NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -34,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_scores_user_mode ON scores (user_id, mode);
 CREATE TABLE IF NOT EXISTS daily_tasks (
   id BIGSERIAL PRIMARY KEY,
   date DATE NOT NULL,
-  user_id UUID NOT NULL REFERENCES auth.users(id),
+  user_id UUID NOT NULL REFERENCES profiles(id),
   completed BOOLEAN NOT NULL DEFAULT false,
   score INTEGER NOT NULL DEFAULT 0,
   completed_at TIMESTAMPTZ,

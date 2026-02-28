@@ -60,3 +60,4 @@ GoogleService-Info.plist
 *.env
 *.env.local
 supabase_keys.dart
+supabase/.temp/

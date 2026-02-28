@@ -11,9 +11,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseConfig {
   SupabaseConfig._();
 
-  // TODO: Supabase projenizin URL ve anonKey değerlerini girin
-  static const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
-  static const supabaseAnonKey = 'YOUR_ANON_KEY';
+  static const supabaseUrl = 'https://lcumiadyvwharxhrbtkm.supabase.co';
+  static const supabaseAnonKey = 'sb_publishable_p1_zSGuHlfDtwZQWp0tMSg_SidU7y9K';
 
   /// Placeholder degerler doldurulan gercek projeden mi yoksa sahte mi?
   static bool get isConfigured =>
