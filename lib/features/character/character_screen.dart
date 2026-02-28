@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/widgets/glow_orb.dart';
+import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
 
@@ -39,6 +40,23 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     _resources.setEnergy(repo.getGelEnergy());
     _character.loadFromMap(repo.getCharacterState());
     setState(() => _loaded = true);
+
+    // Backend'den sync
+    final remote = RemoteRepository();
+    final meta = await remote.loadMetaState();
+    if (meta != null && mounted) {
+      final backendChar = meta['character_state'] as Map<String, dynamic>?;
+      final backendEnergy = meta['gel_energy'] as int?;
+      if (backendChar != null && backendChar.isNotEmpty) {
+        _character.loadFromMap(backendChar);
+        await repo.saveCharacterState(_character.toMap());
+      }
+      if (backendEnergy != null && backendEnergy > _resources.energy) {
+        _resources.setEnergy(backendEnergy);
+        await repo.saveGelEnergy(backendEnergy);
+      }
+      setState(() {});
+    }
   }
 
   Future<void> _onUpgradeTalent(TalentType type) async {
@@ -48,6 +66,12 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
       await repo.saveCharacterState(_character.toMap());
       await repo.saveGelEnergy(_resources.energy);
       setState(() {});
+
+      // Backend sync (fire-and-forget)
+      RemoteRepository().saveMetaState(
+        characterState: _character.toMap(),
+        gelEnergy: _resources.energy,
+      );
     }
   }
 

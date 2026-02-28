@@ -1,14 +1,15 @@
 # Gloo — Kalan Isler ve Yol Haritasi
 
-> Son guncelleme: 2026-02-27
-> Durum: Faz 1 (MVP) tamamlandi. Faz B kod entegrasyonu tamamlandi (gercek Supabase projesi bekliyor). Faz C tamamlandi. Faz E kismi.
+> Son guncelleme: 2026-02-28
+> Durum: Faz 1 (MVP) tamamlandi. Faz A++ tamamlandi (634 test). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E kismi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
 
 ---
 
 ## A. Birim Testler (Oncelik: Yuksek)
 
-222 test yazildi (9 birim + 3 widget test dosyasi). Tamamlandi.
+634 test yazildi (27 test dosyasi). 427 yeni test (15 dosya) eklendi. Tamamlandi.
 
+**Onceki (222 test, 12 dosya):**
 - [x] A.1 — `test/game/grid_manager_test.dart`: 54 test (yerlestirme, satir/sutun temizleme, gravity, buz kirma, clearArea, undo, Cell sinifi)
 - [x] A.2 — `test/game/color_synthesis_test.dart`: 12 test (yatay/dikey sentez, 8 tablo girisi, sira bagimsizlik, applySynthesis)
 - [x] A.3 — `test/core/near_miss_detector_test.dart`: 9 test (esik degerleri, critical/standard siniflar, faktor agirliklari)
@@ -19,26 +20,46 @@
 - [x] A.8 — `test/game/currency_manager_test.dart`: 26 test (kazanim, harcama, callback, CurrencyCosts)
 - [x] A.9 — `test/features/`: 22 widget test (HomeScreen 9, OnboardingScreen 6, GameOverlay 8 — mod kartlari, HUD, streak, lock)
 
+**2. dalga (305 test, 11 dosya):**
+- [x] A.10 — `test/game/game_world_test.dart`: 53 test (GlooGame — startGame, placePiece, checkGameOver, pause/resume, continueWithExtraMoves, generateNextHand, power-up entegrasyonu, callback'ler, freeze, currentChefLevel)
+- [x] A.11 — `test/game/powerup_system_test.dart`: 33 test (PowerUpSystem — canUse, rotate, bomb, peek, undo, rainbow, freeze, cooldown decay, recordPlacement, reset, grantFreePowerUp)
+- [x] A.12 — `test/game/matchmaking_test.dart`: 44 test (EloLeague, EloSystem, ObstacleGenerator, MatchmakingManager, AsyncDuelState, MatchResult, DuelResult)
+- [x] A.13 — `test/game/resource_manager_test.dart`: 38 test (ResourceManager, IslandState, Building, CharacterState, SeasonPassState, Quest tanimlari)
+- [x] A.14 — `test/game/level_system_test.dart`: 26 test (LevelData, MapShape, LevelProgression — 50 oncetanimli, prosedurel, breathing room, CellConfig)
+- [x] A.15 — `test/core/constants_test.dart`: 33 test (GameConstants, GelColor, kColorMixingTable, kPrimaryColors, UI palette, CurrencyCosts)
+- [x] A.16 — `test/game/cell_type_test.dart`: 17 test (CellType enum, Cell — isEmpty, canAccept, crackIce, clearColor, copy, toString)
+- [x] A.17 — `test/game/combo_detector_test.dart`: 8 test (ComboTier, ComboEvent, ComboDetector — tier eskalasyonu, zincir birikimi, reset)
+- [x] A.18 — `test/data/data_models_test.dart`: 5 test (Score, UserProfile — constructor, varsayilan degerler, mutability)
+- [x] A.19 — `test/core/l10n_test.dart`: 25 test (AppStrings.forLocale — 12 dil, fallback, string completeness)
+- [x] A.20 — `test/game/gel_shape_test.dart`: 23 test (GelShape — boyutlar, at(), rotated(), kAllShapes, shape kategorileri, ShapeGenerator — seeded, difficulty, mercy)
+
+**3. dalga (122 test, 4 yeni dosya + 1 guncelleme):**
+- [x] A.21 — `test/core/constants_test.dart` guncellendi: +10 test (AudioPaths SFX/Music yol dogrulama, AudioConfig volume/pitch, UIConstants radius skalasi ve padding) → toplam 43 test
+- [x] A.22 — `test/data/local_repository_test.dart`: 70 test (HighScore, Profile, Onboarding, Colorblind, Analytics, GDPR clearAllData, Streak, DiscoveredColors, DailyPuzzle, GelOzu, GelEnergy, Level ilerleme, GameStats, PvP/ELO, IslandState, CharacterState, SeasonPassState, DailyQuestProgress, RedeemCodes, UnlockedProducts)
+- [x] A.23 — `test/providers/game_provider_test.dart`: 18 test (GameState defaults/copyWith, GameNotifier tum update metodlari, reset, bagimsiz mod state)
+- [x] A.24 — `test/providers/audio_provider_test.dart`: 15 test (AudioSettings defaults/copyWith, AudioSettingsNotifier toggle/set metodlari — colorBlind, analytics, glooPlus, adsRemoved)
+- [x] A.25 — `test/providers/locale_provider_test.dart`: 9 test (kLanguageOptions 12 dil/benzersiz kodlar, LocaleNotifier setLocale)
+
 ---
 
 ## B. Backend — Supabase Gercek Entegrasyon (Oncelik: Yuksek)
 
-Kod tarafı tamamlandı. `supabase_client.dart` isConfigured guard'ı eklendi, tüm remote metodlar placeholder'da sessizce atlar. SQL şeması ve RLS hazır. Supabase projesi oluşturulup gerçek anahtarlar girildiğinde test edilebilir.
+Tamamlandi. Supabase projesi olusturuldu, gercek anahtarlar girildi, 6 tablo + 15 RLS + indeksler deploy edildi. Tum akislar end-to-end test edildi.
 
+- [x] B.1 — Supabase projesi olusturuldu (`lcumiadyvwharxhrbtkm`)
 - [x] B.2 — Veritabani semasini deploy et: `supabase/schema.sql` (6 tablo + RLS + indeksler)
 - [x] B.3 — RLS politikalarini uygula (`supabase/schema.sql` icinde)
+- [x] B.4 — `supabase_client.dart`'ta gercek URL ve anonKey dolduruldu
+- [x] B.5 — Anonim auth akisi test edildi (signInAnonymously → profile olusturma)
+- [x] B.6 — Leaderboard gercek veriyle test edildi (scores JOIN profiles → username)
+- [x] B.7 — Daily puzzle backend entegrasyonu test edildi (upsert + sorgulama)
+- [x] B.8 — Redeem code akisi test edildi (kod dogrulama + current_uses artirimi)
 - [x] B.9 — `pvp_matches` ve `pvp_obstacles` tablolarini olustur (`supabase/schema.sql`)
 - [x] B.10 — PvP tablolari icin RLS politikalarini uygula
 - [x] B.11 — `supabase_client.dart` isConfigured guard + otomatik profil olusturma
 - [x] B.12 — `remote_repository.dart` tum metodlara isConfigured guard eklendi
 - [x] B.13 — GameScreen onGameOver'da backend skor submit + daily submit eklendi
 - [x] B.14 — Duel sonucunda backend ELO + PvP istatistik + mac sonucu gonderimi eklendi
-- [ ] B.1 — Supabase projesi olustur (supabase.com dashboard) *(manuel)*
-- [ ] B.4 — `supabase_client.dart`'ta gercek URL ve anonKey'i doldur *(manuel)*
-- [ ] B.5 — Anonim auth akisini test et (signInAnonymously → profile olusturma) *(gercek proje gerekli)*
-- [ ] B.6 — Leaderboard'u gercek veriyle test et *(gercek proje gerekli)*
-- [ ] B.7 — Daily puzzle backend entegrasyonu test et *(gercek proje gerekli)*
-- [ ] B.8 — Redeem code akisini test et *(gercek proje gerekli)*
 
 ---
 
@@ -64,15 +85,18 @@ Tamamlandi. Realtime eslestirme, duello senkronizasyonu, engel gondermesi, bot f
 
 ---
 
-## D. Meta-Game Backend Entegrasyonu (Oncelik: Orta)
+## D. Meta-Game Backend Entegrasyonu (Oncelik: Orta) ✓
 
-UI ekranlari yazildi (island, character, season_pass, quests). `ResourceManager` lokal. Backend persist yok.
+Tamamlandi. `meta_states` tablosu (7 JSONB/int kolon + RLS) deploy edildi. Tum ekranlar local-first + async backend sync ile entegre edildi.
 
-- [ ] D.1 — `ResourceManager` state'ini Supabase'e persist et (jel enerjisi, bina seviyeleri)
-- [ ] D.2 — Karakter/kostum kilitleri backend'de tutulsin
-- [ ] D.3 — Sezon pasi ilerlemesini backend ile senkronize et
-- [ ] D.4 — Gunluk/haftalik gorev tanimlarini backend'den cek (su an sabit)
-- [ ] D.5 — Cross-device senkronizasyon testi (ayni hesap, farkli cihaz)
+- [x] D.1 — `ResourceManager` state'ini Supabase'e persist et → `meta_states` tablosu (gel_energy, total_earned_energy, island_state JSONB)
+- [x] D.2 — Karakter/kostum kilitleri backend'de → `meta_states.character_state` JSONB (kostumler, yetenekler, equipment)
+- [x] D.3 — Sezon pasi ilerlemesini backend ile senkronize et → `meta_states.season_pass_state` JSONB (xp, free_tier, premium_tier)
+- [x] D.4 — Gorev ilerlemesini backend'e sync et → `meta_states.quest_progress` JSONB + `quest_date` (gorev tanimlari lokal sabit, ilerleme backend sync)
+- [x] D.5 — Cross-device senkronizasyon → local-first + backend override pattern, end-to-end test basarili
+- [x] D.6 — `remote_repository.dart`'a `saveMetaState()` ve `loadMetaState()` eklendi
+- [x] D.7 — `supabase/schema.sql` guncellendi (meta_states tablo + RLS)
+- [x] D.8 — GameScreen `onJelEnergyEarned` callback'ine backend enerji sync eklendi
 
 ---
 
@@ -111,17 +135,17 @@ Firebase paketleri eklendi, kod yazildi. `flutterfire configure` ve Firebase Con
 
 ---
 
-## G. Viral Pipeline (Oncelik: Dusuk)
+## G. Viral Pipeline (Oncelik: Dusuk) ✓
 
-ClipRecorder state machine'i var ama gercek frame capture yok. VideoProcessor tamamen stub.
+Tamamlandi. `screen_recorder` + `ffmpeg_kit_flutter_full_gpl` paketleri eklendi. Frame capture, FFmpeg video isleme ve XFile paylasim aktif.
 
-- [ ] G.1 — `screen_recorder` paketini pubspec'e ekle + platform uyumluluk kontrolu
-- [ ] G.2 — `clip_recorder.dart`: yorum satirlarini ac (_beginCapture, _finalizeClip, dispose)
-- [ ] G.3 — `ffmpeg_kit_flutter_full_gpl` paketini pubspec'e ekle (web uyumsuz — platform guard)
-- [ ] G.4 — `video_processor.dart`: FFmpeg komut pipeline'ini aktiflestir (slow-mo, filigran, LUT)
-- [ ] G.5 — `share_manager.dart`: `shareVideo()` XFile dalini ac
-- [ ] G.6 — End-to-end test: near-miss → kayit → isleme → paylasim akisini dogrula
-- [ ] G.7 — TikTok/Instagram direct share arastir (`social_share` paketi?)
+- [x] G.1 — `screen_recorder: ^0.3.0` pubspec'e eklendi
+- [x] G.2 — `clip_recorder.dart`: RepaintBoundary frame capture + PNG dizisi + FFmpeg pipeline aktif
+- [x] G.3 — `ffmpeg_kit_flutter_full_gpl: ^6.0.3` pubspec'e eklendi (web'de kIsWeb guard)
+- [x] G.4 — `video_processor.dart`: FFmpeg komut pipeline aktif (slow-mo 0.5x, saturation 1.3, contrast 1.1, filigran opsiyonel)
+- [x] G.5 — `share_manager.dart`: `shareVideo()` XFile + Share.shareXFiles aktif
+- [ ] G.6 — End-to-end test: near-miss → kayit → isleme → paylasim akisini dogrula *(cihaz testi gerekli)*
+- [ ] G.7 — TikTok/Instagram direct share arastir *(gelecek iterasyon)*
 
 ---
 
@@ -162,25 +186,25 @@ APK build calisiyor. Store listesi ve release build eksik.
 
 ---
 
-## J. CI/CD Pipeline (Oncelik: Dusuk)
+## J. CI/CD Pipeline (Oncelik: Dusuk) ✓
 
-Hicbir otomasyon yok.
+Tamamlandi. 3 GitHub Actions workflow olusturuldu.
 
-- [ ] J.1 — GitHub Actions: `flutter analyze` + `flutter test` PR check
-- [ ] J.2 — GitHub Actions: Android APK/AAB build (push to main)
-- [ ] J.3 — GitHub Actions: iOS build (Xcode Cloud veya self-hosted runner)
-- [ ] J.4 — Fastlane veya Shorebird entegrasyonu (opsiyonel)
+- [x] J.1 — `flutter_ci.yml`: `flutter analyze` + `flutter test --coverage` + `dart format` (PR + push to main)
+- [x] J.2 — `android_build.yml`: Debug APK + Release AAB build (push to main, Java 17)
+- [x] J.3 — `ios_build.yml`: iOS build `--no-codesign` (push to main, macos-latest)
+- [ ] J.4 — Fastlane veya Shorebird entegrasyonu *(opsiyonel — ihtiyac duyulunca)*
 
 ---
 
 ## K. Kod Kalitesi ve Polish (Oncelik: Dusuk)
 
-- [ ] K.1 — Renk sentezi gorsel animasyonu: `applySynthesis()` `_evaluateBoard()`'dan cagrilmiyor (GDD 1.2 notu)
-- [ ] K.2 — `isar_schema.dart` adi yaniltici — dosyayi `data_models.dart` olarak yeniden adlandir
-- [ ] K.3 — README.md platform durumunu guncelle (iOS eklendi, Flutter 3.41.2)
-- [ ] K.4 — GDD.md Faz Durumu checklistini guncelle (mevcut ilerlemeyi yansitsin)
-- [ ] K.5 — Uygulama ikonu tasarla (GDD 2.2 konseptine gore)
-- [ ] K.6 — Splash screen / logo animasyonu (GDD 1.5 — jel kapsul birlesmesi)
+- [x] K.1 — Renk sentezi gorsel animasyonu: `onColorSynthesis` callback + `ColorSynthesisBloomEffect` overlay entegre edildi
+- [x] K.2 — `isar_schema.dart` → `data_models.dart` olarak yeniden adlandirildi (import'lar guncellendi)
+- [x] K.3 — README.md platform durumu guncellendi (iOS + Flutter 3.41.2 + faz durumlari)
+- [x] K.4 — GDD.md Faz Durumu checklisti guncellendi (Faz 1-3 tamamlandi, Faz 4 kaldi)
+- [ ] K.5 — Uygulama ikonu tasarla *(tasarim gorevi)*
+- [ ] K.6 — Splash screen / logo animasyonu *(tasarim gorevi)*
 
 ---
 

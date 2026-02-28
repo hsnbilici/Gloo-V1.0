@@ -30,8 +30,10 @@ dependencies:
   shared_preferences: ^2.3.2
   path_provider: ^2.1.2
 
-  # Paylaşım
+  # Paylaşım & Viral Pipeline
   share_plus: ^10.0.2
+  screen_recorder: ^0.3.0                # Frame capture (iOS/Android — web uyumsuz)
+  ffmpeg_kit_flutter_full_gpl: ^6.0.3    # FFmpeg video isleme (iOS/Android — web uyumsuz)
 
   # Ses
   just_audio: ^0.9.40

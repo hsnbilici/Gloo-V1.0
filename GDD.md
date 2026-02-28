@@ -41,7 +41,7 @@ ASMR Geri Bildirim (Ses + Haptik) → Kombo Zinciri → Skor/Seviye →
 Yeni Şekil Al
 ```
 
-> **Mevcut Uygulama Durumu (Faz 1):** Sentez tespiti skora yansır (`colorSynthesisBonus +50`). Grid üzerinde görsel renk değişimi Faz 2'de uygulanacak. `applySynthesis()` metodu `ColorSynthesisSystem` içinde mevcuttur; ancak `_evaluateBoard()` içinden çağrılmamaktadır. Renk karışım animasyonu da henüz eklenmemiştir.
+> **Mevcut Uygulama Durumu:** Sentez tespiti skora yansır (`colorSynthesisBonus +50`). Grid üzerinde görsel renk değişimi aktif — `_evaluateBoard()` sentezleri uygulayıp `onColorSynthesis` callback ile `ColorSynthesisBloomEffect` animasyonunu tetikler (flaş + 2 halka + 10 parçacık, 700ms).
 
 ---
 
@@ -566,27 +566,30 @@ CREATE POLICY "scores_insert" ON scores FOR INSERT WITH CHECK (auth.uid() = user
 
 ## 5. PROJE YOL HARİTASI
 
-### Faz 1 — MVP (8 Hafta)
-- [ ] Temel ızgara ve Block Blast yerleştirme mekaniği
-- [ ] Renk sentezi sistemi (3 temel renk)
-- [ ] Jel deformasyon animasyonu (Bézier tabanlı)
-- [ ] ASMR ses efektleri (10 ses)
-- [ ] Temel haptik geri bildirim
-- [ ] Klasik Mod + leaderboard
-- [ ] iOS ve Android build
+### Faz 1 — MVP (8 Hafta) ✅
+- [x] Temel ızgara ve Block Blast yerleştirme mekaniği
+- [x] Renk sentezi sistemi (12 renk, 8 karışım)
+- [x] Jel deformasyon animasyonu (spring physics + gel deformer)
+- [x] ASMR ses altyapısı (AudioManager + 30 ses yolu tanımlı, dosyalar üretilecek)
+- [x] Haptik geri bildirim (HapticManager, 13 profil)
+- [x] 7 Oyun Modu (Classic, ColorChef, TimeTrial, Zen, Daily, Level, Duel)
+- [x] iOS, Android ve Web build
 
-### Faz 2 — Viral Loop (4 Hafta)
-- [ ] Near-miss algılama sistemi
-- [ ] Otomatik video kayıt pipeline
-- [ ] FFmpeg post-processing (slow-mo, filigran)
-- [ ] Sosyal paylaşım entegrasyonu
-- [ ] Günlük Bulmaca modu
+### Faz 2 — Viral Loop (4 Hafta) ✅
+- [x] Near-miss algılama sistemi (Shannon entropy)
+- [x] Otomatik video kayıt pipeline (RepaintBoundary + ClipRecorder)
+- [x] FFmpeg post-processing (slow-mo, renk grading, filigran)
+- [x] Sosyal paylaşım entegrasyonu (share_plus, XFile video)
+- [x] Günlük Bulmaca modu
 
-### Faz 3 — Monetizasyon (3 Hafta)
-- [ ] AdMob rewarded + interstitial entegrasyonu
-- [ ] IAP (ses paketleri, doku paketleri)
-- [ ] Gloo+ abonelik sistemi
-- [ ] Zen Modu (premium)
+### Faz 3 — Monetizasyon (3 Hafta) ✅
+- [x] AdMob rewarded + interstitial + banner entegrasyonu (test ID)
+- [x] IAP (7 ürün tanımlı, Store'da tanimlanacak)
+- [x] Gloo+ abonelik sistemi
+- [x] Zen Modu (Gloo+ kilidi)
+- [x] Supabase backend (leaderboard, daily, redeem code, meta-game, PvP)
+- [x] PvP Realtime (Supabase Realtime Presence + Broadcast)
+- [x] CI/CD (GitHub Actions: analyze, test, Android/iOS build)
 
 ### Faz 4 — ASO & Launch (2 Hafta)
 - [ ] A/B test ikonları

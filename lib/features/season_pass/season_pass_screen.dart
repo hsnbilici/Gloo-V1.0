@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/widgets/glow_orb.dart';
+import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
 
@@ -60,6 +61,19 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
     final repo = await ref.read(localRepositoryProvider.future);
     _passState.loadFromMap(repo.getSeasonPassState());
     setState(() => _loaded = true);
+
+    // Backend'den sync
+    final remote = RemoteRepository();
+    final meta = await remote.loadMetaState();
+    if (meta != null && mounted) {
+      final backendPass = meta['season_pass_state'] as Map<String, dynamic>?;
+      if (backendPass != null && backendPass.isNotEmpty) {
+        _passState.loadFromMap(
+            backendPass.map((k, v) => MapEntry(k, v as int)));
+        await repo.saveSeasonPassState(_passState.toMap());
+        setState(() {});
+      }
+    }
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
 
@@ -55,6 +56,21 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
     _activeWeeklies = _pickQuests(kWeeklyQuestPool, 5, weekSeed);
 
     setState(() => _loaded = true);
+
+    // Backend'den sync
+    final remote = RemoteRepository();
+    final meta = await remote.loadMetaState();
+    if (meta != null && mounted) {
+      final backendProgress = meta['quest_progress'] as Map<String, dynamic>?;
+      final backendDate = meta['quest_date'] as String?;
+      if (backendProgress != null &&
+          backendDate == today &&
+          backendProgress.isNotEmpty) {
+        _dailyProgress = backendProgress.map((k, v) => MapEntry(k, v as int));
+        await repo.saveDailyQuestProgress(_dailyProgress);
+        setState(() {});
+      }
+    }
   }
 
   List<Quest> _pickQuests(List<Quest> pool, int count, int seed) {

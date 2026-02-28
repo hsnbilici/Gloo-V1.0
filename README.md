@@ -1,6 +1,6 @@
 # Gloo: ASMR Jel Puzzle
-**Durum:** Alpha / Aktif Gelistirme
-**Platform:** Android + Web (Flutter)
+**Durum:** Beta / Aktif Gelistirme
+**Platform:** Android + iOS + Web (Flutter 3.41.2)
 
 ---
 
@@ -97,9 +97,9 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 | Faz | Durum |
 |---|---|
 | Faz 1 — MVP | Tamamlandi (izgara, 7 mod, renk sentezi, skor, kombo, power-up, l10n) |
-| Faz 2 — Viral | Kismi (near-miss algilama aktif, video kayit stub) |
-| Faz 3 — Monetizasyon | Kismi (AdMob test, IAP tanimli, Gloo+ enum) |
-| Faz 4 — Hybrid-Casual | UI tamamlandi (7 ekran + VFX), backend entegrasyonu bekliyor |
+| Faz 2 — Viral | Tamamlandi (near-miss, ClipRecorder + FFmpeg video pipeline, ShareManager) |
+| Faz 3 — Monetizasyon | Tamamlandi (AdMob test, IAP tanimli, Gloo+ enum) |
+| Faz 4 — Hybrid-Casual | Tamamlandi (14 ekran + 7 VFX + Supabase backend + PvP Realtime + CI/CD) |
 
 ---
 

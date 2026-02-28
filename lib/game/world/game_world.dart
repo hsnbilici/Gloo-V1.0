@@ -86,6 +86,7 @@ class GlooGame {
   void Function(List<(int, int)> crackedCells)? onIceCracked;
   void Function(List<(int, int, int, int)> moves)? onGravityApplied;
   void Function(int amount)? onJelEnergyEarned;
+  void Function(GelColor resultColor, (int, int) position)? onColorSynthesis;
 
   int get score => _scoreSystem.score;
   int get highScore => _scoreSystem.highScore;
@@ -269,6 +270,7 @@ class GlooGame {
       }
       modifiedCells.addAll(synthesis.positions);
       appliedSynthesisCount++;
+      onColorSynthesis?.call(synthesis.resultColor, first);
 
       if (chefLevel != null && synthesis.resultColor == chefLevel.targetColor) {
         chefTargetCount++;

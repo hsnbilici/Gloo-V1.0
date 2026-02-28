@@ -15,14 +15,26 @@ class ShareManager {
 
   /// Video klip dosyasını (MP4) metin başlığıyla paylaşır.
   /// Web'de sessizce atlanır.
-  Future<void> shareVideo({required String videoPath, required String caption}) async {
+  Future<void> shareVideo({
+    required String videoPath,
+    required String caption,
+  }) async {
     if (kIsWeb) return;
-    // TODO: share_plus XFile desteği ile paylaşım:
-    // await Share.shareXFiles([XFile(videoPath)], text: caption);
-    debugPrint('ShareManager.shareVideo: $videoPath — share_plus XFile ile paylaşılacak');
+    try {
+      await Share.shareXFiles(
+        [XFile(videoPath)],
+        text: '$caption\n\n$_hashtags',
+      );
+      AnalyticsService().logShare(mode: 'video');
+    } catch (e) {
+      debugPrint('ShareManager.shareVideo error: $e');
+    }
   }
 
-  Future<void> shareDailyResult({required int score, required String dateLabel}) async {
+  Future<void> shareDailyResult({
+    required int score,
+    required String dateLabel,
+  }) async {
     AnalyticsService().logShare(mode: 'daily');
     final text = 'Günlük Bulmaca [$dateLabel] — ${_formatScore(score)} puan! '
         'Sen bugün kaç yaptın? '

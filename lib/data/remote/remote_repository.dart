@@ -331,4 +331,57 @@ class RemoteRepository {
       return null;
     }
   }
+
+  // ── Meta-Game State ────────────────────────────────────────────────────────
+
+  /// Meta-game state'ini Supabase'e kaydet (island, character, season_pass, quest).
+  Future<void> saveMetaState({
+    Map<String, int>? islandState,
+    Map<String, dynamic>? characterState,
+    Map<String, int>? seasonPassState,
+    Map<String, int>? questProgress,
+    String? questDate,
+    int? gelEnergy,
+    int? totalEarnedEnergy,
+  }) async {
+    if (!isConfigured) return;
+    final uid = _userId;
+    if (uid == null) return;
+    try {
+      final data = <String, dynamic>{
+        'user_id': uid,
+        'updated_at': DateTime.now().toIso8601String(),
+      };
+      if (islandState != null) data['island_state'] = islandState;
+      if (characterState != null) data['character_state'] = characterState;
+      if (seasonPassState != null) data['season_pass_state'] = seasonPassState;
+      if (questProgress != null) data['quest_progress'] = questProgress;
+      if (questDate != null) data['quest_date'] = questDate;
+      if (gelEnergy != null) data['gel_energy'] = gelEnergy;
+      if (totalEarnedEnergy != null) {
+        data['total_earned_energy'] = totalEarnedEnergy;
+      }
+
+      await _client.from('meta_states').upsert(data);
+    } catch (e) {
+      debugPrint('RemoteRepository.saveMetaState error: $e');
+    }
+  }
+
+  /// Meta-game state'ini Supabase'den yukle.
+  Future<Map<String, dynamic>?> loadMetaState() async {
+    if (!isConfigured) return null;
+    final uid = _userId;
+    if (uid == null) return null;
+    try {
+      return await _client
+          .from('meta_states')
+          .select()
+          .eq('user_id', uid)
+          .maybeSingle();
+    } catch (e) {
+      debugPrint('RemoteRepository.loadMetaState error: $e');
+      return null;
+    }
+  }
 }

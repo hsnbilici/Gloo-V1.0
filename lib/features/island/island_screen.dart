@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/widgets/glow_orb.dart';
+import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
 
@@ -40,6 +41,29 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     _resources.setTotalEarned(repo.getTotalEarnedEnergy());
     _island.loadFromMap(repo.getIslandState());
     setState(() => _loaded = true);
+
+    // Backend'den sync (local-first, backend override)
+    final remote = RemoteRepository();
+    final meta = await remote.loadMetaState();
+    if (meta != null && mounted) {
+      final backendIsland = meta['island_state'] as Map<String, dynamic>?;
+      final backendEnergy = meta['gel_energy'] as int?;
+      final backendTotal = meta['total_earned_energy'] as int?;
+      if (backendIsland != null && backendIsland.isNotEmpty) {
+        _island.loadFromMap(
+            backendIsland.map((k, v) => MapEntry(k, v as int)));
+        await repo.saveIslandState(_island.toMap());
+      }
+      if (backendEnergy != null && backendEnergy > _resources.energy) {
+        _resources.setEnergy(backendEnergy);
+        await repo.saveGelEnergy(backendEnergy);
+      }
+      if (backendTotal != null && backendTotal > _resources.totalEarnedLifetime) {
+        _resources.setTotalEarned(backendTotal);
+        await repo.saveTotalEarnedEnergy(backendTotal);
+      }
+      setState(() {});
+    }
   }
 
   Future<void> _onUpgrade(BuildingType type) async {
@@ -53,6 +77,13 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
       await repo.saveIslandState(_island.toMap());
       await repo.saveGelEnergy(_resources.energy);
       setState(() {});
+
+      // Backend sync (fire-and-forget)
+      RemoteRepository().saveMetaState(
+        islandState: _island.toMap(),
+        gelEnergy: _resources.energy,
+        totalEarnedEnergy: _resources.totalEarnedLifetime,
+      );
     }
   }
 

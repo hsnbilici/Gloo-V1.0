@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/local/isar_schema.dart';
+import '../data/local/data_models.dart';
 import '../data/local/local_repository.dart';
 
 final localRepositoryProvider = FutureProvider<LocalRepository>((ref) async {

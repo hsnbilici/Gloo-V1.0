@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'isar_schema.dart';
+import 'data_models.dart';
 
 class LocalRepository {
   const LocalRepository(this._prefs);

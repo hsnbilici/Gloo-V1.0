@@ -83,6 +83,20 @@ CREATE TABLE IF NOT EXISTS pvp_obstacles (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ─── Meta-Game State ──────────────────────────────────────────────────────
+
+CREATE TABLE IF NOT EXISTS meta_states (
+  user_id UUID PRIMARY KEY REFERENCES profiles(id),
+  island_state JSONB NOT NULL DEFAULT '{}'::jsonb,
+  character_state JSONB NOT NULL DEFAULT '{}'::jsonb,
+  season_pass_state JSONB NOT NULL DEFAULT '{}'::jsonb,
+  quest_progress JSONB NOT NULL DEFAULT '{}'::jsonb,
+  quest_date TEXT,
+  gel_energy INTEGER NOT NULL DEFAULT 0,
+  total_earned_energy INTEGER NOT NULL DEFAULT 0,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- =============================================================================
 -- RLS Politikalari
 -- =============================================================================
@@ -165,3 +179,16 @@ CREATE POLICY pvp_obstacles_select ON pvp_obstacles
 
 CREATE POLICY pvp_obstacles_insert ON pvp_obstacles
   FOR INSERT WITH CHECK (auth.uid() = sender_id);
+
+-- ─── meta_states ────────────────────────────────────────────────────────────
+
+ALTER TABLE meta_states ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY meta_states_select ON meta_states
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY meta_states_insert ON meta_states
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY meta_states_update ON meta_states
+  FOR UPDATE USING (auth.uid() = user_id);

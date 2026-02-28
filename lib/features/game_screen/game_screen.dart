@@ -82,6 +82,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
   int _feedbackKeyIndex = 0;
   List<({int row, int col, Color color, int key, Duration delay})> _burstCells = [];
   int _burstKeyBase = 0;
+  List<({int row, int col, Color color, int key})> _synthesisBlooms = [];
+  int _synthesisKeyBase = 0;
 
   // Faz 4: Ekran sarsıntısı durumu
   double _shakeIntensity = 0;
@@ -284,7 +286,29 @@ class _GameScreenState extends ConsumerState<GameScreen>
         final current = repo.getGelEnergy();
         final updated = current + amount;
         repo.saveGelEnergy(updated);
-        repo.saveTotalEarnedEnergy(repo.getTotalEarnedEnergy() + amount);
+        final totalEarned = repo.getTotalEarnedEnergy() + amount;
+        repo.saveTotalEarnedEnergy(totalEarned);
+
+        // Backend'e meta-game enerji sync (fire-and-forget)
+        RemoteRepository().saveMetaState(
+          gelEnergy: updated,
+          totalEarnedEnergy: totalEarned,
+        );
+      });
+    };
+
+    _game.onColorSynthesis = (resultColor, position) {
+      if (!mounted) return;
+      setState(() {
+        _synthesisBlooms = [
+          ..._synthesisBlooms,
+          (
+            row: position.$1,
+            col: position.$2,
+            color: resultColor.displayColor,
+            key: ++_synthesisKeyBase,
+          ),
+        ];
       });
     };
 
@@ -525,6 +549,26 @@ class _GameScreenState extends ConsumerState<GameScreen>
                             if (mounted) {
                               setState(() => _burstCells
                                   .removeWhere((b) => b.key == burst.key));
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  }),
+                  // Renk sentezi bloom overlay'leri
+                  ..._synthesisBlooms.map((bloom) {
+                    return Positioned(
+                      key: ValueKey(bloom.key),
+                      left: bloom.col * (cell + gap) - cell * 2.0,
+                      top: bloom.row * (cell + gap) - cell * 2.0,
+                      child: IgnorePointer(
+                        child: ColorSynthesisBloomEffect(
+                          color: bloom.color,
+                          cellSize: cell,
+                          onDismiss: () {
+                            if (mounted) {
+                              setState(() => _synthesisBlooms
+                                  .removeWhere((b) => b.key == bloom.key));
                             }
                           },
                         ),
