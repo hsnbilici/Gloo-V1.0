@@ -26,6 +26,14 @@ class GelCellPainter extends CustomPainter {
   /// Hucre bazli faz ofseti (radyan). Dalga seklinde nefes icin.
   final double breathPhase;
 
+  // ── Cached paint objects ────────────────────────────────────────────────
+  Shader? _cachedBodyShader;
+  Size? _cachedBodyShaderSize;
+  Color? _cachedBodyShaderColor;
+
+  Paint? _cachedGlowPaint;
+  Color? _cachedGlowColor;
+
   @override
   void paint(Canvas canvas, Size size) {
     final s = size.width; // kare hucre
@@ -39,17 +47,22 @@ class GelCellPainter extends CustomPainter {
         RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
 
     // ── 1. Dis glow — hucrenin altinda renkli isik halkasi ───────────────
-    canvas.drawRRect(
-      rrect.inflate(2.0),
-      Paint()
+    if (_cachedGlowPaint == null || _cachedGlowColor != color) {
+      _cachedGlowColor = color;
+      _cachedGlowPaint = Paint()
         ..color = color.withValues(alpha: 0.40)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-    );
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
+    canvas.drawRRect(rrect.inflate(2.0), _cachedGlowPaint!);
 
     // ── 2. Ic degrade govde — sol ust isik kaynagi → sag alt golge ──────
     //    Yuksek kontrast: acik ust-sol, koyu alt-sag → 3B derinlik
-    final bodyPaint = Paint()
-      ..shader = RadialGradient(
+    if (_cachedBodyShader == null ||
+        _cachedBodyShaderSize != size ||
+        _cachedBodyShaderColor != color) {
+      _cachedBodyShaderSize = size;
+      _cachedBodyShaderColor = color;
+      _cachedBodyShader = RadialGradient(
         center: const Alignment(-0.35, -0.35),
         radius: 1.1,
         colors: [
@@ -59,6 +72,8 @@ class GelCellPainter extends CustomPainter {
         ],
         stops: const [0.0, 0.40, 1.0],
       ).createShader(rect);
+    }
+    final bodyPaint = Paint()..shader = _cachedBodyShader;
     canvas.drawRRect(rrect, bodyPaint);
 
     // ── 3. Ince ust kenar parlama — "isik vuruyor" hissi ────────────────
@@ -136,5 +151,7 @@ class GelCellPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(GelCellPainter old) =>
-      old.color != color || old.borderRadius != borderRadius;
+      old.color != color ||
+      old.borderRadius != borderRadius ||
+      old.breathPhase != breathPhase;
 }

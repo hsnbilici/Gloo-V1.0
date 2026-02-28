@@ -23,6 +23,9 @@ class ClipRecorder {
   /// Sonuç klip dosyasına hazır olunca callback.
   void Function(String outputPath)? onClipReady;
 
+  /// 30fps × 5s = 150 frame — GPU bellek taşmasını önler.
+  static const _maxFrames = 150;
+
   RecordingState _state = RecordingState.idle;
   bool _autoStopScheduled = false;
   final List<ui.Image> _capturedFrames = [];
@@ -89,6 +92,9 @@ class ClipRecorder {
           as RenderRepaintBoundary?;
       if (boundary == null) return;
       final image = await boundary.toImage(pixelRatio: 1.0);
+      if (_capturedFrames.length >= _maxFrames) {
+        _capturedFrames.removeAt(0).dispose();
+      }
       _capturedFrames.add(image);
     } catch (e) {
       debugPrint('ClipRecorder.captureFrame error: $e');

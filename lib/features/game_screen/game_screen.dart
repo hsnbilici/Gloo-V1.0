@@ -80,7 +80,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   int _feedbackKeyIndex = 0;
   List<({int row, int col, Color color, int key, Duration delay})> _burstCells = [];
   int _burstKeyBase = 0;
-  List<({int row, int col, Color color, int key})> _synthesisBlooms = [];
+  final List<({int row, int col, Color color, int key})> _synthesisBlooms = [];
   int _synthesisKeyBase = 0;
 
   // Ekran sarsintisi durumu
@@ -178,7 +178,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
         ));
       }
       if (bursts.isNotEmpty) {
-        setState(() => _burstCells = [..._burstCells, ...bursts]);
+        setState(() {
+          _burstCells.addAll(bursts);
+          if (_burstCells.length > 200) {
+            _burstCells.removeRange(0, _burstCells.length - 200);
+          }
+        });
       }
 
       // PvP: satir temizleyince rakibe engel gonder
@@ -306,15 +311,15 @@ class _GameScreenState extends ConsumerState<GameScreen>
     _game.onColorSynthesis = (resultColor, position) {
       if (!mounted) return;
       setState(() {
-        _synthesisBlooms = [
-          ..._synthesisBlooms,
-          (
-            row: position.$1,
-            col: position.$2,
-            color: resultColor.displayColor,
-            key: ++_synthesisKeyBase,
-          ),
-        ];
+        _synthesisBlooms.add((
+          row: position.$1,
+          col: position.$2,
+          color: resultColor.displayColor,
+          key: ++_synthesisKeyBase,
+        ));
+        if (_synthesisBlooms.length > 20) {
+          _synthesisBlooms.removeRange(0, _synthesisBlooms.length - 20);
+        }
       });
     };
 
@@ -356,6 +361,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
         isBot: widget.duelIsBot,
         seed: widget.duelSeed ?? 0,
         onStateChanged: () {
+          // Grid was mutated in-place by incoming PvP obstacles;
+          // trigger rebuild so GridView reflects new cell states.
           if (mounted) setState(() {});
         },
       );

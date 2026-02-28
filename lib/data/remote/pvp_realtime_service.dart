@@ -25,6 +25,7 @@ class PvpRealtimeService {
   RealtimeChannel? _matchmakingChannel;
   RealtimeChannel? _duelChannel;
   Timer? _matchmakingTimeout;
+  Timer? _evaluateDebounce;
 
   // Duello stream controller'lari — dispose'da kapatilir
   final List<StreamController<dynamic>> _duelControllers = [];
@@ -47,10 +48,10 @@ class PvpRealtimeService {
 
     _matchmakingChannel!
         .onPresenceSync((_) {
-          _evaluateMatches(request, onMatch);
+          _debouncedEvaluateMatches(request, onMatch);
         })
         .onPresenceJoin((_) {
-          _evaluateMatches(request, onMatch);
+          _debouncedEvaluateMatches(request, onMatch);
         })
         .subscribe((status, [error]) async {
           if (status == RealtimeSubscribeStatus.subscribed) {
@@ -68,6 +69,19 @@ class PvpRealtimeService {
       const Duration(seconds: MatchmakingManager.maxWaitSeconds),
       () => _botFallback(request, onMatch),
     );
+  }
+
+  /// Eslestirme degerlendirmesini debounce et.
+  /// Birden fazla presence guncellemesi ayni anda geldiginde
+  /// gereksiz tekrarlanan cagrilari onler.
+  void _debouncedEvaluateMatches(
+    MatchRequest request,
+    void Function(MatchResult) onMatch,
+  ) {
+    _evaluateDebounce?.cancel();
+    _evaluateDebounce = Timer(const Duration(milliseconds: 250), () {
+      _evaluateMatches(request, onMatch);
+    });
   }
 
   /// Presence state'ini tarayip uyumlu rakip ara.
@@ -139,6 +153,9 @@ class PvpRealtimeService {
   /// Eslestirme kuyrugundan ayril.
   Future<void> _leaveMatchmakingQueue() async {
     _matchmakingTimeout?.cancel();
+    _matchmakingTimeout = null;
+    _evaluateDebounce?.cancel();
+    _evaluateDebounce = null;
     await _matchmakingChannel?.untrack();
     await _matchmakingChannel?.unsubscribe();
     _matchmakingChannel = null;
@@ -307,6 +324,8 @@ class PvpRealtimeService {
 
   /// Tum kanallari temizle.
   Future<void> dispose() async {
+    _evaluateDebounce?.cancel();
+    _evaluateDebounce = null;
     await cancelMatchmaking();
     _closeDuelControllers();
     if (_duelChannel != null) {

@@ -136,11 +136,24 @@ class GameDuelController {
       _pvpService?.broadcastGameOver(duelState.matchId!, playerScore);
     }
 
-    if (isBot) {
-      botScoreTimer?.cancel();
-    }
+    // Duello sonuclandi — tum abonelikleri ve zamanlayicilari temizle
+    _cancelSubscriptions();
 
     _finalizeDuelResult(playerScore, context);
+  }
+
+  /// Tum stream aboneliklerini ve zamanlayicilari iptal et.
+  void _cancelSubscriptions() {
+    _opponentScoreSub?.cancel();
+    _opponentScoreSub = null;
+    _opponentObstacleSub?.cancel();
+    _opponentObstacleSub = null;
+    _opponentGameOverSub?.cancel();
+    _opponentGameOverSub = null;
+    scoreBroadcastTimer?.cancel();
+    scoreBroadcastTimer = null;
+    botScoreTimer?.cancel();
+    botScoreTimer = null;
   }
 
   Future<void> _finalizeDuelResult(int playerScore, BuildContext context) async {
@@ -246,11 +259,7 @@ class GameDuelController {
   }
 
   void dispose() {
-    scoreBroadcastTimer?.cancel();
-    botScoreTimer?.cancel();
-    _opponentScoreSub?.cancel();
-    _opponentObstacleSub?.cancel();
-    _opponentGameOverSub?.cancel();
+    _cancelSubscriptions();
     if (matchId != null) {
       _pvpService?.leaveDuelRoom(matchId!);
     }

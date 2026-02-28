@@ -21,12 +21,17 @@ class AudioManager {
   AudioManager._();
 
   final _musicPlayer = AudioPlayer();
-  late final List<AudioPlayer> _sfxPool = List.generate(
-    AudioConfig.maxConcurrentSfxChannels,
-    (_) => AudioPlayer(),
-  );
+  final List<AudioPlayer?> _sfxPool =
+      List.filled(AudioConfig.maxConcurrentSfxChannels, null);
   final _random = math.Random();
-  int _sfxIndex = 0;
+  int _nextSfxIndex = 0;
+
+  AudioPlayer _getNextPlayer() {
+    _sfxPool[_nextSfxIndex] ??= AudioPlayer();
+    final player = _sfxPool[_nextSfxIndex]!;
+    _nextSfxIndex = (_nextSfxIndex + 1) % _sfxPool.length;
+    return player;
+  }
 
   bool _sfxEnabled = true;
   bool _musicEnabled = true;
@@ -59,8 +64,7 @@ class AudioManager {
   }) async {
     if (!_sfxEnabled) return;
     try {
-      final player = _sfxPool[_sfxIndex % _sfxPool.length];
-      _sfxIndex++;
+      final player = _getNextPlayer();
       await player.setVolume(AudioConfig.sfxVolume * volume);
       if (pitchVariation) {
         final speed = AudioConfig.pitchVarianceMin +
@@ -105,7 +109,7 @@ class AudioManager {
     _sfxEnabled = value;
     if (!value) {
       for (final p in _sfxPool) {
-        p.stop();
+        p?.stop();
       }
     }
   }
@@ -122,7 +126,7 @@ class AudioManager {
   Future<void> dispose() async {
     await _musicPlayer.dispose();
     for (final p in _sfxPool) {
-      await p.dispose();
+      await p?.dispose();
     }
   }
 }

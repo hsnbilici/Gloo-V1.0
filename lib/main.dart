@@ -30,18 +30,12 @@ Future<void> main() async {
     // Firebase henuz yapilandirilmamis — uygulama calismaya devam eder
   }
 
-  // Supabase backend init (sahte anahtarlar varsa sessizce atlar)
-  await SupabaseConfig.initialize();
-
-  // AdMob init (web'de no-op)
-  if (!kIsWeb) {
-    await AdManager().initialize();
-  }
-
-  // IAP init (web'de no-op)
-  if (!kIsWeb) {
-    await PurchaseService().initialize();
-  }
+  // Supabase, AdMob, IAP birbirinden bagimsiz — paralel baslatma
+  await Future.wait([
+    SupabaseConfig.initialize(),
+    if (!kIsWeb) AdManager().initialize(),
+    if (!kIsWeb) PurchaseService().initialize(),
+  ]);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

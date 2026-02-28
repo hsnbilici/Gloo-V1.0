@@ -195,8 +195,11 @@ class _ChefTargetBar extends StatelessWidget {
         const SizedBox(width: 6),
         // İlerleme çubuğu
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+            ),
+            clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
                 Container(height: 4, color: Colors.white.withValues(alpha: 0.07)),
@@ -274,8 +277,11 @@ class _FillBar extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+            ),
+            clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
                 // Track
@@ -360,8 +366,11 @@ class _CountdownBar extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+            ),
+            clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
                 Container(
@@ -585,8 +594,11 @@ class _ZenAmbienceBar extends StatelessWidget {
         Icon(Icons.water_drop_outlined, color: color.withValues(alpha: 0.55), size: 12),
         const SizedBox(width: 6),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+            ),
+            clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
                 Container(height: 3, color: Colors.white.withValues(alpha: 0.05)),
@@ -814,8 +826,11 @@ class _DuelHud extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+                ),
+                clipBehavior: Clip.hardEdge,
                 child: Stack(
                   children: [
                     Container(
