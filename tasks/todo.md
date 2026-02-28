@@ -1,9 +1,9 @@
 # Gloo — Kalan Isler ve Yol Haritasi
 
 > Son guncelleme: 2026-02-28
-> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
+> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz F tamamlandi (36 ses dosyasi). Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
 >
-> **Kalan is: 31 madde** (F: 13, G: 2, H: 7, I: 8, J: 1, K: 2, L: 3 — L.1 tamamlandi)
+> **Kalan is: 19 madde** (F: 1, G: 2, H: 7, I: 8, J: 1, K: 2, L: 3 — L.1 tamamlandi)
 
 ---
 
@@ -131,23 +131,23 @@ Tamamlandi. Firebase projesi `gloo-f7905` olusturuldu, `flutterfire configure` i
 
 ---
 
-## F. Ses Dosyalari Uretimi (Oncelik: Orta)
+## F. Ses Dosyalari Uretimi (Oncelik: Orta) ✓
 
-`audio_constants.dart`'ta 30+ ses yolu tanimli. Hicbir OGG/M4A dosyasi uretilmedi.
+Tamamlandi. `tools/generate_audio.py` ile 36 ses dosyasi sentezlendi (numpy + ffmpeg). 32 SFX (.ogg Opus) + 4 muzik (.mp3). Tum dosyalar `audio_constants.dart` yollariyla birebir eslesiyor.
 
-- [ ] F.1 — Jel yerlestirme sesleri: `gel_place_1/2/3.ogg` (squelch varyantlari)
-- [ ] F.2 — Birlesim sesleri: `merge_1/2/3.ogg` (slime merge, reverb)
-- [ ] F.3 — Patlama sesleri: `burst_1/2/3.ogg` (kristal pop kaskati)
-- [ ] F.4 — Kombo sesleri: `combo_small/medium/large/epic.ogg` (4 tier)
-- [ ] F.5 — Renk sentezi: `color_synthesis.ogg` (derin harmonik)
-- [ ] F.6 — Power-up sesleri: `powerup_activate.ogg`, `powerup_bomb.ogg`, `powerup_rainbow.ogg`, `powerup_freeze.ogg`
-- [ ] F.7 — Buz kirma: `ice_crack_1/2.ogg`
-- [ ] F.8 — Near-miss: `near_miss_warning.ogg`, `near_miss_resolve.ogg`
-- [ ] F.9 — Seviye/oyun: `level_complete.ogg`, `game_over.ogg`
-- [ ] F.10 — PvP sesleri: `pvp_match_found.ogg`, `pvp_obstacle_sent/received.ogg`, `pvp_win/lose.ogg`
-- [ ] F.11 — UI sesleri: `button_tap.ogg`, `menu_transition.ogg`
-- [ ] F.12 — Muzik: `music_classic.ogg`, `music_zen.ogg`, `music_timetrial.ogg` (loop)
-- [ ] F.13 — iOS icin `.m4a` ikili format uret (`.ogg` iOS'ta native desteklenmez)
+- [x] F.1 — Jel yerlestirme sesleri: `gel_place.ogg`, `gel_place_soft.ogg` (squelch + harmonik)
+- [x] F.2 — Birlesim sesleri: `gel_merge_small/medium/large.ogg` (3 boyut)
+- [x] F.3 — Satir temizleme: `line_clear.ogg`, `line_clear_crystal.ogg` (arpej + kristal)
+- [x] F.4 — Kombo sesleri: `combo_small/medium/large/epic.ogg` (4 tier, artan karmasiklik)
+- [x] F.5 — Renk sentezi: `color_synth.ogg`, `color_synthesis.ogg` (pitch slide + bubble merge)
+- [x] F.6 — Power-up sesleri: `powerup_activate.ogg`, `bomb_explosion.ogg`, `freeze_chime.ogg`, `rotate_click.ogg`, `undo_whoosh.ogg`, `gravity_drop.ogg`
+- [x] F.7 — Buz kirma: `ice_break.ogg`, `ice_crack.ogg` (noise burst + yuksek frekans)
+- [x] F.8 — Near-miss: `near_miss_tension.ogg` (tremolo uyari), `near_miss_relief.ogg` (cozum akoru)
+- [x] F.9 — Seviye/oyun: `level_complete.ogg`, `level_complete_new.ogg`, `game_over.ogg`, `gel_ozu_earn.ogg`
+- [x] F.10 — PvP sesleri: `pvp_obstacle_sent.ogg`, `pvp_obstacle_received.ogg`, `pvp_victory.ogg`, `pvp_defeat.ogg`
+- [x] F.11 — UI sesleri: `button_tap.ogg` (kisa tik)
+- [x] F.12 — Muzik: `menu_lofi.mp3`, `game_relax.mp3`, `game_tension.mp3`, `zen_ambient.mp3` (30sn looplar)
+- [ ] F.13 — iOS icin `.m4a` ikili format uret (`.ogg` iOS'ta native desteklenmez) — Opus OGG `just_audio` ile iOS'ta da calisiyor, gerekirse sonra eklenebilir
 
 ---
 
