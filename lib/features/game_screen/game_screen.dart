@@ -258,10 +258,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
       );
     };
 
-    // Jel Ozu guncellemesi
+    // Jel Ozu guncellemesi — setState yok, sadece provider + persist
     _game.currencyManager.onBalanceChanged = (balance) {
       if (mounted) {
-        setState(() {});
         ref.read(gameProvider(widget.mode).notifier).updateGelOzu(balance);
         ref.read(localRepositoryProvider.future).then((repo) {
           repo.saveGelOzu(balance);
@@ -509,7 +508,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  SizedBox(
+                  RepaintBoundary(
+                   child: SizedBox(
                     width: gridW,
                     height: gridH,
                     child: MouseRegion(
@@ -554,7 +554,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                         },
                       ),
                     ),
-                  ),
+                  )),
                   // Hucre patlamasi overlay'leri
                   ..._burstCells.map((burst) {
                     return Positioned(

@@ -3,7 +3,7 @@
 > Son guncelleme: 2026-02-28
 > Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
 >
-> **Kalan is: 44 madde** (F: 13, G: 2, H: 13, I: 9, J: 1, K: 2, L: 4)
+> **Kalan is: 31 madde** (F: 13, G: 2, H: 7, I: 8, J: 1, K: 2, L: 3 — L.1 tamamlandi)
 
 ---
 
@@ -167,31 +167,31 @@ Tamamlandi. `screen_recorder` + `ffmpeg_kit_flutter_full_gpl` paketleri eklendi.
 
 ## H. iOS App Store Hazirligi (Oncelik: Orta)
 
-iOS build simulator'de calisiyor. Gercek cihaz ve store icin eksikler var.
+iOS build simulator'de calisiyor. Bundle ID `com.gloogame.app` olarak guncellendi. Privacy policy + metadata hazirlandi.
 
 - [x] H.1 — Xcode.app kurulumu
 - [x] H.2 — iOS Simulator'de basarili calisma
-- [ ] H.3 — Bundle ID belirle ve Xcode project'te guncelle (com.example.gloo → gercek ID)
-- [ ] H.4 — Apple Developer Account'ta App ID kaydet
-- [ ] H.5 — Signing & Capabilities ayarla (Xcode'da)
-- [ ] H.6 — In-App Purchase capability ekle
-- [ ] H.7 — App Store Connect'te 7 IAP urunu tanimla
-- [ ] H.8 — StoreKit Sandbox test
-- [ ] H.9 — LaunchScreen.storyboard arka planini #0A0A0F yap (Xcode'da)
-- [ ] H.10 — Privacy policy hazirla (URL gerekli)
-- [ ] H.11 — Ekran goruntuleri (6.7", 6.1", 5.5" — 12 dil)
-- [ ] H.12 — App Store metadata (baslik, aciklama, anahtar kelimeler — 12 dil)
-- [ ] H.13 — App Store onizleme videosu
-- [ ] H.14 — TestFlight dahili + harici test
-- [ ] H.15 — Submit for Review
+- [x] H.3 — Bundle ID `com.gloogame.app` olarak guncellendi (iOS project.pbxproj + Android build.gradle.kts + Firebase re-configure)
+- [ ] H.4 — Apple Developer Account'ta App ID kaydet *(Apple Developer hesabi gerekli)*
+- [ ] H.5 — Signing & Capabilities ayarla (Xcode'da) *(Apple Developer hesabi gerekli)*
+- [ ] H.6 — In-App Purchase capability ekle *(Xcode GUI gerekli)*
+- [ ] H.7 — App Store Connect'te 7 IAP urunu tanimla *(App Store Connect gerekli)*
+- [ ] H.8 — StoreKit Sandbox test *(fiziksel cihaz gerekli)*
+- [x] H.9 — LaunchScreen.storyboard arka plani #0A0A0F olarak guncellendi
+- [x] H.10 — Privacy policy hazir: `docs/privacy-policy.html` + Terms of Service: `docs/terms-of-service.html`
+- [ ] H.11 — Ekran goruntuleri (6.7", 6.1", 5.5" — 12 dil) *(cihaz screenshot gerekli)*
+- [x] H.12 — App Store metadata 12 dilde hazir: `tasks/appstore_metadata.md` (baslik, alt baslik, anahtar kelimeler, tanitim metni, aciklama)
+- [ ] H.13 — App Store onizleme videosu *(video uretimi gerekli)*
+- [ ] H.14 — TestFlight dahili + harici test *(Apple Developer hesabi gerekli)*
+- [ ] H.15 — Submit for Review *(tum H maddeleri tamamlandiktan sonra)*
 
 ---
 
 ## I. Android Play Store Hazirligi (Oncelik: Orta)
 
-APK build calisiyor. Store listesi ve release build eksik. **Application ID hala `com.example.gloo`.**
+APK build calisiyor. Application ID `com.gloogame.app` olarak guncellendi. Store listesi ve release build eksik.
 
-- [ ] I.0 — Application ID degistir: `android/app/build.gradle.kts` → `com.example.gloo` yerine gercek ID (orn: `com.gloo.puzzle`)
+- [x] I.0 — Application ID `com.gloogame.app` olarak guncellendi (build.gradle.kts namespace + applicationId + Kotlin package)
 - [ ] I.1 — Release signing key olustur (keystore) + `key.properties` dosyasi
 - [ ] I.2 — `flutter build appbundle --release` basarili build
 - [ ] I.3 — Google Play Console'da uygulama olustur
@@ -230,28 +230,29 @@ Tamamlandi. 3 GitHub Actions workflow olusturuldu.
 
 Bu maddeler mevcut fazlarda yer almayip kod/proje incelemesinde tespit edildi.
 
-### L.1 — Bundle ID ve Paket Isimlendirmesi (Oncelik: Yuksek — store'dan once zorunlu)
-- [ ] L.1.1 — Gercek bundle ID belirle (orn: `com.gloo.puzzle` veya `app.gloo.puzzle`)
-- [ ] L.1.2 — iOS: Xcode project `PRODUCT_BUNDLE_IDENTIFIER` guncelle (3 konfigurasyonda: Debug, Release, Profile)
-- [ ] L.1.3 — Android: `build.gradle.kts` → `namespace` + `applicationId` guncelle
-- [ ] L.1.4 — `firebase_options.dart` bundle ID'leri otomatik guncellenir (`flutterfire configure` ile)
+### L.1 — Bundle ID ve Paket Isimlendirmesi (Oncelik: Yuksek — store'dan once zorunlu) ✓
+- [x] L.1.1 — Bundle ID `com.gloogame.app` olarak belirlendi
+- [x] L.1.2 — iOS: Xcode project `PRODUCT_BUNDLE_IDENTIFIER` 6 yerde guncellendi (Runner Debug/Release/Profile + RunnerTests)
+- [x] L.1.3 — Android: `build.gradle.kts` namespace + applicationId + Kotlin package dizini guncellendi
+- [x] L.1.4 — `flutterfire configure` ile Firebase uygulamalari yeni bundle ID ile yeniden kayit edildi
 
 ### L.2 — Gorsel Asset'ler (Oncelik: Orta — UI eksik)
 - [ ] L.2.1 — `assets/images/ui/` dizinine uygulama ikonu, buton ikonlari, logo tasarla
 - [ ] L.2.2 — `assets/images/gel_textures/` dizinine jel doku goruntuleri olustur (dokusu)
-- [ ] L.2.3 — iOS LaunchScreen.storyboard arka plan rengini `#0A0A0F` yap (Xcode'da)
+- [x] L.2.3 — iOS LaunchScreen.storyboard arka plan rengi `#0A0A0F` olarak guncellendi
 
 ### L.3 — Gizlilik ve Yasal (Oncelik: Yuksek — store'dan once zorunlu)
-- [ ] L.3.1 — Privacy Policy web sayfasi hazirla ve yayinla (URL: gloo.app/privacy veya GitHub Pages)
-- [ ] L.3.2 — Terms of Service web sayfasi hazirla
+- [x] L.3.1 — Privacy Policy hazir: `docs/privacy-policy.html` (Firebase, AdMob, Supabase, GDPR/KVKK, cocuk gizliligi kapsamli)
+- [x] L.3.2 — Terms of Service hazir: `docs/terms-of-service.html` (IAP, abone, PvP, fikri mulkiyet kapsamli)
 - [ ] L.3.3 — GDPR/KVKK uyumluluk kontrolu (veri silme, onay mekanizmasi — `clearAllData` mevcut)
 - [ ] L.3.4 — ATT (App Tracking Transparency) iOS dialog testi — `Info.plist`'te `NSUserTrackingUsageDescription` mevcut
+- [ ] L.3.5 — Privacy policy ve ToS'u GitHub Pages veya benzeri bir platformda yayinla
 
 ### L.4 — Performans ve Stabilite (Oncelik: Dusuk — lansmandan once)
-- [ ] L.4.1 — Flutter DevTools ile performans profili (60fps hedefi, jank tespiti)
-- [ ] L.4.2 — GameScreen widget rebuild optimizasyonu (1779 satir — potansiyel aşırı rebuild)
+- [ ] L.4.1 — Flutter DevTools ile performans profili (60fps hedefi, jank tespiti) *(cihaz testi gerekli)*
+- [x] L.4.2 — GameScreen rebuild optimizasyonu: gereksiz `setState(() {})` kaldirildi, GridView `RepaintBoundary` ile izole edildi
 - [x] L.4.3 — Buyuk dosyalari refactor et: `game_screen.dart` (2290→570), `game_effects.dart` (1319→barrel) → 14 odakli dosyaya bolundu
-- [ ] L.4.4 — Memory leak testi (ozellikle PvP Realtime channel temizligi)
+- [x] L.4.4 — Memory leak audit + fix: 4 timer leak (ComboEffect, PlaceFeedbackEffect, NearMissEffect, PowerUpActivateEffect), 3 StreamController leak (PvpRealtimeService) duzeltildi
 
 ---
 
@@ -264,26 +265,26 @@ Bu maddeler mevcut fazlarda yer almayip kod/proje incelemesinde tespit edildi.
 | B | Supabase gercek entegrasyon (6 tablo + RLS + indeksler) | ✅ Tamamlandi |
 | C | PvP Realtime (Presence + Broadcast + bot fallback) | ✅ Tamamlandi |
 | D | Meta-game backend (meta_states + cross-device sync) | ✅ Tamamlandi |
+| E | Firebase Analytics + Crashlytics (gloo-f7905) | ✅ Tamamlandi |
 | G | Viral pipeline (screen_recorder + FFmpeg + share) | ✅ Kod tamamlandi |
 | J | CI/CD (3 GitHub Actions workflow) | ✅ Tamamlandi |
+| L.1 | Bundle ID (`com.gloogame.app`) | ✅ Tamamlandi |
 
 ### Kalan Isler — Yayina Cikis Yol Haritasi
 
 | Sira | Bolum | Madde Sayisi | Aciklama | Gereken |
 |------|-------|-------------|----------|---------|
-| 1 | **E** | 3 kaldi | Firebase yapilandirma — Analytics + Crashlytics aktif degil | Firebase Console + CLI |
-| 2 | **L.1** | 4 | Bundle ID degisikligi — store submission icin zorunlu | Karar + kod degisikligi |
-| 3 | **L.3** | 4 | Gizlilik politikasi + yasal — store submission icin zorunlu | Metin yazimi + web sayfasi |
-| 4 | **F** | 13 | Ses dosyalari uretimi — ASMR deneyiminin cekirdegi | Ses tasarimi (Audacity/FL Studio) |
-| 5 | **K** | 2 | Uygulama ikonu + splash screen | Gorsel tasarim |
-| 6 | **L.2** | 3 | Gorsel asset'ler (ikon, doku, launch screen) | Gorsel tasarim |
-| 7 | **H** | 13 | iOS App Store tam hazirligi | Apple Developer Account + Xcode |
-| 8 | **I** | 9 | Android Play Store tam hazirligi | Google Play Console + Keystore |
-| 9 | **G** | 2 | Viral pipeline cihaz testi + direct share | Fiziksel cihaz |
-| 10 | **L.4** | 4 | Performans optimizasyonu | DevTools profiling |
-| 11 | **J** | 1 | Fastlane/Shorebird (opsiyonel) | Ihtiyac duyulunca |
+| 1 | **L.3** | 3 | Gizlilik politikasi yayinla + GDPR/ATT testi | Web deploy + cihaz testi |
+| 2 | **F** | 13 | Ses dosyalari uretimi — ASMR deneyiminin cekirdegi | Ses tasarimi (Audacity/FL Studio) |
+| 3 | **K** | 2 | Uygulama ikonu + splash screen | Gorsel tasarim |
+| 4 | **L.2** | 2 | Gorsel asset'ler (ikon, doku) | Gorsel tasarim |
+| 5 | **H** | 7 | iOS App Store (signing, IAP, TestFlight, screenshots) | Apple Developer Account + Xcode |
+| 6 | **I** | 8 | Android Play Store (keystore, listing, IAP, test) | Google Play Console + Keystore |
+| 7 | **G** | 2 | Viral pipeline cihaz testi + direct share | Fiziksel cihaz |
+| 8 | **L.4** | 4 | Performans optimizasyonu | DevTools profiling |
+| 9 | **J** | 1 | Fastlane/Shorebird (opsiyonel) | Ihtiyac duyulunca |
 
-**Toplam: 58 madde (47 mevcut + 11 yeni tespit)**
+**Toplam kalan: 31 madde**
 
 ---
 

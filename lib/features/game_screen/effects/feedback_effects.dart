@@ -20,13 +20,21 @@ class ComboEffect extends ConsumerStatefulWidget {
 }
 
 class _ComboEffectState extends ConsumerState<ComboEffect> {
+  Timer? _dismissTimer;
+
   @override
   void initState() {
     super.initState();
     // Toplam animasyon suresi: 350ms giris + 750ms bekleme + 400ms cikis = ~1500ms
-    Timer(const Duration(milliseconds: 1500), () {
+    _dismissTimer = Timer(const Duration(milliseconds: 1500), () {
       if (mounted) widget.onDismiss();
     });
+  }
+
+  @override
+  void dispose() {
+    _dismissTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -114,12 +122,20 @@ class PlaceFeedbackEffect extends StatefulWidget {
 }
 
 class _PlaceFeedbackEffectState extends State<PlaceFeedbackEffect> {
+  Timer? _dismissTimer;
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 650), () {
+    _dismissTimer = Timer(const Duration(milliseconds: 650), () {
       if (mounted) widget.onDismiss();
     });
+  }
+
+  @override
+  void dispose() {
+    _dismissTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -161,6 +177,7 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnim;
+  Timer? _dismissTimer;
 
   @override
   void initState() {
@@ -171,13 +188,14 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
     )..repeat(reverse: true);
     _pulseAnim = CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut);
 
-    Timer(const Duration(milliseconds: 2000), () {
+    _dismissTimer = Timer(const Duration(milliseconds: 2000), () {
       if (mounted) widget.onDismiss();
     });
   }
 
   @override
   void dispose() {
+    _dismissTimer?.cancel();
     _pulseController.dispose();
     super.dispose();
   }

@@ -1,4 +1,4 @@
-package com.example.gloo
+package com.gloogame.app
 
 import io.flutter.embedding.android.FlutterActivity
 

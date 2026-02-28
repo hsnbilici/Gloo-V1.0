@@ -20,12 +20,20 @@ class PowerUpActivateEffect extends StatefulWidget {
 }
 
 class _PowerUpActivateEffectState extends State<PowerUpActivateEffect> {
+  Timer? _dismissTimer;
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 800), () {
+    _dismissTimer = Timer(const Duration(milliseconds: 800), () {
       if (mounted) widget.onDismiss();
     });
+  }
+
+  @override
+  void dispose() {
+    _dismissTimer?.cancel();
+    super.dispose();
   }
 
   @override

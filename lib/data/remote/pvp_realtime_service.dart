@@ -26,6 +26,9 @@ class PvpRealtimeService {
   RealtimeChannel? _duelChannel;
   Timer? _matchmakingTimeout;
 
+  // Duello stream controller'lari — dispose'da kapatilir
+  final List<StreamController<dynamic>> _duelControllers = [];
+
   // ── Eslestirme Kuyrugu (Presence) ─────────────────────────────────────
 
   /// Eslestirme kuyruguna katil. [onMatch] eslestirme bulunursa cagirilir.
@@ -222,10 +225,12 @@ class PvpRealtimeService {
   /// Rakip skor guncellemelerini dinle.
   Stream<int> listenOpponentScore(String matchId) {
     final controller = StreamController<int>();
+    _duelControllers.add(controller);
 
     _duelChannel?.onBroadcast(
       event: 'score_update',
       callback: (payload) {
+        if (controller.isClosed) return;
         final senderId = payload['user_id'] as String?;
         if (senderId != null && senderId != _userId) {
           final score = payload['score'] as int? ?? 0;
@@ -240,10 +245,12 @@ class PvpRealtimeService {
   /// Rakip engellerini dinle.
   Stream<ObstaclePacket> listenOpponentObstacles(String matchId) {
     final controller = StreamController<ObstaclePacket>();
+    _duelControllers.add(controller);
 
     _duelChannel?.onBroadcast(
       event: 'obstacle_sent',
       callback: (payload) {
+        if (controller.isClosed) return;
         final senderId = payload['user_id'] as String?;
         if (senderId != null && senderId != _userId) {
           final typeName = payload['type'] as String? ?? 'ice';
@@ -266,10 +273,12 @@ class PvpRealtimeService {
   /// Rakip oyun bitis sinyalini dinle.
   Stream<int> listenOpponentGameOver(String matchId) {
     final controller = StreamController<int>();
+    _duelControllers.add(controller);
 
     _duelChannel?.onBroadcast(
       event: 'game_over',
       callback: (payload) {
+        if (controller.isClosed) return;
         final senderId = payload['user_id'] as String?;
         if (senderId != null && senderId != _userId) {
           final score = payload['score'] as int? ?? 0;
@@ -283,13 +292,23 @@ class PvpRealtimeService {
 
   /// Duello odasindan ayril ve temizle.
   Future<void> leaveDuelRoom(String matchId) async {
+    _closeDuelControllers();
     await _duelChannel?.unsubscribe();
     _duelChannel = null;
+  }
+
+  /// Tum stream controller'lari kapat.
+  void _closeDuelControllers() {
+    for (final c in _duelControllers) {
+      if (!c.isClosed) c.close();
+    }
+    _duelControllers.clear();
   }
 
   /// Tum kanallari temizle.
   Future<void> dispose() async {
     await cancelMatchmaking();
+    _closeDuelControllers();
     if (_duelChannel != null) {
       await _duelChannel!.unsubscribe();
       _duelChannel = null;

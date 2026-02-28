@@ -36,7 +36,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC-8m-bPO7vv-7M_EHY1AitfMpPNa0HbDo',
-    appId: '1:473072331709:android:5313b586fc295662aa80d4',
+    appId: '1:473072331709:android:bac6c3d395677a9eaa80d4',
     messagingSenderId: '473072331709',
     projectId: 'gloo-f7905',
     storageBucket: 'gloo-f7905.firebasestorage.app',
@@ -44,11 +44,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBB55ddtzDqtvq4BVPgCW_fWJLB_gSwbJs',
-    appId: '1:473072331709:ios:57de4139590c625caa80d4',
+    appId: '1:473072331709:ios:3e271024cbb55d9eaa80d4',
     messagingSenderId: '473072331709',
     projectId: 'gloo-f7905',
     storageBucket: 'gloo-f7905.firebasestorage.app',
-    iosBundleId: 'com.example.gloo',
+    iosBundleId: 'com.gloogame.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '473072331709',
     projectId: 'gloo-f7905',
     storageBucket: 'gloo-f7905.firebasestorage.app',
-    iosBundleId: 'com.example.gloo',
+    iosBundleId: 'com.gloogame.app',
   );
 
 }
