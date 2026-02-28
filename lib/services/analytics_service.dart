@@ -7,22 +7,39 @@ class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._();
   factory AnalyticsService() => _instance;
 
-  final _analytics = FirebaseAnalytics.instance;
-  final _crashlytics = FirebaseCrashlytics.instance;
+  FirebaseAnalytics? _analytics;
+  FirebaseCrashlytics? _crashlytics;
 
   bool _enabled = true;
 
+  /// Lazy accessor — returns null when Firebase is not initialized (e.g. tests).
+  FirebaseAnalytics? get _safeAnalytics {
+    try {
+      return _analytics ??= FirebaseAnalytics.instance;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  FirebaseCrashlytics? get _safeCrashlytics {
+    try {
+      return _crashlytics ??= FirebaseCrashlytics.instance;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> setEnabled(bool enabled) async {
     _enabled = enabled;
-    await _analytics.setAnalyticsCollectionEnabled(enabled);
-    await _crashlytics.setCrashlyticsCollectionEnabled(enabled);
+    await _safeAnalytics?.setAnalyticsCollectionEnabled(enabled);
+    await _safeCrashlytics?.setCrashlyticsCollectionEnabled(enabled);
   }
 
   // ── Oyun yaşam döngüsü ─────────────────────────────────────────────────
 
   void logGameStart({required String mode}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'game_start',
       parameters: {'mode': mode},
     );
@@ -30,7 +47,7 @@ class AnalyticsService {
 
   void logGameOver({required String mode, required int score}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'game_over',
       parameters: {'mode': mode, 'score': score},
     );
@@ -38,7 +55,7 @@ class AnalyticsService {
 
   void logCombo({required String tier}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'combo',
       parameters: {'tier': tier},
     );
@@ -46,7 +63,7 @@ class AnalyticsService {
 
   void logShare({required String mode}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'share',
       parameters: {'mode': mode},
     );
@@ -56,7 +73,7 @@ class AnalyticsService {
 
   void logPowerUpUsed({required String powerUp, required String mode}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'power_up_used',
       parameters: {'power_up': powerUp, 'mode': mode},
     );
@@ -64,7 +81,7 @@ class AnalyticsService {
 
   void logLevelComplete({required int levelId, required int score}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'level_complete',
       parameters: {'level_id': levelId, 'score': score},
     );
@@ -76,7 +93,7 @@ class AnalyticsService {
     required bool isBot,
   }) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'pvp_result',
       parameters: {
         'outcome': outcome,
@@ -88,7 +105,7 @@ class AnalyticsService {
 
   void logColorSynthesis({required String resultColor}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'color_synthesis',
       parameters: {'result_color': resultColor},
     );
@@ -96,7 +113,7 @@ class AnalyticsService {
 
   void logPurchase({required String productId}) {
     if (!_enabled) return;
-    _analytics.logEvent(
+    _safeAnalytics?.logEvent(
       name: 'iap_purchase',
       parameters: {'product_id': productId},
     );
@@ -106,11 +123,11 @@ class AnalyticsService {
 
   void recordError(dynamic error, StackTrace? stack, {String? reason}) {
     if (!_enabled) return;
-    _crashlytics.recordError(error, stack, reason: reason);
+    _safeCrashlytics?.recordError(error, stack, reason: reason);
   }
 
   void setUserId(String userId) {
-    _analytics.setUserId(id: userId);
-    _crashlytics.setUserIdentifier(userId);
+    _safeAnalytics?.setUserId(id: userId);
+    _safeCrashlytics?.setUserIdentifier(userId);
   }
 }

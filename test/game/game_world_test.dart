@@ -4,8 +4,6 @@ import 'package:gloo/core/constants/color_constants.dart';
 import 'package:gloo/core/constants/game_constants.dart';
 import 'package:gloo/game/levels/level_data.dart';
 import 'package:gloo/game/shapes/gel_shape.dart';
-import 'package:gloo/game/systems/combo_detector.dart';
-import 'package:gloo/game/systems/powerup_system.dart';
 import 'package:gloo/game/world/game_world.dart';
 import 'package:gloo/game/world/grid_manager.dart';
 
@@ -467,8 +465,7 @@ void main() {
     test('onCurrencyEarned fires on line clear', () {
       final game = GlooGame(mode: GameMode.classic);
       game.startGame();
-      int? earned;
-      game.onCurrencyEarned = (amount) => earned = amount;
+      game.onCurrencyEarned = (amount) {};
 
       // Note: onCurrencyEarned is not directly wired in _evaluateBoard,
       // but CurrencyManager.onBalanceChanged could be used.

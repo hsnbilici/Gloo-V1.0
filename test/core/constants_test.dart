@@ -76,7 +76,7 @@ void main() {
 
     test('displayColor returns non-zero color value', () {
       for (final color in GelColor.values) {
-        expect(color.displayColor.value, isNonZero);
+        expect(color.displayColor.toARGB32(), isNonZero);
       }
     });
 
@@ -158,8 +158,8 @@ void main() {
 
   group('UI palette constants', () {
     test('kBgDark is dark color', () {
-      expect(kBgDark.red, lessThan(10));
-      expect(kBgDark.green, lessThan(30));
+      expect((kBgDark.r * 255.0).round(), lessThan(10));
+      expect((kBgDark.g * 255.0).round(), lessThan(30));
     });
 
     test('mode accent colors are distinct', () {

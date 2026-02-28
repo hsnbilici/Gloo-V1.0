@@ -16,13 +16,15 @@ import 'services/purchase_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Firebase init
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // Crashlytics: yakalanmamis Flutter hatalarini raporla
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // Firebase init (placeholder anahtarlar varsa sessizce atlar)
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  } catch (_) {
+    // Firebase henuz yapilandirilmamis — uygulama calismaya devam eder
+  }
 
   // Supabase backend init (sahte anahtarlar varsa sessizce atlar)
   await SupabaseConfig.initialize();

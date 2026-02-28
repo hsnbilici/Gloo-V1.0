@@ -1,13 +1,15 @@
 # Gloo — Kalan Isler ve Yol Haritasi
 
 > Son guncelleme: 2026-02-28
-> Durum: Faz 1 (MVP) tamamlandi. Faz A++ tamamlandi (634 test). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E kismi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
+> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E kismi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
+>
+> **Kalan is: 47 madde** (E: 3, F: 13, G: 2, H: 13, I: 9, J: 1, K: 2, L: 4 yeni)
 
 ---
 
 ## A. Birim Testler (Oncelik: Yuksek)
 
-634 test yazildi (27 test dosyasi). 427 yeni test (15 dosya) eklendi. Tamamlandi.
+723 test yazildi (37 test dosyasi, 0 hata). 508 yeni test (25 dosya) eklendi. Tamamlandi.
 
 **Onceki (222 test, 12 dosya):**
 - [x] A.1 — `test/game/grid_manager_test.dart`: 54 test (yerlestirme, satir/sutun temizleme, gravity, buz kirma, clearArea, undo, Cell sinifi)
@@ -39,6 +41,20 @@
 - [x] A.23 — `test/providers/game_provider_test.dart`: 18 test (GameState defaults/copyWith, GameNotifier tum update metodlari, reset, bagimsiz mod state)
 - [x] A.24 — `test/providers/audio_provider_test.dart`: 15 test (AudioSettings defaults/copyWith, AudioSettingsNotifier toggle/set metodlari — colorBlind, analytics, glooPlus, adsRemoved)
 - [x] A.25 — `test/providers/locale_provider_test.dart`: 9 test (kLanguageOptions 12 dil/benzersiz kodlar, LocaleNotifier setLocale)
+
+**4. dalga (81 test, 10 yeni dosya + 1 fix):**
+- [x] A.26 — `lib/services/analytics_service.dart` fix: Firebase instance'lari lazy/null-safe yapildi (8 HomeScreen test hatasi duzeltildi)
+- [x] A.27 — Flutter analyze 6 issue duzeltildi (deprecated API'ler + unused import/variable)
+- [x] A.28 — `test/game/spring_physics_test.dart`: 16 test (SpringPhysics — position, target, isSettled, update, snapTo, oscillation; Spring2D — setTarget, update, convergence)
+- [x] A.29 — `test/game/gel_deformer_test.dart`: 7 test (GelDeformer — buildPath, applyForce deformation, resetToCircle, isSettled)
+- [x] A.30 — `test/game/color_chef_levels_test.dart`: 6 test (kColorChefLevels — 20 seviye, positif requiredCount, birincil renk yok, zorluk artisi)
+- [x] A.31 — `test/providers/pvp_provider_test.dart`: 11 test (DuelState defaults/copyWith, DuelNotifier — setMatch, updateOpponentScore, setOpponentDone, reset)
+- [x] A.32 — `test/core/color_extensions_test.dart`: 7 test (GelColorExtension — glowColor alpha, selectionOverlay alpha, onDark lightness; ColorLerp — lerpTo 0/0.5/1)
+- [x] A.33 — `test/services/analytics_service_test.dart`: 14 test (singleton, lazy Firebase null-safety, tum log metodlari, disabled mode)
+- [x] A.34 — `test/app/router_test.dart`: 12 test (GameMode.fromString — 7 mod + fallback + case-sensitive; GameMode enum 7 deger)
+- [x] A.35 — `test/features/settings_screen_test.dart`: 3 test (render, switch toggle'lar, back butonu)
+- [x] A.36 — `test/features/collection_screen_test.dart`: 3 test (render, back butonu, progress sayaci)
+- [x] A.37 — `test/features/level_select_test.dart`: 4 test (render, SEVIYELER baslik, back butonu, level 1 acik)
 
 ---
 
@@ -100,17 +116,17 @@ Tamamlandi. `meta_states` tablosu (7 JSONB/int kolon + RLS) deploy edildi. Tum e
 
 ---
 
-## E. Firebase Analytics ve Crashlytics (Oncelik: Orta)
+## E. Firebase Analytics ve Crashlytics (Oncelik: Yuksek)
 
-Firebase paketleri eklendi, kod yazildi. `flutterfire configure` ve Firebase Console kurulumu gerekli.
+Firebase paketleri eklendi, kod yazildi. **`firebase_options.dart` tum degerler PLACEHOLDER** — `flutterfire configure` ve Firebase Console kurulumu gerekli. Firebase olmadan Analytics + Crashlytics tamamen devre disi.
 
-- [ ] E.0 — Firebase CLI kur (`curl -sL https://firebase.tools | bash`) + `firebase login`
+- [x] E.0 — Firebase CLI kuruldu (1.3.1), `firebase login` yapildi
 - [ ] E.1 — Firebase projesi olustur (Firebase Console) → `gloo-d3dd8`
 - [x] E.2 — `firebase_core`, `firebase_analytics`, `firebase_crashlytics` pubspec'e ekle
-- [ ] E.3 — `flutterfire configure --project=gloo-d3dd8` calistir → `firebase_options.dart` olusturulur
-- [x] E.4 — `main.dart`'taki Firebase init yorum satirlarini ac + Crashlytics error handler
-- [x] E.5 — `analytics_service.dart` gercek Firebase cagrilari ile guncellendi
-- [ ] E.6 — Crashlytics'i test et (kasti crash → dashboard'da gorunurluk)
+- [ ] E.3 — `flutterfire configure --project=gloo-d3dd8` calistir → `firebase_options.dart` gercek degerlerle olusturulur + `google-services.json` + `GoogleService-Info.plist` uretilir
+- [x] E.4 — `main.dart` Firebase init aktif (try-catch ile korunuyor — placeholder'da sessizce atlar)
+- [x] E.5 — `analytics_service.dart` lazy/null-safe Firebase cagrilari (Firebase yoksa sessizce no-op)
+- [ ] E.6 — Crashlytics'i test et: kasti crash → Firebase Console dashboard'da gorunurluk dogrula
 - [x] E.7 — Custom event'ler eklendi: power-up, seviye tamamlama, PvP sonuc, renk sentezi, IAP
 
 ---
@@ -173,16 +189,18 @@ iOS build simulator'de calisiyor. Gercek cihaz ve store icin eksikler var.
 
 ## I. Android Play Store Hazirligi (Oncelik: Orta)
 
-APK build calisiyor. Store listesi ve release build eksik.
+APK build calisiyor. Store listesi ve release build eksik. **Application ID hala `com.example.gloo`.**
 
-- [ ] I.1 — Release signing key olustur (keystore)
+- [ ] I.0 — Application ID degistir: `android/app/build.gradle.kts` → `com.example.gloo` yerine gercek ID (orn: `com.gloo.puzzle`)
+- [ ] I.1 — Release signing key olustur (keystore) + `key.properties` dosyasi
 - [ ] I.2 — `flutter build appbundle --release` basarili build
 - [ ] I.3 — Google Play Console'da uygulama olustur
 - [ ] I.4 — Store listesi: baslik, aciklama, ekran goruntuleri (12 dil)
 - [ ] I.5 — Icerik derecelendirme anketi
 - [ ] I.6 — IAP urunlerini Play Console'da tanimla
 - [ ] I.7 — Dahili test → Kapali test → Acik test → Uretim
-- [ ] I.8 — AdMob gercek App ID ve ad unit ID'leri ile degistir
+- [ ] I.8 — AdMob gercek App ID ve ad unit ID'leri ile degistir (`AndroidManifest.xml` + `ios/Runner/Info.plist`)
+- [ ] I.9 — `ad_manager.dart` ad unit ID'lerini gercek ID'lerle degistir (iOS + Android)
 
 ---
 
@@ -203,25 +221,69 @@ Tamamlandi. 3 GitHub Actions workflow olusturuldu.
 - [x] K.2 — `isar_schema.dart` → `data_models.dart` olarak yeniden adlandirildi (import'lar guncellendi)
 - [x] K.3 — README.md platform durumu guncellendi (iOS + Flutter 3.41.2 + faz durumlari)
 - [x] K.4 — GDD.md Faz Durumu checklisti guncellendi (Faz 1-3 tamamlandi, Faz 4 kaldi)
-- [ ] K.5 — Uygulama ikonu tasarla *(tasarim gorevi)*
+- [ ] K.5 — Uygulama ikonu tasarla *(tasarim gorevi)* — `assets/images/ui/` dizini bos
 - [ ] K.6 — Splash screen / logo animasyonu *(tasarim gorevi)*
 
 ---
 
-## Oncelik Ozeti
+## L. Yeni Tespit Edilen Eksikler (2026-02-28)
 
-| Oncelik | Bolum | Aciklama |
-|---------|-------|----------|
-| **Yuksek** | A | Birim testler — refactoring ve yeni ozellikler icin guvenlik agi |
-| **Yuksek** | B | Supabase gercek entegrasyon — leaderboard, daily, redeem code |
-| **Orta** | C | PvP Realtime — ana diferansiyator |
-| **Orta** | D | Meta-game backend — retention mekanizmasi |
-| **Orta** | E | Firebase Analytics/Crashlytics — metrik takibi |
-| **Orta** | F | Ses dosyalari — ASMR deneyiminin cekirdegi |
-| **Orta** | H, I | Store hazirligi — yayina cikis yolu |
-| **Dusuk** | G | Viral pipeline — TikTok paylasim altyapisi |
-| **Dusuk** | J | CI/CD — otomasyon |
-| **Dusuk** | K | Kod kalitesi ve polish |
+Bu maddeler mevcut fazlarda yer almayip kod/proje incelemesinde tespit edildi.
+
+### L.1 — Bundle ID ve Paket Isimlendirmesi (Oncelik: Yuksek — store'dan once zorunlu)
+- [ ] L.1.1 — Gercek bundle ID belirle (orn: `com.gloo.puzzle` veya `app.gloo.puzzle`)
+- [ ] L.1.2 — iOS: Xcode project `PRODUCT_BUNDLE_IDENTIFIER` guncelle (3 konfigurasyonda: Debug, Release, Profile)
+- [ ] L.1.3 — Android: `build.gradle.kts` → `namespace` + `applicationId` guncelle
+- [ ] L.1.4 — `firebase_options.dart` bundle ID'leri otomatik guncellenir (`flutterfire configure` ile)
+
+### L.2 — Gorsel Asset'ler (Oncelik: Orta — UI eksik)
+- [ ] L.2.1 — `assets/images/ui/` dizinine uygulama ikonu, buton ikonlari, logo tasarla
+- [ ] L.2.2 — `assets/images/gel_textures/` dizinine jel doku goruntuleri olustur (dokusu)
+- [ ] L.2.3 — iOS LaunchScreen.storyboard arka plan rengini `#0A0A0F` yap (Xcode'da)
+
+### L.3 — Gizlilik ve Yasal (Oncelik: Yuksek — store'dan once zorunlu)
+- [ ] L.3.1 — Privacy Policy web sayfasi hazirla ve yayinla (URL: gloo.app/privacy veya GitHub Pages)
+- [ ] L.3.2 — Terms of Service web sayfasi hazirla
+- [ ] L.3.3 — GDPR/KVKK uyumluluk kontrolu (veri silme, onay mekanizmasi — `clearAllData` mevcut)
+- [ ] L.3.4 — ATT (App Tracking Transparency) iOS dialog testi — `Info.plist`'te `NSUserTrackingUsageDescription` mevcut
+
+### L.4 — Performans ve Stabilite (Oncelik: Dusuk — lansmandan once)
+- [ ] L.4.1 — Flutter DevTools ile performans profili (60fps hedefi, jank tespiti)
+- [ ] L.4.2 — GameScreen widget rebuild optimizasyonu (1779 satir — potansiyel aşırı rebuild)
+- [x] L.4.3 — Buyuk dosyalari refactor et: `game_screen.dart` (2290→570), `game_effects.dart` (1319→barrel) → 14 odakli dosyaya bolundu
+- [ ] L.4.4 — Memory leak testi (ozellikle PvP Realtime channel temizligi)
+
+---
+
+## Oncelik Ozeti (Guncel)
+
+### Tamamlanan Fazlar ✓
+| Bolum | Aciklama | Durum |
+|-------|----------|-------|
+| A | Birim testler (723 test, 37 dosya, 0 hata) | ✅ Tamamlandi |
+| B | Supabase gercek entegrasyon (6 tablo + RLS + indeksler) | ✅ Tamamlandi |
+| C | PvP Realtime (Presence + Broadcast + bot fallback) | ✅ Tamamlandi |
+| D | Meta-game backend (meta_states + cross-device sync) | ✅ Tamamlandi |
+| G | Viral pipeline (screen_recorder + FFmpeg + share) | ✅ Kod tamamlandi |
+| J | CI/CD (3 GitHub Actions workflow) | ✅ Tamamlandi |
+
+### Kalan Isler — Yayina Cikis Yol Haritasi
+
+| Sira | Bolum | Madde Sayisi | Aciklama | Gereken |
+|------|-------|-------------|----------|---------|
+| 1 | **E** | 3 kaldi | Firebase yapilandirma — Analytics + Crashlytics aktif degil | Firebase Console + CLI |
+| 2 | **L.1** | 4 | Bundle ID degisikligi — store submission icin zorunlu | Karar + kod degisikligi |
+| 3 | **L.3** | 4 | Gizlilik politikasi + yasal — store submission icin zorunlu | Metin yazimi + web sayfasi |
+| 4 | **F** | 13 | Ses dosyalari uretimi — ASMR deneyiminin cekirdegi | Ses tasarimi (Audacity/FL Studio) |
+| 5 | **K** | 2 | Uygulama ikonu + splash screen | Gorsel tasarim |
+| 6 | **L.2** | 3 | Gorsel asset'ler (ikon, doku, launch screen) | Gorsel tasarim |
+| 7 | **H** | 13 | iOS App Store tam hazirligi | Apple Developer Account + Xcode |
+| 8 | **I** | 9 | Android Play Store tam hazirligi | Google Play Console + Keystore |
+| 9 | **G** | 2 | Viral pipeline cihaz testi + direct share | Fiziksel cihaz |
+| 10 | **L.4** | 4 | Performans optimizasyonu | DevTools profiling |
+| 11 | **J** | 1 | Fastlane/Shorebird (opsiyonel) | Ihtiyac duyulunca |
+
+**Toplam: 58 madde (47 mevcut + 11 yeni tespit)**
 
 ---
 
@@ -241,4 +303,7 @@ Tamamlandi. 3 GitHub Actions workflow olusturuldu.
 - [x] Near-miss algilama (Shannon entropy)
 - [x] AudioManager + iOS audio session (ambient)
 - [x] ShareManager metin paylasimi (share_plus)
+- [x] Supabase Realtime PvP (eslestirme + duello + engel + ELO)
+- [x] Meta-game backend (ada, karakter, sezon pasi, gorevler)
 - [x] `flutter analyze` — 0 issue
+- [x] 723 birim test, 0 hata
