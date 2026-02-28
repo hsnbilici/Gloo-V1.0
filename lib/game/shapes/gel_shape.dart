@@ -25,16 +25,16 @@ class GelShape {
 
   /// Parçanın tüm hücrelerini (anchorRow, anchorCol) ankerine göre döner.
   List<(int, int)> at(int anchorRow, int anchorCol) =>
-      cells.map((c) => (c.$1 + anchorRow, c.$2 + anchorCol)).toList();
+      [for (final c in cells) (c.$1 + anchorRow, c.$2 + anchorCol)];
 
   /// Şekli 90 derece saat yönünde döndürür.
   GelShape rotated() {
-    final rotated = cells.map((c) => (c.$2, -c.$1)).toList();
+    final rotated = [for (final c in cells) (c.$2, -c.$1)];
     // Negatif offset'leri düzelt — tüm koordinatları 0'a normalize et
     final minRow = rotated.fold(0, (acc, c) => c.$1 < acc ? c.$1 : acc);
     final minCol = rotated.fold(0, (acc, c) => c.$2 < acc ? c.$2 : acc);
     return GelShape(
-      cells: rotated.map((c) => (c.$1 - minRow, c.$2 - minCol)).toList(),
+      cells: [for (final c in rotated) (c.$1 - minRow, c.$2 - minCol)],
       name: '${name}_r',
     );
   }
@@ -83,15 +83,15 @@ const List<GelShape> kAllShapes = [
 
 /// Küçük şekiller (1-2 hücre).
 final List<GelShape> kSmallShapes =
-    kAllShapes.where((s) => s.cellCount <= 2).toList();
+    [for (final s in kAllShapes) if (s.cellCount <= 2) s];
 
 /// Orta şekiller (3 hücre).
 final List<GelShape> kMediumShapes =
-    kAllShapes.where((s) => s.cellCount == 3).toList();
+    [for (final s in kAllShapes) if (s.cellCount == 3) s];
 
 /// Büyük şekiller (4+ hücre).
 final List<GelShape> kLargeShapes =
-    kAllShapes.where((s) => s.cellCount >= 4).toList();
+    [for (final s in kAllShapes) if (s.cellCount >= 4) s];
 
 /// Rastgele el (hand) oluşturucu — Smart Seed RNG destekli.
 class ShapeGenerator {

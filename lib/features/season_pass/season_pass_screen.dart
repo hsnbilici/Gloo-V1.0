@@ -10,6 +10,31 @@ import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
 
+// ─── Sezon Pasi Tier Verileri (50 tier, statik) ─────────────────────────────
+
+final List<SeasonTier> _kSeasonTiers = List.generate(50, (i) {
+  final tier = i + 1;
+  return SeasonTier(
+    tier: tier,
+    xpRequired: 100 + (i * 20),
+    freeReward: SeasonReward(
+      type: tier % 5 == 0
+          ? SeasonRewardType.costume
+          : tier % 3 == 0
+              ? SeasonRewardType.energy
+              : SeasonRewardType.gelOzu,
+      amount: tier % 5 == 0 ? 1 : tier % 3 == 0 ? 5 : 10 + i,
+    ),
+    premiumReward: SeasonReward(
+      type: tier % 10 == 0
+          ? SeasonRewardType.costume
+          : SeasonRewardType.gelOzu,
+      amount: tier % 10 == 0 ? 1 : 20 + i * 2,
+      isPremium: true,
+    ),
+  );
+});
+
 // ─── Sezon Pasi Ekrani ──────────────────────────────────────────────────────
 
 class SeasonPassScreen extends ConsumerStatefulWidget {
@@ -25,35 +50,10 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
   late final SeasonPassState _passState;
   bool _loaded = false;
 
-  // Ornek tier listesi (50 tier)
-  late final List<SeasonTier> _tiers;
-
   @override
   void initState() {
     super.initState();
     _passState = SeasonPassState();
-    _tiers = List.generate(50, (i) {
-      final tier = i + 1;
-      return SeasonTier(
-        tier: tier,
-        xpRequired: 100 + (i * 20),
-        freeReward: SeasonReward(
-          type: tier % 5 == 0
-              ? SeasonRewardType.costume
-              : tier % 3 == 0
-                  ? SeasonRewardType.energy
-                  : SeasonRewardType.gelOzu,
-          amount: tier % 5 == 0 ? 1 : tier % 3 == 0 ? 5 : 10 + i,
-        ),
-        premiumReward: SeasonReward(
-          type: tier % 10 == 0
-              ? SeasonRewardType.costume
-              : SeasonRewardType.gelOzu,
-          amount: tier % 10 == 0 ? 1 : 20 + i * 2,
-          isPremium: true,
-        ),
-      );
-    });
     _loadState();
   }
 
@@ -78,7 +78,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTier = _passState.getCurrentTier(_tiers);
+    final currentTier = _passState.getCurrentTier(_kSeasonTiers);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -159,7 +159,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                   child: _XpProgressBar(
                     currentXp: _passState.currentXp,
                     currentTier: currentTier,
-                    tiers: _tiers,
+                    tiers: _kSeasonTiers,
                   ),
                 ).animate(delay: 100.ms).fadeIn(duration: 350.ms),
                 const SizedBox(height: 16),
@@ -170,9 +170,9 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _tiers.length,
+                          itemCount: _kSeasonTiers.length,
                           itemBuilder: (context, index) {
-                            final tier = _tiers[index];
+                            final tier = _kSeasonTiers[index];
                             final isUnlocked = tier.tier <= currentTier;
                             final isCurrent = tier.tier == currentTier + 1;
 

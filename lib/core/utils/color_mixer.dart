@@ -27,10 +27,14 @@ class ColorMixer {
   }
 
   /// Hedef rengi üretmek için gereken hammadde kombinasyonunu bulur.
+  static final Map<GelColor, List<(GelColor, GelColor)>> _recipeCache = {};
+
   static List<(GelColor, GelColor)> findRecipes(GelColor target) {
-    return kColorMixingTable.entries
-        .where((e) => e.value == target)
-        .map((e) => e.key)
-        .toList();
+    return _recipeCache.putIfAbsent(target, () {
+      return [
+        for (final entry in kColorMixingTable.entries)
+          if (entry.value == target) entry.key
+      ];
+    });
   }
 }

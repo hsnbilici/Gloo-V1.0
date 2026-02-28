@@ -86,6 +86,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   // Ekran sarsintisi durumu
   double _shakeIntensity = 0;
   int _shakeKey = 0;
+  Timer? _shakeTimer;
 
   // Power-up modu
   PowerUpType? _activePowerUpMode;
@@ -104,6 +105,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   // Protokol 2: Yerlestirme dalga yayilimi
   Set<(int, int)> _recentlyPlacedCells = {};
   int _waveKey = 0;
+  Timer? _waveClearTimer;
 
   // Mod bazli ortam rengi
   Color get _modeColor => switch (widget.mode) {
@@ -385,6 +387,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
@@ -440,7 +443,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
             ),
           if (_showNearMissRescueBadge)
             Positioned(
-              top: MediaQuery.of(context).padding.top + 52,
+              top: topPadding + 52,
               right: 16,
               child: RewardBadge(
                 label: 'Kurtarilabilir!',
@@ -459,7 +462,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
             ),
           if (_showHighScoreBadge)
             Positioned(
-              top: MediaQuery.of(context).padding.top + 52,
+              top: topPadding + 52,
               left: 16,
               child: RewardBadge(
                 label: 'Rekoruna yakinsin!',
@@ -484,10 +487,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
   // ─── Izgara ───────────────────────────────────────────────────────────
 
   Widget _buildGrid() {
+    final colorBlindMode = ref.watch(audioSettingsProvider).colorBlindMode;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final colorBlindMode =
-            ref.watch(audioSettingsProvider).colorBlindMode;
         final cols = _game.gridManager.cols;
         final rows = _game.gridManager.rows;
         const gap = 2.0;
@@ -672,12 +674,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
             ),
             child: gridContent,
           );
-          Future.delayed(
+          _shakeTimer?.cancel();
+          _shakeTimer = Timer(
             Duration(milliseconds: _shakeIntensity >= GameConstants.shakeAmplitudeEpic
                 ? GameConstants.shakeDurationEpic
                 : GameConstants.shakeDurationLarge),
             () {
-              if (mounted) setState(() => _shakeIntensity = 0);
+              if (mounted) setState(() => _shakeIntensity = 0.0);
             },
           );
         }
@@ -801,7 +804,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
       if (_hand.every((h) => h == null)) _refillHand();
     });
 
-    Future.delayed(const Duration(milliseconds: 480), () {
+    _waveClearTimer?.cancel();
+    _waveClearTimer = Timer(const Duration(milliseconds: 480), () {
       if (mounted) setState(() => _recentlyPlacedCells = {});
     });
 
@@ -946,6 +950,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   @override
   void dispose() {
+    _waveClearTimer?.cancel();
+    _shakeTimer?.cancel();
     _toastTimer?.cancel();
     _game.cancelTimer();
     _game.onLineClear        = null;

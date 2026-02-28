@@ -179,21 +179,20 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                       ? ListView(
                           physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          children: BuildingType.values.asMap().entries.map((e) {
-                            final index = e.key;
-                            final type = e.value;
-                            return _BuildingCard(
-                              type: type,
-                              building: kBuildings[type]!,
-                              level: _island.getBuildingLevel(type),
-                              canBuild: _island.canBuild(type),
-                              cost: _island.getUpgradeCost(type),
-                              canAfford: _resources.canAfford(
-                                  _island.getUpgradeCost(type)),
-                              onUpgrade: () => _onUpgrade(type),
-                              delay: Duration(milliseconds: 80 * index),
-                            );
-                          }).toList(),
+                          children: [
+                            for (final entry in BuildingType.values.asMap().entries)
+                              _BuildingCard(
+                                type: entry.value,
+                                building: kBuildings[entry.value]!,
+                                level: _island.getBuildingLevel(entry.value),
+                                canBuild: _island.canBuild(entry.value),
+                                cost: _island.getUpgradeCost(entry.value),
+                                canAfford: _resources.canAfford(
+                                    _island.getUpgradeCost(entry.value)),
+                                onUpgrade: () => _onUpgrade(entry.value),
+                                delay: Duration(milliseconds: 80 * entry.key),
+                              ),
+                          ],
                         )
                       : const Center(
                           child: CircularProgressIndicator(color: _kAccent),

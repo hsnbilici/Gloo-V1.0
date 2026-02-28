@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +34,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   bool _purchasing = false;
   bool _redeeming = false;
   String? _toastMsg;
+  Timer? _toastTimer;
 
   @override
   void initState() {
@@ -50,6 +53,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
 
   @override
   void dispose() {
+    _toastTimer?.cancel();
     _redeemController.dispose();
     super.dispose();
   }
@@ -112,8 +116,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   }
 
   void _showToast(String msg) {
+    _toastTimer?.cancel();
     setState(() => _toastMsg = msg);
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    _toastTimer = Timer(const Duration(milliseconds: 2000), () {
       if (mounted) setState(() => _toastMsg = null);
     });
   }

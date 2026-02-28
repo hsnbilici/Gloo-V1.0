@@ -20,27 +20,28 @@ class ShapePreview extends StatelessWidget {
       width: shape.colCount * (_cellSize + _gap) - _gap,
       height: shape.rowCount * (_cellSize + _gap) - _gap,
       child: Stack(
-        children: shape.cells.map((cell) {
-          return Positioned(
-            left: cell.$2 * (_cellSize + _gap),
-            top: cell.$1 * (_cellSize + _gap),
-            child: Container(
-              width: _cellSize,
-              height: _cellSize,
-              decoration: BoxDecoration(
-                color: displayColor,
-                borderRadius: BorderRadius.circular(UIConstants.radiusXs),
-                boxShadow: [
-                  BoxShadow(
-                    color: displayColor.withValues(alpha: 0.6),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  ),
-                ],
+        children: [
+          for (final cell in shape.cells)
+            Positioned(
+              left: cell.$2 * (_cellSize + _gap),
+              top: cell.$1 * (_cellSize + _gap),
+              child: Container(
+                width: _cellSize,
+                height: _cellSize,
+                decoration: BoxDecoration(
+                  color: displayColor,
+                  borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+                  boxShadow: [
+                    BoxShadow(
+                      color: displayColor.withValues(alpha: 0.6),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
               ),
             ),
-          );
-        }).toList(),
+        ],
       ),
     );
   }

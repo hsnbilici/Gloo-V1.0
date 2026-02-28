@@ -79,6 +79,7 @@ class _AmbientGelDropletsState extends State<AmbientGelDroplets>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final List<_DropletData> _droplets;
+  late _AmbientDropletPainter _painter;
 
   @override
   void initState() {
@@ -101,6 +102,24 @@ class _AmbientGelDropletsState extends State<AmbientGelDroplets>
         hueShift: (rng.nextDouble() - 0.5) * 40,
       );
     });
+
+    _painter = _AmbientDropletPainter(
+      repaint: _ctrl,
+      droplets: _droplets,
+      baseColor: widget.baseColor,
+    );
+  }
+
+  @override
+  void didUpdateWidget(AmbientGelDroplets oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.baseColor != widget.baseColor) {
+      _painter = _AmbientDropletPainter(
+        repaint: _ctrl,
+        droplets: _droplets,
+        baseColor: widget.baseColor,
+      );
+    }
   }
 
   @override
@@ -112,18 +131,9 @@ class _AmbientGelDropletsState extends State<AmbientGelDroplets>
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) {
-          return CustomPaint(
-            painter: _AmbientDropletPainter(
-              time: _ctrl.value,
-              droplets: _droplets,
-              baseColor: widget.baseColor,
-            ),
-            child: const SizedBox.expand(),
-          );
-        },
+      child: CustomPaint(
+        painter: _painter,
+        child: const SizedBox.expand(),
       ),
     );
   }
@@ -152,18 +162,27 @@ class _DropletData {
 }
 
 class _AmbientDropletPainter extends CustomPainter {
-  const _AmbientDropletPainter({
-    required this.time,
+  _AmbientDropletPainter({
+    required Animation<double> repaint,
     required this.droplets,
     required this.baseColor,
-  });
+  })  : _animation = repaint,
+        _glowPaint = Paint()
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+        _blobPaint = Paint(),
+        _highlightPaint = Paint(),
+        super(repaint: repaint);
 
-  final double time;
+  final Animation<double> _animation;
   final List<_DropletData> droplets;
   final Color baseColor;
+  final Paint _glowPaint;
+  final Paint _blobPaint;
+  final Paint _highlightPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final time = _animation.value;
     for (final d in droplets) {
       final t = time * 2 * math.pi;
       // Yuzme hareketi: sinusoidal dalga + yavas drift
@@ -178,30 +197,20 @@ class _AmbientDropletPainter extends CustomPainter {
       final r = d.radius * breathScale;
 
       // Glow
-      canvas.drawCircle(
-        Offset(x, y),
-        r * 2.5,
-        Paint()
-          ..color = baseColor.withValues(alpha: d.opacity * 0.3)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-      );
+      _glowPaint.color = baseColor.withValues(alpha: d.opacity * 0.3);
+      canvas.drawCircle(Offset(x, y), r * 2.5, _glowPaint);
 
       // Jel blob
-      canvas.drawCircle(
-        Offset(x, y),
-        r,
-        Paint()..color = baseColor.withValues(alpha: d.opacity),
-      );
+      _blobPaint.color = baseColor.withValues(alpha: d.opacity);
+      canvas.drawCircle(Offset(x, y), r, _blobPaint);
 
       // Specular highlight
-      canvas.drawCircle(
-        Offset(x - r * 0.25, y - r * 0.25),
-        r * 0.35,
-        Paint()..color = Colors.white.withValues(alpha: d.opacity * 0.6),
-      );
+      _highlightPaint.color = Colors.white.withValues(alpha: d.opacity * 0.6);
+      canvas.drawCircle(Offset(x - r * 0.25, y - r * 0.25), r * 0.35, _highlightPaint);
     }
   }
 
   @override
-  bool shouldRepaint(_AmbientDropletPainter old) => old.time != time;
+  bool shouldRepaint(_AmbientDropletPainter old) =>
+      old.droplets != droplets || old.baseColor != baseColor;
 }

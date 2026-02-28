@@ -75,11 +75,19 @@ class _CellBurstEffectState extends State<CellBurstEffect>
 }
 
 class _BurstPainter extends CustomPainter {
-  const _BurstPainter({
+  _BurstPainter({
     required this.progress,
     required this.color,
     required this.cellSize,
-  });
+  })  : _flashPaint = Paint(),
+        _glowPaint = Paint()
+          ..style = PaintingStyle.stroke
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+        _ringPaint = Paint()..style = PaintingStyle.stroke,
+        _particleGlowPaint = Paint()
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
+        _particleBodyPaint = Paint(),
+        _particleHighlightPaint = Paint();
 
   final double progress;
   final Color color;
@@ -87,6 +95,14 @@ class _BurstPainter extends CustomPainter {
 
   // Faz F: 8 -> 16 parcacik, Bezier trajectory
   static const int _particleCount = 16;
+
+  // Pre-allocated reusable Paint objects
+  final Paint _flashPaint;
+  final Paint _glowPaint;
+  final Paint _ringPaint;
+  final Paint _particleGlowPaint;
+  final Paint _particleBodyPaint;
+  final Paint _particleHighlightPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -116,16 +132,15 @@ class _BurstPainter extends CustomPainter {
   void _drawFlash(Canvas canvas, Offset center, double opacity) {
     // Faz 4: 1.5x hucre boyutu (eskiden 0.85x)
     final radius = cellSize * 1.5;
-    final paint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          Colors.white.withValues(alpha: opacity * 0.92),
-          color.withValues(alpha: opacity * 0.65),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.5, 1.0],
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
-    canvas.drawCircle(center, radius, paint);
+    _flashPaint.shader = RadialGradient(
+      colors: [
+        Colors.white.withValues(alpha: opacity * 0.92),
+        color.withValues(alpha: opacity * 0.65),
+        Colors.transparent,
+      ],
+      stops: const [0.0, 0.5, 1.0],
+    ).createShader(Rect.fromCircle(center: center, radius: radius));
+    canvas.drawCircle(center, radius, _flashPaint);
   }
 
   void _drawRing(Canvas canvas, Offset center, double t) {
@@ -137,19 +152,16 @@ class _BurstPainter extends CustomPainter {
     final strokeW = (1.0 - eased) * 3.0 + 0.5;
 
     // Glow katmani
-    final glowPaint = Paint()
+    _glowPaint
       ..color = color.withValues(alpha: opacity * 0.45)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeW + 4.0
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    canvas.drawCircle(center, radius, glowPaint);
+      ..strokeWidth = strokeW + 4.0;
+    canvas.drawCircle(center, radius, _glowPaint);
 
     // Keskin halka
-    final ringPaint = Paint()
+    _ringPaint
       ..color = color.withValues(alpha: opacity)
-      ..style = PaintingStyle.stroke
       ..strokeWidth = strokeW;
-    canvas.drawCircle(center, radius, ringPaint);
+    canvas.drawCircle(center, radius, _ringPaint);
   }
 
   void _drawParticles(Canvas canvas, Offset center, double t) {
@@ -172,7 +184,8 @@ class _BurstPainter extends CustomPainter {
       final dy = 2 * omt * bt * ctrlDy + bt * bt * endDy;
       // Yercekimi: y += t^2 * 0.3
       final gravity = t * t * cellSize * 0.3;
-      final pos = center.translate(dx, dy + gravity);
+      final posX = center.dx + dx;
+      final posY = center.dy + dy + gravity;
 
       // Faz 4: Boyut 3-8px araliginda varyasyon
       final sizeVariation = 0.24 + (i % 3) * 0.06;
@@ -182,34 +195,41 @@ class _BurstPainter extends CustomPainter {
       // Faz 4: Karesel opasite azalmasi (quadratic decay)
       final opacity = (1.0 - t * t) * 0.95;
 
-      final rrect = RRect.fromRectAndRadius(
-        Rect.fromCenter(center: pos, width: particleSize, height: particleSize),
-        Radius.circular(particleSize * 0.38),
+      final halfSize = particleSize / 2;
+      final cornerRadius = Radius.circular(particleSize * 0.38);
+      final rrect = RRect.fromLTRBR(
+        posX - halfSize,
+        posY - halfSize,
+        posX + halfSize,
+        posY + halfSize,
+        cornerRadius,
       );
 
       // Glow
-      canvas.drawRRect(
-        rrect,
-        Paint()
-          ..color = color.withValues(alpha: opacity * 0.42)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
-      );
+      _particleGlowPaint.color = color.withValues(alpha: opacity * 0.42);
+      canvas.drawRRect(rrect, _particleGlowPaint);
 
       // Jel blob govdesi
-      canvas.drawRRect(rrect, Paint()..color = color.withValues(alpha: opacity));
+      _particleBodyPaint.color = color.withValues(alpha: opacity);
+      canvas.drawRRect(rrect, _particleBodyPaint);
 
       // Ic highlight
       final hlSize = particleSize * 0.38;
+      final hlHalf = hlSize / 2;
+      final hlX = posX - particleSize * 0.12;
+      final hlY = posY - particleSize * 0.12;
+      final hlCorner = Radius.circular(hlSize * 0.5);
+      _particleHighlightPaint.color =
+          Colors.white.withValues(alpha: opacity * 0.55);
       canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromCenter(
-            center: pos.translate(-particleSize * 0.12, -particleSize * 0.12),
-            width: hlSize,
-            height: hlSize,
-          ),
-          Radius.circular(hlSize * 0.5),
+        RRect.fromLTRBR(
+          hlX - hlHalf,
+          hlY - hlHalf,
+          hlX + hlHalf,
+          hlY + hlHalf,
+          hlCorner,
         ),
-        Paint()..color = Colors.white.withValues(alpha: opacity * 0.55),
+        _particleHighlightPaint,
       );
     }
   }

@@ -23,6 +23,28 @@
 - [x] 3.5 — **[MEDIUM] ClipRRect** — 5 ClipRRect → Container + BoxDecoration + Clip.hardEdge
 - [x] 3.6 — **[MEDIUM] Matchmaking debounce** — 250ms `_evaluateDebounce` Timer eklendi
 
+### Tur 2 Tamamlanan (11/11)
+
+- [x] GridManager.grid getter cached (`_invalidateCache()` ile)
+- [x] GridManager.filledCells manual loop (allocation-free)
+- [x] MediaQuery.of(context) local variable olarak cache'lendi
+- [x] ScreenShake Future.delayed → cancellable Timer
+- [x] audioSettingsProvider.colorBlindMode LayoutBuilder disina cikarildi
+- [x] AmbientDropletPainter cached in state, repaint: listenable, pre-allocated Paint
+- [x] BurstPainter 6 Paint pre-allocated, Offset allocation eliminated
+- [x] shape_preview.dart collection-for
+- [x] island_screen.dart collection-for
+- [x] season_pass_screen.dart tiers → file-level constant
+- [x] CADisableMinimumFrameDurationOnPhone → false
+
+### Tur 3 Tamamlanan (5/5)
+
+- [x] P.1 — **[MEDIUM] Future.delayed → Timer: WaveRipple** — `_delayTimer` + dispose iptal
+- [x] P.2 — **[MEDIUM] Future.delayed → Timer: ShopScreen toast** — `_toastTimer` + dispose iptal
+- [x] P.3 — **[MEDIUM] Future.delayed → Timer: _recentlyPlacedCells** — `_waveClearTimer` + dispose iptal
+- [x] P.4 — **[MEDIUM] GelShape.at()/rotated() collection-for** — `.map().toList()` → `[for ...]`, kSmall/Medium/LargeShapes da duzeltildi
+- [x] P.5 — **[MEDIUM] findRecipes() static cache** — `_recipeCache.putIfAbsent()` ile tek seferlik hesaplama
+
 ### Kalan Performans (LOW — opsiyonel)
 
 - [ ] 2.3 — **[LOW] OGG software decoding** — `.m4a` ikili format uret (6.1 ile birlikte)
@@ -87,4 +109,4 @@
 | J | CI/CD (3 GitHub Actions workflow) |
 | K | Kod kalitesi (refactoring, rename, README, GDD) |
 | L | Bundle ID, GDPR/ATT, memory leak fix, dosya refactoring |
-| M | Performans optimizasyonu: 15/17 duzeltildi (4 CRITICAL + 6 HIGH + 5 MEDIUM) |
+| M | Performans optimizasyonu: 31/33 duzeltildi (4 CRITICAL + 8 HIGH + 15 MEDIUM + 4 LOW) |

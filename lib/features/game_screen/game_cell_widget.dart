@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -349,6 +350,7 @@ class WaveRipple extends StatefulWidget {
 class _WaveRippleState extends State<WaveRipple>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
+  Timer? _delayTimer;
 
   @override
   void initState() {
@@ -357,13 +359,14 @@ class _WaveRippleState extends State<WaveRipple>
       vsync: this,
       duration: const Duration(milliseconds: 180),
     );
-    Future.delayed(Duration(milliseconds: widget.distance * 25), () {
+    _delayTimer = Timer(Duration(milliseconds: widget.distance * 25), () {
       if (mounted) _ctrl.forward();
     });
   }
 
   @override
   void dispose() {
+    _delayTimer?.cancel();
     _ctrl.dispose();
     super.dispose();
   }

@@ -42,12 +42,29 @@ class GridManager {
   /// Hücre matrisine doğrudan erişim.
   List<List<Cell>> get cells => _cells;
 
-  /// Geriye uyumluluk: GelColor? tabanlı grid döner (eski kodla çalışır).
-  Grid get grid =>
-      _cells.map((row) => row.map((c) => c.color).toList()).toList();
+  /// Önbelleklenmiş GelColor? grid — mutasyon sonrası invalidate edilir.
+  Grid? _cachedGrid;
 
-  int get filledCells =>
-      _cells.expand((row) => row).where((c) => c.color != null).length;
+  /// Geriye uyumluluk: GelColor? tabanlı grid döner (eski kodla çalışır).
+  Grid get grid {
+    _cachedGrid ??=
+        _cells.map((row) => row.map((c) => c.color).toList()).toList();
+    return _cachedGrid!;
+  }
+
+  void _invalidateCache() {
+    _cachedGrid = null;
+  }
+
+  int get filledCells {
+    int count = 0;
+    for (final row in _cells) {
+      for (final cell in row) {
+        if (cell.color != null) count++;
+      }
+    }
+    return count;
+  }
 
   int get totalCells {
     int count = 0;
@@ -92,6 +109,7 @@ class GridManager {
     for (final (r, c) in cells) {
       _cells[r][c].color = color;
     }
+    _invalidateCache();
   }
 
   LineClearResult detectAndClear() {
@@ -161,6 +179,8 @@ class GridManager {
       }
     }
 
+    if (clearedCellColors.isNotEmpty) _invalidateCache();
+
     return LineClearResult(
       clearedRows: clearedRows,
       clearedCols: clearedCols,
@@ -192,11 +212,13 @@ class GridManager {
         }
       }
     }
+    if (moves.isNotEmpty) _invalidateCache();
     return moves;
   }
 
   void setCell(int row, int col, GelColor? color) {
     _cells[row][col].color = color;
+    _invalidateCache();
   }
 
   /// Hücre türünü ayarla (seviye yükleme için).
@@ -212,10 +234,12 @@ class GridManager {
     _cells[row][col]
       ..type = CellType.stone
       ..color = null;
+    _invalidateCache();
   }
 
   void reset() {
     _initGrid();
+    _invalidateCache();
   }
 
   /// Seviye verisinden ızgarayı yapılandır.
@@ -245,6 +269,7 @@ class GridManager {
         }
       }
     }
+    if (cleared.isNotEmpty) _invalidateCache();
     return cleared;
   }
 
@@ -253,6 +278,7 @@ class GridManager {
     for (final (r, c) in cells) {
       _cells[r][c].clearColor();
     }
+    _invalidateCache();
   }
 
   // ── PvP: Rakipten gelen engel uygulama ──────────────────────────────────
