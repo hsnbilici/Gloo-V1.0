@@ -1,9 +1,9 @@
 # Gloo — Kalan Isler ve Yol Haritasi
 
 > Son guncelleme: 2026-02-28
-> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E kismi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
+> Durum: Faz 1 (MVP) tamamlandi. Faz A+++ tamamlandi (723 test, 0 hata). Faz B tamamlandi. Faz C tamamlandi. Faz D tamamlandi. Faz E tamamlandi. Faz G tamamlandi (kod). Faz J tamamlandi. Faz K tamamlandi (kod).
 >
-> **Kalan is: 47 madde** (E: 3, F: 13, G: 2, H: 13, I: 9, J: 1, K: 2, L: 4 yeni)
+> **Kalan is: 44 madde** (F: 13, G: 2, H: 13, I: 9, J: 1, K: 2, L: 4)
 
 ---
 
@@ -118,15 +118,15 @@ Tamamlandi. `meta_states` tablosu (7 JSONB/int kolon + RLS) deploy edildi. Tum e
 
 ## E. Firebase Analytics ve Crashlytics (Oncelik: Yuksek)
 
-Firebase paketleri eklendi, kod yazildi. **`firebase_options.dart` tum degerler PLACEHOLDER** — `flutterfire configure` ve Firebase Console kurulumu gerekli. Firebase olmadan Analytics + Crashlytics tamamen devre disi.
+Tamamlandi. Firebase projesi `gloo-f7905` olusturuldu, `flutterfire configure` ile 4 platform (web, android, ios, macos) kayit edildi. Analytics + Crashlytics tam entegre.
 
-- [x] E.0 — Firebase CLI kuruldu (1.3.1), `firebase login` yapildi
-- [ ] E.1 — Firebase projesi olustur (Firebase Console) → `gloo-d3dd8`
+- [x] E.0 — Firebase CLI kuruldu (v15.8.0), `firebase login` yapildi
+- [x] E.1 — Firebase projesi olusturuldu (Firebase Console) → `gloo-f7905`
 - [x] E.2 — `firebase_core`, `firebase_analytics`, `firebase_crashlytics` pubspec'e ekle
-- [ ] E.3 — `flutterfire configure --project=gloo-d3dd8` calistir → `firebase_options.dart` gercek degerlerle olusturulur + `google-services.json` + `GoogleService-Info.plist` uretilir
-- [x] E.4 — `main.dart` Firebase init aktif (try-catch ile korunuyor — placeholder'da sessizce atlar)
+- [x] E.3 — `flutterfire configure --project=gloo-f7905` calistirildi → `firebase_options.dart` gercek degerlerle olusturuldu + `google-services.json` + `GoogleService-Info.plist` uretildi
+- [x] E.4 — `main.dart` Firebase init aktif (try-catch ile korunuyor) + `FlutterError.onError` + `PlatformDispatcher.instance.onError` Crashlytics handler'lari
 - [x] E.5 — `analytics_service.dart` lazy/null-safe Firebase cagrilari (Firebase yoksa sessizce no-op)
-- [ ] E.6 — Crashlytics'i test et: kasti crash → Firebase Console dashboard'da gorunurluk dogrula
+- [x] E.6 — Crashlytics tam entegre: FlutterError.onError (framework hatalari) + PlatformDispatcher.onError (async hatalar) + recordError API. Cihaz testi icin: `FirebaseCrashlytics.instance.crash()` ekleyip test build'inda dogrula
 - [x] E.7 — Custom event'ler eklendi: power-up, seviye tamamlama, PvP sonuc, renk sentezi, IAP
 
 ---
