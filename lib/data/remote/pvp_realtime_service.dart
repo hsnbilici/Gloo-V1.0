@@ -5,6 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../game/pvp/matchmaking.dart';
+import 'dto/broadcast_game_over.dart';
+import 'dto/broadcast_obstacle.dart';
+import 'dto/broadcast_score.dart';
 import 'remote_repository.dart';
 import 'supabase_client.dart';
 
@@ -185,13 +188,14 @@ class PvpRealtimeService {
   /// Skor guncelleme broadcast'i.
   Future<void> broadcastScore(String matchId, int score) async {
     if (_duelChannel == null) return;
+    final dto = BroadcastScore(
+      userId: _userId,
+      score: score,
+      timestamp: DateTime.now().toIso8601String(),
+    );
     await _duelChannel!.sendBroadcastMessage(
       event: 'score_update',
-      payload: {
-        'user_id': _userId,
-        'score': score,
-        'timestamp': DateTime.now().toIso8601String(),
-      },
+      payload: dto.toMap(),
     );
   }
 
@@ -201,14 +205,15 @@ class PvpRealtimeService {
     ObstaclePacket packet,
   ) async {
     if (_duelChannel == null) return;
+    final dto = BroadcastObstacle(
+      userId: _userId,
+      type: packet.type.name,
+      count: packet.count,
+      areaSize: packet.areaSize,
+    );
     await _duelChannel!.sendBroadcastMessage(
       event: 'obstacle_sent',
-      payload: {
-        'user_id': _userId,
-        'type': packet.type.name,
-        'count': packet.count,
-        'area_size': packet.areaSize,
-      },
+      payload: dto.toMap(),
     );
 
     // Veritabanina da kaydet
@@ -228,12 +233,10 @@ class PvpRealtimeService {
   /// Oyun bitis broadcast'i.
   Future<void> broadcastGameOver(String matchId, int finalScore) async {
     if (_duelChannel == null) return;
+    final dto = BroadcastGameOver(userId: _userId, score: finalScore);
     await _duelChannel!.sendBroadcastMessage(
       event: 'game_over',
-      payload: {
-        'user_id': _userId,
-        'score': finalScore,
-      },
+      payload: dto.toMap(),
     );
 
     // Veritabanina kaydet
@@ -252,10 +255,9 @@ class PvpRealtimeService {
       event: 'score_update',
       callback: (payload) {
         if (controller.isClosed) return;
-        final senderId = payload['user_id'] as String?;
-        if (senderId != null && senderId != _userId) {
-          final score = payload['score'] as int? ?? 0;
-          controller.add(score);
+        final dto = BroadcastScore.fromMap(payload);
+        if (dto.userId != null && dto.userId != _userId) {
+          controller.add(dto.score);
         }
       },
     );
@@ -272,17 +274,16 @@ class PvpRealtimeService {
       event: 'obstacle_sent',
       callback: (payload) {
         if (controller.isClosed) return;
-        final senderId = payload['user_id'] as String?;
-        if (senderId != null && senderId != _userId) {
-          final typeName = payload['type'] as String? ?? 'ice';
+        final dto = BroadcastObstacle.fromMap(payload);
+        if (dto.userId != null && dto.userId != _userId) {
           final type = ObstacleType.values.firstWhere(
-            (t) => t.name == typeName,
+            (t) => t.name == dto.type,
             orElse: () => ObstacleType.ice,
           );
           controller.add(ObstaclePacket(
             type: type,
-            count: payload['count'] as int? ?? 1,
-            areaSize: payload['area_size'] as int?,
+            count: dto.count,
+            areaSize: dto.areaSize,
           ));
         }
       },
@@ -300,10 +301,9 @@ class PvpRealtimeService {
       event: 'game_over',
       callback: (payload) {
         if (controller.isClosed) return;
-        final senderId = payload['user_id'] as String?;
-        if (senderId != null && senderId != _userId) {
-          final score = payload['score'] as int? ?? 0;
-          controller.add(score);
+        final dto = BroadcastGameOver.fromMap(payload);
+        if (dto.userId != null && dto.userId != _userId) {
+          controller.add(dto.score);
         }
       },
     );

@@ -274,7 +274,7 @@ void main() {
         'mode': 'classic',
         'score': 5000,
         'created_at': '2026-03-01T12:00:00Z',
-        'profiles': {'username': 'TestPlayer'},
+        'username': 'TestPlayer',
       });
       expect(entry.id, 'score_1');
       expect(entry.userId, 'user_1');

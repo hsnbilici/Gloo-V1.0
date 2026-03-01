@@ -30,15 +30,7 @@ class GameOverlay extends ConsumerWidget {
       GameMode.level => 'Seviye',
       GameMode.duel => 'Düello',
     };
-    final modeColor = switch (mode) {
-      GameMode.classic => kColorClassic,
-      GameMode.colorChef => kColorChef,
-      GameMode.timeTrial => kColorTimeTrial,
-      GameMode.zen => kColorZen,
-      GameMode.daily => kCyan,
-      GameMode.level => kColorChef,
-      GameMode.duel => kColorClassic,
-    };
+    final modeColor = kModeColors[mode]!;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

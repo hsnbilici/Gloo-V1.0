@@ -34,15 +34,7 @@ class GameOverOverlay extends ConsumerWidget {
   final bool showSecondChance;
   final VoidCallback? onSecondChance;
 
-  static Color modeColor(GameMode mode) => switch (mode) {
-        GameMode.classic => kColorClassic,
-        GameMode.colorChef => kColorChef,
-        GameMode.timeTrial => kColorTimeTrial,
-        GameMode.zen => kColorZen,
-        GameMode.daily => kCyan,
-        GameMode.level => kColorChef,
-        GameMode.duel => kColorClassic,
-      };
+  static Color modeColor(GameMode mode) => kModeColors[mode]!;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

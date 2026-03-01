@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../shared/section_header.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -73,7 +74,7 @@ class SettingsScreen extends ConsumerWidget {
           ListView(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             children: [
-              _SectionHeader(title: l.settingsSectionAudio, color: kCyan),
+              SectionHeader(title: l.settingsSectionAudio, color: kCyan),
               _ToggleTile(
                 label: l.settingsSfx,
                 icon: Icons.volume_up_rounded,
@@ -88,7 +89,7 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kCyan,
                 onChanged: (_) => notifier.toggleMusic(),
               ),
-              _SectionHeader(
+              SectionHeader(
                   title: l.settingsSectionFeedback, color: kColorZen),
               _ToggleTile(
                 label: l.settingsHaptics,
@@ -97,7 +98,7 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorZen,
                 onChanged: (_) => notifier.toggleHaptics(),
               ),
-              _SectionHeader(
+              SectionHeader(
                   title: l.settingsSectionAccessibility,
                   color: kColorTimeTrial),
               _ToggleTile(
@@ -107,7 +108,7 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorTimeTrial,
                 onChanged: (_) => notifier.toggleColorBlindMode(),
               ),
-              _SectionHeader(
+              SectionHeader(
                   title: l.settingsSectionLanguage, color: _kLangAccent),
               _LanguageTile(
                 label: l.settingsLanguage,
@@ -115,7 +116,7 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: _kLangAccent,
                 onTap: () => _showLanguageSheet(context, ref, currentLocale),
               ),
-              _SectionHeader(
+              SectionHeader(
                   title: l.settingsSectionPrivacy, color: _kPrivacyAccent),
               _ToggleTile(
                 label: l.settingsAnalytics,
@@ -163,7 +164,7 @@ class SettingsScreen extends ConsumerWidget {
                   }
                 },
               ),
-              _SectionHeader(title: l.settingsSectionAbout, color: kMuted),
+              SectionHeader(title: l.settingsSectionAbout, color: kMuted),
               _InfoTile(label: l.settingsVersion, value: '1.0.0'),
               _InfoTile(label: l.settingsDeveloper, value: 'Gloo Studio'),
             ],
@@ -238,51 +239,6 @@ class _SettingsBackground extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// ─── Bölüm başlığı ────────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.color});
-
-  final String title;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 28, bottom: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 3,
-            height: 14,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
-              boxShadow: [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.6),
-                  blurRadius: 6,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2.5,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

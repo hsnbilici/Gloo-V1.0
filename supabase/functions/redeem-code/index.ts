@@ -94,14 +94,6 @@ serve(async (req: Request) => {
       }
     }
 
-    // Max uses asilmis mi?
-    if (codeData.current_uses >= codeData.max_uses) {
-      return new Response(
-        JSON.stringify({ error: 'Code usage limit reached' }),
-        { status: 410, headers: CORS_HEADERS },
-      )
-    }
-
     // ── Per-user kontrol: ayni kullanici ayni kodu tekrar kullanamasin ────
     const { data: existingUsage, error: usageCheckError } = await supabase
       .from('redeem_usages')
@@ -143,15 +135,33 @@ serve(async (req: Request) => {
       )
     }
 
-    const { error: updateError } = await supabase
-      .from('redeem_codes')
-      .update({ current_uses: codeData.current_uses + 1 })
-      .eq('id', codeData.id)
+    // ── Atomik artırma: race condition olmadan current_uses kontrol + artır ──
+    const { data: rpcResult, error: rpcError } = await supabase
+      .rpc('increment_redeem_usage', { p_code_id: codeData.id })
 
-    if (updateError) {
+    if (rpcError) {
+      // Usage zaten insert edildi, geri al
+      await supabase
+        .from('redeem_usages')
+        .delete()
+        .eq('code_id', codeData.id)
+        .eq('user_id', userId)
       return new Response(
         JSON.stringify({ error: 'Failed to update code usage' }),
         { status: 500, headers: CORS_HEADERS },
+      )
+    }
+
+    if (rpcResult === -1) {
+      // Limit aşılmış — usage kaydını da geri al
+      await supabase
+        .from('redeem_usages')
+        .delete()
+        .eq('code_id', codeData.id)
+        .eq('user_id', userId)
+      return new Response(
+        JSON.stringify({ error: 'Code usage limit reached' }),
+        { status: 410, headers: CORS_HEADERS },
       )
     }
 

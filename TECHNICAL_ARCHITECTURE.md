@@ -1,5 +1,5 @@
 # Gloo: Teknik Mimari Belgesi
-## v0.2 — 2026-02-27
+## v0.3 — 2026-03-01
 
 ---
 
@@ -26,7 +26,7 @@
 |  +------------------------------------------------------------+  |
 |                                                                 |
 |  +------------------------------------------------------------+  |
-|  |              Viral Clip Module (Stub)                      |  |
+|  |              Viral Clip Module                             |  |
 |  |    ClipRecorder | VideoProcessor | ShareManager            |  |
 |  +------------------------------------------------------------+  |
 +-----------------------------------------------------------------+
@@ -58,7 +58,7 @@ lib/
 |   |   +-- color_extensions.dart      # Color yardimcilari
 |   +-- l10n/
 |   |   +-- app_strings.dart           # Abstract l10n base
-|   |   +-- strings_{tr,en,de,zh,ja,ko,ru,es,ar}.dart  # 9 dil
+|   |   +-- strings_{tr,en,de,zh,ja,ko,ru,es,ar,fr,hi,pt}.dart  # 12 dil
 |   +-- widgets/
 |       +-- glow_orb.dart              # Animasyonlu isik efekti widget
 |
@@ -81,7 +81,11 @@ lib/
 |   +-- economy/
 |   |   +-- currency_manager.dart      # Jel Ozu (kazanim, harcama, bakiye)
 |   +-- meta/
-|   |   +-- resource_manager.dart      # Ada, karakter, sezon pasi, gorevler
+|   |   +-- resource_manager.dart      # Barrel export (~42 satir)
+|   |   |   +-- island_state.dart          # Ada yonetimi (BuildingType, Building, IslandState)
+|   |   |   +-- character_state.dart       # Karakter/kostum (CostumeSlot, TalentDef, CharacterState)
+|   |   |   +-- season_pass.dart           # Sezon pasi (SeasonRewardType, SeasonTier, SeasonPassState)
+|   |   |   +-- quests.dart                # Gorev sistemi (QuestType, Quest, kDailyQuestPool)
 |   +-- pvp/
 |   |   +-- matchmaking.dart           # ELO, eslestirme, engel uretici
 |   +-- physics/
@@ -90,7 +94,7 @@ lib/
 |
 +-- audio/
 |   +-- audio_manager.dart             # just_audio, 8 kanal SFX havuzu, pitch varyasyonu
-|   +-- haptic_manager.dart            # 6 haptik profil (light-heavy)
+|   +-- haptic_manager.dart            # 13 haptic profil
 |   +-- sound_bank.dart                # Ses onbellek
 |
 +-- viral/
@@ -99,34 +103,50 @@ lib/
 |   +-- share_manager.dart             # share_plus entegrasyonu
 |
 +-- services/
-|   +-- analytics_service.dart         # Firebase Analytics (stub)
+|   +-- analytics_service.dart         # Firebase Analytics (gloo-f7905)
 |   +-- ad_manager.dart                # google_mobile_ads (test ID)
 |   +-- purchase_service.dart          # in_app_purchase (7 urun)
 |
 +-- data/
 |   +-- local/
 |   |   +-- local_repository.dart      # SharedPreferences wrapper
-|   |   +-- isar_schema.dart           # Score, UserProfile veri siniflari (Isar YOK)
+|   |   +-- data_models.dart           # Score, UserProfile veri siniflari
 |   +-- remote/
-|       +-- supabase_client.dart       # Supabase config (placeholder)
-|       +-- remote_repository.dart     # Leaderboard, daily puzzles
+|       +-- supabase_client.dart       # Supabase config (gercek credentials)
+|       +-- remote_repository.dart     # Leaderboard, daily puzzles, PvP, IAP, GDPR, meta-game
+|       +-- pvp_realtime_service.dart  # Supabase Realtime (Presence + Broadcast)
+|       +-- dto/                       # Veri transfer nesneleri
+|           +-- daily_puzzle.dart
+|           +-- leaderboard_entry.dart
+|           +-- meta_state.dart
+|           +-- pvp_match.dart
+|           +-- redeem_result.dart
+|           +-- broadcast_score.dart
+|           +-- broadcast_obstacle.dart
+|           +-- broadcast_game_over.dart
 |
 +-- providers/
 |   +-- game_provider.dart             # GameState, GameNotifier
 |   +-- audio_provider.dart            # Ses/haptik ayarlari
 |   +-- locale_provider.dart           # Dil secimi
+|   +-- pvp_provider.dart             # PvP state (duel, matchmaking)
+|   +-- service_providers.dart        # Singleton service provider'lari
 |   +-- user_provider.dart             # Kullanici profili, ELO
 |
 +-- features/
 |   +-- game_screen/
-|   |   +-- game_screen.dart           # Ana oyun ekrani (~1779 satir)
+|   |   +-- game_screen.dart           # Ana oyun ekrani (~398 satir, 3 mixin ile modular)
+|   |   +-- game_callbacks.dart        # Oyun callback mixin'leri
+|   |   +-- game_interactions.dart     # Kullanici etkilesim mixin'leri
+|   |   +-- game_grid_builder.dart     # Grid widget builder mixin'i
+|   |   +-- game_dialogs.dart          # Oyun icin dialog fonksiyonlari
 |   |   +-- game_overlay.dart          # HUD (skor, timer, Chef progress)
 |   |   +-- game_over_overlay.dart     # Oyun bitti + ikinci sans dialog
 |   |   +-- game_effects.dart          # VFX efektleri (~1185 satir)
 |   |   +-- gel_cell_painter.dart      # 6 katman CustomPainter (141 satir)
 |   |   +-- chef_level_overlay.dart    # Color Chef seviye tamamlama
 |   +-- home_screen/
-|   |   +-- home_screen.dart           # 7 mod karti + meta-game bar (~1011 satir)
+|   |   +-- home_screen.dart           # 7 mod karti + meta-game bar (~329 satir, 8 module)
 |   +-- onboarding/
 |   |   +-- onboarding_screen.dart     # 3 adimli tutorial
 |   +-- daily_puzzle/
@@ -151,12 +171,14 @@ lib/
 |   +-- season_pass/
 |   |   +-- season_pass_screen.dart    # Sezon pasi (50 tier, 467 satir)
 |   +-- quests/
-|       +-- quest_overlay.dart         # Gorev sistemi (gunluk+haftalik, 475 satir)
+|   |   +-- quest_overlay.dart         # Gorev sistemi (gunluk+haftalik, 475 satir)
+|   +-- shared/
+|       +-- section_header.dart       # Ortak SectionHeader widget
 
 assets/
 +-- audio/
-|   +-- sfx/                           # ASMR ses efektleri (.ogg) — bos, uretilecek
-|   +-- music/                         # Arka plan muzigi (.mp3) — bos, uretilecek
+|   +-- sfx/                           # 32 ASMR ses efektleri (.ogg + .m4a)
+|   +-- music/                         # 4 arka plan muzigi (.mp3)
 +-- images/
     +-- gel_textures/                  # Jel doku atlaslari
     +-- ui/                            # UI ikonlar
@@ -332,6 +354,7 @@ Maksimum: 0.95 (asla 1.0 olmaz)
 | `streakProvider` | Gunluk giris serisi |
 | `userProvider` | Auth, profil |
 | `eloProvider` | PvP ELO puani |
+| `duelProvider` | DuelState (matchId, seed, opponentScore, isBot) |
 
 ---
 
@@ -381,13 +404,11 @@ Sira onemli — spesifik rotalar genel `/game/:mode` rotasindan ONCE tanimlanir:
 - Jel Enerjisi (gelEnergy, totalEarnedEnergy)
 - Redeem code verileri: `redeemed_codes` (kullanilmis kodlar), `unlocked_products` (acilmis urun ID'leri)
 
-### Uzak (Supabase — placeholder)
+### Uzak (Supabase)
 - Leaderboard
 - Daily puzzle seed'leri
-- PvP eslestirme (Realtime — henuz entegre degil)
+- PvP eslestirme (Supabase Realtime — Presence + Broadcast)
 - `redeem_codes` tablosu: Promosyon kodlari dogrulama. `RemoteRepository.redeemCode(code)` → Supabase'de kod gecerliligi, `max_uses`/`current_uses` ve `expires_at` kontrolu → basarili ise `product_ids` listesi doner
-
-**Not:** `isar_schema.dart` dosya adi yaniltici — Isar eklenmemistir. Dosya yalnizca `Score` ve `UserProfile` veri siniflarini icerir.
 
 ---
 
@@ -406,9 +427,7 @@ Sira onemli — spesifik rotalar genel `/game/:mode` rotasindan ONCE tanimlanir:
 - `withOpacity()` yerine `withValues(alpha:)` kullanilmali (Flutter 3.41+ deprecation)
 - `SwitchListTile.activeColor` yerine `activeThumbColor` (Flutter 3.31+)
 - Proje yolunda non-ASCII karakter varsa `impellerc` hatasi — ASCII-safe yola kopyalanarak build edilmeli (detay: CLAUDE.md)
-- Ses dosyalari (OGG/MP3) henuz uretilmedi — AudioManager bulamazsa sessizce atlar
-- Supabase anahtarlari sahte (placeholder)
-- AnalyticsService no-op stub
+- Ses dosyalari: 32 SFX (.ogg + .m4a) + 4 muzik (.mp3) uretildi
 
 ---
 

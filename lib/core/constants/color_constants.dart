@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../game/world/game_world.dart';
+
 enum GelColor {
   red,
   yellow,
@@ -101,3 +103,17 @@ const Color kColorClassic = Color(0xFFFF4D6D);
 const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
 const Color kColorZen = Color(0xFF9D5CFF);
+
+// ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
+// Tek tanım noktası: game_overlay, game_over_overlay, game_screen bu map'i
+// kullanır; lokal modeColor tanımı yapılmaz.
+
+const Map<GameMode, Color> kModeColors = {
+  GameMode.classic: kColorClassic,
+  GameMode.colorChef: kColorChef,
+  GameMode.timeTrial: kColorTimeTrial,
+  GameMode.zen: kColorZen,
+  GameMode.daily: kCyan,
+  GameMode.level: kColorChef,
+  GameMode.duel: kColorClassic,
+};

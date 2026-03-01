@@ -192,11 +192,12 @@ class MatchmakingManager {
     return eloDiff <= maxRange;
   }
 
-  /// Bot eslestirme icin client-side seed uretir.
+  /// Bot eslestirme icin guvenli rastgele seed uretir.
   /// Gercek PvP maclarda seed sunucu tarafinda uretilir (DB DEFAULT).
   static int generateBotMatchSeed() {
-    final now = DateTime.now();
-    return now.microsecondsSinceEpoch;
+    final rng = Random.secure();
+    // 32-bit guvenli random (Dart int 64-bit, ama seed olarak yeterli)
+    return rng.nextInt(1 << 32);
   }
 
   /// Bot zorluk seviyesi (ELO bazlı).

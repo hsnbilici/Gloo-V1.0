@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
+import '../shared/section_header.dart';
 import '../../data/remote/dto/redeem_result.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -178,7 +179,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
             children: [
               // ── Gloo+ Abonelik ────────────────────────────────────────
-              _SectionHeader(title: l.shopSectionSubscription, color: _kGold),
+              SectionHeader(title: l.shopSectionSubscription, color: _kGold),
               _GlooPlusCard(
                 title: l.glooPlusTitle,
                 desc: l.glooPlusDesc,
@@ -199,7 +200,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Reklamsız ─────────────────────────────────────────────
-              _SectionHeader(title: l.shopSectionRemoveAds, color: _kCoral),
+              SectionHeader(title: l.shopSectionRemoveAds, color: _kCoral),
               _ProductTile(
                 icon: Icons.block_rounded,
                 label: l.shopRemoveAds,
@@ -215,7 +216,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Ses Paketleri ─────────────────────────────────────────
-              _SectionHeader(title: l.shopSectionSoundPacks, color: kCyan),
+              SectionHeader(title: l.shopSectionSoundPacks, color: kCyan),
               _ProductTile(
                 icon: Icons.graphic_eq_rounded,
                 label: l.shopSoundCrystal,
@@ -244,7 +245,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Doku Paketleri ────────────────────────────────────────
-              _SectionHeader(title: l.shopSectionTexturePacks, color: _kViolet),
+              SectionHeader(title: l.shopSectionTexturePacks, color: _kViolet),
               _ProductTile(
                 icon: Icons.texture_rounded,
                 label: l.shopTexturePack,
@@ -278,7 +279,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
               const SizedBox(height: 20),
 
               // ── Redeem Code ─────────────────────────────────────────
-              _SectionHeader(title: l.redeemCodeTitle, color: kCyan),
+              SectionHeader(title: l.redeemCodeTitle, color: kCyan),
               _RedeemCodeField(
                 controller: _redeemController,
                 buttonLabel: l.redeemCodeButton,
@@ -346,50 +347,6 @@ class _ShopBackground extends StatelessWidget {
           child: GlowOrb(size: 260, color: _kViolet, opacity: 0.07),
         ),
       ],
-    );
-  }
-}
-
-// ─── Bölüm başlığı ───────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title, required this.color});
-
-  final String title;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 28, bottom: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 3,
-            height: 14,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
-              boxShadow: [
-                BoxShadow(
-                    color: color.withValues(alpha: 0.6),
-                    blurRadius: 6,
-                    spreadRadius: 1),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2.5,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

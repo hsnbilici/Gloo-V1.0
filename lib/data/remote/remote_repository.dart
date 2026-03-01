@@ -57,8 +57,8 @@ class RemoteRepository {
     if (!isConfigured) return [];
     try {
       var query = _client
-          .from('scores')
-          .select('id, user_id, mode, score, created_at, profiles(username)')
+          .from('leaderboard_view')
+          .select('id, user_id, mode, score, created_at, username')
           .eq('mode', mode);
 
       if (weekly) {
@@ -399,23 +399,32 @@ class RemoteRepository {
 
   // ── GDPR: Uzak Veri Silme ───────────────────────────────────────────────
 
-  /// Kullaniciya ait tum uzak verileri siler (GDPR Right to Erasure).
+  /// Kullaniciya ait tum uzak verileri + auth.users satirini siler (GDPR Article 17).
+  /// Edge Function uzerinden:
+  ///   1. delete_user_data RPC (uygulama tablolari — transaction)
+  ///   2. auth.admin.deleteUser (auth.users satiri — email/phone)
   /// Basarili silme → `true`, hata veya yapilandirma eksikse → `false`.
   Future<bool> deleteUserData() async {
     if (!isConfigured) return false;
     final uid = _userId;
     if (uid == null) return false;
     try {
-      // FK bagimliliklari nedeniyle redeem_usages ve pvp_matches once silinmeli.
-      await _client.from('redeem_usages').delete().eq('user_id', uid);
-      await _client.from('pvp_matches').delete().eq('player1_id', uid);
-      await _client.from('pvp_matches').delete().eq('player2_id', uid);
-      await _client.from('meta_states').delete().eq('user_id', uid);
-      await _client.from('scores').delete().eq('user_id', uid);
-      await _client.from('daily_tasks').delete().eq('user_id', uid);
-      await _client.from('pvp_obstacles').delete().eq('sender_id', uid);
-      await _client.from('profiles').delete().eq('id', uid);
-      if (kDebugMode) debugPrint('RemoteRepository.deleteUserData: all data deleted for $uid');
+      final response = await _client.functions.invoke('delete-user');
+
+      if (response.status != 200) {
+        if (kDebugMode) {
+          debugPrint(
+            'RemoteRepository.deleteUserData: Edge Function error ${response.status}',
+          );
+        }
+        return false;
+      }
+
+      if (kDebugMode) {
+        debugPrint(
+          'RemoteRepository.deleteUserData: all data + auth deleted for $uid',
+        );
+      }
       return true;
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.deleteUserData error: $e');

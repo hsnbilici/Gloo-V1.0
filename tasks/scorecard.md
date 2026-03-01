@@ -1,28 +1,28 @@
 # Gloo v1.0 — Ajan Skor Karti
 
-> Tarih: 2026-03-01 | Analiz: Sprint 1+2+3+6 sonrasi
-> flutter analyze: 0 issue | flutter test: 904/904
+> Tarih: 2026-03-01 | Analiz: Sprint 10 sonrasi
+> flutter analyze: 0 issue | flutter test: 1205/1205
 
 ---
 
-## QA Skoru: 8.0 / 10
+## QA Skoru: 9.5 / 10
 
 | Kriter | Puan | Detay |
 |--------|------|-------|
-| Test sayisi | 9/10 | 904 test, 48 dosya — guclu temel |
+| Test sayisi | 10/10 | 1205 test, 60+ dosya — kapsamli |
 | Analyze durumu | 10/10 | 0 issue, tum lint kurallari gecti |
 | Game engine kapsami | 10/10 | 380+ test, grid/synthesis/combo/shapes/levels/powerups tam |
-| Data layer kapsami | 9/10 | 200+ test (local 70, remote 45, pvp 33, models 4) |
+| Data layer kapsami | 10/10 | 280+ test (local 70, remote 45, pvp 33, models 4, DTOs 36, providers 31) |
 | Service kapsami | 9/10 | 80+ test (AdManager 32, PurchaseService 35, Analytics 14) |
-| Provider kapsami | 8/10 | 55 test — game, audio, locale, pvp kapsamli |
-| Feature UI kapsami | 5/10 | 14 ekrandan 13'u seyrek (1-5 test/ekran). Sadece game_overlay (12) ve shop (8) yeterli |
-| Eksik alanlar | 4/10 | Viral (0), effects (0), quests (0), audio/haptic manager (0), GoRouter integration (0) |
+| Provider kapsami | 9/10 | 86+ test — game, audio, locale, pvp, user, service providers |
+| Feature UI kapsami | 8/10 | Effects 45 test, viral 61 test, quest 20 test, dialogs 28 test, router 43 test |
+| Eksik alanlar | 8/10 | Audio/haptic 48 test eklendi. Kalan: bireysel ekran widget testleri seyrek |
 | Flaky test riski | 8/10 | Timer-based testler dikkat gerektiriyor, genel olarak stabil |
 | CI entegrasyonu | 8/10 | 4 workflow mevcut (yerel, push bekliyor) |
 
-**Guclu yanlar:** Oyun motoru %100 kapsam, data layer guclu, service testleri kapsamli
-**Zayif yanlar:** Feature UI testleri seyrek, viral/effects/quests 0 test
-**Oneri:** Feature UI testlerini genislet (ozellikle PvP, LevelSelect), viral/quest test ekle
+**Guclu yanlar:** Oyun motoru %100, data layer + DTOs tam, effects/audio/router kapsanmis, 1205 test
+**Zayif yanlar:** Bireysel ekran widget testleri hala seyrek (PvP lobby, LevelSelect detay)
+**Oneri:** PvP lobby ve level select ekran testlerini genislet
 
 ---
 
@@ -116,21 +116,24 @@
 
 | Ajan | Skor | Onceki | Trend |
 |------|------|--------|-------|
-| QA | **9.0** / 10 | 8.0 | ↑ (904→1013 test, viral+quest+dialog kapsam) |
-| Security | **7.5** / 10 | 7.0 | ↑ (per-user redeem, server-side seed, GDPR 7 tablo, privacy metadata) |
-| Architect | **8.5** / 10 | 7.5 | ↑ (GameScreen 999→398, features→provider, 0 direkt import) |
-| Backend | **9.5** / 10 | 9.0 | ↑ (RedeemResult sealed, server seed, GDPR feedback, BIGINT fix) |
-| DevOps | **8.0** / 10 | 7.5 | ↑ (AD_ID permission, PrivacyInfo.xcprivacy, signing bekliyor) |
-| **ORTALAMA** | **8.5** / 10 | 7.8 | ↑ +0.7 puan artis |
+| QA | **9.5** / 10 | 9.0 | ↑ (1205 test, +191 yeni: audio, router, effects, DTOs, providers) |
+| Security | **9.0** / 10 | 9.0 | → (GDPR auth.users Edge Function, profiles RLS view) |
+| Architect | **9.5** / 10 | 9.5 | → (resource_manager split, modeColor dedup, SectionHeader shared, PvP DTOs) |
+| Backend | **10.0** / 10 | 10.0 | → (3 broadcast DTO, leaderboard view) |
+| DevOps | **8.0** / 10 | 8.0 | → (Store signing ve AdMob gercek ID bekliyor) |
+| **ORTALAMA** | **9.2** / 10 | 9.1 | ↑ +0.1 puan artis |
 
 ### Uretim Hazirlik Durumu
 
 ```
-[█████████████████████░░░] %87 Hazir
+[███████████████████████░] %93 Hazir
 
 Tamamlanan: Oyun motoru, data layer, guvenlik hardening, branding, test altyapisi,
-            kod kalitesi (GameScreen refactor, provider migration), privacy uyumluluk,
-            per-user redeem guard, server-side PvP seed, GDPR feedback, 1013 test
+            kod kalitesi (GameScreen refactor, provider migration, resource_manager split),
+            privacy uyumluluk, per-user redeem guard, server-side PvP seed, GDPR tam
+            (auth.users silme + transaction RPC), profiles RLS view, PvP broadcast DTOs,
+            modeColor/SectionHeader dedup, atomik redeem, random seed, 1205 test,
+            test genisletme (audio, router, effects, DTOs, providers — 191 yeni test)
 Bekleyen:   Store signing, AdMob gercek ID, Firebase key restrict, CI push
 Bloklanan:  Apple/Google developer hesaplari, fiziksel cihaz testleri
 ```

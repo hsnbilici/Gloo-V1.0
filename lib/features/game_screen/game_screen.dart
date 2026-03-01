@@ -138,15 +138,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   Timer? waveClearTimer;
 
   // ─── Mod rengi ─────────────────────────────────────────────────────
-  Color get _modeColor => switch (widget.mode) {
-        GameMode.classic => kColorClassic,
-        GameMode.colorChef => kColorChef,
-        GameMode.timeTrial => kColorTimeTrial,
-        GameMode.zen => kColorZen,
-        GameMode.daily => kCyan,
-        GameMode.level => const Color(0xFFFF8C42),
-        GameMode.duel => const Color(0xFFFF4D6D),
-      };
+  Color get _modeColor => kModeColors[widget.mode]!;
 
   // ─── Loss Aversion badge'leri ──────────────────────────────────────
   @override

@@ -1,5 +1,5 @@
 # Gloo: ASMR Jel Puzzle
-**Durum:** Beta / Aktif Gelistirme
+**Durum:** Beta / Uretime Hazirlik (%93)
 **Platform:** Android + iOS + Web (Flutter 3.41.2)
 
 ---
@@ -24,7 +24,7 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 - 7 oyun modu: Classic, Color Chef, Time Trial, Zen, Daily Puzzle, Level, PvP Duel
 - Otomatik near-miss tespiti (Shannon entropy) ve loss aversion mekaniklari
 - 7 VFX protokolu: breathing gel, squash & stretch, cascade burst, chain lightning, danger pulse, color bloom, ambient atmosphere
-- 9 dil destegi (TR, EN, DE, ZH, JA, KO, RU, ES, AR)
+- 12 dil destegi (TR, EN, DE, ZH, JA, KO, RU, ES, AR, FR, HI, PT)
 
 ---
 
@@ -44,7 +44,7 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 - 5 harita formu: rectangle, diamond, cross, L-shape, corridor
 - Color Chef: 50 hedef renk sentezi seviyesi
 
-### Meta-Game (UI yazildi — backend bekliyor)
+### Meta-Game
 - Ada yonetimi (5 bina, yukseltme sistemi)
 - Karakter/kostum sistemi (yetenek agaci)
 - Sezon pasi (8 hafta, 50 tier)
@@ -60,7 +60,7 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 - AmbientGelDroplets: 10 yuzucu damlacik, mod bazli renk
 - NearMiss vignette: Radyal gradient tehlike overlay'i
 
-### Monetizasyon (kismi)
+### Monetizasyon
 - AdMob: Interstitial, rewarded (ikinci sans), banner (test ID'leri aktif)
 - IAP: 7 urun tanimli (kRemoveAds, kSoundCrystal, kSoundForest, kTexturePack, kStarterPack, kGlooPlusMonthly, kGlooPlusYearly)
 - Gloo+ abonelik: Zen modu kilidi, +%50 Jel Ozu bonus
@@ -78,7 +78,7 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 | Animasyon | flutter_animate 4.5 + CustomPainter |
 | Ses | just_audio 0.9 (8 kanal SFX havuzu, pitch varyasyonu) |
 | Yerel Depolama | SharedPreferences |
-| Backend | Supabase (placeholder — entegrasyon bekliyor) |
+| Backend | Supabase (8 tablo, 22 RLS, 3 RPC, 3 Edge Function, Realtime PvP) |
 | Monetizasyon | google_mobile_ads + in_app_purchase |
 | Oyun Motoru | Saf Dart (GlooGame orkestrator — Flame KULLANILMIYOR) |
 
@@ -86,8 +86,9 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 
 ## Proje Istatistikleri
 
-- ~74 Dart dosyasi
-- ~19,000+ satir kod
+- ~90+ Dart dosyasi
+- ~22,000+ satir kod
+- 1205 birim test, 60+ test dosyasi, 0 hata
 - 14 feature dizini (game_screen, home_screen, onboarding, daily_puzzle, settings, leaderboard, shop, collection, level_select, pvp, island, character, season_pass, quests)
 
 ---
@@ -100,6 +101,18 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 | Faz 2 — Viral | Tamamlandi (near-miss, ClipRecorder + FFmpeg video pipeline, ShareManager) |
 | Faz 3 — Monetizasyon | Tamamlandi (AdMob test, IAP tanimli, Gloo+ enum) |
 | Faz 4 — Hybrid-Casual | Tamamlandi (14 ekran + 7 VFX + Supabase backend + PvP Realtime + CI/CD) |
+| Sprint 1-3 | Tamamlandi (guvenlik hardening, backend kalite, gorsel branding) |
+| Sprint 6-7 | Tamamlandi (home refactor, GameScreen refactor, provider migration, 290 test) |
+| Sprint 8-10 | Tamamlandi (guvenlik fix, mimari polish, test genisletme — toplam 1205 test) |
+
+---
+
+## Test
+
+```bash
+flutter test    # 1205 test, 0 hata
+flutter analyze # 0 issue
+```
 
 ---
 

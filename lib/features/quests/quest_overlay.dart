@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../shared/section_header.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
@@ -166,10 +167,11 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         children: [
                           // Gunluk gorevler
-                          const _SectionHeader(
-                            label: 'GUNLUK',
+                          const SectionHeader(
+                            title: 'GUNLUK',
                             color: _kDaily,
                             icon: Icons.today_rounded,
+                            showDivider: true,
                           ).animate(delay: 50.ms).fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeDailies.asMap().entries.map((e) {
@@ -184,10 +186,11 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                           }),
                           const SizedBox(height: 20),
                           // Haftalik gorevler
-                          const _SectionHeader(
-                            label: 'HAFTALIK',
+                          const SectionHeader(
+                            title: 'HAFTALIK',
                             color: _kWeekly,
                             icon: Icons.date_range_rounded,
+                            showDivider: true,
                           ).animate(delay: 250.ms).fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeWeeklies.asMap().entries.map((e) {
@@ -211,46 +214,6 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
           ),
         );
       },
-    );
-  }
-}
-
-// ─── Bolum Basligi ───────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.label,
-    required this.color,
-    required this.icon,
-  });
-
-  final String label;
-  final Color color;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 16),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: TextStyle(
-            color: color,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 2,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: color.withValues(alpha: 0.15),
-          ),
-        ),
-      ],
     );
   }
 }

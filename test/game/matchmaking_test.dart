@@ -306,9 +306,16 @@ void main() {
       });
     });
 
-    test('generateBotMatchSeed returns non-zero', () {
+    test('generateBotMatchSeed returns value in 32-bit range', () {
       final seed = MatchmakingManager.generateBotMatchSeed();
-      expect(seed, isNonZero);
+      expect(seed, greaterThanOrEqualTo(0));
+      expect(seed, lessThan(1 << 32));
+    });
+
+    test('generateBotMatchSeed returns different values', () {
+      final seeds = List.generate(10, (_) => MatchmakingManager.generateBotMatchSeed());
+      // Secure random ile 10 cagri arasinda en az 2 farkli deger olmali
+      expect(seeds.toSet().length, greaterThan(1));
     });
 
     group('botDifficulty', () {

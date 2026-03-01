@@ -172,12 +172,13 @@ void main() {
   // ── Bot fallback mantigi (MatchmakingManager uzerinden) ─────────────
 
   group('bot fallback logic (via MatchmakingManager)', () {
-    test('generateBotMatchSeed returns unique values', () {
+    test('generateBotMatchSeed returns secure random values', () {
       final seed1 = MatchmakingManager.generateBotMatchSeed();
       final seed2 = MatchmakingManager.generateBotMatchSeed();
-      // Zaman bazli oldugu icin farkli olmali (ayni microsecond'da degilse)
       expect(seed1, isA<int>());
       expect(seed2, isA<int>());
+      expect(seed1, greaterThanOrEqualTo(0));
+      expect(seed1, lessThan(1 << 32));
     });
 
     test('botDifficulty scales with ELO', () {
