@@ -95,11 +95,13 @@ void main() {
     });
 
     test('red + yellow = orange', () {
-      expect(kColorMixingTable[(GelColor.red, GelColor.yellow)], GelColor.orange);
+      expect(
+          kColorMixingTable[(GelColor.red, GelColor.yellow)], GelColor.orange);
     });
 
     test('yellow + blue = green', () {
-      expect(kColorMixingTable[(GelColor.yellow, GelColor.blue)], GelColor.green);
+      expect(
+          kColorMixingTable[(GelColor.yellow, GelColor.blue)], GelColor.green);
     });
 
     test('red + blue = purple', () {
@@ -107,7 +109,8 @@ void main() {
     });
 
     test('orange + blue = brown', () {
-      expect(kColorMixingTable[(GelColor.orange, GelColor.blue)], GelColor.brown);
+      expect(
+          kColorMixingTable[(GelColor.orange, GelColor.blue)], GelColor.brown);
     });
 
     test('red + white = pink', () {
@@ -115,15 +118,18 @@ void main() {
     });
 
     test('blue + white = lightBlue', () {
-      expect(kColorMixingTable[(GelColor.blue, GelColor.white)], GelColor.lightBlue);
+      expect(kColorMixingTable[(GelColor.blue, GelColor.white)],
+          GelColor.lightBlue);
     });
 
     test('green + yellow = lime', () {
-      expect(kColorMixingTable[(GelColor.green, GelColor.yellow)], GelColor.lime);
+      expect(
+          kColorMixingTable[(GelColor.green, GelColor.yellow)], GelColor.lime);
     });
 
     test('purple + orange = maroon', () {
-      expect(kColorMixingTable[(GelColor.purple, GelColor.orange)], GelColor.maroon);
+      expect(kColorMixingTable[(GelColor.purple, GelColor.orange)],
+          GelColor.maroon);
     });
 
     test('all results are non-primary synthesized colors', () {

@@ -41,11 +41,11 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
     final label = switch (widget.combo.tier) {
-      ComboTier.small  => l.comboSmall,
+      ComboTier.small => l.comboSmall,
       ComboTier.medium => l.comboMedium,
-      ComboTier.large  => l.comboLarge,
-      ComboTier.epic   => l.comboEpic,
-      ComboTier.none   => '',
+      ComboTier.large => l.comboLarge,
+      ComboTier.epic => l.comboEpic,
+      ComboTier.none => '',
     };
     final color = _tierColor(widget.combo.tier);
 
@@ -61,7 +61,9 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
                 fontSize: 36,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 3,
-                shadows: [Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)],
+                shadows: [
+                  Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)
+                ],
               ),
             )
                 .animate()
@@ -85,7 +87,11 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
               ),
             )
                 .animate()
-                .slideY(begin: 0.8, end: 0, duration: 350.ms, curve: Curves.easeOutCubic)
+                .slideY(
+                    begin: 0.8,
+                    end: 0,
+                    duration: 350.ms,
+                    curve: Curves.easeOutCubic)
                 .fadeIn(duration: 200.ms)
                 .then(delay: 750.ms)
                 .fadeOut(duration: 400.ms),
@@ -96,11 +102,11 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
   }
 
   Color _tierColor(ComboTier tier) => switch (tier) {
-        ComboTier.small  => const Color(0xFF3CFF8B),
+        ComboTier.small => const Color(0xFF3CFF8B),
         ComboTier.medium => const Color(0xFFFFE03C),
-        ComboTier.large  => const Color(0xFFFF7B3C),
-        ComboTier.epic   => const Color(0xFFFF3B3B),
-        ComboTier.none   => Colors.transparent,
+        ComboTier.large => const Color(0xFFFF7B3C),
+        ComboTier.epic => const Color(0xFFFF3B3B),
+        ComboTier.none => Colors.transparent,
       };
 }
 
@@ -164,7 +170,8 @@ class _PlaceFeedbackEffectState extends State<PlaceFeedbackEffect> {
 /// Near-miss tespit edildiginde ekran kenarlarini kirmizi/turuncu titresimle
 /// uyaran ve ortada metin gosteren overlay efekti.
 class NearMissEffect extends ConsumerStatefulWidget {
-  const NearMissEffect({super.key, required this.event, required this.onDismiss});
+  const NearMissEffect(
+      {super.key, required this.event, required this.onDismiss});
 
   final NearMissEvent event;
   final VoidCallback onDismiss;
@@ -186,7 +193,8 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
       vsync: this,
       duration: const Duration(milliseconds: 480),
     )..repeat(reverse: true);
-    _pulseAnim = CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut);
+    _pulseAnim =
+        CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut);
 
     _dismissTimer = Timer(const Duration(milliseconds: 2000), () {
       if (mounted) widget.onDismiss();
@@ -204,7 +212,8 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
     final isCritical = widget.event.isCritical;
-    final color = isCritical ? const Color(0xFFFF3B3B) : const Color(0xFFFF7B3C);
+    final color =
+        isCritical ? const Color(0xFFFF3B3B) : const Color(0xFFFF7B3C);
     final label = isCritical ? l.nearMissCritical : l.nearMissStandard;
 
     return IgnorePointer(
@@ -241,7 +250,9 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
                 fontSize: isCritical ? 30 : 24,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 5,
-                shadows: [Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)],
+                shadows: [
+                  Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)
+                ],
               ),
             )
                 .animate()

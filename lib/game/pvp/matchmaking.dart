@@ -2,28 +2,28 @@ import 'dart:math';
 
 /// ELO ligleri.
 enum EloLeague {
-  bronze,     // 0-999
-  silver,     // 1000-1499
-  gold,       // 1500-1999
-  diamond,    // 2000-2499
+  bronze, // 0-999
+  silver, // 1000-1499
+  gold, // 1500-1999
+  diamond, // 2000-2499
   glooMaster, // 2500+
 }
 
 /// ELO lig bilgisi.
 extension EloLeagueInfo on EloLeague {
   String get displayName => switch (this) {
-        EloLeague.bronze     => 'Bronz',
-        EloLeague.silver     => 'Gümüş',
-        EloLeague.gold       => 'Altın',
-        EloLeague.diamond    => 'Elmas',
+        EloLeague.bronze => 'Bronz',
+        EloLeague.silver => 'Gümüş',
+        EloLeague.gold => 'Altın',
+        EloLeague.diamond => 'Elmas',
         EloLeague.glooMaster => 'Gloo Master',
       };
 
   int get minElo => switch (this) {
-        EloLeague.bronze     => 0,
-        EloLeague.silver     => 1000,
-        EloLeague.gold       => 1500,
-        EloLeague.diamond    => 2000,
+        EloLeague.bronze => 0,
+        EloLeague.silver => 1000,
+        EloLeague.gold => 1500,
+        EloLeague.diamond => 2000,
         EloLeague.glooMaster => 2500,
       };
 
@@ -104,7 +104,7 @@ class EloSystem {
   }) {
     final expected = 1.0 / (1.0 + pow(10, (opponentElo - playerElo) / 400));
     final actual = switch (outcome) {
-      DuelOutcome.win  => 1.0,
+      DuelOutcome.win => 1.0,
       DuelOutcome.loss => 0.0,
       DuelOutcome.draw => 0.5,
     };
@@ -113,7 +113,7 @@ class EloSystem {
 
   /// Ödül hesapla.
   static int calculateGelReward(DuelOutcome outcome) => switch (outcome) {
-        DuelOutcome.win  => 10,
+        DuelOutcome.win => 10,
         DuelOutcome.loss => 3,
         DuelOutcome.draw => 5,
       };
@@ -121,9 +121,9 @@ class EloSystem {
 
 /// PvP engel türleri.
 enum ObstacleType {
-  ice,    // Buz hücresi
+  ice, // Buz hücresi
   locked, // Kilitli hücre
-  stone,  // Taş engel
+  stone, // Taş engel
 }
 
 /// Rakibe gönderilen engel paketi.
@@ -136,6 +136,7 @@ class ObstaclePacket {
 
   final ObstacleType type;
   final int count;
+
   /// Buz alanı için boyut (epic kombo: 3×3).
   final int? areaSize;
 }
@@ -225,8 +226,6 @@ class AsyncDuelState {
   DuelOutcome? get outcome {
     if (!isComplete) return null;
     if (playerScore == opponentScore) return DuelOutcome.draw;
-    return playerScore! > opponentScore!
-        ? DuelOutcome.win
-        : DuelOutcome.loss;
+    return playerScore! > opponentScore! ? DuelOutcome.win : DuelOutcome.loss;
   }
 }

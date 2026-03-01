@@ -34,9 +34,7 @@ class HintToast extends StatelessWidget {
           ),
         ),
       ),
-    )
-        .animate()
-        .fadeIn(duration: 120.ms)
-        .slideY(begin: 0.3, end: 0, duration: 200.ms, curve: Curves.easeOutCubic);
+    ).animate().fadeIn(duration: 120.ms).slideY(
+        begin: 0.3, end: 0, duration: 200.ms, curve: Curves.easeOutCubic);
   }
 }

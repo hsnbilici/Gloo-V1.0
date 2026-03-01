@@ -71,8 +71,10 @@ class GameNotifier extends StateNotifier<GameState> {
       : super(GameState(score: 0, status: GameStatus.idle, mode: mode));
 
   void updateScore(int newScore) => state = state.copyWith(score: newScore);
-  void updateFill(int filledCells) => state = state.copyWith(filledCells: filledCells);
-  void updateStatus(GameStatus status) => state = state.copyWith(status: status);
+  void updateFill(int filledCells) =>
+      state = state.copyWith(filledCells: filledCells);
+  void updateStatus(GameStatus status) =>
+      state = state.copyWith(status: status);
   void updateRemainingSeconds(int seconds) =>
       state = state.copyWith(remainingSeconds: seconds);
 
@@ -82,13 +84,15 @@ class GameNotifier extends StateNotifier<GameState> {
   // Faz 4
   void updateGelOzu(int value) => state = state.copyWith(gelOzu: value);
   void updateMovesUsed(int value) => state = state.copyWith(movesUsed: value);
-  void updateLevel(int level, int targetScore) =>
-      state = state.copyWith(currentLevel: level, levelTargetScore: targetScore);
+  void updateLevel(int level, int targetScore) => state =
+      state.copyWith(currentLevel: level, levelTargetScore: targetScore);
   void updateElo(int value) => state = state.copyWith(elo: value);
 
-  void reset() => state = GameState(score: 0, status: GameStatus.idle, mode: state.mode);
+  void reset() =>
+      state = GameState(score: 0, status: GameStatus.idle, mode: state.mode);
 }
 
-final gameProvider = StateNotifierProvider.family<GameNotifier, GameState, GameMode>(
+final gameProvider =
+    StateNotifierProvider.family<GameNotifier, GameState, GameMode>(
   (ref, mode) => GameNotifier(mode),
 );

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -33,9 +33,11 @@ class CollectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = ref.watch(stringsProvider);
     final repoAsync = ref.watch(localRepositoryProvider);
-    final discovered = repoAsync.valueOrNull?.getDiscoveredColors() ?? <String>{};
+    final discovered =
+        repoAsync.valueOrNull?.getDiscoveredColors() ?? <String>{};
     final total = _kCollectibleColors.length;
-    final found = _kCollectibleColors.where((c) => discovered.contains(c.name)).length;
+    final found =
+        _kCollectibleColors.where((c) => discovered.contains(c.name)).length;
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -55,9 +57,11 @@ class CollectionScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 18),
+                child: const Icon(Icons.arrow_back_rounded,
+                    color: Colors.white, size: 18),
               ),
             ),
           ),
@@ -76,7 +80,8 @@ class CollectionScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 20),
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: kCyan.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
@@ -105,7 +110,8 @@ class CollectionScreen extends ConsumerWidget {
                     child: Text(
                       l.collectionEmpty,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(color: kMuted, fontSize: 14, height: 1.5),
+                      style: const TextStyle(
+                          color: kMuted, fontSize: 14, height: 1.5),
                     ),
                   ),
                 )
@@ -131,7 +137,10 @@ class CollectionScreen extends ConsumerWidget {
                       discoveredLabel: l.collectionDiscovered,
                       lockedLabel: l.collectionLocked,
                       recipe: recipe,
-                    ).animate(delay: (60 * index).ms).fadeIn(duration: 350.ms).scale(
+                    )
+                        .animate(delay: (60 * index).ms)
+                        .fadeIn(duration: 350.ms)
+                        .scale(
                           begin: const Offset(0.92, 0.92),
                           duration: 350.ms,
                           curve: Curves.easeOutCubic,
@@ -231,7 +240,8 @@ class _ColorCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isDiscovered ? color : Colors.white.withValues(alpha: 0.06),
+              color:
+                  isDiscovered ? color : Colors.white.withValues(alpha: 0.06),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isDiscovered
@@ -241,8 +251,12 @@ class _ColorCard extends StatelessWidget {
               ),
               boxShadow: isDiscovered
                   ? [
-                      BoxShadow(color: color.withValues(alpha: 0.40), blurRadius: 16),
-                      BoxShadow(color: color.withValues(alpha: 0.15), blurRadius: 30, spreadRadius: 4),
+                      BoxShadow(
+                          color: color.withValues(alpha: 0.40), blurRadius: 16),
+                      BoxShadow(
+                          color: color.withValues(alpha: 0.15),
+                          blurRadius: 30,
+                          spreadRadius: 4),
                     ]
                   : null,
             ),
@@ -269,7 +283,8 @@ class _ColorCard extends StatelessWidget {
                 _MiniColorDot(color: recipe!.$1.displayColor),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: Text('+', style: TextStyle(color: kMuted, fontSize: 10)),
+                  child:
+                      Text('+', style: TextStyle(color: kMuted, fontSize: 10)),
                 ),
                 _MiniColorDot(color: recipe!.$2.displayColor),
               ],

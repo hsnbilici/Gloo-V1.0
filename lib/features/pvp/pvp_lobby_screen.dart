@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/remote/pvp_realtime_service.dart';
 import '../../data/remote/supabase_client.dart';
 import '../../game/pvp/matchmaking.dart';
@@ -180,10 +180,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                         _LeagueBadge(
                           elo: _playerElo,
                           league: _league,
-                        )
-                            .animate(delay: 100.ms)
-                            .fadeIn(duration: 400.ms)
-                            .scale(
+                        ).animate(delay: 100.ms).fadeIn(duration: 400.ms).scale(
                               begin: const Offset(0.8, 0.8),
                               duration: 400.ms,
                               curve: Curves.easeOutBack,
@@ -229,7 +226,8 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _StatChip(label: 'Galibiyet', value: '$wins', color: const Color(0xFF3CFF8B)),
+        _StatChip(
+            label: 'Galibiyet', value: '$wins', color: const Color(0xFF3CFF8B)),
         const SizedBox(width: 12),
         _StatChip(label: 'Maglubiyet', value: '$losses', color: _kAccent),
         const SizedBox(width: 12),
@@ -241,9 +239,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
           color: _kGold,
         ),
       ],
-    )
-        .animate(delay: 200.ms)
-        .fadeIn(duration: 350.ms);
+    ).animate(delay: 200.ms).fadeIn(duration: 350.ms);
   }
 }
 
@@ -256,18 +252,18 @@ class _LeagueBadge extends StatelessWidget {
   final EloLeague league;
 
   Color get _leagueColor => switch (league) {
-        EloLeague.bronze     => const Color(0xFFCD7F32),
-        EloLeague.silver     => const Color(0xFFC0C0C0),
-        EloLeague.gold       => const Color(0xFFFFD700),
-        EloLeague.diamond    => const Color(0xFF00BFFF),
+        EloLeague.bronze => const Color(0xFFCD7F32),
+        EloLeague.silver => const Color(0xFFC0C0C0),
+        EloLeague.gold => const Color(0xFFFFD700),
+        EloLeague.diamond => const Color(0xFF00BFFF),
         EloLeague.glooMaster => const Color(0xFFFF3CFF),
       };
 
   IconData get _leagueIcon => switch (league) {
-        EloLeague.bronze     => Icons.shield_rounded,
-        EloLeague.silver     => Icons.shield_rounded,
-        EloLeague.gold       => Icons.shield_rounded,
-        EloLeague.diamond    => Icons.diamond_rounded,
+        EloLeague.bronze => Icons.shield_rounded,
+        EloLeague.silver => Icons.shield_rounded,
+        EloLeague.gold => Icons.shield_rounded,
+        EloLeague.diamond => Icons.diamond_rounded,
         EloLeague.glooMaster => Icons.stars_rounded,
       };
 
@@ -468,7 +464,8 @@ class _SearchingIndicator extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: color.withValues(alpha: 0.15 + pulseCtrl.value * 0.15),
+                      color: color.withValues(
+                          alpha: 0.15 + pulseCtrl.value * 0.15),
                       blurRadius: 20,
                       spreadRadius: 4,
                     ),

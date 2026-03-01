@@ -12,7 +12,8 @@ void main() {
     test('all levels have positive requiredCount', () {
       for (final level in kColorChefLevels) {
         expect(level.requiredCount, greaterThan(0),
-            reason: 'Level ${kColorChefLevels.indexOf(level) + 1} should have positive count');
+            reason:
+                'Level ${kColorChefLevels.indexOf(level) + 1} should have positive count');
       }
     });
 
@@ -25,11 +26,14 @@ void main() {
       };
       for (final level in kColorChefLevels) {
         expect(primaryColors.contains(level.targetColor), isFalse,
-            reason: '${level.targetColor} is a primary color and should not be a target');
+            reason:
+                '${level.targetColor} is a primary color and should not be a target');
       }
     });
 
-    test('difficulty increases — later levels have higher requiredCount average', () {
+    test(
+        'difficulty increases — later levels have higher requiredCount average',
+        () {
       // Average of first 5 vs last 5
       final first5 = kColorChefLevels.take(5).map((l) => l.requiredCount);
       final last5 = kColorChefLevels.skip(15).map((l) => l.requiredCount);

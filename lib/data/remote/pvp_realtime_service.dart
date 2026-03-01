@@ -46,23 +46,20 @@ class PvpRealtimeService {
       opts: const RealtimeChannelConfig(self: true),
     );
 
-    _matchmakingChannel!
-        .onPresenceSync((_) {
-          _debouncedEvaluateMatches(request, onMatch);
-        })
-        .onPresenceJoin((_) {
-          _debouncedEvaluateMatches(request, onMatch);
-        })
-        .subscribe((status, [error]) async {
-          if (status == RealtimeSubscribeStatus.subscribed) {
-            await _matchmakingChannel!.track({
-              'user_id': uid,
-              'elo': request.elo,
-              'region': request.region,
-              'joined_at': DateTime.now().toIso8601String(),
-            });
-          }
+    _matchmakingChannel!.onPresenceSync((_) {
+      _debouncedEvaluateMatches(request, onMatch);
+    }).onPresenceJoin((_) {
+      _debouncedEvaluateMatches(request, onMatch);
+    }).subscribe((status, [error]) async {
+      if (status == RealtimeSubscribeStatus.subscribed) {
+        await _matchmakingChannel!.track({
+          'user_id': uid,
+          'elo': request.elo,
+          'region': request.region,
+          'joined_at': DateTime.now().toIso8601String(),
         });
+      }
+    });
 
     // 30sn timeout → bot fallback
     _matchmakingTimeout = Timer(
@@ -110,21 +107,29 @@ class PvpRealtimeService {
           _matchmakingTimeout?.cancel();
           final seed = MatchmakingManager.generateMatchSeed();
 
-          // Mac olustur
-          _repository
-              .createPvpMatch(seed: seed, opponentId: otherId)
-              .then((matchId) {
-            if (matchId != null) {
-              _leaveMatchmakingQueue();
-              onMatch(MatchResult(
-                matchId: matchId,
-                player1Id: request.userId,
-                player2Id: otherId,
-                seed: seed,
-                isBot: false,
-              ));
-            }
-          });
+          final myId = request.userId;
+
+          // Sadece leksikografik olarak kucuk ID'li oyuncu mac olusturur.
+          // Bu, iki oyuncunun ayni anda mac olusturmasini (duplicate match) onler.
+          // Diger oyuncu presence sync ile maci algilayacak.
+          if (myId.compareTo(otherId) < 0) {
+            _repository
+                .createPvpMatch(seed: seed, opponentId: otherId)
+                .then((matchId) {
+              if (matchId != null) {
+                _leaveMatchmakingQueue();
+                onMatch(MatchResult(
+                  matchId: matchId,
+                  player1Id: myId,
+                  player2Id: otherId,
+                  seed: seed,
+                  isBot: false,
+                ));
+              }
+            });
+          }
+          // Buyuk ID'li oyuncu mac olusturmaz — presence sync ile
+          // olusturulan maci algilayacak.
           return;
         }
       }
@@ -217,7 +222,7 @@ class PvpRealtimeService {
         'area_size': packet.areaSize,
       });
     } catch (e) {
-      debugPrint('PvpRealtimeService.sendObstacle DB error: $e');
+      if (kDebugMode) debugPrint('PvpRealtimeService.sendObstacle DB error: $e');
     }
   }
 

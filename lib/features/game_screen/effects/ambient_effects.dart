@@ -13,6 +13,7 @@ class ScreenShake extends StatefulWidget {
   });
 
   final Widget child;
+
   /// Sarsinti yogunlugu (piksel): epic=4, large=2.
   final double intensity;
   final Duration duration;
@@ -186,11 +187,13 @@ class _AmbientDropletPainter extends CustomPainter {
     for (final d in droplets) {
       final t = time * 2 * math.pi;
       // Yuzme hareketi: sinusoidal dalga + yavas drift
-      final x = ((d.x + d.speedX * time * 20 + math.sin(t + d.phase) * 0.02) % 1.0) *
-          size.width;
-      final y = ((d.y + d.speedY * time * 20 + math.cos(t * 0.7 + d.phase) * 0.015) %
-              1.0) *
-          size.height;
+      final x =
+          ((d.x + d.speedX * time * 20 + math.sin(t + d.phase) * 0.02) % 1.0) *
+              size.width;
+      final y =
+          ((d.y + d.speedY * time * 20 + math.cos(t * 0.7 + d.phase) * 0.015) %
+                  1.0) *
+              size.height;
 
       // Nefes alma boyut degisimi
       final breathScale = 1.0 + math.sin(t * 1.3 + d.phase) * 0.2;
@@ -206,7 +209,8 @@ class _AmbientDropletPainter extends CustomPainter {
 
       // Specular highlight
       _highlightPaint.color = Colors.white.withValues(alpha: d.opacity * 0.6);
-      canvas.drawCircle(Offset(x - r * 0.25, y - r * 0.25), r * 0.35, _highlightPaint);
+      canvas.drawCircle(
+          Offset(x - r * 0.25, y - r * 0.25), r * 0.35, _highlightPaint);
     }
   }
 

@@ -15,7 +15,7 @@ abstract final class GameConstants {
   static const double settleTolerance = 0.001;
 
   // Jel deformasyon
-  static const double deformDuration = 0.3;   // saniye
+  static const double deformDuration = 0.3; // saniye
   static const int bezierControlPoints = 8;
 
   // Parçacık efekti
@@ -59,7 +59,7 @@ abstract final class GameConstants {
   static const int freezeDuration = 10; // saniye
 
   // Merhamet mekanizması
-  static const int mercyLossThreshold = 3;   // Ardışık kayıp eşiği
+  static const int mercyLossThreshold = 3; // Ardışık kayıp eşiği
   static const int mercyNoClearThreshold = 5; // Temizleme olmadan hamle eşiği
   static const double mercyDifficultyMultiplier = 0.7;
 

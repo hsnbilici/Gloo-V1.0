@@ -6,12 +6,16 @@ import '../world/grid_manager.dart';
 enum MapShape {
   /// Standart dikdörtgen.
   rectangle,
+
   /// Kenarlardaki köşeler taş ile kapatılır → elmas.
   diamond,
+
   /// Ortadaki artı alan aktif, kenarlar taş.
   cross,
+
   /// L formunda aktif alan.
   lShape,
+
   /// Dar uzun geçit.
   corridor,
 }
@@ -81,10 +85,10 @@ class LevelData {
         final armHeight = (rows * 0.35).round();
         for (int r = 0; r < rows; r++) {
           for (int c = 0; c < cols; c++) {
-            final inVerticalArm = c >= (cols - armWidth) ~/ 2 &&
-                c < (cols + armWidth) ~/ 2;
-            final inHorizontalArm = r >= (rows - armHeight) ~/ 2 &&
-                r < (rows + armHeight) ~/ 2;
+            final inVerticalArm =
+                c >= (cols - armWidth) ~/ 2 && c < (cols + armWidth) ~/ 2;
+            final inHorizontalArm =
+                r >= (rows - armHeight) ~/ 2 && r < (rows + armHeight) ~/ 2;
             if (!inVerticalArm && !inHorizontalArm) {
               stones[(r, c)] = stoneConfig;
             }

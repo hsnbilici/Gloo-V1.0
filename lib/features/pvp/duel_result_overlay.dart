@@ -26,19 +26,19 @@ class DuelResultOverlay extends StatelessWidget {
   static const _kDraw = Color(0xFFFFE03C);
 
   Color get _outcomeColor => switch (result.outcome) {
-        DuelOutcome.win  => _kWin,
+        DuelOutcome.win => _kWin,
         DuelOutcome.loss => _kLoss,
         DuelOutcome.draw => _kDraw,
       };
 
   String get _outcomeLabel => switch (result.outcome) {
-        DuelOutcome.win  => 'GALIBIYET!',
+        DuelOutcome.win => 'GALIBIYET!',
         DuelOutcome.loss => 'MAGLUBIYET',
         DuelOutcome.draw => 'BERABERE',
       };
 
   IconData get _outcomeIcon => switch (result.outcome) {
-        DuelOutcome.win  => Icons.emoji_events_rounded,
+        DuelOutcome.win => Icons.emoji_events_rounded,
         DuelOutcome.loss => Icons.sentiment_dissatisfied_rounded,
         DuelOutcome.draw => Icons.handshake_rounded,
       };
@@ -46,9 +46,8 @@ class DuelResultOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _outcomeColor;
-    final eloChangeStr = result.eloChange >= 0
-        ? '+${result.eloChange}'
-        : '${result.eloChange}';
+    final eloChangeStr =
+        result.eloChange >= 0 ? '+${result.eloChange}' : '${result.eloChange}';
 
     return Material(
       color: kBgDark.withValues(alpha: 0.95),
@@ -63,7 +62,8 @@ class DuelResultOverlay extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: color.withValues(alpha: 0.12),
-                border: Border.all(color: color.withValues(alpha: 0.45), width: 2),
+                border:
+                    Border.all(color: color.withValues(alpha: 0.45), width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: color.withValues(alpha: 0.30),
@@ -128,9 +128,7 @@ class DuelResultOverlay extends StatelessWidget {
                   isWinner: result.outcome == DuelOutcome.loss,
                 ),
               ],
-            )
-                .animate(delay: 350.ms)
-                .fadeIn(duration: 350.ms),
+            ).animate(delay: 350.ms).fadeIn(duration: 350.ms),
             const SizedBox(height: 28),
             // ELO degisimi
             Container(
@@ -162,10 +160,7 @@ class DuelResultOverlay extends StatelessWidget {
                   ),
                 ],
               ),
-            )
-                .animate(delay: 450.ms)
-                .fadeIn(duration: 300.ms)
-                .scale(
+            ).animate(delay: 450.ms).fadeIn(duration: 300.ms).scale(
                   begin: const Offset(0.9, 0.9),
                   duration: 300.ms,
                   curve: Curves.easeOutBack,
@@ -179,9 +174,7 @@ class DuelResultOverlay extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
-            )
-                .animate(delay: 500.ms)
-                .fadeIn(duration: 250.ms),
+            ).animate(delay: 500.ms).fadeIn(duration: 250.ms),
             const Spacer(flex: 2),
             // Butonlar
             Padding(

@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'dto/daily_puzzle.dart';
+import 'dto/leaderboard_entry.dart';
+import 'dto/meta_state.dart';
+import 'dto/pvp_match.dart';
 import 'supabase_client.dart';
 
 /// Supabase uzak deposu — profil, skor, günlük bulmaca ve sıralama.
@@ -14,10 +18,12 @@ class RemoteRepository {
 
   String? get _userId => SupabaseConfig.currentUserId;
 
-  /// Supabase yapilandirilmis mi? Sahte anahtarlarla tum metodlar sessizce atlar.
-  bool get isConfigured => SupabaseConfig.isConfigured;
+  /// Supabase yapilandirilmis ve initialize edilmis mi?
+  bool get isConfigured => SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
 
   // ── Skor kaydet ─────────────────────────────────────────────────────────
+  /// Skoru sunucu tarafinda dogrulayan RPC fonksiyonu uzerinden gonderir.
+  /// Mod bazli maks skor siniri sunucu tarafinda uygulanir.
   Future<void> submitScore({
     required String mode,
     required int value,
@@ -26,20 +32,23 @@ class RemoteRepository {
     final uid = _userId;
     if (uid == null) return;
     try {
-      await _client.from('scores').insert({
-        'user_id': uid,
-        'mode': mode,
-        'score': value,
+      final result = await _client.rpc('submit_score', params: {
+        'p_mode': mode,
+        'p_score': value,
       });
+
+      if (result is Map && result['error'] != null) {
+        if (kDebugMode) debugPrint('RemoteRepository.submitScore rejected: ${result['error']}');
+      }
     } catch (e) {
-      debugPrint('RemoteRepository.submitScore error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.submitScore error: $e');
     }
   }
 
   // ── Global sıralama ─────────────────────────────────────────────────────
   /// [mode]: 'classic' | 'timetrial'
   /// [weekly]: true ise son 7 günlük filtre uygulanır
-  Future<List<Map<String, dynamic>>> getGlobalLeaderboard({
+  Future<List<LeaderboardEntry>> getGlobalLeaderboard({
     required String mode,
     int limit = 50,
     bool weekly = false,
@@ -57,13 +66,14 @@ class RemoteRepository {
         query = query.gte('created_at', weekAgo);
       }
 
-      final data = await query
-          .order('score', ascending: false)
-          .limit(limit);
+      final data = await query.order('score', ascending: false).limit(limit);
 
-      return List<Map<String, dynamic>>.from(data);
+      return (data as List)
+          .map((e) =>
+              LeaderboardEntry.fromMap(Map<String, dynamic>.from(e as Map)))
+          .toList();
     } catch (e) {
-      debugPrint('RemoteRepository.getGlobalLeaderboard error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.getGlobalLeaderboard error: $e');
       return [];
     }
   }
@@ -105,7 +115,7 @@ class RemoteRepository {
       final above = await query;
       return above.length + 1;
     } catch (e) {
-      debugPrint('RemoteRepository.getUserRank error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.getUserRank error: $e');
       return null;
     }
   }
@@ -121,12 +131,12 @@ class RemoteRepository {
         'username': username ?? 'Player_${uid.substring(0, 6)}',
       });
     } catch (e) {
-      debugPrint('RemoteRepository.ensureProfile error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.ensureProfile error: $e');
     }
   }
 
   // ── Günlük Bulmaca ─────────────────────────────────────────────────────
-  Future<Map<String, dynamic>?> getDailyPuzzle() async {
+  Future<DailyPuzzle?> getDailyPuzzle() async {
     if (!isConfigured) return null;
     try {
       final today = DateTime.now().toIso8601String().substring(0, 10);
@@ -135,9 +145,10 @@ class RemoteRepository {
           .select()
           .eq('date', today)
           .maybeSingle();
-      return data;
+      if (data == null) return null;
+      return DailyPuzzle.fromMap(data);
     } catch (e) {
-      debugPrint('RemoteRepository.getDailyPuzzle error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.getDailyPuzzle error: $e');
       return null;
     }
   }
@@ -159,7 +170,7 @@ class RemoteRepository {
         'completed_at': completed ? DateTime.now().toIso8601String() : null,
       });
     } catch (e) {
-      debugPrint('RemoteRepository.submitDailyResult error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.submitDailyResult error: $e');
     }
   }
 
@@ -174,20 +185,25 @@ class RemoteRepository {
     final uid = _userId;
     if (uid == null) return null;
     try {
-      final data = await _client.from('pvp_matches').insert({
-        'player1_id': uid,
-        'player2_id': opponentId,
-        'seed': seed,
-        'status': 'active',
-      }).select('id').single();
+      final data = await _client
+          .from('pvp_matches')
+          .insert({
+            'player1_id': uid,
+            'player2_id': opponentId,
+            'seed': seed,
+            'status': 'active',
+          })
+          .select('id')
+          .single();
       return data['id'] as String;
     } catch (e) {
-      debugPrint('RemoteRepository.createPvpMatch error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.createPvpMatch error: $e');
       return null;
     }
   }
 
-  /// Mac sonucunu kaydet ve durumu guncelle.
+  /// Mac skorunu sunucu tarafinda kaydet.
+  /// Winner belirleme ve mac tamamlama sunucu tarafinda (RPC) yapilir.
   Future<void> submitPvpResult({
     required String matchId,
     required int score,
@@ -196,47 +212,12 @@ class RemoteRepository {
     final uid = _userId;
     if (uid == null) return;
     try {
-      // Hangi oyuncu oldugunu belirle
-      final match = await _client
-          .from('pvp_matches')
-          .select()
-          .eq('id', matchId)
-          .single();
-
-      final isPlayer1 = match['player1_id'] == uid;
-      final scoreField = isPlayer1 ? 'player1_score' : 'player2_score';
-
-      await _client
-          .from('pvp_matches')
-          .update({scoreField: score})
-          .eq('id', matchId);
-
-      // Iki skor da varsa maci tamamla
-      final updated = await _client
-          .from('pvp_matches')
-          .select()
-          .eq('id', matchId)
-          .single();
-
-      final p1Score = updated['player1_score'] as int?;
-      final p2Score = updated['player2_score'] as int?;
-
-      if (p1Score != null && p2Score != null) {
-        String? winnerId;
-        if (p1Score > p2Score) {
-          winnerId = updated['player1_id'] as String;
-        } else if (p2Score > p1Score) {
-          winnerId = updated['player2_id'] as String?;
-        }
-
-        await _client.from('pvp_matches').update({
-          'status': 'completed',
-          'winner_id': winnerId,
-          'completed_at': DateTime.now().toIso8601String(),
-        }).eq('id', matchId);
-      }
+      await _client.rpc('submit_pvp_score', params: {
+        'p_match_id': matchId,
+        'p_score': score,
+      });
     } catch (e) {
-      debugPrint('RemoteRepository.submitPvpResult error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.submitPvpResult error: $e');
     }
   }
 
@@ -248,86 +229,105 @@ class RemoteRepository {
     try {
       await _client.from('profiles').update({'elo': newElo}).eq('id', uid);
     } catch (e) {
-      debugPrint('RemoteRepository.updateElo error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.updateElo error: $e');
     }
   }
 
   /// PvP mac bilgisi getir.
-  Future<Map<String, dynamic>?> getPvpMatch(String matchId) async {
+  Future<PvpMatch?> getPvpMatch(String matchId) async {
     if (!isConfigured) return null;
     try {
-      return await _client
+      final data = await _client
           .from('pvp_matches')
           .select()
           .eq('id', matchId)
           .maybeSingle();
+      if (data == null) return null;
+      return PvpMatch.fromMap(data);
     } catch (e) {
-      debugPrint('RemoteRepository.getPvpMatch error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.getPvpMatch error: $e');
       return null;
     }
   }
 
-  /// PvP istatistiklerini guncelle (galibiyet/maglubiyet).
+  /// PvP istatistiklerini atomik olarak guncelle (galibiyet/maglubiyet).
+  /// Sunucu tarafinda `pvp_wins = pvp_wins + 1` seklinde atomic increment yapar.
+  /// Race condition riski yoktur.
   Future<void> incrementPvpStats({required bool isWin}) async {
     if (!isConfigured) return;
     final uid = _userId;
     if (uid == null) return;
     try {
-      final profile = await _client
-          .from('profiles')
-          .select('pvp_wins, pvp_losses')
-          .eq('id', uid)
-          .single();
-
-      final field = isWin ? 'pvp_wins' : 'pvp_losses';
-      final current = profile[field] as int;
-
-      await _client
-          .from('profiles')
-          .update({field: current + 1})
-          .eq('id', uid);
+      await _client.rpc('increment_pvp_stat', params: {
+        'p_stat': isWin ? 'win' : 'loss',
+      });
     } catch (e) {
-      debugPrint('RemoteRepository.incrementPvpStats error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.incrementPvpStats error: $e');
+    }
+  }
+
+  // ── IAP Receipt Dogrulama ────────────────────────────────────────────────
+
+  /// Satin alim receipt'ini sunucu tarafinda dogrular.
+  /// Basarili dogrulama icin `true`, hata veya dogrulama basarisizliginda `false` doner.
+  /// Network hatasi durumunda `null` doner (graceful degradation icin).
+  Future<bool?> verifyPurchase({
+    required String platform,
+    required String receipt,
+    required String productId,
+  }) async {
+    if (!isConfigured) return null;
+    try {
+      final response = await _client.functions.invoke(
+        'verify-purchase',
+        body: {
+          'platform': platform,
+          'receipt': receipt,
+          'productId': productId,
+        },
+      );
+
+      if (response.status == 200) {
+        final data = response.data as Map<String, dynamic>;
+        return data['verified'] == true;
+      }
+
+      if (kDebugMode) {
+        debugPrint(
+          'RemoteRepository.verifyPurchase rejected: ${response.data}',
+        );
+      }
+      return false;
+    } catch (e) {
+      if (kDebugMode) debugPrint('RemoteRepository.verifyPurchase error: $e');
+      return null; // network hatasi — graceful degradation
     }
   }
 
   // ── Redeem Code ──────────────────────────────────────────────────────────
 
-  /// Kodu Supabase'de dogrular. Gecerli ise urun ID listesi doner, degilse null.
-  /// Basarili dogrulamada `current_uses`'i 1 arttirir.
+  /// Kodu Edge Function uzerinden dogrular. Gecerli ise urun ID listesi doner.
+  /// Client dogrudan redeem_codes tablosuna erismez — tum islem sunucu tarafinda yapilir.
   Future<List<String>?> redeemCode(String code) async {
     if (!isConfigured) return null;
     try {
-      final data = await _client
-          .from('redeem_codes')
-          .select()
-          .eq('code', code.toUpperCase())
-          .maybeSingle();
+      final response = await _client.functions.invoke(
+        'redeem-code',
+        body: {'code': code.toUpperCase()},
+      );
 
-      if (data == null) return null;
-
-      final currentUses = data['current_uses'] as int;
-      final maxUses = data['max_uses'] as int;
-      if (currentUses >= maxUses) return null;
-
-      final expiresAt = data['expires_at'] as String?;
-      if (expiresAt != null) {
-        final expiry = DateTime.tryParse(expiresAt);
-        if (expiry != null && DateTime.now().isAfter(expiry)) return null;
+      if (response.status == 200) {
+        final data = response.data as Map<String, dynamic>;
+        final productIds = (data['productIds'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList();
+        return productIds;
       }
 
-      // current_uses'i artir
-      await _client
-          .from('redeem_codes')
-          .update({'current_uses': currentUses + 1})
-          .eq('code', code.toUpperCase());
-
-      final productIds = (data['product_ids'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList();
-      return productIds;
+      if (kDebugMode) debugPrint('RemoteRepository.redeemCode rejected: ${response.data}');
+      return null;
     } catch (e) {
-      debugPrint('RemoteRepository.redeemCode error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.redeemCode error: $e');
       return null;
     }
   }
@@ -364,23 +364,25 @@ class RemoteRepository {
 
       await _client.from('meta_states').upsert(data);
     } catch (e) {
-      debugPrint('RemoteRepository.saveMetaState error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.saveMetaState error: $e');
     }
   }
 
   /// Meta-game state'ini Supabase'den yukle.
-  Future<Map<String, dynamic>?> loadMetaState() async {
+  Future<MetaState?> loadMetaState() async {
     if (!isConfigured) return null;
     final uid = _userId;
     if (uid == null) return null;
     try {
-      return await _client
+      final data = await _client
           .from('meta_states')
           .select()
           .eq('user_id', uid)
           .maybeSingle();
+      if (data == null) return null;
+      return MetaState.fromMap(data);
     } catch (e) {
-      debugPrint('RemoteRepository.loadMetaState error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.loadMetaState error: $e');
       return null;
     }
   }
@@ -398,9 +400,9 @@ class RemoteRepository {
       await _client.from('daily_tasks').delete().eq('user_id', uid);
       await _client.from('pvp_obstacles').delete().eq('sender_id', uid);
       await _client.from('profiles').delete().eq('id', uid);
-      debugPrint('RemoteRepository.deleteUserData: all data deleted for $uid');
+      if (kDebugMode) debugPrint('RemoteRepository.deleteUserData: all data deleted for $uid');
     } catch (e) {
-      debugPrint('RemoteRepository.deleteUserData error: $e');
+      if (kDebugMode) debugPrint('RemoteRepository.deleteUserData error: $e');
     }
   }
 }

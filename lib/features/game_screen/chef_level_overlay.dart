@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 
 // ─── Seviye tamamlama overlay ─────────────────────────────────────────────────
@@ -58,10 +58,7 @@ class ChefLevelOverlay extends ConsumerWidget {
                   levelNumber: isAllComplete ? null : levelNumber,
                   isAllComplete: isAllComplete,
                   color: color,
-                )
-                    .animate(delay: 60.ms)
-                    .fadeIn(duration: 260.ms)
-                    .scale(
+                ).animate(delay: 60.ms).fadeIn(duration: 260.ms).scale(
                       begin: const Offset(0.75, 0.75),
                       duration: 260.ms,
                       curve: Curves.easeOutBack,
@@ -97,10 +94,7 @@ class ChefLevelOverlay extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      )
-                          .animate(delay: 200.ms)
-                          .fadeIn(duration: 300.ms)
-                          .slideY(
+                      ).animate(delay: 200.ms).fadeIn(duration: 300.ms).slideY(
                             begin: -0.10,
                             end: 0,
                             duration: 300.ms,
@@ -116,14 +110,10 @@ class ChefLevelOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.w700,
                           letterSpacing: 2,
                         ),
-                      )
-                          .animate(delay: 280.ms)
-                          .fadeIn(duration: 260.ms),
+                      ).animate(delay: 280.ms).fadeIn(duration: 260.ms),
                       const SizedBox(height: 10),
                       // Parıldayan ayraç
-                      _GlowLine(color: color)
-                          .animate(delay: 340.ms)
-                          .scaleX(
+                      _GlowLine(color: color).animate(delay: 340.ms).scaleX(
                             begin: 0,
                             end: 1,
                             duration: 360.ms,
@@ -140,7 +130,8 @@ class ChefLevelOverlay extends ConsumerWidget {
                 ),
                 // Butonlar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 28, vertical: 32),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -194,9 +185,7 @@ class _ChefBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = isAllComplete
-        ? 'RENK ŞEFİ'
-        : 'SEVİYE $levelNumber';
+    final label = isAllComplete ? 'RENK ŞEFİ' : 'SEVİYE $levelNumber';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
       decoration: BoxDecoration(
@@ -236,7 +225,10 @@ class _ColorDrop extends StatelessWidget {
         shape: BoxShape.circle,
         color: color,
         boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.55), blurRadius: 36, spreadRadius: 4),
+          BoxShadow(
+              color: color.withValues(alpha: 0.55),
+              blurRadius: 36,
+              spreadRadius: 4),
           BoxShadow(color: color.withValues(alpha: 0.20), blurRadius: 80),
         ],
       ),
@@ -267,7 +259,10 @@ class _GlowLine extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
         boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.70), blurRadius: 8, spreadRadius: 1),
+          BoxShadow(
+              color: color.withValues(alpha: 0.70),
+              blurRadius: 8,
+              spreadRadius: 1),
         ],
       ),
     );
@@ -292,9 +287,7 @@ class _AllCompleteStars extends StatelessWidget {
             Icons.star_rounded,
             color: color.withValues(alpha: 0.3 + i * 0.14),
             size: 20 + i * 3.0,
-          )
-              .animate(delay: Duration(milliseconds: 420 + i * 80))
-              .scale(
+          ).animate(delay: Duration(milliseconds: 420 + i * 80)).scale(
                 begin: const Offset(0, 0),
                 end: const Offset(1, 1),
                 duration: 300.ms,

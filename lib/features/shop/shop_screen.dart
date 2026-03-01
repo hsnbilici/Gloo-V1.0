@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -42,7 +42,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     _purchase.onPurchaseUpdate = (_) {
       if (!mounted) return;
       // Gloo+ veya ads removed durumunu provider'a yansıt
-      final notifier = ref.read(audioSettingsProvider.notifier);
+      final notifier = ref.read(appSettingsProvider.notifier);
       notifier.setGlooPlus(enabled: _purchase.isGlooPlus);
       notifier.setAdsRemoved(removed: _purchase.adsRemoved);
       AdManager().setAdsRemoved(_purchase.adsRemoved);
@@ -126,7 +126,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
-    final settings = ref.watch(audioSettingsProvider);
+    final settings = ref.watch(appSettingsProvider);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -146,9 +146,11 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 18),
+                child: const Icon(Icons.arrow_back_rounded,
+                    color: Colors.white, size: 18),
               ),
             ),
           ),
@@ -178,12 +180,18 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 monthlyLabel: l.glooPlusMonthly,
                 yearlyLabel: l.glooPlusYearly,
                 badgeLabel: l.glooPlusBadge,
-                monthlyPrice: _purchase.priceOf(PurchaseService.kGlooPlusMonthly, fallback: '\$1.99'),
-                yearlyPrice: _purchase.priceOf(PurchaseService.kGlooPlusYearly, fallback: '\$9.99'),
+                monthlyPrice: _purchase.priceOf(
+                    PurchaseService.kGlooPlusMonthly,
+                    fallback: '\$1.99'),
+                yearlyPrice: _purchase.priceOf(PurchaseService.kGlooPlusYearly,
+                    fallback: '\$9.99'),
                 isSubscribed: settings.glooPlus,
                 onMonthly: () => _buy(PurchaseService.kGlooPlusMonthly),
                 onYearly: () => _buy(PurchaseService.kGlooPlusYearly),
-              ).animate(delay: 60.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 60.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Reklamsız ─────────────────────────────────────────────
               _SectionHeader(title: l.shopSectionRemoveAds, color: _kCoral),
@@ -191,11 +199,15 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.block_rounded,
                 label: l.shopRemoveAds,
                 desc: l.shopRemoveAdsDesc,
-                price: _purchase.priceOf(PurchaseService.kRemoveAds, fallback: '\$2.99'),
+                price: _purchase.priceOf(PurchaseService.kRemoveAds,
+                    fallback: '\$2.99'),
                 color: _kCoral,
                 purchased: settings.adsRemoved,
                 onBuy: () => _buy(PurchaseService.kRemoveAds),
-              ).animate(delay: 120.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 120.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Ses Paketleri ─────────────────────────────────────────
               _SectionHeader(title: l.shopSectionSoundPacks, color: kCyan),
@@ -203,20 +215,28 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.graphic_eq_rounded,
                 label: l.shopSoundCrystal,
                 desc: l.shopSoundCrystalDesc,
-                price: _purchase.priceOf(PurchaseService.kSoundCrystal, fallback: '\$1.99'),
+                price: _purchase.priceOf(PurchaseService.kSoundCrystal,
+                    fallback: '\$1.99'),
                 color: kCyan,
                 purchased: _purchase.isPurchased(PurchaseService.kSoundCrystal),
                 onBuy: () => _buy(PurchaseService.kSoundCrystal),
-              ).animate(delay: 180.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 180.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
               _ProductTile(
                 icon: Icons.forest_rounded,
                 label: l.shopSoundForest,
                 desc: l.shopSoundForestDesc,
-                price: _purchase.priceOf(PurchaseService.kSoundForest, fallback: '\$1.99'),
+                price: _purchase.priceOf(PurchaseService.kSoundForest,
+                    fallback: '\$1.99'),
                 color: kCyan,
                 purchased: _purchase.isPurchased(PurchaseService.kSoundForest),
                 onBuy: () => _buy(PurchaseService.kSoundForest),
-              ).animate(delay: 220.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 220.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Doku Paketleri ────────────────────────────────────────
               _SectionHeader(title: l.shopSectionTexturePacks, color: _kViolet),
@@ -224,23 +244,31 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.texture_rounded,
                 label: l.shopTexturePack,
                 desc: l.shopTexturePackDesc,
-                price: _purchase.priceOf(PurchaseService.kTexturePack, fallback: '\$2.99'),
+                price: _purchase.priceOf(PurchaseService.kTexturePack,
+                    fallback: '\$2.99'),
                 color: _kViolet,
                 purchased: _purchase.isPurchased(PurchaseService.kTexturePack),
                 onBuy: () => _buy(PurchaseService.kTexturePack),
-              ).animate(delay: 280.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 280.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               // ── Starter Pack ──────────────────────────────────────────
               _ProductTile(
                 icon: Icons.star_rounded,
                 label: l.shopStarterPack,
                 desc: l.shopStarterPackDesc,
-                price: _purchase.priceOf(PurchaseService.kStarterPack, fallback: '\$4.99'),
+                price: _purchase.priceOf(PurchaseService.kStarterPack,
+                    fallback: '\$4.99'),
                 color: _kGold,
                 purchased: _purchase.isPurchased(PurchaseService.kStarterPack),
                 onBuy: () => _buy(PurchaseService.kStarterPack),
                 isFeatured: true,
-              ).animate(delay: 340.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 340.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               const SizedBox(height: 20),
 
@@ -252,7 +280,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 hintText: l.redeemCodeHint,
                 enabled: !_redeeming,
                 onRedeem: () => _redeemCode(_redeemController.text),
-              ).animate(delay: 400.ms).fadeIn(duration: 350.ms).slideY(begin: 0.08, end: 0, duration: 350.ms),
+              )
+                  .animate(delay: 400.ms)
+                  .fadeIn(duration: 350.ms)
+                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
               const SizedBox(height: 20),
 
@@ -335,7 +366,10 @@ class _SectionHeader extends StatelessWidget {
               color: color,
               borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
               boxShadow: [
-                BoxShadow(color: color.withValues(alpha: 0.6), blurRadius: 6, spreadRadius: 1),
+                BoxShadow(
+                    color: color.withValues(alpha: 0.6),
+                    blurRadius: 6,
+                    spreadRadius: 1),
               ],
             ),
           ),
@@ -400,7 +434,12 @@ class _ProductTile extends StatelessWidget {
           width: isFeatured ? 1.5 : 1,
         ),
         boxShadow: isFeatured
-            ? [BoxShadow(color: color.withValues(alpha: 0.12), blurRadius: 16, offset: const Offset(0, 4))]
+            ? [
+                BoxShadow(
+                    color: color.withValues(alpha: 0.12),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4))
+              ]
             : null,
       ),
       child: Row(
@@ -427,7 +466,11 @@ class _ProductTile extends StatelessWidget {
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     shadows: isFeatured
-                        ? [Shadow(color: color.withValues(alpha: 0.35), blurRadius: 8)]
+                        ? [
+                            Shadow(
+                                color: color.withValues(alpha: 0.35),
+                                blurRadius: 8)
+                          ]
                         : null,
                   ),
                 ),
@@ -445,7 +488,8 @@ class _ProductTile extends StatelessWidget {
           const SizedBox(width: 8),
           purchased
               ? Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(UIConstants.radiusSm),
@@ -456,7 +500,8 @@ class _ProductTile extends StatelessWidget {
               : GestureDetector(
                   onTap: onBuy,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(UIConstants.radiusSm),
@@ -522,7 +567,10 @@ class _GlooPlusCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(UIConstants.radiusLg),
         border: Border.all(color: _kGold.withValues(alpha: 0.35), width: 1.5),
         boxShadow: [
-          BoxShadow(color: _kGold.withValues(alpha: 0.10), blurRadius: 20, offset: const Offset(0, 6)),
+          BoxShadow(
+              color: _kGold.withValues(alpha: 0.10),
+              blurRadius: 20,
+              offset: const Offset(0, 6)),
         ],
       ),
       child: Column(
@@ -535,12 +583,16 @@ class _GlooPlusCard extends StatelessWidget {
                 height: 46,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [_kGold.withValues(alpha: 0.20), _kViolet.withValues(alpha: 0.15)],
+                    colors: [
+                      _kGold.withValues(alpha: 0.20),
+                      _kViolet.withValues(alpha: 0.15)
+                    ],
                   ),
                   borderRadius: BorderRadius.circular(UIConstants.radiusMd),
                   border: Border.all(color: _kGold.withValues(alpha: 0.45)),
                 ),
-                child: const Icon(Icons.workspace_premium_rounded, color: _kGold, size: 24),
+                child: const Icon(Icons.workspace_premium_rounded,
+                    color: _kGold, size: 24),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -554,7 +606,11 @@ class _GlooPlusCard extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
                         letterSpacing: -0.5,
-                        shadows: [Shadow(color: _kGold.withValues(alpha: 0.50), blurRadius: 12)],
+                        shadows: [
+                          Shadow(
+                              color: _kGold.withValues(alpha: 0.50),
+                              blurRadius: 12)
+                        ],
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -583,7 +639,8 @@ class _GlooPlusCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.check_circle_rounded, color: _kGold, size: 18),
+                  const Icon(Icons.check_circle_rounded,
+                      color: _kGold, size: 18),
                   const SizedBox(width: 8),
                   Text(
                     'ACTIVE',
@@ -592,7 +649,11 @@ class _GlooPlusCard extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.5,
-                      shadows: [Shadow(color: _kGold.withValues(alpha: 0.40), blurRadius: 8)],
+                      shadows: [
+                        Shadow(
+                            color: _kGold.withValues(alpha: 0.40),
+                            blurRadius: 8)
+                      ],
                     ),
                   ),
                 ],
@@ -609,8 +670,10 @@ class _GlooPlusCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.04),
-                        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMd),
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.12)),
                       ),
                       child: Column(
                         children: [
@@ -646,19 +709,25 @@ class _GlooPlusCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
                         color: _kGold.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(color: _kGold.withValues(alpha: 0.50), width: 1.5),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMd),
+                        border: Border.all(
+                            color: _kGold.withValues(alpha: 0.50), width: 1.5),
                         boxShadow: [
-                          BoxShadow(color: _kGold.withValues(alpha: 0.14), blurRadius: 10),
+                          BoxShadow(
+                              color: _kGold.withValues(alpha: 0.14),
+                              blurRadius: 10),
                         ],
                       ),
                       child: Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: _kGold.withValues(alpha: 0.20),
-                              borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+                              borderRadius:
+                                  BorderRadius.circular(UIConstants.radiusXs),
                             ),
                             child: Text(
                               badgeLabel,
@@ -807,14 +876,19 @@ class _Toast extends StatelessWidget {
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
         border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.50), blurRadius: 20),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.50), blurRadius: 20),
         ],
       ),
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+        style: const TextStyle(
+            color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
       ),
-    ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.3, end: 0, duration: 200.ms);
+    )
+        .animate()
+        .fadeIn(duration: 200.ms)
+        .slideY(begin: 0.3, end: 0, duration: 200.ms);
   }
 }

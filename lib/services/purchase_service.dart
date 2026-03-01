@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+
+import '../data/remote/remote_repository.dart';
 
 /// Uygulama içi satın alma (IAP) ve Gloo+ abonelik yöneticisi.
 ///
@@ -77,7 +80,7 @@ class PurchaseService {
   Future<void> initialize() async {
     _available = await _iap.isAvailable();
     if (!_available) {
-      debugPrint('PurchaseService: IAP not available');
+      if (kDebugMode) debugPrint('PurchaseService: IAP not available');
       return;
     }
 
@@ -85,19 +88,19 @@ class PurchaseService {
     _subscription = _iap.purchaseStream.listen(
       _handlePurchaseUpdate,
       onDone: () => _subscription?.cancel(),
-      onError: (error) => debugPrint('PurchaseService: stream error $error'),
+      onError: (error) { if (kDebugMode) debugPrint('PurchaseService: stream error $error'); },
     );
 
     // Ürünleri yükle
     final response = await _iap.queryProductDetails(allProductIds);
     if (response.notFoundIDs.isNotEmpty) {
-      debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
+      if (kDebugMode) debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
     }
     for (final product in response.productDetails) {
       _products[product.id] = product;
     }
 
-    debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
+    if (kDebugMode) debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
   }
 
   void dispose() {
@@ -125,26 +128,27 @@ class PurchaseService {
     await _iap.restorePurchases();
   }
 
+  // Sunucu dogrulamasi beklemeden eklenen urunler (network hatasi durumunda).
+  // Sonraki baslatmada tekrar dogrulanmali.
+  final Set<String> _pendingVerification = {};
+
+  /// Network hatasi nedeniyle dogrulanamamis urunler.
+  Set<String> get pendingVerification => Set.unmodifiable(_pendingVerification);
+
   // ── Satın alma stream handler ─────────────────────────────────────────
   void _handlePurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
     for (final purchase in purchaseDetailsList) {
       switch (purchase.status) {
         case PurchaseStatus.purchased:
         case PurchaseStatus.restored:
-          _purchasedIds.add(purchase.productID);
-          debugPrint('PurchaseService: ✓ ${purchase.productID}');
-          // Starter Pack: alt ürünleri de aç
-          if (purchase.productID == kStarterPack) {
-            _purchasedIds
-              ..add(kRemoveAds)
-              ..add(kSoundCrystal)
-              ..add(kSoundForest)
-              ..add(kTexturePack);
-          }
+          _verifyAndUnlock(purchase);
           break;
         case PurchaseStatus.error:
-          debugPrint(
-              'PurchaseService: error ${purchase.productID}: ${purchase.error}');
+          if (kDebugMode) {
+            debugPrint(
+              'PurchaseService: error ${purchase.productID}: ${purchase.error}',
+            );
+          }
           break;
         case PurchaseStatus.pending:
         case PurchaseStatus.canceled:
@@ -155,7 +159,57 @@ class PurchaseService {
         _iap.completePurchase(purchase);
       }
     }
+  }
 
+  /// Receipt'i sunucu tarafinda dogrular, basariliysa urunu acar.
+  /// Network hatasinda graceful degradation: yerel olarak ekler, flag'ler.
+  Future<void> _verifyAndUnlock(PurchaseDetails purchase) async {
+    final repo = RemoteRepository();
+    final platform = Platform.isIOS ? 'ios' : 'android';
+    final receipt = purchase.verificationData.serverVerificationData;
+
+    final result = await repo.verifyPurchase(
+      platform: platform,
+      receipt: receipt,
+      productId: purchase.productID,
+    );
+
+    if (result == true) {
+      // Sunucu dogruladi
+      _addProduct(purchase.productID);
+      _pendingVerification.remove(purchase.productID);
+      if (kDebugMode) {
+        debugPrint('PurchaseService: server verified ${purchase.productID}');
+      }
+    } else if (result == null) {
+      // Network hatasi — graceful degradation: yerel olarak ekle, flag'le
+      _addProduct(purchase.productID);
+      _pendingVerification.add(purchase.productID);
+      if (kDebugMode) {
+        debugPrint(
+          'PurchaseService: network error, locally added ${purchase.productID}',
+        );
+      }
+    } else {
+      // Dogrulama basarisiz — urunu ekleme
+      if (kDebugMode) {
+        debugPrint(
+          'PurchaseService: verification failed for ${purchase.productID}',
+        );
+      }
+    }
+  }
+
+  /// Urunu ve alt urunlerini _purchasedIds'e ekler.
+  void _addProduct(String productId) {
+    _purchasedIds.add(productId);
+    if (productId == kStarterPack) {
+      _purchasedIds
+        ..add(kRemoveAds)
+        ..add(kSoundCrystal)
+        ..add(kSoundForest)
+        ..add(kTexturePack);
+    }
     onPurchaseUpdate?.call(_purchasedIds);
   }
 

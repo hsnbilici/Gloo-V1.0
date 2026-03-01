@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/locale_provider.dart';
 
@@ -35,13 +35,13 @@ class GameOverOverlay extends ConsumerWidget {
   final VoidCallback? onSecondChance;
 
   static Color modeColor(GameMode mode) => switch (mode) {
-        GameMode.classic   => kColorClassic,
+        GameMode.classic => kColorClassic,
         GameMode.colorChef => kColorChef,
         GameMode.timeTrial => kColorTimeTrial,
-        GameMode.zen       => kColorZen,
-        GameMode.daily     => kCyan,
-        GameMode.level     => kColorChef,
-        GameMode.duel      => kColorClassic,
+        GameMode.zen => kColorZen,
+        GameMode.daily => kCyan,
+        GameMode.level => kColorChef,
+        GameMode.duel => kColorClassic,
       };
 
   @override
@@ -50,18 +50,17 @@ class GameOverOverlay extends ConsumerWidget {
     final color = modeColor(mode);
 
     final modeLabel = switch (mode) {
-      GameMode.classic   => l.gameOverModeClassic,
+      GameMode.classic => l.gameOverModeClassic,
       GameMode.colorChef => l.gameOverModeColorChef,
       GameMode.timeTrial => l.gameOverModeTimeTrial,
-      GameMode.zen       => l.gameOverModeZen,
-      GameMode.daily     => l.gameOverModeDaily,
-      GameMode.level     => 'Seviye',
-      GameMode.duel      => 'Düello',
+      GameMode.zen => l.gameOverModeZen,
+      GameMode.daily => l.gameOverModeDaily,
+      GameMode.level => 'Seviye',
+      GameMode.duel => 'Düello',
     };
 
-    final fillPct = totalCells > 0
-        ? (filledCells / totalCells * 100).round()
-        : 0;
+    final fillPct =
+        totalCells > 0 ? (filledCells / totalCells * 100).round() : 0;
 
     return Material(
       color: Colors.transparent,
@@ -117,10 +116,7 @@ class GameOverOverlay extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      )
-                          .animate(delay: 140.ms)
-                          .fadeIn(duration: 300.ms)
-                          .slideY(
+                      ).animate(delay: 140.ms).fadeIn(duration: 300.ms).slideY(
                             begin: -0.12,
                             end: 0,
                             duration: 300.ms,
@@ -128,9 +124,7 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 14),
                       // Parıldayan ayraç
-                      _GlowDivider(color: color)
-                          .animate(delay: 240.ms)
-                          .scaleX(
+                      _GlowDivider(color: color).animate(delay: 240.ms).scaleX(
                             begin: 0,
                             end: 1,
                             duration: 380.ms,
@@ -148,12 +142,11 @@ class GameOverOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.w700,
                           letterSpacing: 4,
                         ),
-                      )
-                          .animate(delay: 360.ms)
-                          .fadeIn(duration: 280.ms),
+                      ).animate(delay: 360.ms).fadeIn(duration: 280.ms),
                       if (isNewHighScore) ...[
                         const SizedBox(height: 12),
-                        _NewRecordBadge(label: l.gameOverNewRecord, color: color)
+                        _NewRecordBadge(
+                                label: l.gameOverNewRecord, color: color)
                             .animate(delay: 420.ms)
                             .fadeIn(duration: 300.ms)
                             .scale(
@@ -168,10 +161,7 @@ class GameOverOverlay extends ConsumerWidget {
                         label: l.gameOverGridFill,
                         value: '%$fillPct',
                         color: color,
-                      )
-                          .animate(delay: 460.ms)
-                          .fadeIn(duration: 280.ms)
-                          .slideX(
+                      ).animate(delay: 460.ms).fadeIn(duration: 280.ms).slideX(
                             begin: 0.12,
                             end: 0,
                             duration: 280.ms,
@@ -211,10 +201,7 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: color,
                         filled: true,
                         onTap: onReplay,
-                      )
-                          .animate(delay: 540.ms)
-                          .fadeIn(duration: 320.ms)
-                          .slideY(
+                      ).animate(delay: 540.ms).fadeIn(duration: 320.ms).slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,
@@ -227,10 +214,7 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: kMuted,
                         filled: false,
                         onTap: onHome,
-                      )
-                          .animate(delay: 610.ms)
-                          .fadeIn(duration: 320.ms)
-                          .slideY(
+                      ).animate(delay: 610.ms).fadeIn(duration: 320.ms).slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,
@@ -536,13 +520,11 @@ class _SecondChanceButtonState extends State<_SecondChanceButton> {
             ),
             const SizedBox(width: 6),
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
                 color: accent.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                    color: accent.withValues(alpha: 0.40)),
+                border: Border.all(color: accent.withValues(alpha: 0.40)),
               ),
               child: const Text(
                 '+3 Hamle',
@@ -574,7 +556,8 @@ class _ActionButtonState extends State<_ActionButton> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 80),
         transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(_pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
+        transform: Matrix4.diagonal3Values(
+            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(

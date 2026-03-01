@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
+import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../providers/locale_provider.dart';
 
@@ -23,7 +24,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
   bool _weekly = true;
   bool _loading = true;
-  List<Map<String, dynamic>> _scores = [];
+  List<LeaderboardEntry> _scores = [];
   int? _userRank;
 
   @override
@@ -42,7 +43,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     super.dispose();
   }
 
-  String get _currentMode => _tabController.index == 0 ? 'classic' : 'timetrial';
+  String get _currentMode =>
+      _tabController.index == 0 ? 'classic' : 'timetrial';
 
   Future<void> _fetchData() async {
     setState(() => _loading = true);
@@ -52,7 +54,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     ]);
     if (!mounted) return;
     setState(() {
-      _scores = results[0] as List<Map<String, dynamic>>;
+      _scores = results[0] as List<LeaderboardEntry>;
       _userRank = results[1] as int?;
       _loading = false;
     });
@@ -80,9 +82,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 18),
+                child: const Icon(Icons.arrow_back_rounded,
+                    color: Colors.white, size: 18),
               ),
             ),
           ),
@@ -131,20 +135,23 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               if (_userRank != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: _UserRankBanner(rank: _userRank!, label: l.leaderboardYourRank),
+                  child: _UserRankBanner(
+                      rank: _userRank!, label: l.leaderboardYourRank),
                 ),
               const SizedBox(height: 8),
               // Skor listesi
               Expanded(
                 child: _loading
                     ? const Center(
-                        child: CircularProgressIndicator(color: kCyan, strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                            color: kCyan, strokeWidth: 2),
                       )
                     : _scores.isEmpty
                         ? Center(
                             child: Text(
                               l.leaderboardEmpty,
-                              style: const TextStyle(color: kMuted, fontSize: 14),
+                              style:
+                                  const TextStyle(color: kMuted, fontSize: 14),
                             ),
                           )
                         : ListView.builder(
@@ -153,16 +160,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                             itemBuilder: (context, index) {
                               final entry = _scores[index];
                               final rank = index + 1;
-                              final score = entry['score'] as int? ?? 0;
-                              final profiles = entry['profiles'];
-                              final username = profiles is Map
-                                  ? (profiles['username'] as String? ?? 'Player')
-                                  : 'Player';
                               return _ScoreRow(
                                 rank: rank,
-                                username: username,
-                                score: score,
-                              ).animate(delay: (40 * index).ms).fadeIn(duration: 250.ms).slideX(
+                                username: entry.username,
+                                score: entry.score,
+                              )
+                                  .animate(delay: (40 * index).ms)
+                                  .fadeIn(duration: 250.ms)
+                                  .slideX(
                                     begin: 0.05,
                                     end: 0,
                                     duration: 250.ms,
@@ -238,7 +243,8 @@ class _ModeTabs extends StatelessWidget {
         labelColor: kCyan,
         unselectedLabelColor: kMuted,
         labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-        unselectedLabelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        unselectedLabelStyle:
+            const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
         tabs: [
           Tab(text: classicLabel),
           Tab(text: timeTrialLabel),
@@ -447,7 +453,9 @@ class _ScoreRow extends StatelessWidget {
             child: Text(
               username,
               style: TextStyle(
-                color: rank <= 3 ? Colors.white : Colors.white.withValues(alpha: 0.80),
+                color: rank <= 3
+                    ? Colors.white
+                    : Colors.white.withValues(alpha: 0.80),
                 fontSize: 14,
                 fontWeight: rank <= 3 ? FontWeight.w700 : FontWeight.w500,
               ),

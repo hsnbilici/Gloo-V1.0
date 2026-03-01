@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
@@ -23,12 +23,14 @@ final List<SeasonTier> _kSeasonTiers = List.generate(50, (i) {
           : tier % 3 == 0
               ? SeasonRewardType.energy
               : SeasonRewardType.gelOzu,
-      amount: tier % 5 == 0 ? 1 : tier % 3 == 0 ? 5 : 10 + i,
+      amount: tier % 5 == 0
+          ? 1
+          : tier % 3 == 0
+              ? 5
+              : 10 + i,
     ),
     premiumReward: SeasonReward(
-      type: tier % 10 == 0
-          ? SeasonRewardType.costume
-          : SeasonRewardType.gelOzu,
+      type: tier % 10 == 0 ? SeasonRewardType.costume : SeasonRewardType.gelOzu,
       amount: tier % 10 == 0 ? 1 : 20 + i * 2,
       isPremium: true,
     ),
@@ -66,10 +68,10 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
     final remote = RemoteRepository();
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
-      final backendPass = meta['season_pass_state'] as Map<String, dynamic>?;
+      final backendPass = meta.seasonPassState;
       if (backendPass != null && backendPass.isNotEmpty) {
-        _passState.loadFromMap(
-            backendPass.map((k, v) => MapEntry(k, v as int)));
+        _passState
+            .loadFromMap(backendPass.map((k, v) => MapEntry(k, v as int)));
         await repo.saveSeasonPassState(_passState.toMap());
         setState(() {});
       }
@@ -309,10 +311,10 @@ class _TierCard extends StatelessWidget {
   final Duration delay;
 
   IconData _rewardIcon(SeasonRewardType type) => switch (type) {
-        SeasonRewardType.gelOzu     => Icons.water_drop_rounded,
-        SeasonRewardType.costume    => Icons.checkroom_rounded,
+        SeasonRewardType.gelOzu => Icons.water_drop_rounded,
+        SeasonRewardType.costume => Icons.checkroom_rounded,
         SeasonRewardType.decoration => Icons.auto_awesome_rounded,
-        SeasonRewardType.energy     => Icons.bolt_rounded,
+        SeasonRewardType.energy => Icons.bolt_rounded,
       };
 
   @override
@@ -381,9 +383,7 @@ class _TierCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Icon(
                     _rewardIcon(tier.freeReward.type),
-                    color: isUnlocked
-                        ? const Color(0xFF00E5FF)
-                        : kMuted,
+                    color: isUnlocked ? const Color(0xFF00E5FF) : kMuted,
                     size: 20,
                   ),
                   const SizedBox(height: 2),
@@ -416,7 +416,8 @@ class _TierCard extends StatelessWidget {
                         Text(
                           'PREMIUM',
                           style: TextStyle(
-                            color: const Color(0xFFFF69B4).withValues(alpha: 0.50),
+                            color:
+                                const Color(0xFFFF69B4).withValues(alpha: 0.50),
                             fontSize: 7,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1,

@@ -19,8 +19,8 @@ enum GameMode {
   timeTrial,
   zen,
   daily,
-  level,  // Faz 4: Seviye modu
-  duel;   // Faz 4: PvP düello modu
+  level, // Faz 4: Seviye modu
+  duel; // Faz 4: PvP düello modu
 
   static GameMode fromString(String value) {
     return GameMode.values.firstWhere(
@@ -102,7 +102,8 @@ class GlooGame {
           : null;
   GridManager get gridManager => _gridManager;
 
-  void setInitialHighScore(int value) => _scoreSystem.setInitialHighScore(value);
+  void setInitialHighScore(int value) =>
+      _scoreSystem.setInitialHighScore(value);
   void setGamesPlayed(int value) => _totalGamesPlayed = value;
   void setCurrencyBalance(int value) => currencyManager.setBalance(value);
 
@@ -352,7 +353,8 @@ class GlooGame {
 
       // Time Trial: her temizlenen satır +2 saniye bonus
       if (mode == GameMode.timeTrial) {
-        _remainingSeconds += clearResult.totalLines * GameConstants.timeTrialLineClearBonus;
+        _remainingSeconds +=
+            clearResult.totalLines * GameConstants.timeTrialLineClearBonus;
         onTimerTick?.call(_remainingSeconds);
       }
 

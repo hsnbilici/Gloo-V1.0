@@ -118,7 +118,8 @@ void main() {
     });
 
     test('categories cover all shapes', () {
-      final total = kSmallShapes.length + kMediumShapes.length + kLargeShapes.length;
+      final total =
+          kSmallShapes.length + kMediumShapes.length + kLargeShapes.length;
       expect(total, kAllShapes.length);
     });
   });
@@ -160,10 +161,14 @@ void main() {
 
     test('generateNextSeededHand is deterministic', () {
       final h1 = ShapeGenerator.generateNextSeededHand(
-        baseSeed: 100, handIndex: 0, moveCount: 0,
+        baseSeed: 100,
+        handIndex: 0,
+        moveCount: 0,
       );
       final h2 = ShapeGenerator.generateNextSeededHand(
-        baseSeed: 100, handIndex: 0, moveCount: 0,
+        baseSeed: 100,
+        handIndex: 0,
+        moveCount: 0,
       );
       for (int i = 0; i < h1.length; i++) {
         expect(h1[i].$1.name, h2[i].$1.name);
@@ -182,7 +187,8 @@ void main() {
     });
 
     test('getDifficulty caps at 0.95', () {
-      final diff = ShapeGenerator.getDifficulty(score: 100000, gamesPlayed: 1000);
+      final diff =
+          ShapeGenerator.getDifficulty(score: 100000, gamesPlayed: 1000);
       expect(diff, 0.95);
     });
 

@@ -78,7 +78,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
   int _nearMissKeyIndex = 0;
   ({double cx, double cy, int count, Color color, int key})? _placeFeedback;
   int _feedbackKeyIndex = 0;
-  List<({int row, int col, Color color, int key, Duration delay})> _burstCells = [];
+  List<({int row, int col, Color color, int key, Duration delay})> _burstCells =
+      [];
   int _burstKeyBase = 0;
   final List<({int row, int col, Color color, int key})> _synthesisBlooms = [];
   int _synthesisKeyBase = 0;
@@ -109,13 +110,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
   // Mod bazli ortam rengi
   Color get _modeColor => switch (widget.mode) {
-        GameMode.classic   => kColorClassic,
+        GameMode.classic => kColorClassic,
         GameMode.colorChef => kColorChef,
         GameMode.timeTrial => kColorTimeTrial,
-        GameMode.zen       => kColorZen,
-        GameMode.daily     => kCyan,
-        GameMode.level     => const Color(0xFFFF8C42),
-        GameMode.duel      => const Color(0xFFFF4D6D),
+        GameMode.zen => kColorZen,
+        GameMode.daily => kCyan,
+        GameMode.level => const Color(0xFFFF8C42),
+        GameMode.duel => const Color(0xFFFF4D6D),
       };
 
   // Loss Aversion badge'leri
@@ -165,7 +166,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
       if (!mounted) return;
       final gridCols = _game.gridManager.cols;
       final gridRows = _game.gridManager.rows;
-      final bursts = <({int row, int col, Color color, int key, Duration delay})>[];
+      final bursts =
+          <({int row, int col, Color color, int key, Duration delay})>[];
       for (final entry in clearResult.clearedCellColors.entries) {
         final (row, col) = entry.key;
         final double distFromCenter = clearResult.clearedRows.contains(row)
@@ -230,13 +232,17 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
     _game.onTimerTick = (seconds) {
       if (mounted) {
-        ref.read(gameProvider(widget.mode).notifier).updateRemainingSeconds(seconds);
+        ref
+            .read(gameProvider(widget.mode).notifier)
+            .updateRemainingSeconds(seconds);
       }
     };
 
     _game.onChefProgress = (progress, required) {
       if (mounted) {
-        ref.read(gameProvider(widget.mode).notifier).updateChef(progress, required);
+        ref
+            .read(gameProvider(widget.mode).notifier)
+            .updateChef(progress, required);
       }
     };
 
@@ -244,9 +250,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
       if (!mounted) return;
       final nextLevel = _game.currentChefLevel;
       ref.read(gameProvider(widget.mode).notifier).updateChef(
-        0,
-        nextLevel?.requiredCount ?? 1,
-      );
+            0,
+            nextLevel?.requiredCount ?? 1,
+          );
       showChefLevelComplete(
         context: context,
         completedIndex: completedIndex,
@@ -487,7 +493,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   // ─── Izgara ───────────────────────────────────────────────────────────
 
   Widget _buildGrid() {
-    final colorBlindMode = ref.watch(audioSettingsProvider).colorBlindMode;
+    final colorBlindMode = ref.watch(appSettingsProvider).colorBlindMode;
     return LayoutBuilder(
       builder: (context, constraints) {
         final cols = _game.gridManager.cols;
@@ -501,7 +507,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
         const powerUpGap = 6.0;
 
         final availW = constraints.maxWidth - hPad * 2;
-        final availH = constraints.maxHeight - handH - handGap - bottomPad - powerUpH - powerUpGap;
+        final availH = constraints.maxHeight -
+            handH -
+            handGap -
+            bottomPad -
+            powerUpH -
+            powerUpGap;
 
         final cellByW = (availW - gap * (cols - 1)) / cols;
         final cellByH = (availH - gap * (rows - 1)) / rows;
@@ -518,7 +529,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 clipBehavior: Clip.none,
                 children: [
                   RepaintBoundary(
-                   child: SizedBox(
+                      child: SizedBox(
                     width: gridW,
                     height: gridH,
                     child: MouseRegion(
@@ -554,7 +565,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
                             recentlyPlacedCells: _recentlyPlacedCells,
                             waveKey: _waveKey,
                             previewValid: _previewValid,
-                            previewSlotColor: _selectedSlot != null ? _hand[_selectedSlot!]?.$2 : null,
+                            previewSlotColor: _selectedSlot != null
+                                ? _hand[_selectedSlot!]?.$2
+                                : null,
                             selectedSlot: _selectedSlot,
                             activePowerUpMode: _activePowerUpMode,
                             onTap: () => _onCellTap(row, col),
@@ -615,19 +628,25 @@ class _GameScreenState extends ConsumerState<GameScreen>
                           key: ValueKey(_placeFeedback!.key),
                           count: _placeFeedback!.count,
                           color: _placeFeedback!.color,
-                          onDismiss: () => setState(() => _placeFeedback = null),
+                          onDismiss: () =>
+                              setState(() => _placeFeedback = null),
                         ),
                       ),
                     ),
                   if (_bombExplosion != null)
                     Positioned(
-                      left: _bombExplosion!.col * (cell + gap) + cell / 2 - cell * 3,
-                      top: _bombExplosion!.row * (cell + gap) + cell / 2 - cell * 3,
+                      left: _bombExplosion!.col * (cell + gap) +
+                          cell / 2 -
+                          cell * 3,
+                      top: _bombExplosion!.row * (cell + gap) +
+                          cell / 2 -
+                          cell * 3,
                       child: IgnorePointer(
                         child: BombExplosionEffect(
                           key: ValueKey(_bombExplosion!.key),
                           cellSize: cell,
-                          onDismiss: () => setState(() => _bombExplosion = null),
+                          onDismiss: () =>
+                              setState(() => _bombExplosion = null),
                         ),
                       ),
                     ),
@@ -649,7 +668,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
               balance: _game.currencyManager.balance,
               powerUpSystem: _game.powerUpSystem,
               activePowerUpMode: _activePowerUpMode,
-              showFreeze: widget.mode == GameMode.timeTrial || widget.mode == GameMode.duel,
+              showFreeze: widget.mode == GameMode.timeTrial ||
+                  widget.mode == GameMode.duel,
               onPowerUpTap: _onPowerUpTap,
             ),
             const SizedBox(height: 8),
@@ -676,9 +696,11 @@ class _GameScreenState extends ConsumerState<GameScreen>
           );
           _shakeTimer?.cancel();
           _shakeTimer = Timer(
-            Duration(milliseconds: _shakeIntensity >= GameConstants.shakeAmplitudeEpic
-                ? GameConstants.shakeDurationEpic
-                : GameConstants.shakeDurationLarge),
+            Duration(
+                milliseconds:
+                    _shakeIntensity >= GameConstants.shakeAmplitudeEpic
+                        ? GameConstants.shakeDurationEpic
+                        : GameConstants.shakeDurationLarge),
             () {
               if (mounted) setState(() => _shakeIntensity = 0.0);
             },
@@ -780,7 +802,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
     }
 
     _game.placePiece(cells, color);
-    ref.read(gameProvider(widget.mode).notifier)
+    ref
+        .read(gameProvider(widget.mode).notifier)
         .updateFill(_game.gridManager.filledCells);
 
     final feedbackCx = ac + (shape.colCount - 1) / 2.0;
@@ -829,7 +852,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
             _previewCells = {};
             _previewValid = false;
             _previewAnchor = null;
-            _activePowerUpEffect = (type: PowerUpType.rotate, key: ++_powerUpFxKey);
+            _activePowerUpEffect =
+                (type: PowerUpType.rotate, key: ++_powerUpFxKey);
           });
         }
 
@@ -917,7 +941,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
                           _showNearMissRescueBadge = false;
                           _showHighScoreBadge = false;
                         });
-                        ref.read(gameProvider(widget.mode).notifier)
+                        ref
+                            .read(gameProvider(widget.mode).notifier)
                             .updateScore(_game.score);
                       },
                     );
@@ -954,17 +979,17 @@ class _GameScreenState extends ConsumerState<GameScreen>
     _shakeTimer?.cancel();
     _toastTimer?.cancel();
     _game.cancelTimer();
-    _game.onLineClear        = null;
-    _game.onCombo            = null;
-    _game.onNearMiss         = null;
-    _game.onGameOver         = null;
-    _game.onTimerTick        = null;
-    _game.onChefProgress     = null;
+    _game.onLineClear = null;
+    _game.onCombo = null;
+    _game.onNearMiss = null;
+    _game.onGameOver = null;
+    _game.onTimerTick = null;
+    _game.onChefProgress = null;
     _game.onChefLevelComplete = null;
-    _game.onMoveCompleted    = null;
-    _game.onLevelComplete    = null;
-    _game.onIceCracked       = null;
-    _game.onGravityApplied   = null;
+    _game.onMoveCompleted = null;
+    _game.onLevelComplete = null;
+    _game.onIceCracked = null;
+    _game.onGravityApplied = null;
     _game.currencyManager.onBalanceChanged = null;
     _duelController?.dispose();
     _breathCtrl.dispose();

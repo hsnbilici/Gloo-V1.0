@@ -148,8 +148,14 @@ void main() {
 
     test('all secondary colors have at least one recipe', () {
       final secondaries = [
-        GelColor.orange, GelColor.green, GelColor.purple, GelColor.brown,
-        GelColor.pink, GelColor.lightBlue, GelColor.lime, GelColor.maroon,
+        GelColor.orange,
+        GelColor.green,
+        GelColor.purple,
+        GelColor.brown,
+        GelColor.pink,
+        GelColor.lightBlue,
+        GelColor.lime,
+        GelColor.maroon,
       ];
       for (final color in secondaries) {
         final recipes = ColorMixer.findRecipes(color);

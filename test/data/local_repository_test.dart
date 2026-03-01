@@ -445,7 +445,10 @@ void main() {
 
     test('saveCharacterState + getCharacterState round trip', () async {
       repo = await createRepo();
-      final state = {'equippedCostume': 'default', 'talents': [1, 2]};
+      final state = {
+        'equippedCostume': 'default',
+        'talents': [1, 2]
+      };
       await repo.saveCharacterState(state);
       final loaded = repo.getCharacterState();
       expect(loaded['equippedCostume'], 'default');

@@ -49,14 +49,14 @@ class AdManager {
   //       ? 'ca-app-pub-XXXX/IOS_BANNER_ID'
   //       : 'ca-app-pub-XXXX/ANDROID_BANNER_ID';
   static String get _kBanner => _isIOS
-      ? 'ca-app-pub-3940256099942544/2435281174'   // iOS test banner
-      : 'ca-app-pub-3940256099942544/6300978111';   // Android test banner
+      ? 'ca-app-pub-3940256099942544/2435281174' // iOS test banner
+      : 'ca-app-pub-3940256099942544/6300978111'; // Android test banner
   static String get _kInterstitial => _isIOS
-      ? 'ca-app-pub-3940256099942544/4411468910'   // iOS test interstitial
-      : 'ca-app-pub-3940256099942544/1033173712';   // Android test interstitial
+      ? 'ca-app-pub-3940256099942544/4411468910' // iOS test interstitial
+      : 'ca-app-pub-3940256099942544/1033173712'; // Android test interstitial
   static String get _kRewarded => _isIOS
-      ? 'ca-app-pub-3940256099942544/1712485313'   // iOS test rewarded
-      : 'ca-app-pub-3940256099942544/5224354917';   // Android test rewarded
+      ? 'ca-app-pub-3940256099942544/1712485313' // iOS test rewarded
+      : 'ca-app-pub-3940256099942544/5224354917'; // Android test rewarded
 
   static bool get _isIOS => !kIsWeb && Platform.isIOS;
 
@@ -72,7 +72,7 @@ class AdManager {
     _initialized = true;
     _loadInterstitial();
     _loadRewarded();
-    debugPrint('AdManager: initialized');
+    if (kDebugMode) debugPrint('AdManager: initialized');
   }
 
   /// IAP satın alımı sonrası reklamları kaldırır.
@@ -113,7 +113,7 @@ class AdManager {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) => _interstitialAd = ad,
         onAdFailedToLoad: (error) {
-          debugPrint('AdManager: interstitial load failed: $error');
+          if (kDebugMode) debugPrint('AdManager: interstitial load failed: $error');
           _interstitialAd = null;
         },
       ),
@@ -133,8 +133,7 @@ class AdManager {
 
     // Anti-frustration kontrolü
     final now = DateTime.now();
-    if (_lastLossTime != null &&
-        now.difference(_lastLossTime!).inMinutes < 5) {
+    if (_lastLossTime != null && now.difference(_lastLossTime!).inMinutes < 5) {
       _recentLosses++;
     } else {
       _recentLosses = 1;
@@ -184,7 +183,7 @@ class AdManager {
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => _rewardedAd = ad,
         onAdFailedToLoad: (error) {
-          debugPrint('AdManager: rewarded load failed: $error');
+          if (kDebugMode) debugPrint('AdManager: rewarded load failed: $error');
           _rewardedAd = null;
         },
       ),
@@ -303,9 +302,9 @@ class AdManager {
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) => debugPrint('AdManager: banner loaded'),
+        onAdLoaded: (_) { if (kDebugMode) debugPrint('AdManager: banner loaded'); },
         onAdFailedToLoad: (ad, error) {
-          debugPrint('AdManager: banner failed: $error');
+          if (kDebugMode) debugPrint('AdManager: banner failed: $error');
           ad.dispose();
           _bannerAd = null;
         },

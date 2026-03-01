@@ -28,7 +28,7 @@ class LocalRepository {
     profile.sfxEnabled = _prefs.getBool('sfx') ?? true;
     profile.musicEnabled = _prefs.getBool('music') ?? true;
     profile.hapticsEnabled = _prefs.getBool('haptics') ?? true;
-    profile.currentStreak = _prefs.getInt('streak') ?? 0;
+    profile.currentStreak = _prefs.getInt('streak_count') ?? 0;
     return profile;
   }
 
@@ -37,7 +37,7 @@ class LocalRepository {
     await _prefs.setBool('sfx', profile.sfxEnabled);
     await _prefs.setBool('music', profile.musicEnabled);
     await _prefs.setBool('haptics', profile.hapticsEnabled);
-    await _prefs.setInt('streak', profile.currentStreak);
+    await _prefs.setInt('streak_count', profile.currentStreak);
   }
 
   bool getOnboardingDone() => _prefs.getBool('onboarding_done') ?? false;

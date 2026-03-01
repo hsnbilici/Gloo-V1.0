@@ -18,8 +18,10 @@ class LineClearResult {
 
   final List<int> clearedRows;
   final List<int> clearedCols;
+
   /// Silinmeden önce yakalanan (satır, sütun) → renk haritası.
   final Map<(int, int), GelColor> clearedCellColors;
+
   /// Buz katmanı kırılan hücrelerin pozisyonları.
   final List<(int, int)> crackedIceCells;
   int get totalLines => clearedRows.length + clearedCols.length;
@@ -222,7 +224,8 @@ class GridManager {
   }
 
   /// Hücre türünü ayarla (seviye yükleme için).
-  void setCellType(int row, int col, CellType type, {int iceLayer = 0, GelColor? lockedColor}) {
+  void setCellType(int row, int col, CellType type,
+      {int iceLayer = 0, GelColor? lockedColor}) {
     final cell = _cells[row][col];
     cell.type = type;
     cell.iceLayer = iceLayer;
@@ -255,7 +258,8 @@ class GridManager {
   }
 
   /// 3×3 alan temizle (Bomb power-up için). Merkez hücresinden çevreyi siler.
-  Map<(int, int), GelColor> clearArea(int centerRow, int centerCol, int radius) {
+  Map<(int, int), GelColor> clearArea(
+      int centerRow, int centerCol, int radius) {
     final cleared = <(int, int), GelColor>{};
     for (int r = centerRow - radius; r <= centerRow + radius; r++) {
       for (int c = centerCol - radius; c <= centerCol + radius; c++) {

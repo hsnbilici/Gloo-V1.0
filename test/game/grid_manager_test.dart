@@ -416,8 +416,8 @@ void main() {
       gm.initFromSpecialCells({
         (0, 0): const CellConfig(type: CellType.ice, iceLayer: 2),
         (1, 1): const CellConfig(type: CellType.stone),
-        (2, 2): const CellConfig(
-            type: CellType.locked, lockedColor: GelColor.red),
+        (2, 2):
+            const CellConfig(type: CellType.locked, lockedColor: GelColor.red),
         (3, 3): const CellConfig(type: CellType.gravity),
       });
 
@@ -506,8 +506,7 @@ void main() {
     });
 
     test('copy creates independent clone', () {
-      final cell = Cell(
-          color: GelColor.red, type: CellType.ice, iceLayer: 2);
+      final cell = Cell(color: GelColor.red, type: CellType.ice, iceLayer: 2);
       final clone = cell.copy();
       expect(clone.color, GelColor.red);
       expect(clone.type, CellType.ice);

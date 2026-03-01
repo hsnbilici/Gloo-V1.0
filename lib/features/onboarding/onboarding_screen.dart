@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -105,7 +105,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               children: [
                 // Üst bar: Gloo logosu + Geç butonu
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -172,8 +173,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           final active = i == _page;
                           return AnimatedContainer(
                             duration: const Duration(milliseconds: 280),
-                            margin:
-                                const EdgeInsets.symmetric(horizontal: 4),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
                             width: active ? 22 : 6,
                             height: 6,
                             decoration: BoxDecoration(
@@ -305,10 +305,7 @@ class _StepPage extends StatelessWidget {
               ],
             ),
             child: Icon(step.icon, color: step.color, size: 44),
-          )
-              .animate()
-              .fadeIn(duration: 320.ms)
-              .scale(
+          ).animate().fadeIn(duration: 320.ms).scale(
                 begin: const Offset(0.6, 0.6),
                 duration: 380.ms,
                 curve: Curves.easeOutBack,
@@ -330,10 +327,11 @@ class _StepPage extends StatelessWidget {
                 ),
               ],
             ),
-          )
-              .animate(delay: 80.ms)
-              .fadeIn(duration: 280.ms)
-              .slideY(begin: -0.08, end: 0, duration: 280.ms, curve: Curves.easeOutCubic),
+          ).animate(delay: 80.ms).fadeIn(duration: 280.ms).slideY(
+              begin: -0.08,
+              end: 0,
+              duration: 280.ms,
+              curve: Curves.easeOutCubic),
           const SizedBox(height: 16),
           // Açıklama
           Text(
@@ -346,10 +344,11 @@ class _StepPage extends StatelessWidget {
               height: 1.55,
               letterSpacing: 0.1,
             ),
-          )
-              .animate(delay: 160.ms)
-              .fadeIn(duration: 300.ms)
-              .slideY(begin: 0.08, end: 0, duration: 300.ms, curve: Curves.easeOutCubic),
+          ).animate(delay: 160.ms).fadeIn(duration: 300.ms).slideY(
+              begin: 0.08,
+              end: 0,
+              duration: 300.ms,
+              curve: Curves.easeOutCubic),
         ],
       ),
     );

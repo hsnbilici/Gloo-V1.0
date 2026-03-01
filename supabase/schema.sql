@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS scores (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID NOT NULL REFERENCES profiles(id),
   mode TEXT NOT NULL,
-  score INTEGER NOT NULL,
+  score INTEGER NOT NULL CHECK (score >= 0),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
@@ -121,8 +121,9 @@ ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
 CREATE POLICY scores_select ON scores
   FOR SELECT USING (true);
 
-CREATE POLICY scores_insert ON scores
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- NOT: Dogrudan INSERT devre disi birakildi.
+-- Skor gondermek icin submit_score() RPC fonksiyonu kullanilmali.
+-- Bu fonksiyon mod bazli skor sinirini dogrular.
 
 -- ─── daily_tasks ─────────────────────────────────────────────────────────────
 
@@ -138,14 +139,14 @@ CREATE POLICY daily_tasks_update ON daily_tasks
   FOR UPDATE USING (auth.uid() = user_id);
 
 -- ─── redeem_codes ────────────────────────────────────────────────────────────
+-- NOT: Client dogrudan redeem_codes tablosuna erismemeli.
+-- Tum redeem islemleri supabase/functions/redeem-code Edge Function uzerinden yapilir.
+-- Edge Function service_role key ile RLS'i bypass eder.
 
 ALTER TABLE redeem_codes ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY redeem_codes_select ON redeem_codes
-  FOR SELECT USING (true);
-
-CREATE POLICY redeem_codes_update ON redeem_codes
-  FOR UPDATE USING (true);  -- current_uses artirimi icin
+-- Client tarafindan SELECT/UPDATE YAPILAMAZ.
+-- Tum erisim Edge Function (service_role) uzerinden saglanir.
 
 -- ─── pvp_matches ─────────────────────────────────────────────────────────────
 
@@ -159,10 +160,9 @@ CREATE POLICY pvp_matches_select ON pvp_matches
 CREATE POLICY pvp_matches_insert ON pvp_matches
   FOR INSERT WITH CHECK (auth.uid() = player1_id);
 
-CREATE POLICY pvp_matches_update ON pvp_matches
-  FOR UPDATE USING (
-    auth.uid() = player1_id OR auth.uid() = player2_id
-  );
+-- NOT: pvp_matches icin UPDATE politikasi KALDIRILDI.
+-- Client dogrudan winner_id, status, completed_at guncelleyemez.
+-- Skor gondermek icin submit_pvp_score() RPC fonksiyonu kullanilmali.
 
 -- ─── pvp_obstacles ───────────────────────────────────────────────────────────
 
@@ -192,3 +192,158 @@ CREATE POLICY meta_states_insert ON meta_states
 
 CREATE POLICY meta_states_update ON meta_states
   FOR UPDATE USING (auth.uid() = user_id);
+
+-- =============================================================================
+-- GDPR DELETE Politikalari (Right to Erasure)
+-- =============================================================================
+-- Kullanici yalnizca kendi verisini silebilir.
+
+CREATE POLICY profiles_delete ON profiles
+  FOR DELETE USING (auth.uid() = id);
+
+CREATE POLICY scores_delete ON scores
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY daily_tasks_delete ON daily_tasks
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY pvp_matches_delete ON pvp_matches
+  FOR DELETE USING (auth.uid() = player1_id OR auth.uid() = player2_id);
+
+CREATE POLICY meta_states_delete ON meta_states
+  FOR DELETE USING (auth.uid() = user_id);
+
+CREATE POLICY pvp_obstacles_delete ON pvp_obstacles
+  FOR DELETE USING (
+    EXISTS (
+      SELECT 1 FROM pvp_matches
+      WHERE id = pvp_obstacles.match_id
+        AND (player1_id = auth.uid() OR player2_id = auth.uid())
+    )
+  );
+
+-- =============================================================================
+-- RPC Fonksiyonlari
+-- =============================================================================
+
+-- ─── PvP Skor Gonderimi ────────────────────────────────────────────────────
+-- Client dogrudan pvp_matches tablosunu guncelleyemez.
+-- Bu fonksiyon:
+--   1. Auth'dan user_id alir
+--   2. User'in match'in player1 veya player2'si oldugunu dogrular
+--   3. Ilgili skor alanini gunceller (player1_score veya player2_score)
+--   4. Her iki skor da girildiyse: winner_id hesaplar, status='completed', completed_at=now()
+
+CREATE OR REPLACE FUNCTION submit_pvp_score(p_match_id UUID, p_score INT)
+RETURNS JSON AS $$
+DECLARE
+  v_match pvp_matches%ROWTYPE;
+  v_user_id UUID := auth.uid();
+  v_winner_id UUID;
+BEGIN
+  -- Mac bilgisini getir
+  SELECT * INTO v_match FROM pvp_matches WHERE id = p_match_id;
+
+  IF v_match IS NULL THEN
+    RETURN json_build_object('error', 'Match not found');
+  END IF;
+
+  -- Mac aktif olmali
+  IF v_match.status != 'active' THEN
+    RETURN json_build_object('error', 'Match is not active');
+  END IF;
+
+  -- Hangi oyuncu oldugunu belirle ve skoru guncelle
+  IF v_user_id = v_match.player1_id THEN
+    UPDATE pvp_matches SET player1_score = p_score WHERE id = p_match_id;
+  ELSIF v_user_id = v_match.player2_id THEN
+    UPDATE pvp_matches SET player2_score = p_score WHERE id = p_match_id;
+  ELSE
+    RETURN json_build_object('error', 'Not a participant');
+  END IF;
+
+  -- Guncel mac verisini yeniden oku
+  SELECT * INTO v_match FROM pvp_matches WHERE id = p_match_id;
+
+  -- Her iki skor da girildiyse winner belirle ve maci tamamla
+  IF v_match.player1_score IS NOT NULL AND v_match.player2_score IS NOT NULL THEN
+    IF v_match.player1_score > v_match.player2_score THEN
+      v_winner_id := v_match.player1_id;
+    ELSIF v_match.player2_score > v_match.player1_score THEN
+      v_winner_id := v_match.player2_id;
+    END IF;
+    -- v_winner_id beraberliklerde NULL kalir
+
+    UPDATE pvp_matches
+    SET winner_id = v_winner_id,
+        status = 'completed',
+        completed_at = NOW()
+    WHERE id = p_match_id;
+  END IF;
+
+  RETURN json_build_object('success', true);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ─── PvP Stat Atomic Increment ───────────────────────────────────────────
+-- Client read-then-write yerine atomic increment kullanir.
+-- Race condition riski olmadan pvp_wins veya pvp_losses arttirir.
+
+CREATE OR REPLACE FUNCTION increment_pvp_stat(p_stat TEXT)
+RETURNS VOID AS $$
+BEGIN
+  IF p_stat = 'win' THEN
+    UPDATE profiles SET pvp_wins = pvp_wins + 1 WHERE id = auth.uid();
+  ELSIF p_stat = 'loss' THEN
+    UPDATE profiles SET pvp_losses = pvp_losses + 1 WHERE id = auth.uid();
+  ELSE
+    RAISE EXCEPTION 'Invalid stat: %', p_stat;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ─── Skor Gonderimi (Mod Bazli Sinirli) ──────────────────────────────────
+-- Client dogrudan scores tablosuna INSERT yapamaz.
+-- Bu fonksiyon mod bazli makul maks skor sinirini dogrular:
+--   classic: 100000, colorChef: 50000, timeTrial: 100000,
+--   zen: 999999, daily: 100000, level: 50000, duel: 100000
+
+CREATE OR REPLACE FUNCTION submit_score(p_mode TEXT, p_score INT)
+RETURNS JSON AS $$
+DECLARE
+  v_user_id UUID := auth.uid();
+  v_max_score INT;
+BEGIN
+  -- Auth kontrolu
+  IF v_user_id IS NULL THEN
+    RETURN json_build_object('error', 'Authentication required');
+  END IF;
+
+  -- Negatif skor reddet
+  IF p_score < 0 THEN
+    RETURN json_build_object('error', 'Score cannot be negative');
+  END IF;
+
+  -- Mod bazli maks skor siniri
+  CASE p_mode
+    WHEN 'classic' THEN v_max_score := 100000;
+    WHEN 'colorChef' THEN v_max_score := 50000;
+    WHEN 'timeTrial' THEN v_max_score := 100000;
+    WHEN 'zen' THEN v_max_score := 999999;
+    WHEN 'daily' THEN v_max_score := 100000;
+    WHEN 'level' THEN v_max_score := 50000;
+    WHEN 'duel' THEN v_max_score := 100000;
+    ELSE RETURN json_build_object('error', 'Invalid game mode');
+  END CASE;
+
+  IF p_score > v_max_score THEN
+    RETURN json_build_object('error', 'Score exceeds maximum for mode');
+  END IF;
+
+  -- Skoru kaydet
+  INSERT INTO scores (user_id, mode, score)
+  VALUES (v_user_id, p_mode, p_score);
+
+  RETURN json_build_object('success', true);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

@@ -43,7 +43,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/game/level/:levelId',
         builder: (context, state) {
-          final levelId = int.tryParse(state.pathParameters['levelId'] ?? '1') ?? 1;
+          final levelId =
+              int.tryParse(state.pathParameters['levelId'] ?? '1') ?? 1;
           final levelData = LevelProgression.getLevel(levelId);
           return GameScreen(
             mode: GameMode.level,
@@ -56,10 +57,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/game/duel',
         builder: (context, state) {
           final matchId = state.uri.queryParameters['matchId'];
-          final seed = int.tryParse(
-              state.uri.queryParameters['seed'] ?? '');
-          final isBot =
-              state.uri.queryParameters['isBot'] == 'true';
+          final seed = int.tryParse(state.uri.queryParameters['seed'] ?? '');
+          final isBot = state.uri.queryParameters['isBot'] == 'true';
           return GameScreen(
             mode: GameMode.duel,
             duelMatchId: matchId,

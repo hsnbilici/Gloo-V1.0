@@ -6,7 +6,18 @@ import '../core/l10n/app_strings.dart';
 
 // Desteklenen dil kodları
 const _kSupportedLangs = [
-  'tr', 'en', 'de', 'zh', 'ja', 'ko', 'ru', 'es', 'ar', 'hi', 'pt', 'fr',
+  'tr',
+  'en',
+  'de',
+  'zh',
+  'ja',
+  'ko',
+  'ru',
+  'es',
+  'ar',
+  'hi',
+  'pt',
+  'fr',
 ];
 
 /// Cihaz sistem dilini okur; desteklenmiyorsa İngilizce'ye düşer.

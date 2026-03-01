@@ -26,13 +26,17 @@ void main() {
     });
 
     test('computeShapeCells returns empty for rectangle', () {
-      const level = LevelData(id: 1, targetScore: 200, shape: MapShape.rectangle);
+      const level =
+          LevelData(id: 1, targetScore: 200, shape: MapShape.rectangle);
       expect(level.computeShapeCells(), isEmpty);
     });
 
     test('computeShapeCells returns stones for diamond', () {
       const level = LevelData(
-        id: 1, rows: 8, cols: 8, targetScore: 200,
+        id: 1,
+        rows: 8,
+        cols: 8,
+        targetScore: 200,
         shape: MapShape.diamond,
       );
       final stones = level.computeShapeCells();
@@ -44,7 +48,10 @@ void main() {
 
     test('computeShapeCells returns stones for cross', () {
       const level = LevelData(
-        id: 1, rows: 10, cols: 8, targetScore: 200,
+        id: 1,
+        rows: 10,
+        cols: 8,
+        targetScore: 200,
         shape: MapShape.cross,
       );
       final stones = level.computeShapeCells();
@@ -53,7 +60,10 @@ void main() {
 
     test('computeShapeCells returns stones for lShape', () {
       const level = LevelData(
-        id: 1, rows: 10, cols: 8, targetScore: 200,
+        id: 1,
+        rows: 10,
+        cols: 8,
+        targetScore: 200,
         shape: MapShape.lShape,
       );
       final stones = level.computeShapeCells();
@@ -62,7 +72,10 @@ void main() {
 
     test('computeShapeCells returns stones for corridor', () {
       const level = LevelData(
-        id: 1, rows: 10, cols: 8, targetScore: 200,
+        id: 1,
+        rows: 10,
+        cols: 8,
+        targetScore: 200,
         shape: MapShape.corridor,
       );
       final stones = level.computeShapeCells();
@@ -71,7 +84,10 @@ void main() {
 
     test('allSpecialCells merges shape and level cells', () {
       const level = LevelData(
-        id: 1, rows: 8, cols: 8, targetScore: 200,
+        id: 1,
+        rows: 8,
+        cols: 8,
+        targetScore: 200,
         shape: MapShape.diamond,
         specialCells: {
           (3, 3): CellConfig(type: CellType.ice, iceLayer: 1),
@@ -169,16 +185,16 @@ void main() {
       final level = LevelProgression.getLevel(101);
       expect(level, isNotNull);
       // 101+ should have stones in specialCells (procedural)
-      final hasStone = level!.specialCells.values
-          .any((c) => c.type == CellType.stone);
+      final hasStone =
+          level!.specialCells.values.any((c) => c.type == CellType.stone);
       expect(hasStone, isTrue);
     });
 
     test('procedural level 200+ gets gravity cells', () {
       final level = LevelProgression.getLevel(201);
       expect(level, isNotNull);
-      final hasGravity = level!.specialCells.values
-          .any((c) => c.type == CellType.gravity);
+      final hasGravity =
+          level!.specialCells.values.any((c) => c.type == CellType.gravity);
       expect(hasGravity, isTrue);
     });
   });

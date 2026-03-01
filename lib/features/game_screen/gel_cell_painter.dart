@@ -39,12 +39,10 @@ class GelCellPainter extends CustomPainter {
     final s = size.width; // kare hucre
     if (s <= 0) return;
 
-    final breathMod =
-        math.sin(_breathAnim.value * 2 * math.pi + breathPhase);
+    final breathMod = math.sin(_breathAnim.value * 2 * math.pi + breathPhase);
 
     final rect = Offset.zero & size;
-    final rrect =
-        RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
 
     // ── 1. Dis glow — hucrenin altinda renkli isik halkasi ───────────────
     if (_cachedGlowPaint == null || _cachedGlowColor != color) {
@@ -67,8 +65,8 @@ class GelCellPainter extends CustomPainter {
         radius: 1.1,
         colors: [
           _lighten(color, 0.42), // parlak ust-sol
-          color,                  // orta ton
-          _darken(color, 0.25),   // koyu alt-sag
+          color, // orta ton
+          _darken(color, 0.25), // koyu alt-sag
         ],
         stops: const [0.0, 0.40, 1.0],
       ).createShader(rect);

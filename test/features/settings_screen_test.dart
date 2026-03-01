@@ -15,12 +15,12 @@ void main() {
     });
   });
 
-  Widget buildSettings({AudioSettings? initialSettings}) {
+  Widget buildSettings({AppSettings? initialSettings}) {
     final overrides = <Override>[];
     if (initialSettings != null) {
       overrides.add(
-        audioSettingsProvider.overrideWith((ref) {
-          final n = AudioSettingsNotifier();
+        appSettingsProvider.overrideWith((ref) {
+          final n = AppSettingsNotifier();
           if (!initialSettings.sfxEnabled) n.toggleSfx();
           if (initialSettings.colorBlindMode) n.toggleColorBlindMode();
           if (!initialSettings.analyticsEnabled) n.toggleAnalytics();

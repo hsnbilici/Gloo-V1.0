@@ -2,17 +2,26 @@
 //
 // Bu fonksiyon mac tamamlandiginda cagirilir.
 // Client dogrudan ELO guncelleyemez — bu fonksiyon:
-// 1. pvp_matches tablosundan iki oyuncunun skorunu dogrular
-// 2. ELO degisimini hesaplar (K=32)
-// 3. profiles tablosunu gunceller
+// 1. Auth dogrulama yapar (token + match katilimci kontrolu)
+// 2. pvp_matches tablosundan iki oyuncunun skorunu dogrular
+// 3. ELO degisimini hesaplar (K=32)
+// 4. profiles tablosunu gunceller
 //
 // Deploy: supabase functions deploy calculate-elo
-// Cagri: POST /functions/v1/calculate-elo { matchId: "uuid" }
+// Cagri: POST /functions/v1/calculate-elo
+//   Headers: Authorization: Bearer <user_token>
+//   Body: { matchId: "uuid" }
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const K_FACTOR = 32
+
+const CORS_HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 interface MatchRow {
   id: string
@@ -42,13 +51,46 @@ function calculateEloChange(
 }
 
 serve(async (req: Request) => {
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: CORS_HEADERS })
+  }
+
   try {
+    // ── Auth dogrulama ──────────────────────────────────────────────────────
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Authorization header required' }),
+        { status: 401, headers: CORS_HEADERS },
+      )
+    }
+
+    // Kullanici token'ini dogrula
+    const token = authHeader.replace('Bearer ', '')
+    const anonClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: `Bearer ${token}` } } },
+    )
+
+    const { data: { user }, error: authError } = await anonClient.auth.getUser(token)
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid auth token' }),
+        { status: 401, headers: CORS_HEADERS },
+      )
+    }
+
+    const userId = user.id
+
+    // ── Request body ────────────────────────────────────────────────────────
     const { matchId } = await req.json()
 
     if (!matchId) {
       return new Response(JSON.stringify({ error: 'matchId gerekli' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       })
     }
 
@@ -68,17 +110,26 @@ serve(async (req: Request) => {
     if (matchError || !match) {
       return new Response(JSON.stringify({ error: 'Mac bulunamadi' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       })
     }
 
     const m = match as MatchRow
 
+    // ── Katilimci kontrolu ──────────────────────────────────────────────────
+    // Dogrulanan kullanicinin bu match'in player1 veya player2'si oldugunu kontrol et
+    if (userId !== m.player1_id && userId !== m.player2_id) {
+      return new Response(
+        JSON.stringify({ error: 'Not a participant of this match' }),
+        { status: 403, headers: CORS_HEADERS },
+      )
+    }
+
     // Iki skor da girilmis olmali
     if (m.player1_score === null || m.player2_score === null) {
       return new Response(JSON.stringify({ error: 'Skorlar eksik' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       })
     }
 
@@ -86,7 +137,7 @@ serve(async (req: Request) => {
     if (m.status === 'completed') {
       return new Response(JSON.stringify({ error: 'Mac zaten tamamlandi' }), {
         status: 409,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       })
     }
 
@@ -103,7 +154,7 @@ serve(async (req: Request) => {
     if (!p1Profile) {
       return new Response(JSON.stringify({ error: 'Oyuncu 1 profili bulunamadi' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       })
     }
 
@@ -199,13 +250,13 @@ serve(async (req: Request) => {
       }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: CORS_HEADERS,
       },
     )
   } catch (err) {
     return new Response(JSON.stringify({ error: String(err) }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: CORS_HEADERS,
     })
   }
 })

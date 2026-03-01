@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/local/local_repository.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/locale_provider.dart';

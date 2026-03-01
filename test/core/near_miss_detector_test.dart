@@ -65,7 +65,8 @@ void main() {
       expect(result, isNotNull);
       expect(result!.isCritical, isTrue);
       expect(result.type, NearMissType.critical);
-      expect(result.score, greaterThan(GameConstants.criticalNearMissThreshold));
+      expect(
+          result.score, greaterThan(GameConstants.criticalNearMissThreshold));
     });
 
     test('empty grid returns null (low fill ratio)', () {

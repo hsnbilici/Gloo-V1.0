@@ -23,8 +23,8 @@ void main() {
     });
 
     test('L shape has correct dimensions', () {
-      const lShape = GelShape(
-          cells: [(0, 0), (1, 0), (2, 0), (2, 1)], name: 'L');
+      const lShape =
+          GelShape(cells: [(0, 0), (1, 0), (2, 0), (2, 1)], name: 'L');
       expect(lShape.cellCount, 4);
       expect(lShape.rowCount, 3);
       expect(lShape.colCount, 2);

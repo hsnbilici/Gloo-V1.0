@@ -112,7 +112,8 @@ void main() {
     test('returns null when cannot afford', () {
       currency = CurrencyManager(initialBalance: 0);
       system = PowerUpSystem(currencyManager: currency);
-      final result = system.useRotate(const GelShape(cells: [(0, 0)], name: 'dot'));
+      final result =
+          system.useRotate(const GelShape(cells: [(0, 0)], name: 'dot'));
       expect(result, isNull);
     });
   });

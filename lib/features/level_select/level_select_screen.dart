@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../game/levels/level_progression.dart';
 import '../../providers/user_provider.dart';
 
@@ -31,8 +31,7 @@ class LevelSelectScreen extends ConsumerWidget {
     final repoAsync = ref.watch(localRepositoryProvider);
     final completedLevels =
         repoAsync.valueOrNull?.getCompletedLevels() ?? <int>{};
-    final maxCompleted =
-        repoAsync.valueOrNull?.getMaxCompletedLevel() ?? 0;
+    final maxCompleted = repoAsync.valueOrNull?.getMaxCompletedLevel() ?? 0;
     final totalLevels = LevelProgression.totalPredefinedLevels;
 
     return Scaffold(
@@ -281,9 +280,8 @@ class _LevelCellState extends State<_LevelCell> {
     }
 
     return GestureDetector(
-      onTap: isUnlocked
-          ? () => context.go('/game/level/${widget.levelId}')
-          : null,
+      onTap:
+          isUnlocked ? () => context.go('/game/level/${widget.levelId}') : null,
       onTapDown: isUnlocked ? (_) => setState(() => _pressed = true) : null,
       onTapUp: isUnlocked ? (_) => setState(() => _pressed = false) : null,
       onTapCancel: isUnlocked ? () => setState(() => _pressed = false) : null,
@@ -299,8 +297,8 @@ class _LevelCellState extends State<_LevelCell> {
           boxShadow: isCompleted
               ? [
                   BoxShadow(
-                    color: LevelSelectScreen._kCompleted
-                        .withValues(alpha: 0.15),
+                    color:
+                        LevelSelectScreen._kCompleted.withValues(alpha: 0.15),
                     blurRadius: 8,
                   ),
                 ]
@@ -336,10 +334,7 @@ class _LevelCellState extends State<_LevelCell> {
           ],
         ),
       ),
-    )
-        .animate(delay: widget.delay)
-        .fadeIn(duration: 200.ms)
-        .scale(
+    ).animate(delay: widget.delay).fadeIn(duration: 200.ms).scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1.0, 1.0),
           duration: 200.ms,

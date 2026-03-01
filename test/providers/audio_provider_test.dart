@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/providers/audio_provider.dart';
 
 void main() {
-  // ─── AudioSettings ──────────────────────────────────────────────────────
+  // ─── AppSettings ──────────────────────────────────────────────────────
 
-  group('AudioSettings', () {
+  group('AppSettings', () {
     test('default values', () {
-      const settings = AudioSettings();
+      const settings = AppSettings();
       expect(settings.sfxEnabled, isTrue);
       expect(settings.musicEnabled, isTrue);
       expect(settings.hapticsEnabled, isTrue);
@@ -18,7 +18,7 @@ void main() {
     });
 
     test('copyWith updates only specified fields', () {
-      const settings = AudioSettings();
+      const settings = AppSettings();
       final updated = settings.copyWith(sfxEnabled: false);
       expect(updated.sfxEnabled, isFalse);
       expect(updated.musicEnabled, isTrue);
@@ -26,7 +26,7 @@ void main() {
     });
 
     test('copyWith can update all fields', () {
-      const settings = AudioSettings();
+      const settings = AppSettings();
       final updated = settings.copyWith(
         sfxEnabled: false,
         musicEnabled: false,
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('custom constructor values', () {
-      const settings = AudioSettings(
+      const settings = AppSettings(
         sfxEnabled: false,
         glooPlus: true,
         adsRemoved: true,
@@ -58,18 +58,18 @@ void main() {
     });
   });
 
-  // ─── AudioSettingsNotifier ──────────────────────────────────────────────
+  // ─── AppSettingsNotifier ──────────────────────────────────────────────
   // Note: toggleSfx/Music/Haptics call AudioManager/HapticManager singletons
   // which need a Flutter engine. We test the state-only methods here.
 
-  group('AudioSettingsNotifier', () {
-    late AudioSettingsNotifier notifier;
+  group('AppSettingsNotifier', () {
+    late AppSettingsNotifier notifier;
 
     setUp(() {
-      notifier = AudioSettingsNotifier();
+      notifier = AppSettingsNotifier();
     });
 
-    test('initial state is default AudioSettings', () {
+    test('initial state is default AppSettings', () {
       expect(notifier.state.sfxEnabled, isTrue);
       expect(notifier.state.musicEnabled, isTrue);
       expect(notifier.state.hapticsEnabled, isTrue);

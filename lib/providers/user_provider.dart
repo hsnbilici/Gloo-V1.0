@@ -14,8 +14,7 @@ final userProfileProvider = FutureProvider<UserProfile?>((ref) async {
   return repo.getProfile();
 });
 
-final highScoreProvider =
-    FutureProvider.family<int, String>((ref, mode) async {
+final highScoreProvider = FutureProvider.family<int, String>((ref, mode) async {
   final repo = await ref.watch(localRepositoryProvider.future);
   return repo.getHighScore(mode);
 });

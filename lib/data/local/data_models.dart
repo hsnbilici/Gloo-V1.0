@@ -16,7 +16,7 @@ class UserProfile {
 
   String username;
   String platform = 'unknown';
-  late DateTime createdAt;
+  DateTime createdAt = DateTime.now();
 
   bool sfxEnabled = true;
   bool musicEnabled = true;

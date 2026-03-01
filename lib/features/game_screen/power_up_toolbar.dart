@@ -7,8 +7,8 @@ import '../../game/systems/powerup_system.dart';
 /// Power-up tema renkleri
 const kPowerUpColors = <PowerUpType, (Color, Color)>{
   PowerUpType.rotate: (Color(0xFF00E5FF), Color(0xFF006978)),
-  PowerUpType.bomb:   (Color(0xFFFF6B35), Color(0xFF8B2500)),
-  PowerUpType.undo:   (Color(0xFFFFD740), Color(0xFF8B6914)),
+  PowerUpType.bomb: (Color(0xFFFF6B35), Color(0xFF8B2500)),
+  PowerUpType.undo: (Color(0xFFFFD740), Color(0xFF8B6914)),
   PowerUpType.freeze: (Color(0xFF80D8FF), Color(0xFF01579B)),
 };
 
@@ -250,9 +250,7 @@ class _PowerUpButton extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 22,
-                color: canUse
-                    ? primary
-                    : Colors.white.withValues(alpha: 0.18),
+                color: canUse ? primary : Colors.white.withValues(alpha: 0.18),
                 shadows: canUse
                     ? [
                         Shadow(

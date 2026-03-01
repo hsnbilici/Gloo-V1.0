@@ -53,15 +53,18 @@ class VideoProcessor {
       final session = await FFmpegKit.execute(cmd);
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        debugPrint('VideoProcessor: success → ${req.outputPath}');
+        if (kDebugMode) debugPrint('VideoProcessor: success → ${req.outputPath}');
         return req.outputPath;
       }
       final logs = await session.getLogs();
-      debugPrint(
-          'VideoProcessor error: ${logs.map((l) => l.getMessage()).join('\n')}');
+      if (kDebugMode) {
+        debugPrint(
+          'VideoProcessor error: ${logs.map((l) => l.getMessage()).join('\n')}',
+        );
+      }
       return null;
     } catch (e) {
-      debugPrint('VideoProcessor.processClip error: $e');
+      if (kDebugMode) debugPrint('VideoProcessor.processClip error: $e');
       return null;
     }
   }

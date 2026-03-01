@@ -59,5 +59,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'gloo-f7905.firebasestorage.app',
     iosBundleId: 'com.gloogame.app',
   );
-
 }

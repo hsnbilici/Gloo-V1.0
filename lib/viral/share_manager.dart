@@ -27,7 +27,7 @@ class ShareManager {
       );
       AnalyticsService().logShare(mode: 'video');
     } catch (e) {
-      debugPrint('ShareManager.shareVideo error: $e');
+      if (kDebugMode) debugPrint('ShareManager.shareVideo error: $e');
     }
   }
 

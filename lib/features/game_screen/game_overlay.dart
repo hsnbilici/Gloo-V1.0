@@ -22,22 +22,22 @@ class GameOverlay extends ConsumerWidget {
     final l = ref.watch(stringsProvider);
 
     final modeLabel = switch (mode) {
-      GameMode.classic   => l.modeLabelClassic,
+      GameMode.classic => l.modeLabelClassic,
       GameMode.colorChef => l.modeLabelColorChef,
       GameMode.timeTrial => l.modeLabelTimeTrial,
-      GameMode.zen       => l.modeLabelZen,
-      GameMode.daily     => l.modeLabelDaily,
-      GameMode.level     => 'Seviye',
-      GameMode.duel      => 'Düello',
+      GameMode.zen => l.modeLabelZen,
+      GameMode.daily => l.modeLabelDaily,
+      GameMode.level => 'Seviye',
+      GameMode.duel => 'Düello',
     };
     final modeColor = switch (mode) {
-      GameMode.classic   => kColorClassic,
+      GameMode.classic => kColorClassic,
       GameMode.colorChef => kColorChef,
       GameMode.timeTrial => kColorTimeTrial,
-      GameMode.zen       => kColorZen,
-      GameMode.daily     => kCyan,
-      GameMode.level     => kColorChef,
-      GameMode.duel      => kColorClassic,
+      GameMode.zen => kColorZen,
+      GameMode.daily => kCyan,
+      GameMode.level => kColorChef,
+      GameMode.duel => kColorClassic,
     };
 
     return Column(
@@ -58,7 +58,8 @@ class GameOverlay extends ConsumerWidget {
                 semanticLabel: l.pauseTitle,
                 onTap: () {
                   game.pauseGame();
-                  _showPauseDialog(context, game, l.pauseTitle, l.pauseResume, l.pauseHome);
+                  _showPauseDialog(
+                      context, game, l.pauseTitle, l.pauseResume, l.pauseHome);
                 },
               ),
             ],
@@ -202,7 +203,8 @@ class _ChefTargetBar extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
-                Container(height: 4, color: Colors.white.withValues(alpha: 0.07)),
+                Container(
+                    height: 4, color: Colors.white.withValues(alpha: 0.07)),
                 AnimatedFractionallySizedBox(
                   duration: const Duration(milliseconds: 400),
                   curve: Curves.easeOutCubic,
@@ -229,7 +231,8 @@ class _ChefTargetBar extends StatelessWidget {
         // İlerleme sayısı + seviye
         RichText(
           text: TextSpan(
-            style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w700),
+            style: TextStyle(
+                color: color, fontSize: 10, fontWeight: FontWeight.w700),
             children: [
               TextSpan(
                 text: '$progress/$required',
@@ -261,7 +264,8 @@ class _FillBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ratio = totalCells > 0 ? (filledCells / totalCells).clamp(0.0, 1.0) : 0.0;
+    final ratio =
+        totalCells > 0 ? (filledCells / totalCells).clamp(0.0, 1.0) : 0.0;
 
     final Color barColor;
     if (ratio > 0.80) {
@@ -387,7 +391,8 @@ class _CountdownBar extends StatelessWidget {
                       color: barColor,
                       boxShadow: [
                         BoxShadow(
-                          color: barColor.withValues(alpha: isPulsing ? 0.90 : 0.60),
+                          color: barColor.withValues(
+                              alpha: isPulsing ? 0.90 : 0.60),
                           blurRadius: isPulsing ? 10 : 6,
                           spreadRadius: 1,
                         ),
@@ -587,11 +592,13 @@ class _ZenAmbienceBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ratio = totalCells > 0 ? (filledCells / totalCells).clamp(0.0, 1.0) : 0.0;
+    final ratio =
+        totalCells > 0 ? (filledCells / totalCells).clamp(0.0, 1.0) : 0.0;
 
     return Row(
       children: [
-        Icon(Icons.water_drop_outlined, color: color.withValues(alpha: 0.55), size: 12),
+        Icon(Icons.water_drop_outlined,
+            color: color.withValues(alpha: 0.55), size: 12),
         const SizedBox(width: 6),
         Expanded(
           child: Container(
@@ -601,7 +608,8 @@ class _ZenAmbienceBar extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             child: Stack(
               children: [
-                Container(height: 3, color: Colors.white.withValues(alpha: 0.05)),
+                Container(
+                    height: 3, color: Colors.white.withValues(alpha: 0.05)),
                 FractionallySizedBox(
                   widthFactor: ratio,
                   child: Container(
@@ -679,7 +687,8 @@ class _PauseDialog extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: kCyan.withValues(alpha: 0.28)),
                   ),
-                  child: const Icon(Icons.pause_rounded, color: kCyan, size: 24),
+                  child:
+                      const Icon(Icons.pause_rounded, color: kCyan, size: 24),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -748,7 +757,8 @@ class _PauseBtnState extends State<_PauseBtn> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 80),
         transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(_pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
+        transform: Matrix4.diagonal3Values(
+            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
@@ -879,9 +889,7 @@ class _DuelHud extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Icon(
-              duelState.isBot
-                  ? Icons.smart_toy_rounded
-                  : Icons.person_rounded,
+              duelState.isBot ? Icons.smart_toy_rounded : Icons.person_rounded,
               color: Colors.white.withValues(alpha: 0.40),
               size: 14,
             ),

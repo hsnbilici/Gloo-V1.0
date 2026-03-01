@@ -2,8 +2,7 @@ import '../game/systems/combo_detector.dart';
 import 'haptic_manager.dart';
 
 class SoundBank {
-  SoundBank({HapticManager? haptic})
-      : _haptic = haptic ?? HapticManager();
+  SoundBank({HapticManager? haptic}) : _haptic = haptic ?? HapticManager();
 
   final HapticManager _haptic;
 
@@ -12,7 +11,9 @@ class SoundBank {
   }
 
   Future<void> onGelMerge({required int mergeCount}) async {
-    final haptic = mergeCount >= 3 ? HapticProfile.gelMergeLarge : HapticProfile.gelMergeSmall;
+    final haptic = mergeCount >= 3
+        ? HapticProfile.gelMergeLarge
+        : HapticProfile.gelMergeSmall;
     await _haptic.trigger(haptic);
   }
 

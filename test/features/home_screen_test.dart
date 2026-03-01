@@ -23,8 +23,8 @@ void main() {
 
     if (glooPlus) {
       overrides.add(
-        audioSettingsProvider.overrideWith((ref) {
-          final n = AudioSettingsNotifier();
+        appSettingsProvider.overrideWith((ref) {
+          final n = AppSettingsNotifier();
           n.setGlooPlus(enabled: true);
           return n;
         }),
@@ -99,8 +99,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('5 DAYS'), findsOneWidget);
-      expect(
-          find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.local_fire_department_rounded), findsOneWidget);
     });
 
     testWidgets('hidden when streak < 2', (tester) async {

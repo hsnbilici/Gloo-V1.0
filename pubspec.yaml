@@ -54,10 +54,15 @@ dependencies:
   # GDPR / ATT
   app_tracking_transparency: ^2.0.6
 
+  # Native Splash Screen
+  flutter_native_splash: ^2.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+  image: ^4.0.0
+  flutter_launcher_icons: ^0.14.0
 
 flutter:
   uses-material-design: true
@@ -68,3 +73,22 @@ flutter:
     # Ses dosyaları — OGG/MP3 dosyaları bu dizinlere eklenmeli
     - assets/audio/sfx/
     - assets/audio/music/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+  adaptive_icon_background: "#010C14"
+  adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+
+flutter_native_splash:
+  color: "#010C14"
+  android_12:
+    color: "#010C14"
+  web: true
+  ios: true
+  fullscreen: true

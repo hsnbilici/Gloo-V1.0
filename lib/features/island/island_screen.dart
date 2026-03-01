@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
@@ -46,19 +46,19 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     final remote = RemoteRepository();
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
-      final backendIsland = meta['island_state'] as Map<String, dynamic>?;
-      final backendEnergy = meta['gel_energy'] as int?;
-      final backendTotal = meta['total_earned_energy'] as int?;
+      final backendIsland = meta.islandState;
+      final backendEnergy = meta.gelEnergy;
+      final backendTotal = meta.totalEarnedEnergy;
       if (backendIsland != null && backendIsland.isNotEmpty) {
-        _island.loadFromMap(
-            backendIsland.map((k, v) => MapEntry(k, v as int)));
+        _island.loadFromMap(backendIsland.map((k, v) => MapEntry(k, v as int)));
         await repo.saveIslandState(_island.toMap());
       }
       if (backendEnergy != null && backendEnergy > _resources.energy) {
         _resources.setEnergy(backendEnergy);
         await repo.saveGelEnergy(backendEnergy);
       }
-      if (backendTotal != null && backendTotal > _resources.totalEarnedLifetime) {
+      if (backendTotal != null &&
+          backendTotal > _resources.totalEarnedLifetime) {
         _resources.setTotalEarned(backendTotal);
         await repo.saveTotalEarnedEnergy(backendTotal);
       }
@@ -180,7 +180,8 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                           physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           children: [
-                            for (final entry in BuildingType.values.asMap().entries)
+                            for (final entry
+                                in BuildingType.values.asMap().entries)
                               _BuildingCard(
                                 type: entry.value,
                                 building: kBuildings[entry.value]!,
@@ -240,17 +241,17 @@ class _BuildingCardState extends State<_BuildingCard> {
   IconData get _buildingIcon => switch (widget.type) {
         BuildingType.gelFactory => Icons.factory_rounded,
         BuildingType.asmrTower => Icons.music_note_rounded,
-        BuildingType.colorLab  => Icons.science_rounded,
-        BuildingType.arena     => Icons.sports_mma_rounded,
-        BuildingType.harbor    => Icons.sailing_rounded,
+        BuildingType.colorLab => Icons.science_rounded,
+        BuildingType.arena => Icons.sports_mma_rounded,
+        BuildingType.harbor => Icons.sailing_rounded,
       };
 
   Color get _buildingColor => switch (widget.type) {
         BuildingType.gelFactory => const Color(0xFF3CFF8B),
         BuildingType.asmrTower => const Color(0xFFB080FF),
-        BuildingType.colorLab  => const Color(0xFFFF8C42),
-        BuildingType.arena     => const Color(0xFFFF4D6D),
-        BuildingType.harbor    => const Color(0xFF00BFFF),
+        BuildingType.colorLab => const Color(0xFFFF8C42),
+        BuildingType.arena => const Color(0xFFFF4D6D),
+        BuildingType.harbor => const Color(0xFF00BFFF),
       };
 
   @override
@@ -331,12 +332,15 @@ class _BuildingCardState extends State<_BuildingCard> {
             if (!isMaxLevel)
               GestureDetector(
                 onTap: widget.canAfford ? widget.onUpgrade : null,
-                onTapDown:
-                    widget.canAfford ? (_) => setState(() => _pressed = true) : null,
-                onTapUp:
-                    widget.canAfford ? (_) => setState(() => _pressed = false) : null,
-                onTapCancel:
-                    widget.canAfford ? () => setState(() => _pressed = false) : null,
+                onTapDown: widget.canAfford
+                    ? (_) => setState(() => _pressed = true)
+                    : null,
+                onTapUp: widget.canAfford
+                    ? (_) => setState(() => _pressed = false)
+                    : null,
+                onTapCancel: widget.canAfford
+                    ? () => setState(() => _pressed = false)
+                    : null,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 80),
                   transform: Matrix4.diagonal3Values(

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../core/widgets/glow_orb.dart';
+import '../shared/glow_orb.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/user_provider.dart';
@@ -45,8 +45,8 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     final remote = RemoteRepository();
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
-      final backendChar = meta['character_state'] as Map<String, dynamic>?;
-      final backendEnergy = meta['gel_energy'] as int?;
+      final backendChar = meta.characterState;
+      final backendEnergy = meta.gelEnergy;
       if (backendChar != null && backendChar.isNotEmpty) {
         _character.loadFromMap(backendChar);
         await repo.saveCharacterState(_character.toMap());
@@ -347,17 +347,17 @@ class _TalentCard extends StatelessWidget {
   final Duration delay;
 
   Color get _talentColor => switch (def.type) {
-        TalentType.betterHand  => const Color(0xFF3CFF8B),
+        TalentType.betterHand => const Color(0xFF3CFF8B),
         TalentType.colorMaster => const Color(0xFFFF8C42),
-        TalentType.fastHands   => const Color(0xFFFF4D6D),
-        TalentType.zenGuru     => const Color(0xFFB080FF),
+        TalentType.fastHands => const Color(0xFFFF4D6D),
+        TalentType.zenGuru => const Color(0xFFB080FF),
       };
 
   IconData get _talentIcon => switch (def.type) {
-        TalentType.betterHand  => Icons.back_hand_rounded,
+        TalentType.betterHand => Icons.back_hand_rounded,
         TalentType.colorMaster => Icons.palette_rounded,
-        TalentType.fastHands   => Icons.speed_rounded,
-        TalentType.zenGuru     => Icons.self_improvement_rounded,
+        TalentType.fastHands => Icons.speed_rounded,
+        TalentType.zenGuru => Icons.self_improvement_rounded,
       };
 
   @override

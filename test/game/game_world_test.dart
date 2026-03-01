@@ -234,8 +234,11 @@ void main() {
       expect(game.status, GameStatus.gameOver);
     });
 
-    test('level mode: triggers game over when moves exhausted and score below target', () {
-      const level = LevelData(id: 1, rows: 6, cols: 6, targetScore: 9999, maxMoves: 1);
+    test(
+        'level mode: triggers game over when moves exhausted and score below target',
+        () {
+      const level =
+          LevelData(id: 1, rows: 6, cols: 6, targetScore: 9999, maxMoves: 1);
       final game = GlooGame(mode: GameMode.level, levelData: level);
       game.startGame();
       // Use up 1 move
@@ -246,8 +249,11 @@ void main() {
       expect(gameOverCalled, isTrue);
     });
 
-    test('level mode: triggers level complete when moves exhausted and score meets target', () {
-      const level = LevelData(id: 1, rows: 6, cols: 6, targetScore: 0, maxMoves: 1);
+    test(
+        'level mode: triggers level complete when moves exhausted and score meets target',
+        () {
+      const level =
+          LevelData(id: 1, rows: 6, cols: 6, targetScore: 0, maxMoves: 1);
       final game = GlooGame(mode: GameMode.level, levelData: level);
       game.startGame();
       game.placePiece([(0, 0)], GelColor.red);
@@ -304,7 +310,8 @@ void main() {
     });
 
     test('level mode: reduces movesUsed', () {
-      const level = LevelData(id: 1, rows: 6, cols: 6, targetScore: 9999, maxMoves: 2);
+      const level =
+          LevelData(id: 1, rows: 6, cols: 6, targetScore: 9999, maxMoves: 2);
       final game = GlooGame(mode: GameMode.level, levelData: level);
       game.startGame();
       game.placePiece([(0, 0)], GelColor.red);

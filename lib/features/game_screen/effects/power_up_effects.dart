@@ -180,7 +180,8 @@ class _BombPainter extends CustomPainter {
         final angle = (i / sparkCount) * 2 * math.pi;
         final dist = cellSize * 2.5 * sparkT;
         final sparkX = math.cos(angle) * dist;
-        final sparkY = math.sin(angle) * dist + sparkT * sparkT * cellSize * 0.4;
+        final sparkY =
+            math.sin(angle) * dist + sparkT * sparkT * cellSize * 0.4;
         final sparkSize = cellSize * 0.12 * (1.0 - sparkT);
         if (sparkSize <= 0) continue;
         final opacity = (1.0 - sparkT * sparkT) * 0.9;
@@ -315,12 +316,14 @@ class _UndoRewindPainter extends CustomPainter {
       // Beyaz merkez parlama
       if (progress < 0.5) {
         final flashT = progress / 0.5;
-        final flashOpacity = flashT < 0.4 ? flashT * 2.5 : (1.0 - flashT) * 1.67;
+        final flashOpacity =
+            flashT < 0.4 ? flashT * 2.5 : (1.0 - flashT) * 1.67;
         canvas.drawCircle(
           Offset(cx, cy),
           cellSize * 0.35 * flashT,
           Paint()
-            ..color = Colors.white.withValues(alpha: flashOpacity.clamp(0.0, 1.0) * 0.7)
+            ..color = Colors.white
+                .withValues(alpha: flashOpacity.clamp(0.0, 1.0) * 0.7)
             ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
         );
       }

@@ -16,18 +16,18 @@ enum GelColor {
 
   /// Renk körü modu için kısa etiket — dil bağımsız evrensel kısaltma.
   String get shortLabel => switch (this) {
-        GelColor.red       => 'R',
-        GelColor.yellow    => 'Y',
-        GelColor.blue      => 'B',
-        GelColor.orange    => 'O',
-        GelColor.green     => 'G',
-        GelColor.purple    => 'P',
-        GelColor.pink      => 'Pk',
+        GelColor.red => 'R',
+        GelColor.yellow => 'Y',
+        GelColor.blue => 'B',
+        GelColor.orange => 'O',
+        GelColor.green => 'G',
+        GelColor.purple => 'P',
+        GelColor.pink => 'Pk',
         GelColor.lightBlue => 'Lb',
-        GelColor.lime      => 'Li',
-        GelColor.maroon    => 'Mn',
-        GelColor.brown     => 'Br',
-        GelColor.white     => 'W',
+        GelColor.lime => 'Li',
+        GelColor.maroon => 'Mn',
+        GelColor.brown => 'Br',
+        GelColor.white => 'W',
       };
 
   Color get displayColor => switch (this) {
@@ -97,7 +97,7 @@ const Color kMuted = Color(0xFF6B8FA8);
 // game_over_overlay, game_overlay, game_effects, home_screen bu sabitleri
 // import eder; her dosyada ayrıca tanımlamaz.
 
-const Color kColorClassic   = Color(0xFFFF4D6D);
-const Color kColorChef      = Color(0xFF00FF9D);
+const Color kColorClassic = Color(0xFFFF4D6D);
+const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
-const Color kColorZen       = Color(0xFF9D5CFF);
+const Color kColorZen = Color(0xFF9D5CFF);

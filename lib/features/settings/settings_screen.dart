@@ -23,8 +23,8 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final audio = ref.watch(audioSettingsProvider);
-    final notifier = ref.read(audioSettingsProvider.notifier);
+    final audio = ref.watch(appSettingsProvider);
+    final notifier = ref.read(appSettingsProvider.notifier);
     final l = ref.watch(stringsProvider);
     final currentLocale = ref.watch(localeProvider);
 
@@ -39,22 +39,23 @@ class SettingsScreen extends ConsumerWidget {
           child: GestureDetector(
             onTap: () => context.pop(),
             child: Center(
-            child: Container(
-              width: 44,
-              height: 44,
-              margin: const EdgeInsets.only(left: 12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.white,
-                size: 18,
+              child: Container(
+                width: 44,
+                height: 44,
+                margin: const EdgeInsets.only(left: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                ),
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.white,
+                  size: 18,
+                ),
               ),
             ),
-          ),
           ),
         ),
         title: Text(
@@ -88,7 +89,8 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kCyan,
                 onChanged: (_) => notifier.toggleMusic(),
               ),
-              _SectionHeader(title: l.settingsSectionFeedback, color: kColorZen),
+              _SectionHeader(
+                  title: l.settingsSectionFeedback, color: kColorZen),
               _ToggleTile(
                 label: l.settingsHaptics,
                 icon: Icons.vibration_rounded,
@@ -96,7 +98,9 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorZen,
                 onChanged: (_) => notifier.toggleHaptics(),
               ),
-              _SectionHeader(title: l.settingsSectionAccessibility, color: kColorTimeTrial),
+              _SectionHeader(
+                  title: l.settingsSectionAccessibility,
+                  color: kColorTimeTrial),
               _ToggleTile(
                 label: l.settingsColorBlind,
                 icon: Icons.palette_outlined,
@@ -104,14 +108,16 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorTimeTrial,
                 onChanged: (_) => notifier.toggleColorBlindMode(),
               ),
-              _SectionHeader(title: l.settingsSectionLanguage, color: _kLangAccent),
+              _SectionHeader(
+                  title: l.settingsSectionLanguage, color: _kLangAccent),
               _LanguageTile(
                 label: l.settingsLanguage,
                 currentLocale: currentLocale,
                 accentColor: _kLangAccent,
                 onTap: () => _showLanguageSheet(context, ref, currentLocale),
               ),
-              _SectionHeader(title: l.settingsSectionPrivacy, color: _kPrivacyAccent),
+              _SectionHeader(
+                  title: l.settingsSectionPrivacy, color: _kPrivacyAccent),
               _ToggleTile(
                 label: l.settingsAnalytics,
                 icon: Icons.analytics_outlined,
@@ -137,7 +143,7 @@ class SettingsScreen extends ConsumerWidget {
                   await RemoteRepository().deleteUserData();
                   await repo.clearAllData();
                   AnalyticsService().setEnabled(false);
-                  ref.invalidate(audioSettingsProvider);
+                  ref.invalidate(appSettingsProvider);
                   if (context.mounted) context.go('/onboarding');
                 },
               ),
@@ -403,43 +409,43 @@ class _LanguageTile extends StatelessWidget {
         onTap: onTap,
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: accentColor.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(color: accentColor.withValues(alpha: 0.22)),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.language_rounded, color: accentColor, size: 18),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: accentColor.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(color: accentColor.withValues(alpha: 0.22)),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.language_rounded, color: accentColor, size: 18),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              _currentNativeName,
-              style: TextStyle(
-                color: accentColor,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+              Text(
+                _currentNativeName,
+                style: TextStyle(
+                  color: accentColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(width: 6),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: accentColor.withValues(alpha: 0.70),
-              size: 18,
-            ),
-          ],
+              const SizedBox(width: 6),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: accentColor.withValues(alpha: 0.70),
+                size: 18,
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -461,7 +467,8 @@ class _LanguageSheet extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF0F1420),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.radiusXxl)),
+        borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(UIConstants.radiusXxl)),
         border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
       ),
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
@@ -545,7 +552,8 @@ class _DeleteDataTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(Icons.delete_outline_rounded, color: _kPrivacyAccent, size: 18),
+              const Icon(Icons.delete_outline_rounded,
+                  color: _kPrivacyAccent, size: 18),
               const SizedBox(width: 12),
               Text(
                 label,
@@ -608,7 +616,8 @@ class _DeleteConfirmDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.warning_amber_rounded, color: _kPrivacyAccent, size: 36),
+            const Icon(Icons.warning_amber_rounded,
+                color: _kPrivacyAccent, size: 36),
             const SizedBox(height: 16),
             Text(
               title,
@@ -639,8 +648,10 @@ class _DeleteConfirmDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.07),
-                        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMd),
+                        border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.12)),
                       ),
                       child: Text(
                         cancelLabel,
@@ -662,8 +673,10 @@ class _DeleteConfirmDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
                         color: _kPrivacyAccent.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(color: _kPrivacyAccent.withValues(alpha: 0.55)),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMd),
+                        border: Border.all(
+                            color: _kPrivacyAccent.withValues(alpha: 0.55)),
                       ),
                       child: Text(
                         confirmAction,
@@ -711,54 +724,54 @@ class _LangChip extends StatelessWidget {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? accent.withValues(alpha: 0.14)
-              : Colors.white.withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-          border: Border.all(
+          decoration: BoxDecoration(
             color: isSelected
-                ? accent.withValues(alpha: 0.55)
-                : Colors.white.withValues(alpha: 0.09),
-            width: isSelected ? 1.5 : 1,
+                ? accent.withValues(alpha: 0.14)
+                : Colors.white.withValues(alpha: 0.04),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(
+              color: isSelected
+                  ? accent.withValues(alpha: 0.55)
+                  : Colors.white.withValues(alpha: 0.09),
+              width: isSelected ? 1.5 : 1,
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: accent.withValues(alpha: 0.18),
+                      blurRadius: 10,
+                    ),
+                  ]
+                : null,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: accent.withValues(alpha: 0.18),
-                    blurRadius: 10,
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              nativeName,
-              style: TextStyle(
-                color: isSelected ? accent : Colors.white,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                nativeName,
+                style: TextStyle(
+                  color: isSelected ? accent : Colors.white,
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              code,
-              style: TextStyle(
-                color: isSelected
-                    ? accent.withValues(alpha: 0.75)
-                    : kMuted.withValues(alpha: 0.60),
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
+              const SizedBox(height: 2),
+              Text(
+                code,
+                style: TextStyle(
+                  color: isSelected
+                      ? accent.withValues(alpha: 0.75)
+                      : kMuted.withValues(alpha: 0.60),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );

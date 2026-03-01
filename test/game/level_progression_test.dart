@@ -48,8 +48,8 @@ void main() {
     test('levels 21+ introduce ice cells', () {
       final level21 = LevelProgression.getLevel(21)!;
       expect(level21.specialCells, isNotEmpty);
-      final hasIce = level21.specialCells.values
-          .any((c) => c.type == CellType.ice);
+      final hasIce =
+          level21.specialCells.values.any((c) => c.type == CellType.ice);
       expect(hasIce, isTrue, reason: 'Level 21 should have ice cells');
     });
 
@@ -75,7 +75,8 @@ void main() {
       expect(br10.targetScore, lessThan(level9.targetScore));
     });
 
-    test('target scores increase within sections (breathing rooms excluded)', () {
+    test('target scores increase within sections (breathing rooms excluded)',
+        () {
       // Her 10'lu bolum icinde (breathing room haric) skor artar
       // Ama bir bolumden digerine gecerken breathing room sonrasi
       // skor dusebilir (yeni bolumun baslangici)
@@ -124,8 +125,8 @@ void main() {
 
     test('procedural level 200+ has gravity cells', () {
       final level = LevelProgression.getLevel(205)!;
-      final hasGravity = level.specialCells.values
-          .any((c) => c.type == CellType.gravity);
+      final hasGravity =
+          level.specialCells.values.any((c) => c.type == CellType.gravity);
       expect(hasGravity, isTrue);
     });
 

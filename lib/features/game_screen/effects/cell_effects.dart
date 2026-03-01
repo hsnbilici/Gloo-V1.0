@@ -485,7 +485,8 @@ class _SynthesisBloomPainter extends CustomPainter {
     // 2. Renk halkalari -- 2 genisleyen halka
     for (int ring = 0; ring < 2; ring++) {
       final ringDelay = ring * 0.12;
-      final ringT = ((progress - ringDelay) / (1.0 - ringDelay)).clamp(0.0, 1.0);
+      final ringT =
+          ((progress - ringDelay) / (1.0 - ringDelay)).clamp(0.0, 1.0);
       if (ringT <= 0) continue;
 
       final eased = Curves.easeOutCubic.transform(ringT);

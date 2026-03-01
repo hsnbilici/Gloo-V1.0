@@ -45,8 +45,7 @@ void main() {
       );
     });
 
-    testWidgets('shows next button on first page (not start)',
-        (tester) async {
+    testWidgets('shows next button on first page (not start)', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
 

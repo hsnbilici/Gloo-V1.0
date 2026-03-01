@@ -80,7 +80,7 @@ class ClipRecorder {
   void _beginCapture() {
     _state = RecordingState.buffering;
     _capturedFrames.clear();
-    debugPrint('ClipRecorder: recording started');
+    if (kDebugMode) debugPrint('ClipRecorder: recording started');
   }
 
   /// Her frame'de çağrılacak — RepaintBoundary'den frame yakalar.
@@ -97,14 +97,14 @@ class ClipRecorder {
       }
       _capturedFrames.add(image);
     } catch (e) {
-      debugPrint('ClipRecorder.captureFrame error: $e');
+      if (kDebugMode) debugPrint('ClipRecorder.captureFrame error: $e');
     }
   }
 
   Future<void> _finalizeClip() async {
     if (_state != RecordingState.buffering) return;
     _state = RecordingState.processing;
-    debugPrint('ClipRecorder: processing ${_capturedFrames.length} frames');
+    if (kDebugMode) debugPrint('ClipRecorder: processing ${_capturedFrames.length} frames');
 
     if (_capturedFrames.isEmpty) {
       _state = RecordingState.idle;
@@ -114,19 +114,18 @@ class ClipRecorder {
     try {
       // Frame'leri gecici dizine PNG olarak kaydet
       final tempDir = await getTemporaryDirectory();
-      final framesDir =
-          Directory('${tempDir.path}/gloo_clip_frames');
+      final framesDir = Directory('${tempDir.path}/gloo_clip_frames');
       if (await framesDir.exists()) {
         await framesDir.delete(recursive: true);
       }
       await framesDir.create(recursive: true);
 
       for (int i = 0; i < _capturedFrames.length; i++) {
-        final byteData = await _capturedFrames[i]
-            .toByteData(format: ui.ImageByteFormat.png);
+        final byteData =
+            await _capturedFrames[i].toByteData(format: ui.ImageByteFormat.png);
         if (byteData == null) continue;
-        final file = File(
-            '${framesDir.path}/frame_${i.toString().padLeft(4, '0')}.png');
+        final file =
+            File('${framesDir.path}/frame_${i.toString().padLeft(4, '0')}.png');
         await file.writeAsBytes(byteData.buffer.asUint8List());
       }
 
@@ -139,7 +138,7 @@ class ClipRecorder {
       ));
 
       if (result != null) {
-        debugPrint('ClipRecorder: clip ready at $result');
+        if (kDebugMode) debugPrint('ClipRecorder: clip ready at $result');
         onClipReady?.call(result);
       }
 
@@ -149,7 +148,7 @@ class ClipRecorder {
       }
       _capturedFrames.clear();
     } catch (e) {
-      debugPrint('ClipRecorder._finalizeClip error: $e');
+      if (kDebugMode) debugPrint('ClipRecorder._finalizeClip error: $e');
     }
 
     _state = RecordingState.idle;

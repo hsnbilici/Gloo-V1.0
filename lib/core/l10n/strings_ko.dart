@@ -1,167 +1,309 @@
 import 'app_strings.dart';
 
 class StringsKo extends AppStrings {
-  @override String get scoreLabel => '점수';
-  @override String get modeLabelClassic => '클래식';
-  @override String get modeLabelColorChef => '컬러 셰프';
-  @override String get modeLabelTimeTrial => '타임';
-  @override String get modeLabelZen => 'ZEN';
-  @override String get modeLabelDaily => '일일';
+  @override
+  String get scoreLabel => '점수';
+  @override
+  String get modeLabelClassic => '클래식';
+  @override
+  String get modeLabelColorChef => '컬러 셰프';
+  @override
+  String get modeLabelTimeTrial => '타임';
+  @override
+  String get modeLabelZen => 'ZEN';
+  @override
+  String get modeLabelDaily => '일일';
 
-  @override String get pauseTitle => '일시정지';
-  @override String get pauseResume => '계속하기';
-  @override String get pauseHome => '메인 메뉴';
+  @override
+  String get pauseTitle => '일시정지';
+  @override
+  String get pauseResume => '계속하기';
+  @override
+  String get pauseHome => '메인 메뉴';
 
-  @override String get gameOverTitle => '게임 오버';
-  @override String get gameOverScoreLabel => '점수';
-  @override String get gameOverNewRecord => '새 기록!';
-  @override String get gameOverGridFill => '그리드 채움';
-  @override String get gameOverModeClassic => '클래식';
-  @override String get gameOverModeColorChef => '컬러 셰프';
-  @override String get gameOverModeTimeTrial => '타임 트라이얼';
-  @override String get gameOverModeZen => 'ZEN';
-  @override String get gameOverModeDaily => '오늘의 퍼즐';
-  @override String get gameOverReplay => '다시 하기';
-  @override String get gameOverHome => '메인 메뉴';
+  @override
+  String get gameOverTitle => '게임 오버';
+  @override
+  String get gameOverScoreLabel => '점수';
+  @override
+  String get gameOverNewRecord => '새 기록!';
+  @override
+  String get gameOverGridFill => '그리드 채움';
+  @override
+  String get gameOverModeClassic => '클래식';
+  @override
+  String get gameOverModeColorChef => '컬러 셰프';
+  @override
+  String get gameOverModeTimeTrial => '타임 트라이얼';
+  @override
+  String get gameOverModeZen => 'ZEN';
+  @override
+  String get gameOverModeDaily => '오늘의 퍼즐';
+  @override
+  String get gameOverReplay => '다시 하기';
+  @override
+  String get gameOverHome => '메인 메뉴';
 
-  @override String get comboSmall => 'COMBO';
-  @override String get comboMedium => '슈퍼 COMBO';
-  @override String get comboLarge => '메가 COMBO';
-  @override String get comboEpic => '에픽 COMBO';
+  @override
+  String get comboSmall => 'COMBO';
+  @override
+  String get comboMedium => '슈퍼 COMBO';
+  @override
+  String get comboLarge => '메가 COMBO';
+  @override
+  String get comboEpic => '에픽 COMBO';
 
-  @override String get nearMissStandard => '아슬아슬!';
-  @override String get nearMissCritical => '위험!';
+  @override
+  String get nearMissStandard => '아슬아슬!';
+  @override
+  String get nearMissCritical => '위험!';
 
-  @override String get toastSlotUsed => '슬롯이 사용됨';
-  @override String get toastSelectShape => '먼저 모양을 선택하세요';
-  @override String get toastCannotPlace => '여기에 놓을 수 없습니다';
+  @override
+  String get toastSlotUsed => '슬롯이 사용됨';
+  @override
+  String get toastSelectShape => '먼저 모양을 선택하세요';
+  @override
+  String get toastCannotPlace => '여기에 놓을 수 없습니다';
 
-  @override String get modeClassicName => '클래식';
-  @override String get modeClassicDesc => '그리드가 찰 때까지 플레이';
-  @override String get modeColorChefName => '컬러 셰프';
-  @override String get modeColorChefDesc => '목표 색상 합성하기';
-  @override String get modeTimeTrialName => '타임 트라이얼';
-  @override String get modeTimeTrialDesc => '90초 — TikTok에 완벽';
-  @override String get modeZenName => 'ZEN';
-  @override String get modeZenDesc => '점수도 시간도 없는 순수 ASMR';
-  @override String get modeLevelName => '레벨';
-  @override String get modeLevelDesc => '장애물 맵, 난이도 상승';
-  @override String get modeDuelName => '듀얼';
-  @override String get modeDuelDesc => '상대를 이기고 ELO 획득';
+  @override
+  String get modeClassicName => '클래식';
+  @override
+  String get modeClassicDesc => '그리드가 찰 때까지 플레이';
+  @override
+  String get modeColorChefName => '컬러 셰프';
+  @override
+  String get modeColorChefDesc => '목표 색상 합성하기';
+  @override
+  String get modeTimeTrialName => '타임 트라이얼';
+  @override
+  String get modeTimeTrialDesc => '90초 — TikTok에 완벽';
+  @override
+  String get modeZenName => 'ZEN';
+  @override
+  String get modeZenDesc => '점수도 시간도 없는 순수 ASMR';
+  @override
+  String get modeLevelName => '레벨';
+  @override
+  String get modeLevelDesc => '장애물 맵, 난이도 상승';
+  @override
+  String get modeDuelName => '듀얼';
+  @override
+  String get modeDuelDesc => '상대를 이기고 ELO 획득';
 
-  @override String get homeSubtitle => 'A S M R   P U Z Z L E';
-  @override String get homeBadgeBeginning => '입문자';
-  @override String get navLeaderboard => '순위';
-  @override String get navShop => '상점';
-  @override String get navSettings => '설정';
+  @override
+  String get homeSubtitle => 'A S M R   P U Z Z L E';
+  @override
+  String get homeBadgeBeginning => '입문자';
+  @override
+  String get navLeaderboard => '순위';
+  @override
+  String get navShop => '상점';
+  @override
+  String get navSettings => '설정';
 
-  @override String get settingsTitle => '설정';
-  @override String get settingsSectionLanguage => '언어';
-  @override String get settingsLanguage => '앱 언어';
-  @override String get settingsSectionAudio => '오디오';
-  @override String get settingsSfx => '음향 효과';
-  @override String get settingsMusic => '음악';
-  @override String get settingsSectionFeedback => '피드백';
-  @override String get settingsHaptics => '햅틱 진동';
-  @override String get settingsSectionAccessibility => '접근성';
-  @override String get settingsColorBlind => '색맹 모드';
-  @override String get settingsSectionAbout => '정보';
-  @override String get settingsVersion => '버전';
-  @override String get settingsDeveloper => '개발자';
+  @override
+  String get settingsTitle => '설정';
+  @override
+  String get settingsSectionLanguage => '언어';
+  @override
+  String get settingsLanguage => '앱 언어';
+  @override
+  String get settingsSectionAudio => '오디오';
+  @override
+  String get settingsSfx => '음향 효과';
+  @override
+  String get settingsMusic => '음악';
+  @override
+  String get settingsSectionFeedback => '피드백';
+  @override
+  String get settingsHaptics => '햅틱 진동';
+  @override
+  String get settingsSectionAccessibility => '접근성';
+  @override
+  String get settingsColorBlind => '색맹 모드';
+  @override
+  String get settingsSectionAbout => '정보';
+  @override
+  String get settingsVersion => '버전';
+  @override
+  String get settingsDeveloper => '개발자';
 
-  @override String get chefTargetLabel => '목표';
-  @override String get chefLevelLabel => '레벨';
-  @override String get chefLevelComplete => '레벨 완료';
-  @override String get chefAllComplete => '모든 레벨 완료';
-  @override String get chefContinue => '계속';
+  @override
+  String get chefTargetLabel => '목표';
+  @override
+  String get chefLevelLabel => '레벨';
+  @override
+  String get chefLevelComplete => '레벨 완료';
+  @override
+  String get chefAllComplete => '모든 레벨 완료';
+  @override
+  String get chefContinue => '계속';
 
-  @override String get colorblindDialogTitle => '접근성';
-  @override String get colorblindDialogMessage => '색상 구별에 어려움이 있으신가요? 색맹 모드를 활성화하시겠습니까?';
-  @override String get colorblindDialogEnable => '활성화';
-  @override String get colorblindDialogSkip => '아니요, 괜찮습니다';
+  @override
+  String get colorblindDialogTitle => '접근성';
+  @override
+  String get colorblindDialogMessage => '색상 구별에 어려움이 있으신가요? 색맹 모드를 활성화하시겠습니까?';
+  @override
+  String get colorblindDialogEnable => '활성화';
+  @override
+  String get colorblindDialogSkip => '아니요, 괜찮습니다';
 
-  @override String get onboardingSkip => '건너뛰기';
-  @override String get onboardingNext => '다음';
-  @override String get onboardingStart => '플레이!';
-  @override String get onboardingStep1Title => '젤 배치하기';
-  @override String get onboardingStep1Desc => '손패에서 모양을 선택해 그리드에 놓으세요. 행이나 열이 가득 차면 자동으로 제거됩니다.';
-  @override String get onboardingStep2Title => '콤보 만들기';
-  @override String get onboardingStep2Desc => '연속으로 줄을 없애세요! 연쇄할수록 배율이 올라가고 점수가 쌓입니다.';
-  @override String get onboardingStep3Title => '색상 합성하기';
-  @override String get onboardingStep3Desc => '인접한 원색이 자동으로 융합되어 새로운 색상을 만들어냅니다. 희귀한 조합을 발견하세요!';
+  @override
+  String get onboardingSkip => '건너뛰기';
+  @override
+  String get onboardingNext => '다음';
+  @override
+  String get onboardingStart => '플레이!';
+  @override
+  String get onboardingStep1Title => '젤 배치하기';
+  @override
+  String get onboardingStep1Desc =>
+      '손패에서 모양을 선택해 그리드에 놓으세요. 행이나 열이 가득 차면 자동으로 제거됩니다.';
+  @override
+  String get onboardingStep2Title => '콤보 만들기';
+  @override
+  String get onboardingStep2Desc => '연속으로 줄을 없애세요! 연쇄할수록 배율이 올라가고 점수가 쌓입니다.';
+  @override
+  String get onboardingStep3Title => '색상 합성하기';
+  @override
+  String get onboardingStep3Desc =>
+      '인접한 원색이 자동으로 융합되어 새로운 색상을 만들어냅니다. 희귀한 조합을 발견하세요!';
 
-  @override String get streakDays => '일';
+  @override
+  String get streakDays => '일';
 
-  @override String get dailyTitle => '오늘의 퍼즐';
-  @override String get dailyPlayButton => '오늘 플레이';
-  @override String get dailyCompleted => '완료';
-  @override String get dailyScore => '오늘의 점수';
-  @override String get dailyShareResult => '공유';
+  @override
+  String get dailyTitle => '오늘의 퍼즐';
+  @override
+  String get dailyPlayButton => '오늘 플레이';
+  @override
+  String get dailyCompleted => '완료';
+  @override
+  String get dailyScore => '오늘의 점수';
+  @override
+  String get dailyShareResult => '공유';
 
-  @override String get settingsSectionPrivacy => '데이터 개인정보';
-  @override String get settingsAnalytics => '분석 및 충돌 보고';
-  @override String get settingsDeleteAccount => '모든 데이터 삭제';
-  @override String get settingsDeleteConfirmTitle => '모든 데이터를 삭제하시겠습니까?';
-  @override String get settingsDeleteConfirmMessage => '점수, 연속 기록 및 모든 설정이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.';
-  @override String get settingsDeleteConfirmAction => '삭제';
-  @override String get settingsDeleteCancel => '취소';
+  @override
+  String get settingsSectionPrivacy => '데이터 개인정보';
+  @override
+  String get settingsAnalytics => '분석 및 충돌 보고';
+  @override
+  String get settingsDeleteAccount => '모든 데이터 삭제';
+  @override
+  String get settingsDeleteConfirmTitle => '모든 데이터를 삭제하시겠습니까?';
+  @override
+  String get settingsDeleteConfirmMessage =>
+      '점수, 연속 기록 및 모든 설정이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.';
+  @override
+  String get settingsDeleteConfirmAction => '삭제';
+  @override
+  String get settingsDeleteCancel => '취소';
 
-  @override String get consentTitle => '분석 및 충돌 보고서';
-  @override String get consentMessage => '익명의 사용 데이터와 충돌 보고서를 공유하여 Gloo 개선에 도움을 주세요. 설정에서 언제든지 변경할 수 있습니다.';
-  @override String get consentAccept => '허용';
-  @override String get consentDecline => '아니요';
+  @override
+  String get consentTitle => '분석 및 충돌 보고서';
+  @override
+  String get consentMessage =>
+      '익명의 사용 데이터와 충돌 보고서를 공유하여 Gloo 개선에 도움을 주세요. 설정에서 언제든지 변경할 수 있습니다.';
+  @override
+  String get consentAccept => '허용';
+  @override
+  String get consentDecline => '아니요';
 
-  @override String get leaderboardTitle => '순위';
-  @override String get leaderboardComingSoon => '온라인 순위 곧 출시';
-  @override String get shopTitle => '상점';
-  @override String get shopComingSoon => '곧 출시';
+  @override
+  String get leaderboardTitle => '순위';
+  @override
+  String get leaderboardComingSoon => '온라인 순위 곧 출시';
+  @override
+  String get shopTitle => '상점';
+  @override
+  String get shopComingSoon => '곧 출시';
 
   // --- Faz 3: Leaderboard ---
-  @override String get leaderboardTabClassic => '클래식';
-  @override String get leaderboardTabTimeTrial => '타임 트라이얼';
-  @override String get leaderboardFilterWeekly => '주간';
-  @override String get leaderboardFilterAllTime => '전체';
-  @override String get leaderboardEmpty => '아직 점수가 없습니다';
-  @override String get leaderboardYourRank => '내 순위';
+  @override
+  String get leaderboardTabClassic => '클래식';
+  @override
+  String get leaderboardTabTimeTrial => '타임 트라이얼';
+  @override
+  String get leaderboardFilterWeekly => '주간';
+  @override
+  String get leaderboardFilterAllTime => '전체';
+  @override
+  String get leaderboardEmpty => '아직 점수가 없습니다';
+  @override
+  String get leaderboardYourRank => '내 순위';
 
   // --- Faz 3: Shop ---
-  @override String get shopSectionRemoveAds => '광고 제거';
-  @override String get shopSectionSoundPacks => '사운드 팩';
-  @override String get shopSectionTexturePacks => '텍스처 팩';
-  @override String get shopSectionSubscription => 'GLOO+';
-  @override String get shopRemoveAds => '광고 없음';
-  @override String get shopRemoveAdsDesc => '모든 광고 영구 제거';
-  @override String get shopSoundCrystal => '크리스탈 ASMR';
-  @override String get shopSoundCrystalDesc => '15가지 크리스탈 효과음';
-  @override String get shopSoundForest => '깊은 숲';
-  @override String get shopSoundForestDesc => '자연의 소리 + 햅틱 프로필';
-  @override String get shopTexturePack => '젤 텍스처 팩';
-  @override String get shopTexturePackDesc => '20가지 새로운 젤 외관';
-  @override String get shopStarterPack => '스타터 팩';
-  @override String get shopStarterPackDesc => '광고 없음 + 사운드 팩 2개 + 텍스처 팩 1개';
-  @override String get shopRestorePurchases => '구매 복원';
-  @override String get shopPurchaseSuccess => '구매 성공!';
-  @override String get shopPurchaseError => '구매 실패';
+  @override
+  String get shopSectionRemoveAds => '광고 제거';
+  @override
+  String get shopSectionSoundPacks => '사운드 팩';
+  @override
+  String get shopSectionTexturePacks => '텍스처 팩';
+  @override
+  String get shopSectionSubscription => 'GLOO+';
+  @override
+  String get shopRemoveAds => '광고 없음';
+  @override
+  String get shopRemoveAdsDesc => '모든 광고 영구 제거';
+  @override
+  String get shopSoundCrystal => '크리스탈 ASMR';
+  @override
+  String get shopSoundCrystalDesc => '15가지 크리스탈 효과음';
+  @override
+  String get shopSoundForest => '깊은 숲';
+  @override
+  String get shopSoundForestDesc => '자연의 소리 + 햅틱 프로필';
+  @override
+  String get shopTexturePack => '젤 텍스처 팩';
+  @override
+  String get shopTexturePackDesc => '20가지 새로운 젤 외관';
+  @override
+  String get shopStarterPack => '스타터 팩';
+  @override
+  String get shopStarterPackDesc => '광고 없음 + 사운드 팩 2개 + 텍스처 팩 1개';
+  @override
+  String get shopRestorePurchases => '구매 복원';
+  @override
+  String get shopPurchaseSuccess => '구매 성공!';
+  @override
+  String get shopPurchaseError => '구매 실패';
 
   // --- Faz 3: Gloo+ ---
-  @override String get glooPlusTitle => 'Gloo+';
-  @override String get glooPlusDesc => '광고 없음 전체 사운드 팩 젠 모드 얼리 액세스';
-  @override String get glooPlusMonthly => '월간';
-  @override String get glooPlusYearly => '연간';
-  @override String get glooPlusBadge => '최고 가치';
-  @override String get premiumRequired => 'Gloo+ 필요';
-  @override String get premiumUnlock => '잠금 해제';
+  @override
+  String get glooPlusTitle => 'Gloo+';
+  @override
+  String get glooPlusDesc => '광고 없음 전체 사운드 팩 젠 모드 얼리 액세스';
+  @override
+  String get glooPlusMonthly => '월간';
+  @override
+  String get glooPlusYearly => '연간';
+  @override
+  String get glooPlusBadge => '최고 가치';
+  @override
+  String get premiumRequired => 'Gloo+ 필요';
+  @override
+  String get premiumUnlock => '잠금 해제';
 
   // --- Faz 3: Collection ---
-  @override String get collectionTitle => '컬렉션';
-  @override String get collectionDiscovered => '발견됨';
-  @override String get collectionLocked => '잠김';
-  @override String get collectionEmpty => '아직 발견한 색상이 없습니다. 플레이하여 희귀 색상을 찾아보세요!';
+  @override
+  String get collectionTitle => '컬렉션';
+  @override
+  String get collectionDiscovered => '발견됨';
+  @override
+  String get collectionLocked => '잠김';
+  @override
+  String get collectionEmpty => '아직 발견한 색상이 없습니다. 플레이하여 희귀 색상을 찾아보세요!';
 
-  @override String get redeemCodeTitle => '코드 사용';
-  @override String get redeemCodeHint => '코드를 입력하세요';
-  @override String get redeemCodeButton => '사용';
-  @override String get redeemCodeSuccess => '코드가 성공적으로 사용되었습니다!';
-  @override String get redeemCodeInvalid => '유효하지 않거나 만료된 코드입니다';
-  @override String get redeemCodeAlreadyUsed => '이 코드는 이미 사용되었습니다';
+  @override
+  String get redeemCodeTitle => '코드 사용';
+  @override
+  String get redeemCodeHint => '코드를 입력하세요';
+  @override
+  String get redeemCodeButton => '사용';
+  @override
+  String get redeemCodeSuccess => '코드가 성공적으로 사용되었습니다!';
+  @override
+  String get redeemCodeInvalid => '유효하지 않거나 만료된 코드입니다';
+  @override
+  String get redeemCodeAlreadyUsed => '이 코드는 이미 사용되었습니다';
 }

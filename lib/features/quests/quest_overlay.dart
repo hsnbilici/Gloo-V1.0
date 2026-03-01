@@ -61,8 +61,8 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
     final remote = RemoteRepository();
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
-      final backendProgress = meta['quest_progress'] as Map<String, dynamic>?;
-      final backendDate = meta['quest_date'] as String?;
+      final backendProgress = meta.questProgress;
+      final backendDate = meta.questDate;
       if (backendProgress != null &&
           backendDate == today &&
           backendProgress.isNotEmpty) {
@@ -271,13 +271,13 @@ class _QuestCard extends StatelessWidget {
   final Duration delay;
 
   IconData get _questIcon => switch (quest.type) {
-        QuestType.clearLines        => Icons.horizontal_rule_rounded,
-        QuestType.makeSyntheses     => Icons.merge_type_rounded,
-        QuestType.reachCombo        => Icons.flash_on_rounded,
+        QuestType.clearLines => Icons.horizontal_rule_rounded,
+        QuestType.makeSyntheses => Icons.merge_type_rounded,
+        QuestType.reachCombo => Icons.flash_on_rounded,
         QuestType.completeDailyPuzzle => Icons.calendar_today_rounded,
-        QuestType.playGames         => Icons.sports_esports_rounded,
+        QuestType.playGames => Icons.sports_esports_rounded,
         QuestType.useColorSynthesis => Icons.palette_rounded,
-        QuestType.reachScore        => Icons.emoji_events_rounded,
+        QuestType.reachScore => Icons.emoji_events_rounded,
       };
 
   @override
@@ -312,12 +312,15 @@ class _QuestCard extends StatelessWidget {
                 color: accentColor.withValues(alpha: isComplete ? 0.15 : 0.08),
                 borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                 border: Border.all(
-                  color: accentColor.withValues(alpha: isComplete ? 0.35 : 0.15),
+                  color:
+                      accentColor.withValues(alpha: isComplete ? 0.35 : 0.15),
                 ),
               ),
               child: Icon(
                 isComplete ? Icons.check_rounded : _questIcon,
-                color: isComplete ? accentColor : accentColor.withValues(alpha: 0.60),
+                color: isComplete
+                    ? accentColor
+                    : accentColor.withValues(alpha: 0.60),
                 size: 18,
               ),
             ),
@@ -335,7 +338,8 @@ class _QuestCard extends StatelessWidget {
                           : Colors.white.withValues(alpha: 0.80),
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      decoration: isComplete ? TextDecoration.lineThrough : null,
+                      decoration:
+                          isComplete ? TextDecoration.lineThrough : null,
                       decorationColor: Colors.white.withValues(alpha: 0.30),
                     ),
                   ),
@@ -472,8 +476,7 @@ class _XpBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star_rounded,
-              color: Color(0xFFFFD700), size: 12),
+          const Icon(Icons.star_rounded, color: Color(0xFFFFD700), size: 12),
           const SizedBox(width: 3),
           Text(
             label,

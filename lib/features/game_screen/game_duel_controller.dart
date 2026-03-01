@@ -45,10 +45,10 @@ class GameDuelController {
 
   void init() {
     ref.read(duelProvider.notifier).setMatch(
-      matchId: matchId ?? 'local',
-      seed: seed,
-      isBot: isBot,
-    );
+          matchId: matchId ?? 'local',
+          seed: seed,
+          isBot: isBot,
+        );
 
     if (isBot) {
       _initBotSimulation();
@@ -62,23 +62,20 @@ class GameDuelController {
     _pvpService!.joinDuelRoom(matchId!);
 
     // Rakip skorunu dinle
-    _opponentScoreSub = _pvpService!
-        .listenOpponentScore(matchId!)
-        .listen((score) {
+    _opponentScoreSub =
+        _pvpService!.listenOpponentScore(matchId!).listen((score) {
       ref.read(duelProvider.notifier).updateOpponentScore(score);
     });
 
     // Rakip engellerini dinle
-    _opponentObstacleSub = _pvpService!
-        .listenOpponentObstacles(matchId!)
-        .listen((packet) {
+    _opponentObstacleSub =
+        _pvpService!.listenOpponentObstacles(matchId!).listen((packet) {
       _applyIncomingObstacle(packet);
     });
 
     // Rakip oyun bitis sinyali
-    _opponentGameOverSub = _pvpService!
-        .listenOpponentGameOver(matchId!)
-        .listen((finalScore) {
+    _opponentGameOverSub =
+        _pvpService!.listenOpponentGameOver(matchId!).listen((finalScore) {
       ref.read(duelProvider.notifier).setOpponentDone(finalScore);
     });
 
@@ -156,7 +153,8 @@ class GameDuelController {
     botScoreTimer = null;
   }
 
-  Future<void> _finalizeDuelResult(int playerScore, BuildContext context) async {
+  Future<void> _finalizeDuelResult(
+      int playerScore, BuildContext context) async {
     final duelState = ref.read(duelProvider);
     final opponentScore = duelState.opponentScore;
 
@@ -164,7 +162,8 @@ class GameDuelController {
     final playerElo = repo.getElo();
 
     final opponentElo = isBot
-        ? (playerElo * MatchmakingManager.botDifficulty(playerElo) * 1.2).round()
+        ? (playerElo * MatchmakingManager.botDifficulty(playerElo) * 1.2)
+            .round()
         : playerElo;
 
     final DuelOutcome outcome;
@@ -220,7 +219,8 @@ class GameDuelController {
     _showDuelResultDialog(result, newElo, context);
   }
 
-  void _showDuelResultDialog(DuelResult result, int newElo, BuildContext context) {
+  void _showDuelResultDialog(
+      DuelResult result, int newElo, BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!context.mounted) return;
       showGeneralDialog<void>(

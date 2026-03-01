@@ -13,12 +13,10 @@ class GelShape {
   final String name;
 
   /// Sınırlayıcı kutu yüksekliği (satır sayısı).
-  int get rowCount =>
-      cells.fold(0, (acc, c) => c.$1 > acc ? c.$1 : acc) + 1;
+  int get rowCount => cells.fold(0, (acc, c) => c.$1 > acc ? c.$1 : acc) + 1;
 
   /// Sınırlayıcı kutu genişliği (sütun sayısı).
-  int get colCount =>
-      cells.fold(0, (acc, c) => c.$2 > acc ? c.$2 : acc) + 1;
+  int get colCount => cells.fold(0, (acc, c) => c.$2 > acc ? c.$2 : acc) + 1;
 
   /// Hücre sayısı.
   int get cellCount => cells.length;
@@ -82,16 +80,22 @@ const List<GelShape> kAllShapes = [
 ];
 
 /// Küçük şekiller (1-2 hücre).
-final List<GelShape> kSmallShapes =
-    [for (final s in kAllShapes) if (s.cellCount <= 2) s];
+final List<GelShape> kSmallShapes = [
+  for (final s in kAllShapes)
+    if (s.cellCount <= 2) s
+];
 
 /// Orta şekiller (3 hücre).
-final List<GelShape> kMediumShapes =
-    [for (final s in kAllShapes) if (s.cellCount == 3) s];
+final List<GelShape> kMediumShapes = [
+  for (final s in kAllShapes)
+    if (s.cellCount == 3) s
+];
 
 /// Büyük şekiller (4+ hücre).
-final List<GelShape> kLargeShapes =
-    [for (final s in kAllShapes) if (s.cellCount >= 4) s];
+final List<GelShape> kLargeShapes = [
+  for (final s in kAllShapes)
+    if (s.cellCount >= 4) s
+];
 
 /// Rastgele el (hand) oluşturucu — Smart Seed RNG destekli.
 class ShapeGenerator {
@@ -259,7 +263,10 @@ class ShapeGenerator {
       }
     }
     // Fallback: dot her zaman sığar
-    return (kAllShapes.first, kPrimaryColors[_rng.nextInt(kPrimaryColors.length)]);
+    return (
+      kAllShapes.first,
+      kPrimaryColors[_rng.nextInt(kPrimaryColors.length)]
+    );
   }
 
   /// Zorluk eğrisi hesapla.

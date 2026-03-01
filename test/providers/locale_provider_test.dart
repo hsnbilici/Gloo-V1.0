@@ -28,7 +28,22 @@ void main() {
 
     test('contains expected languages', () {
       final codes = kLanguageOptions.map((l) => l.code).toSet();
-      expect(codes, containsAll(['en', 'tr', 'de', 'zh', 'ja', 'ko', 'ru', 'es', 'ar', 'fr', 'hi', 'pt']));
+      expect(
+          codes,
+          containsAll([
+            'en',
+            'tr',
+            'de',
+            'zh',
+            'ja',
+            'ko',
+            'ru',
+            'es',
+            'ar',
+            'fr',
+            'hi',
+            'pt'
+          ]));
     });
 
     test('Turkish is listed first', () {

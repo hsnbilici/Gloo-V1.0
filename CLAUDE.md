@@ -164,7 +164,7 @@ Diger rotalar: `/`, `/onboarding`, `/daily`, `/settings`, `/shop`, `/leaderboard
 - `AnalyticsService`: Lazy/null-safe Firebase wrapper — Firebase yoksa sessizce no-op.
 - `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast) ile eslestirme ve duello senkronizasyonu.
 - `data_models.dart`: `Score` ve `UserProfile` veri siniflari (Isar yok).
-- `firebase_options.dart`: Tum degerler PLACEHOLDER — `flutterfire configure` ile gercek degerler uretilmeli.
+- `firebase_options.dart`: Gercek Firebase degerleri girilmis (`gloo-f7905` projesi). Uretime geciste `flutterfire configure` ile dogrulanmali.
 
 ### Ses ve Haptik
 - `AudioManager` ses dosyalarini `assets/audio/sfx/` ve `assets/audio/music/` altindan yukler. Dosya bulunamazsa sessizce atlar.

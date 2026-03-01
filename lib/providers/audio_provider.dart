@@ -2,9 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../audio/audio_manager.dart';
 import '../audio/haptic_manager.dart';
+import 'service_providers.dart';
 
-class AudioSettings {
-  const AudioSettings({
+class AppSettings {
+  const AppSettings({
     this.sfxEnabled = true,
     this.musicEnabled = true,
     this.hapticsEnabled = true,
@@ -17,16 +18,20 @@ class AudioSettings {
   final bool sfxEnabled;
   final bool musicEnabled;
   final bool hapticsEnabled;
+
   /// Her dolu hücreye kısa renk etiketi (K/S/M/B…) ekler.
   final bool colorBlindMode;
+
   /// Firebase Analytics & Crashlytics veri toplamasına izin verir (GDPR).
   final bool analyticsEnabled;
+
   /// Gloo+ abonelik durumu — Zen Modu kilidi ve premium özellikler.
   final bool glooPlus;
+
   /// Reklamlar kaldırılmış mı (doğrudan IAP veya Gloo+).
   final bool adsRemoved;
 
-  AudioSettings copyWith({
+  AppSettings copyWith({
     bool? sfxEnabled,
     bool? musicEnabled,
     bool? hapticsEnabled,
@@ -35,7 +40,7 @@ class AudioSettings {
     bool? glooPlus,
     bool? adsRemoved,
   }) {
-    return AudioSettings(
+    return AppSettings(
       sfxEnabled: sfxEnabled ?? this.sfxEnabled,
       musicEnabled: musicEnabled ?? this.musicEnabled,
       hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
@@ -47,24 +52,32 @@ class AudioSettings {
   }
 }
 
-class AudioSettingsNotifier extends StateNotifier<AudioSettings> {
-  AudioSettingsNotifier() : super(const AudioSettings());
+class AppSettingsNotifier extends StateNotifier<AppSettings> {
+  AppSettingsNotifier({
+    AudioManager? audioManager,
+    HapticManager? hapticManager,
+  })  : _audioManager = audioManager,
+        _hapticManager = hapticManager,
+        super(const AppSettings());
+
+  final AudioManager? _audioManager;
+  final HapticManager? _hapticManager;
 
   void toggleSfx() {
     final next = !state.sfxEnabled;
-    AudioManager().setSfxEnabled(next);
+    (_audioManager ?? AudioManager()).setSfxEnabled(next);
     state = state.copyWith(sfxEnabled: next);
   }
 
   void toggleMusic() {
     final next = !state.musicEnabled;
-    AudioManager().setMusicEnabled(next);
+    (_audioManager ?? AudioManager()).setMusicEnabled(next);
     state = state.copyWith(musicEnabled: next);
   }
 
   void toggleHaptics() {
     final next = !state.hapticsEnabled;
-    HapticManager().setEnabled(next);
+    (_hapticManager ?? HapticManager()).setEnabled(next);
     state = state.copyWith(hapticsEnabled: next);
   }
 
@@ -87,7 +100,10 @@ class AudioSettingsNotifier extends StateNotifier<AudioSettings> {
       state = state.copyWith(adsRemoved: removed);
 }
 
-final audioSettingsProvider =
-    StateNotifierProvider<AudioSettingsNotifier, AudioSettings>(
-  (ref) => AudioSettingsNotifier(),
+final appSettingsProvider =
+    StateNotifierProvider<AppSettingsNotifier, AppSettings>(
+  (ref) => AppSettingsNotifier(
+    audioManager: ref.watch(audioManagerProvider),
+    hapticManager: ref.watch(hapticManagerProvider),
+  ),
 );

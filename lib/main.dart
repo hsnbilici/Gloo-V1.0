@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'app/app.dart';
 import 'data/remote/supabase_client.dart';
@@ -14,7 +15,8 @@ import 'services/ad_manager.dart';
 import 'services/purchase_service.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Firebase init (placeholder anahtarlar varsa sessizce atlar)
   try {
@@ -47,6 +49,8 @@ Future<void> main() async {
   } else {
     await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
+
+  FlutterNativeSplash.remove();
 
   runApp(
     const ProviderScope(

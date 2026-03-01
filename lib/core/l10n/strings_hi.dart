@@ -1,162 +1,309 @@
 import 'app_strings.dart';
 
 class StringsHi extends AppStrings {
-  @override String get scoreLabel => 'स्कोर';
-  @override String get modeLabelClassic => 'क्लासिक';
-  @override String get modeLabelColorChef => 'कलर शेफ';
-  @override String get modeLabelTimeTrial => 'समय';
-  @override String get modeLabelZen => 'ज़ेन';
-  @override String get modeLabelDaily => 'दैनिक';
+  @override
+  String get scoreLabel => 'स्कोर';
+  @override
+  String get modeLabelClassic => 'क्लासिक';
+  @override
+  String get modeLabelColorChef => 'कलर शेफ';
+  @override
+  String get modeLabelTimeTrial => 'समय';
+  @override
+  String get modeLabelZen => 'ज़ेन';
+  @override
+  String get modeLabelDaily => 'दैनिक';
 
-  @override String get pauseTitle => 'रुका हुआ';
-  @override String get pauseResume => 'जारी रखें';
-  @override String get pauseHome => 'मुख्य मेनू';
+  @override
+  String get pauseTitle => 'रुका हुआ';
+  @override
+  String get pauseResume => 'जारी रखें';
+  @override
+  String get pauseHome => 'मुख्य मेनू';
 
-  @override String get gameOverTitle => 'खेल समाप्त';
-  @override String get gameOverScoreLabel => 'स्कोर';
-  @override String get gameOverNewRecord => 'नया रिकॉर्ड!';
-  @override String get gameOverGridFill => 'ग्रिड भराव';
-  @override String get gameOverModeClassic => 'क्लासिक';
-  @override String get gameOverModeColorChef => 'कलर शेफ';
-  @override String get gameOverModeTimeTrial => 'टाइम ट्रायल';
-  @override String get gameOverModeZen => 'ज़ेन';
-  @override String get gameOverModeDaily => 'दैनिक पहेली';
-  @override String get gameOverReplay => 'फिर से खेलें';
-  @override String get gameOverHome => 'मुख्य मेनू';
+  @override
+  String get gameOverTitle => 'खेल समाप्त';
+  @override
+  String get gameOverScoreLabel => 'स्कोर';
+  @override
+  String get gameOverNewRecord => 'नया रिकॉर्ड!';
+  @override
+  String get gameOverGridFill => 'ग्रिड भराव';
+  @override
+  String get gameOverModeClassic => 'क्लासिक';
+  @override
+  String get gameOverModeColorChef => 'कलर शेफ';
+  @override
+  String get gameOverModeTimeTrial => 'टाइम ट्रायल';
+  @override
+  String get gameOverModeZen => 'ज़ेन';
+  @override
+  String get gameOverModeDaily => 'दैनिक पहेली';
+  @override
+  String get gameOverReplay => 'फिर से खेलें';
+  @override
+  String get gameOverHome => 'मुख्य मेनू';
 
-  @override String get comboSmall => 'कॉम्बो';
-  @override String get comboMedium => 'सुपर कॉम्बो';
-  @override String get comboLarge => 'मेगा कॉम्बो';
-  @override String get comboEpic => 'एपिक कॉम्बो';
+  @override
+  String get comboSmall => 'कॉम्बो';
+  @override
+  String get comboMedium => 'सुपर कॉम्बो';
+  @override
+  String get comboLarge => 'मेगा कॉम्बो';
+  @override
+  String get comboEpic => 'एपिक कॉम्बो';
 
-  @override String get nearMissStandard => 'बहुत करीब!';
-  @override String get nearMissCritical => 'खतरा!';
+  @override
+  String get nearMissStandard => 'बहुत करीब!';
+  @override
+  String get nearMissCritical => 'खतरा!';
 
-  @override String get toastSlotUsed => 'स्लॉट पहले से उपयोग में है';
-  @override String get toastSelectShape => 'पहले एक आकार चुनें';
-  @override String get toastCannotPlace => 'यहाँ नहीं रखा जा सकता';
+  @override
+  String get toastSlotUsed => 'स्लॉट पहले से उपयोग में है';
+  @override
+  String get toastSelectShape => 'पहले एक आकार चुनें';
+  @override
+  String get toastCannotPlace => 'यहाँ नहीं रखा जा सकता';
 
-  @override String get modeClassicName => 'क्लासिक';
-  @override String get modeClassicDesc => 'ग्रिड भरने तक खेलें';
-  @override String get modeColorChefName => 'कलर शेफ';
-  @override String get modeColorChefDesc => 'लक्ष्य रंग बनाएं';
-  @override String get modeTimeTrialName => 'टाइम ट्रायल';
-  @override String get modeTimeTrialDesc => '90 सेकंड — TikTok के लिए बिल्कुल सही';
-  @override String get modeZenName => 'ज़ेन';
-  @override String get modeZenDesc => 'कोई स्कोर नहीं, कोई टाइमर नहीं — शुद्ध ASMR';
-  @override String get modeLevelName => 'लेवल';
-  @override String get modeLevelDesc => 'बाधाओं वाले नक्शे, बढ़ती कठिनाई';
-  @override String get modeDuelName => 'द्वंद्व';
-  @override String get modeDuelDesc => 'प्रतिद्वंद्वी को हराएं, ELO कमाएं';
+  @override
+  String get modeClassicName => 'क्लासिक';
+  @override
+  String get modeClassicDesc => 'ग्रिड भरने तक खेलें';
+  @override
+  String get modeColorChefName => 'कलर शेफ';
+  @override
+  String get modeColorChefDesc => 'लक्ष्य रंग बनाएं';
+  @override
+  String get modeTimeTrialName => 'टाइम ट्रायल';
+  @override
+  String get modeTimeTrialDesc => '90 सेकंड — TikTok के लिए बिल्कुल सही';
+  @override
+  String get modeZenName => 'ज़ेन';
+  @override
+  String get modeZenDesc => 'कोई स्कोर नहीं, कोई टाइमर नहीं — शुद्ध ASMR';
+  @override
+  String get modeLevelName => 'लेवल';
+  @override
+  String get modeLevelDesc => 'बाधाओं वाले नक्शे, बढ़ती कठिनाई';
+  @override
+  String get modeDuelName => 'द्वंद्व';
+  @override
+  String get modeDuelDesc => 'प्रतिद्वंद्वी को हराएं, ELO कमाएं';
 
-  @override String get homeSubtitle => 'A S M R   P U Z Z L E';
-  @override String get homeBadgeBeginning => 'शुरुआती';
-  @override String get navLeaderboard => 'लीडरबोर्ड';
-  @override String get navShop => 'दुकान';
-  @override String get navSettings => 'सेटिंग्स';
+  @override
+  String get homeSubtitle => 'A S M R   P U Z Z L E';
+  @override
+  String get homeBadgeBeginning => 'शुरुआती';
+  @override
+  String get navLeaderboard => 'लीडरबोर्ड';
+  @override
+  String get navShop => 'दुकान';
+  @override
+  String get navSettings => 'सेटिंग्स';
 
-  @override String get settingsTitle => 'सेटिंग्स';
-  @override String get settingsSectionLanguage => 'भाषा';
-  @override String get settingsLanguage => 'ऐप भाषा';
-  @override String get settingsSectionAudio => 'ऑडियो';
-  @override String get settingsSfx => 'ध्वनि प्रभाव';
-  @override String get settingsMusic => 'संगीत';
-  @override String get settingsSectionFeedback => 'प्रतिक्रिया';
-  @override String get settingsHaptics => 'हैप्टिक कंपन';
-  @override String get settingsSectionAccessibility => 'सुगम्यता';
-  @override String get settingsColorBlind => 'रंग अंधता मोड';
-  @override String get settingsSectionAbout => 'परिचय';
-  @override String get settingsVersion => 'संस्करण';
-  @override String get settingsDeveloper => 'डेवलपर';
+  @override
+  String get settingsTitle => 'सेटिंग्स';
+  @override
+  String get settingsSectionLanguage => 'भाषा';
+  @override
+  String get settingsLanguage => 'ऐप भाषा';
+  @override
+  String get settingsSectionAudio => 'ऑडियो';
+  @override
+  String get settingsSfx => 'ध्वनि प्रभाव';
+  @override
+  String get settingsMusic => 'संगीत';
+  @override
+  String get settingsSectionFeedback => 'प्रतिक्रिया';
+  @override
+  String get settingsHaptics => 'हैप्टिक कंपन';
+  @override
+  String get settingsSectionAccessibility => 'सुगम्यता';
+  @override
+  String get settingsColorBlind => 'रंग अंधता मोड';
+  @override
+  String get settingsSectionAbout => 'परिचय';
+  @override
+  String get settingsVersion => 'संस्करण';
+  @override
+  String get settingsDeveloper => 'डेवलपर';
 
-  @override String get chefTargetLabel => 'लक्ष्य';
-  @override String get chefLevelLabel => 'लेवल';
-  @override String get chefLevelComplete => 'लेवल पूरा';
-  @override String get chefAllComplete => 'सभी लेवल पूरे';
-  @override String get chefContinue => 'जारी रखें';
+  @override
+  String get chefTargetLabel => 'लक्ष्य';
+  @override
+  String get chefLevelLabel => 'लेवल';
+  @override
+  String get chefLevelComplete => 'लेवल पूरा';
+  @override
+  String get chefAllComplete => 'सभी लेवल पूरे';
+  @override
+  String get chefContinue => 'जारी रखें';
 
-  @override String get colorblindDialogTitle => 'सुगम्यता';
-  @override String get colorblindDialogMessage => 'क्या आपको रंग पहचानने में कठिनाई होती है? क्या आप रंग अंधता मोड सक्षम करना चाहेंगे?';
-  @override String get colorblindDialogEnable => 'सक्षम करें';
-  @override String get colorblindDialogSkip => 'नहीं, धन्यवाद';
+  @override
+  String get colorblindDialogTitle => 'सुगम्यता';
+  @override
+  String get colorblindDialogMessage =>
+      'क्या आपको रंग पहचानने में कठिनाई होती है? क्या आप रंग अंधता मोड सक्षम करना चाहेंगे?';
+  @override
+  String get colorblindDialogEnable => 'सक्षम करें';
+  @override
+  String get colorblindDialogSkip => 'नहीं, धन्यवाद';
 
-  @override String get onboardingSkip => 'छोड़ें';
-  @override String get onboardingNext => 'अगला';
-  @override String get onboardingStart => 'खेलें!';
-  @override String get onboardingStep1Title => 'जेल रखें';
-  @override String get onboardingStep1Desc => 'अपने हाथ से एक आकार चुनें और ग्रिड पर रखें। पूरी पंक्तियाँ या स्तंभ स्वचालित रूप से साफ होते हैं।';
-  @override String get onboardingStep2Title => 'कॉम्बो बनाएं';
-  @override String get onboardingStep2Desc => 'लगातार लाइनें साफ करें! हर श्रृंखला आपके गुणक को बढ़ाती है।';
-  @override String get onboardingStep3Title => 'रंग बनाएं';
-  @override String get onboardingStep3Desc => 'पास के प्राथमिक रंग स्वचालित रूप से मिलकर नए रंग बनाते हैं। दुर्लभ रंग संयोजन खोजें!';
+  @override
+  String get onboardingSkip => 'छोड़ें';
+  @override
+  String get onboardingNext => 'अगला';
+  @override
+  String get onboardingStart => 'खेलें!';
+  @override
+  String get onboardingStep1Title => 'जेल रखें';
+  @override
+  String get onboardingStep1Desc =>
+      'अपने हाथ से एक आकार चुनें और ग्रिड पर रखें। पूरी पंक्तियाँ या स्तंभ स्वचालित रूप से साफ होते हैं।';
+  @override
+  String get onboardingStep2Title => 'कॉम्बो बनाएं';
+  @override
+  String get onboardingStep2Desc =>
+      'लगातार लाइनें साफ करें! हर श्रृंखला आपके गुणक को बढ़ाती है।';
+  @override
+  String get onboardingStep3Title => 'रंग बनाएं';
+  @override
+  String get onboardingStep3Desc =>
+      'पास के प्राथमिक रंग स्वचालित रूप से मिलकर नए रंग बनाते हैं। दुर्लभ रंग संयोजन खोजें!';
 
-  @override String get streakDays => 'दिन';
+  @override
+  String get streakDays => 'दिन';
 
-  @override String get dailyTitle => 'दैनिक पहेली';
-  @override String get dailyPlayButton => 'आज खेलें';
-  @override String get dailyCompleted => 'पूर्ण';
-  @override String get dailyScore => 'आज का स्कोर';
-  @override String get dailyShareResult => 'साझा करें';
+  @override
+  String get dailyTitle => 'दैनिक पहेली';
+  @override
+  String get dailyPlayButton => 'आज खेलें';
+  @override
+  String get dailyCompleted => 'पूर्ण';
+  @override
+  String get dailyScore => 'आज का स्कोर';
+  @override
+  String get dailyShareResult => 'साझा करें';
 
-  @override String get settingsSectionPrivacy => 'डेटा गोपनीयता';
-  @override String get settingsAnalytics => 'एनालिटिक्स और क्रैश रिपोर्ट';
-  @override String get settingsDeleteAccount => 'सभी डेटा हटाएं';
-  @override String get settingsDeleteConfirmTitle => 'सभी डेटा हटाएं?';
-  @override String get settingsDeleteConfirmMessage => 'स्कोर, स्ट्रीक और सभी प्राथमिकताएं स्थायी रूप से हटा दी जाएंगी। यह पूर्ववत नहीं किया जा सकता।';
-  @override String get settingsDeleteConfirmAction => 'हटाएं';
-  @override String get settingsDeleteCancel => 'रद्द करें';
+  @override
+  String get settingsSectionPrivacy => 'डेटा गोपनीयता';
+  @override
+  String get settingsAnalytics => 'एनालिटिक्स और क्रैश रिपोर्ट';
+  @override
+  String get settingsDeleteAccount => 'सभी डेटा हटाएं';
+  @override
+  String get settingsDeleteConfirmTitle => 'सभी डेटा हटाएं?';
+  @override
+  String get settingsDeleteConfirmMessage =>
+      'स्कोर, स्ट्रीक और सभी प्राथमिकताएं स्थायी रूप से हटा दी जाएंगी। यह पूर्ववत नहीं किया जा सकता।';
+  @override
+  String get settingsDeleteConfirmAction => 'हटाएं';
+  @override
+  String get settingsDeleteCancel => 'रद्द करें';
 
-  @override String get consentTitle => 'एनालिटिक्स और क्रैश रिपोर्ट';
-  @override String get consentMessage => 'गुमनाम उपयोग डेटा और क्रैश रिपोर्ट साझा करके Gloo को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी सेटिंग्स में बदल सकते हैं।';
-  @override String get consentAccept => 'अनुमति दें';
-  @override String get consentDecline => 'नहीं';
+  @override
+  String get consentTitle => 'एनालिटिक्स और क्रैश रिपोर्ट';
+  @override
+  String get consentMessage =>
+      'गुमनाम उपयोग डेटा और क्रैश रिपोर्ट साझा करके Gloo को बेहतर बनाने में हमारी मदद करें। आप इसे कभी भी सेटिंग्स में बदल सकते हैं।';
+  @override
+  String get consentAccept => 'अनुमति दें';
+  @override
+  String get consentDecline => 'नहीं';
 
-  @override String get leaderboardTitle => 'लीडरबोर्ड';
-  @override String get leaderboardComingSoon => 'ऑनलाइन लीडरबोर्ड जल्द आ रहा है';
-  @override String get leaderboardTabClassic => 'क्लासिक';
-  @override String get leaderboardTabTimeTrial => 'टाइम ट्रायल';
-  @override String get leaderboardFilterWeekly => 'साप्ताहिक';
-  @override String get leaderboardFilterAllTime => 'सर्वकालिक';
-  @override String get leaderboardEmpty => 'अभी तक कोई स्कोर नहीं';
-  @override String get leaderboardYourRank => 'आपकी रैंक';
+  @override
+  String get leaderboardTitle => 'लीडरबोर्ड';
+  @override
+  String get leaderboardComingSoon => 'ऑनलाइन लीडरबोर्ड जल्द आ रहा है';
+  @override
+  String get leaderboardTabClassic => 'क्लासिक';
+  @override
+  String get leaderboardTabTimeTrial => 'टाइम ट्रायल';
+  @override
+  String get leaderboardFilterWeekly => 'साप्ताहिक';
+  @override
+  String get leaderboardFilterAllTime => 'सर्वकालिक';
+  @override
+  String get leaderboardEmpty => 'अभी तक कोई स्कोर नहीं';
+  @override
+  String get leaderboardYourRank => 'आपकी रैंक';
 
-  @override String get shopTitle => 'दुकान';
-  @override String get shopComingSoon => 'जल्द आ रहा है';
-  @override String get shopSectionRemoveAds => 'विज्ञापन-मुक्त';
-  @override String get shopSectionSoundPacks => 'ध्वनि पैक';
-  @override String get shopSectionTexturePacks => 'टेक्सचर पैक';
-  @override String get shopSectionSubscription => 'GLOO+';
-  @override String get shopRemoveAds => 'विज्ञापन हटाएं';
-  @override String get shopRemoveAdsDesc => 'सभी विज्ञापन स्थायी रूप से हटाएं';
-  @override String get shopSoundCrystal => 'क्रिस्टल ASMR';
-  @override String get shopSoundCrystalDesc => '15 क्रिस्टल ध्वनि प्रभाव';
-  @override String get shopSoundForest => 'गहरा जंगल';
-  @override String get shopSoundForestDesc => 'प्रकृति ध्वनियाँ + हैप्टिक प्रोफ़ाइल';
-  @override String get shopTexturePack => 'जेल टेक्सचर पैक';
-  @override String get shopTexturePackDesc => '20 नई जेल दिखावट';
-  @override String get shopStarterPack => 'स्टार्टर पैक';
-  @override String get shopStarterPackDesc => 'विज्ञापन-मुक्त + 2 ध्वनि पैक + 1 टेक्सचर पैक';
-  @override String get shopRestorePurchases => 'खरीदारी पुनर्स्थापित करें';
-  @override String get shopPurchaseSuccess => 'खरीदारी सफल!';
-  @override String get shopPurchaseError => 'खरीदारी विफल';
+  @override
+  String get shopTitle => 'दुकान';
+  @override
+  String get shopComingSoon => 'जल्द आ रहा है';
+  @override
+  String get shopSectionRemoveAds => 'विज्ञापन-मुक्त';
+  @override
+  String get shopSectionSoundPacks => 'ध्वनि पैक';
+  @override
+  String get shopSectionTexturePacks => 'टेक्सचर पैक';
+  @override
+  String get shopSectionSubscription => 'GLOO+';
+  @override
+  String get shopRemoveAds => 'विज्ञापन हटाएं';
+  @override
+  String get shopRemoveAdsDesc => 'सभी विज्ञापन स्थायी रूप से हटाएं';
+  @override
+  String get shopSoundCrystal => 'क्रिस्टल ASMR';
+  @override
+  String get shopSoundCrystalDesc => '15 क्रिस्टल ध्वनि प्रभाव';
+  @override
+  String get shopSoundForest => 'गहरा जंगल';
+  @override
+  String get shopSoundForestDesc => 'प्रकृति ध्वनियाँ + हैप्टिक प्रोफ़ाइल';
+  @override
+  String get shopTexturePack => 'जेल टेक्सचर पैक';
+  @override
+  String get shopTexturePackDesc => '20 नई जेल दिखावट';
+  @override
+  String get shopStarterPack => 'स्टार्टर पैक';
+  @override
+  String get shopStarterPackDesc =>
+      'विज्ञापन-मुक्त + 2 ध्वनि पैक + 1 टेक्सचर पैक';
+  @override
+  String get shopRestorePurchases => 'खरीदारी पुनर्स्थापित करें';
+  @override
+  String get shopPurchaseSuccess => 'खरीदारी सफल!';
+  @override
+  String get shopPurchaseError => 'खरीदारी विफल';
 
-  @override String get glooPlusTitle => 'Gloo+';
-  @override String get glooPlusDesc => 'विज्ञापन-मुक्त, सभी ध्वनि पैक, ज़ेन मोड, अर्ली एक्सेस';
-  @override String get glooPlusMonthly => 'मासिक';
-  @override String get glooPlusYearly => 'वार्षिक';
-  @override String get glooPlusBadge => 'सबसे अच्छा मूल्य';
-  @override String get premiumRequired => 'Gloo+ आवश्यक';
-  @override String get premiumUnlock => 'अनलॉक करें';
+  @override
+  String get glooPlusTitle => 'Gloo+';
+  @override
+  String get glooPlusDesc =>
+      'विज्ञापन-मुक्त, सभी ध्वनि पैक, ज़ेन मोड, अर्ली एक्सेस';
+  @override
+  String get glooPlusMonthly => 'मासिक';
+  @override
+  String get glooPlusYearly => 'वार्षिक';
+  @override
+  String get glooPlusBadge => 'सबसे अच्छा मूल्य';
+  @override
+  String get premiumRequired => 'Gloo+ आवश्यक';
+  @override
+  String get premiumUnlock => 'अनलॉक करें';
 
-  @override String get collectionTitle => 'संग्रह';
-  @override String get collectionDiscovered => 'खोजे गए';
-  @override String get collectionLocked => 'लॉक';
-  @override String get collectionEmpty => 'अभी तक कोई रंग नहीं मिला। दुर्लभ रंग खोजने के लिए खेलें!';
+  @override
+  String get collectionTitle => 'संग्रह';
+  @override
+  String get collectionDiscovered => 'खोजे गए';
+  @override
+  String get collectionLocked => 'लॉक';
+  @override
+  String get collectionEmpty =>
+      'अभी तक कोई रंग नहीं मिला। दुर्लभ रंग खोजने के लिए खेलें!';
 
-  @override String get redeemCodeTitle => 'कोड रिडीम करें';
-  @override String get redeemCodeHint => 'अपना कोड दर्ज करें';
-  @override String get redeemCodeButton => 'रिडीम';
-  @override String get redeemCodeSuccess => 'कोड सफलतापूर्वक रिडीम किया गया!';
-  @override String get redeemCodeInvalid => 'अमान्य या समाप्त कोड';
-  @override String get redeemCodeAlreadyUsed => 'यह कोड पहले ही उपयोग किया जा चुका है';
+  @override
+  String get redeemCodeTitle => 'कोड रिडीम करें';
+  @override
+  String get redeemCodeHint => 'अपना कोड दर्ज करें';
+  @override
+  String get redeemCodeButton => 'रिडीम';
+  @override
+  String get redeemCodeSuccess => 'कोड सफलतापूर्वक रिडीम किया गया!';
+  @override
+  String get redeemCodeInvalid => 'अमान्य या समाप्त कोड';
+  @override
+  String get redeemCodeAlreadyUsed => 'यह कोड पहले ही उपयोग किया जा चुका है';
 }

@@ -35,8 +35,10 @@ class PowerUpDef {
 
   final PowerUpType type;
   final int cost;
+
   /// Kullanım sonrası bekleme süresi (hamle cinsinden).
   final int cooldownMoves;
+
   /// Oyun başına maksimum kullanım sayısı (null = sınırsız).
   final int? maxPerGame;
 }

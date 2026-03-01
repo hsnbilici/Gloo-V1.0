@@ -78,7 +78,20 @@ void main() {
   // ─── All strings are complete ───────────────────────────────────────────
 
   group('String completeness', () {
-    final locales = ['en', 'tr', 'de', 'zh', 'ja', 'ko', 'ru', 'es', 'fr', 'hi', 'pt', 'ar'];
+    final locales = [
+      'en',
+      'tr',
+      'de',
+      'zh',
+      'ja',
+      'ko',
+      'ru',
+      'es',
+      'fr',
+      'hi',
+      'pt',
+      'ar'
+    ];
 
     for (final code in locales) {
       test('$code has all required strings', () {
