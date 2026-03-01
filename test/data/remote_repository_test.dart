@@ -4,6 +4,7 @@ import 'package:gloo/data/remote/dto/daily_puzzle.dart';
 import 'package:gloo/data/remote/dto/leaderboard_entry.dart';
 import 'package:gloo/data/remote/dto/meta_state.dart';
 import 'package:gloo/data/remote/dto/pvp_match.dart';
+import 'package:gloo/data/remote/dto/redeem_result.dart';
 import 'package:gloo/data/remote/remote_repository.dart';
 
 /// RemoteRepository alt sinifi — `isConfigured` false dondurerek
@@ -78,14 +79,13 @@ void main() {
     });
 
     test('createPvpMatch returns null when not configured', () async {
-      final result = await repo.createPvpMatch(seed: 12345);
+      final result = await repo.createPvpMatch();
       expect(result, isNull);
     });
 
     test('createPvpMatch with opponentId returns null when not configured',
         () async {
       final result = await repo.createPvpMatch(
-        seed: 12345,
         opponentId: 'opponent_123',
       );
       expect(result, isNull);
@@ -127,9 +127,9 @@ void main() {
       expect(result, isNull);
     });
 
-    test('redeemCode returns null when not configured', () async {
+    test('redeemCode returns RedeemResult.error when not configured', () async {
       final result = await repo.redeemCode('TESTCODE');
-      expect(result, isNull);
+      expect(result, isA<RedeemError>());
     });
 
     test('saveMetaState returns immediately when not configured', () async {
@@ -183,8 +183,8 @@ void main() {
       expect(result, isNull);
     });
 
-    test('createPvpMatch returns nullable String', () async {
-      final result = await repo.createPvpMatch(seed: 1);
+    test('createPvpMatch returns nullable record', () async {
+      final result = await repo.createPvpMatch();
       expect(result, isNull);
     });
 
@@ -202,9 +202,9 @@ void main() {
       expect(result, isNull);
     });
 
-    test('redeemCode returns nullable List<String>', () async {
+    test('redeemCode returns RedeemResult', () async {
       final result = await repo.redeemCode('CODE');
-      expect(result, isNull);
+      expect(result, isA<RedeemResult>());
     });
 
     test('loadMetaState returns nullable MetaState', () async {

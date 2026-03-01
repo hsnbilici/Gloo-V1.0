@@ -311,4 +311,10 @@ class StringsEs extends AppStrings {
   String get redeemCodeInvalid => 'Código inválido o expirado';
   @override
   String get redeemCodeAlreadyUsed => 'Este código ya ha sido utilizado';
+
+  @override
+  String get deleteDataSuccess => 'Sus datos se han eliminado correctamente';
+  @override
+  String get deleteDataError =>
+      'No se pudieron eliminar sus datos. Inténtelo de nuevo.';
 }

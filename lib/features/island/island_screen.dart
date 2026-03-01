@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 
 // ─── Gloo Adasi Ekrani ──────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     setState(() => _loaded = true);
 
     // Backend'den sync (local-first, backend override)
-    final remote = RemoteRepository();
+    final remote = ref.read(remoteRepositoryProvider);
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
       final backendIsland = meta.islandState;
@@ -79,7 +79,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
       setState(() {});
 
       // Backend sync (fire-and-forget)
-      RemoteRepository().saveMetaState(
+      ref.read(remoteRepositoryProvider).saveMetaState(
         islandState: _island.toMap(),
         gelEnergy: _resources.energy,
         totalEarnedEnergy: _resources.totalEarnedLifetime,

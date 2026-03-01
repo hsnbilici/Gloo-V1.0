@@ -8,11 +8,11 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../data/remote/remote_repository.dart';
+import '../../data/remote/dto/redeem_result.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
-import '../../services/ad_manager.dart';
 import '../../services/purchase_service.dart';
 
 // Aksan renkleri
@@ -28,8 +28,6 @@ class ShopScreen extends ConsumerStatefulWidget {
 }
 
 class _ShopScreenState extends ConsumerState<ShopScreen> {
-  final _purchase = PurchaseService();
-  final _remoteRepo = RemoteRepository();
   final _redeemController = TextEditingController();
   bool _purchasing = false;
   bool _redeeming = false;
@@ -39,13 +37,14 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   @override
   void initState() {
     super.initState();
-    _purchase.onPurchaseUpdate = (_) {
+    final purchase = ref.read(purchaseServiceProvider);
+    purchase.onPurchaseUpdate = (_) {
       if (!mounted) return;
       // Gloo+ veya ads removed durumunu provider'a yansıt
       final notifier = ref.read(appSettingsProvider.notifier);
-      notifier.setGlooPlus(enabled: _purchase.isGlooPlus);
-      notifier.setAdsRemoved(removed: _purchase.adsRemoved);
-      AdManager().setAdsRemoved(_purchase.adsRemoved);
+      notifier.setGlooPlus(enabled: purchase.isGlooPlus);
+      notifier.setAdsRemoved(removed: purchase.adsRemoved);
+      ref.read(adManagerProvider).setAdsRemoved(purchase.adsRemoved);
       setState(() {});
     };
     _loadRedeemState();
@@ -62,7 +61,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     final repo = await ref.read(localRepositoryProvider.future);
     final unlocked = repo.getUnlockedProducts();
     if (unlocked.isNotEmpty) {
-      _purchase.unlockProducts(unlocked);
+      ref.read(purchaseServiceProvider).unlockProducts(unlocked);
     }
   }
 
@@ -83,19 +82,25 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
       }
 
       // Supabase dogrulama
-      final productIds = await _remoteRepo.redeemCode(code);
-      if (productIds == null || productIds.isEmpty) {
-        _showToast(l.redeemCodeInvalid);
-        if (mounted) setState(() => _redeeming = false);
-        return;
+      final result = await ref.read(remoteRepositoryProvider).redeemCode(code);
+      switch (result) {
+        case RedeemSuccess(:final productIds):
+          if (productIds.isEmpty) {
+            _showToast(l.redeemCodeInvalid);
+            if (mounted) setState(() => _redeeming = false);
+            return;
+          }
+          // Basarili: urunleri ac
+          ref.read(purchaseServiceProvider).unlockProducts(productIds);
+          await repo.addRedeemedCode(code.toUpperCase());
+          await repo.addUnlockedProducts(productIds);
+          _redeemController.clear();
+          _showToast(l.redeemCodeSuccess);
+        case RedeemAlreadyRedeemed():
+          _showToast(l.redeemCodeAlreadyUsed);
+        case RedeemError():
+          _showToast(l.redeemCodeInvalid);
       }
-
-      // Basarili: urunleri ac
-      _purchase.unlockProducts(productIds);
-      await repo.addRedeemedCode(code.toUpperCase());
-      await repo.addUnlockedProducts(productIds);
-      _redeemController.clear();
-      _showToast(l.redeemCodeSuccess);
     } catch (_) {
       _showToast(l.redeemCodeInvalid);
     }
@@ -108,7 +113,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     setState(() => _purchasing = true);
     final l = ref.read(stringsProvider);
     try {
-      await _purchase.buyProduct(productId);
+      await ref.read(purchaseServiceProvider).buyProduct(productId);
     } catch (_) {
       _showToast(l.shopPurchaseError);
     }
@@ -180,10 +185,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 monthlyLabel: l.glooPlusMonthly,
                 yearlyLabel: l.glooPlusYearly,
                 badgeLabel: l.glooPlusBadge,
-                monthlyPrice: _purchase.priceOf(
+                monthlyPrice: ref.read(purchaseServiceProvider).priceOf(
                     PurchaseService.kGlooPlusMonthly,
                     fallback: '\$1.99'),
-                yearlyPrice: _purchase.priceOf(PurchaseService.kGlooPlusYearly,
+                yearlyPrice: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kGlooPlusYearly,
                     fallback: '\$9.99'),
                 isSubscribed: settings.glooPlus,
                 onMonthly: () => _buy(PurchaseService.kGlooPlusMonthly),
@@ -199,7 +204,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.block_rounded,
                 label: l.shopRemoveAds,
                 desc: l.shopRemoveAdsDesc,
-                price: _purchase.priceOf(PurchaseService.kRemoveAds,
+                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kRemoveAds,
                     fallback: '\$2.99'),
                 color: _kCoral,
                 purchased: settings.adsRemoved,
@@ -215,10 +220,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.graphic_eq_rounded,
                 label: l.shopSoundCrystal,
                 desc: l.shopSoundCrystalDesc,
-                price: _purchase.priceOf(PurchaseService.kSoundCrystal,
+                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kSoundCrystal,
                     fallback: '\$1.99'),
                 color: kCyan,
-                purchased: _purchase.isPurchased(PurchaseService.kSoundCrystal),
+                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kSoundCrystal),
                 onBuy: () => _buy(PurchaseService.kSoundCrystal),
               )
                   .animate(delay: 180.ms)
@@ -228,10 +233,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.forest_rounded,
                 label: l.shopSoundForest,
                 desc: l.shopSoundForestDesc,
-                price: _purchase.priceOf(PurchaseService.kSoundForest,
+                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kSoundForest,
                     fallback: '\$1.99'),
                 color: kCyan,
-                purchased: _purchase.isPurchased(PurchaseService.kSoundForest),
+                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kSoundForest),
                 onBuy: () => _buy(PurchaseService.kSoundForest),
               )
                   .animate(delay: 220.ms)
@@ -244,10 +249,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.texture_rounded,
                 label: l.shopTexturePack,
                 desc: l.shopTexturePackDesc,
-                price: _purchase.priceOf(PurchaseService.kTexturePack,
+                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kTexturePack,
                     fallback: '\$2.99'),
                 color: _kViolet,
-                purchased: _purchase.isPurchased(PurchaseService.kTexturePack),
+                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kTexturePack),
                 onBuy: () => _buy(PurchaseService.kTexturePack),
               )
                   .animate(delay: 280.ms)
@@ -259,10 +264,10 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.star_rounded,
                 label: l.shopStarterPack,
                 desc: l.shopStarterPackDesc,
-                price: _purchase.priceOf(PurchaseService.kStarterPack,
+                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kStarterPack,
                     fallback: '\$4.99'),
                 color: _kGold,
-                purchased: _purchase.isPurchased(PurchaseService.kStarterPack),
+                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kStarterPack),
                 onBuy: () => _buy(PurchaseService.kStarterPack),
                 isFeatured: true,
               )
@@ -290,7 +295,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
               // ── Geri Yükle ────────────────────────────────────────────
               Center(
                 child: GestureDetector(
-                  onTap: () => _purchase.restorePurchases(),
+                  onTap: () => ref.read(purchaseServiceProvider).restorePurchases(),
                   child: Text(
                     l.shopRestorePurchases,
                     style: TextStyle(

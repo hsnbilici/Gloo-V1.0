@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 
 // ─── Sezon Pasi Tier Verileri (50 tier, statik) ─────────────────────────────
@@ -65,7 +65,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
     setState(() => _loaded = true);
 
     // Backend'den sync
-    final remote = RemoteRepository();
+    final remote = ref.read(remoteRepositoryProvider);
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
       final backendPass = meta.seasonPassState;

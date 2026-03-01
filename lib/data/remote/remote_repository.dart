@@ -5,6 +5,7 @@ import 'dto/daily_puzzle.dart';
 import 'dto/leaderboard_entry.dart';
 import 'dto/meta_state.dart';
 import 'dto/pvp_match.dart';
+import 'dto/redeem_result.dart';
 import 'supabase_client.dart';
 
 /// Supabase uzak deposu — profil, skor, günlük bulmaca ve sıralama.
@@ -176,9 +177,9 @@ class RemoteRepository {
 
   // ── PvP ────────────────────────────────────────────────────────────────────
 
-  /// Yeni PvP maci olustur. [opponentId] null ise bot eslestirme.
-  Future<String?> createPvpMatch({
-    required int seed,
+  /// Yeni PvP maci olustur. Seed sunucu tarafinda uretilir (DB DEFAULT).
+  /// [opponentId] null ise bot eslestirme.
+  Future<({String id, int seed})?> createPvpMatch({
     String? opponentId,
   }) async {
     if (!isConfigured) return null;
@@ -190,12 +191,11 @@ class RemoteRepository {
           .insert({
             'player1_id': uid,
             'player2_id': opponentId,
-            'seed': seed,
             'status': 'active',
           })
-          .select('id')
+          .select('id, seed')
           .single();
-      return data['id'] as String;
+      return (id: data['id'] as String, seed: data['seed'] as int);
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.createPvpMatch error: $e');
       return null;
@@ -308,8 +308,13 @@ class RemoteRepository {
 
   /// Kodu Edge Function uzerinden dogrular. Gecerli ise urun ID listesi doner.
   /// Client dogrudan redeem_codes tablosuna erismez — tum islem sunucu tarafinda yapilir.
-  Future<List<String>?> redeemCode(String code) async {
-    if (!isConfigured) return null;
+  ///
+  /// Return degerleri:
+  /// - `RedeemResult.success(productIds)` — kod basariyla kullanildi
+  /// - `RedeemResult.alreadyRedeemed` — kullanici bu kodu daha once kullanmis
+  /// - `RedeemResult.error` — gecersiz, suresi dolmus veya baska bir hata
+  Future<RedeemResult> redeemCode(String code) async {
+    if (!isConfigured) return RedeemResult.error;
     try {
       final response = await _client.functions.invoke(
         'redeem-code',
@@ -321,14 +326,19 @@ class RemoteRepository {
         final productIds = (data['productIds'] as List<dynamic>)
             .map((e) => e.toString())
             .toList();
-        return productIds;
+        return RedeemResult.success(productIds);
+      }
+
+      // Per-user limit: kullanici bu kodu daha once kullanmis
+      if (response.status == 409) {
+        return RedeemResult.alreadyRedeemed;
       }
 
       if (kDebugMode) debugPrint('RemoteRepository.redeemCode rejected: ${response.data}');
-      return null;
+      return RedeemResult.error;
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.redeemCode error: $e');
-      return null;
+      return RedeemResult.error;
     }
   }
 
@@ -390,19 +400,26 @@ class RemoteRepository {
   // ── GDPR: Uzak Veri Silme ───────────────────────────────────────────────
 
   /// Kullaniciya ait tum uzak verileri siler (GDPR Right to Erasure).
-  Future<void> deleteUserData() async {
-    if (!isConfigured) return;
+  /// Basarili silme → `true`, hata veya yapilandirma eksikse → `false`.
+  Future<bool> deleteUserData() async {
+    if (!isConfigured) return false;
     final uid = _userId;
-    if (uid == null) return;
+    if (uid == null) return false;
     try {
+      // FK bagimliliklari nedeniyle redeem_usages ve pvp_matches once silinmeli.
+      await _client.from('redeem_usages').delete().eq('user_id', uid);
+      await _client.from('pvp_matches').delete().eq('player1_id', uid);
+      await _client.from('pvp_matches').delete().eq('player2_id', uid);
       await _client.from('meta_states').delete().eq('user_id', uid);
       await _client.from('scores').delete().eq('user_id', uid);
       await _client.from('daily_tasks').delete().eq('user_id', uid);
       await _client.from('pvp_obstacles').delete().eq('sender_id', uid);
       await _client.from('profiles').delete().eq('id', uid);
       if (kDebugMode) debugPrint('RemoteRepository.deleteUserData: all data deleted for $uid');
+      return true;
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.deleteUserData error: $e');
+      return false;
     }
   }
 }

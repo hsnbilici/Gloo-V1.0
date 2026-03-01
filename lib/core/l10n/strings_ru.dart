@@ -311,4 +311,10 @@ class StringsRu extends AppStrings {
   String get redeemCodeInvalid => 'Недействительный или просроченный код';
   @override
   String get redeemCodeAlreadyUsed => 'Этот код уже был использован';
+
+  @override
+  String get deleteDataSuccess => 'Ваши данные успешно удалены';
+  @override
+  String get deleteDataError =>
+      'Не удалось удалить ваши данные. Пожалуйста, попробуйте снова.';
 }

@@ -11,6 +11,7 @@ import '../shared/glow_orb.dart';
 import '../../data/remote/pvp_realtime_service.dart';
 import '../../data/remote/supabase_client.dart';
 import '../../game/pvp/matchmaking.dart';
+import '../../providers/pvp_provider.dart';
 import '../../providers/user_provider.dart';
 
 // ─── PvP Lobby Ekrani ────────────────────────────────────────────────────────
@@ -43,7 +44,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
-    _realtimeService = PvpRealtimeService();
+    _realtimeService = ref.read(pvpRealtimeServiceProvider);
     ref.read(localRepositoryProvider.future).then((repo) {
       if (!mounted) return;
       setState(() {

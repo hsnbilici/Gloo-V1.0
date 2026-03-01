@@ -24,7 +24,7 @@ flutter run -d chrome
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 issue olmali)
-flutter test                                   # tum testler (723 test)
+flutter test                                   # tum testler (1013 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter build web --release                    # web build
 flutter build apk --debug                      # android debug
@@ -189,7 +189,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 ## Test
 
-723 test, 37 dosya, 0 hata. Test alanlari: game engine (grid, synthesis, score, combo, shapes, levels, powerups, matchmaking, resource manager, spring physics, gel deformer, color chef levels), core (constants, color mixer, near miss, cell types, l10n, color extensions), data (local repository, data models), providers (game, audio, locale, pvp), services (analytics), features (home, onboarding, game overlay, settings, collection, level select), app (router).
+1013 test, 53 dosya, 0 hata. Test alanlari: game engine (grid, synthesis, score, combo, shapes, levels, powerups, matchmaking, resource manager, spring physics, gel deformer, color chef levels), core (constants, color mixer, near miss, cell types, l10n, color extensions), data (local repository, data models), providers (game, audio, locale, pvp), services (analytics), features (home, onboarding, game overlay, settings, collection, level select), app (router).
 
 ```bash
 flutter test                                   # tum testler

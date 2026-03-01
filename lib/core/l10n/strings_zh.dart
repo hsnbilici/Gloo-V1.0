@@ -302,4 +302,9 @@ class StringsZh extends AppStrings {
   String get redeemCodeInvalid => '无效或已过期的兑换码';
   @override
   String get redeemCodeAlreadyUsed => '此兑换码已被使用';
+
+  @override
+  String get deleteDataSuccess => '您的数据已成功删除';
+  @override
+  String get deleteDataError => '无法删除您的数据，请重试。';
 }

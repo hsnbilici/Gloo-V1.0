@@ -12,8 +12,8 @@ import '../../data/local/local_repository.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
-import '../../services/analytics_service.dart';
 import 'widgets/bottom_bar.dart';
 import 'widgets/daily_banner.dart';
 import 'widgets/deep_background.dart';
@@ -44,7 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref
           .read(appSettingsProvider.notifier)
           .setAnalyticsEnabled(enabled: analyticsEnabled);
-      AnalyticsService().setEnabled(analyticsEnabled);
+      ref.read(analyticsServiceProvider).setEnabled(analyticsEnabled);
       // 1) Onboarding tamamlanmamışsa yönlendir
       if (!repo.getOnboardingDone()) {
         context.go('/onboarding');
@@ -88,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref
         .read(appSettingsProvider.notifier)
         .setAnalyticsEnabled(enabled: enabled);
-    AnalyticsService().setEnabled(enabled);
+    ref.read(analyticsServiceProvider).setEnabled(enabled);
     // ATT izni (iOS) — consent kabul edildiyse
     if (enabled) _requestATTIfNeeded();
     // Sonraki adım: renk körü prompt

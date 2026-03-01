@@ -172,9 +172,9 @@ void main() {
   // ── Bot fallback mantigi (MatchmakingManager uzerinden) ─────────────
 
   group('bot fallback logic (via MatchmakingManager)', () {
-    test('generateMatchSeed returns unique values', () {
-      final seed1 = MatchmakingManager.generateMatchSeed();
-      final seed2 = MatchmakingManager.generateMatchSeed();
+    test('generateBotMatchSeed returns unique values', () {
+      final seed1 = MatchmakingManager.generateBotMatchSeed();
+      final seed2 = MatchmakingManager.generateBotMatchSeed();
       // Zaman bazli oldugu icin farkli olmali (ayni microsecond'da degilse)
       expect(seed1, isA<int>());
       expect(seed2, isA<int>());

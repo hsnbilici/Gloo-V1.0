@@ -1,197 +1,139 @@
 # Gloo v1.0 — Yol Haritasi
 
 > Son guncelleme: 2026-03-01
-> **Durum:** Sprint 1+2+3+6 TAMAMLANDI (22/22) — QA entegrasyon GECTI
-> **Kalan:** 20 madde (harici arac gerektiren) | Tamamlanan fazlar: 17 (A-Q)
-> **Test:** 904 birim test (723 → 904, +181 yeni test Sprint 6'da)
+> **Durum:** Sprint 7 TAMAMLANDI | flutter analyze: 0 issue | flutter test: 1013/1013
+> **Kalan:** 12 madde (0 yurutulebilir, 12 harici bagimlilk) | Tamamlanan fazlar: 18 (A-R)
+> **Oncelik:** Store hazirligi → Harici bagimlilklar
 
 ---
 
-## Sprint 1: Guvenlik & Butunluk — TAMAMLANDI (7/7)
+## Sprint 7 — Kod Kalitesi & Guvenlik (TAMAMLANDI)
 
-> Ajan: Backend + Developer | QA Entegrasyon: GECTI
-> flutter analyze: 0 issue | flutter test: 723/723 gecti
+> 8 yurutulebilir gorev tamamlandi, 12 harici bagimlilk (atlanacak)
 
-- [x] 1.1 — **[CRITICAL] IAP sunucu tarafli receipt dogrulama** — `supabase/functions/verify-purchase/index.ts` Edge Function olusturuldu. `purchase_service.dart`'ta `_verifyAndUnlock()` ile sunucu dogrulamasi eklendi (graceful degradation destekli). `remote_repository.dart`'a `verifyPurchase()` eklendi (isConfigured guard + try-catch).
-  - Ajan: Backend
-  - Kabul: Edge Function + PurchaseService + RemoteRepository guncellendi
+### Batch 1 (Paralel — bagimsiz gorevler)
+- [x] M.1 — GameScreen parcalama (UI/UX) — 999→398 satir, 3 mixin + dialog refactor
+- [x] H.1 — Redeem code per-user (Backend) — RedeemResult sealed class + Edge Function auth
+- [x] M.4 — PvP seed server-side (Backend) — createPvpMatch seed kaldirildi, generateBotMatchSeed eklendi
+- [x] M.6 — Android AD_ID privacy metadata (DevOps) — AndroidManifest AD_ID + iOS PrivacyInfo.xcprivacy
 
-- [x] 1.2 — **[CRITICAL] Redeem codes RLS fix** — `redeem_codes` SELECT/UPDATE RLS politikalari kaldirildi. `supabase/functions/redeem-code/index.ts` Edge Function olusturuldu (auth kontrolu + service_role ile RLS bypass). `remote_repository.dart`'taki `redeemCode()` Edge Function cagiracak sekilde guncellendi.
-  - Ajan: Backend
-  - Kabul: Client redeem_codes tablosuna dogrudan erisemiyor
+### Batch 2 (Paralel — Batch 1 sonrasi)
+- [x] M.2 — Features→Provider gecisi (Developer) — 12 feature dosyasi provider'a gecti, remoteRepositoryProvider eklendi
+- [x] M.5 — GDPR silme dogrulama (Backend) — deleteUserData→bool, 12 dil x 5 string
+- [x] L.1 — Viral pipeline testleri (QA) — 3 dosya, 61 test
+- [x] L.2 — Quest/Dialog testleri (QA) — 2 dosya, 48 test
 
-- [x] 1.3 — **[HIGH] PvP winner/skor sunucu dogrulamasi** — `pvp_matches` UPDATE RLS kaldirildi. `submit_pvp_score()` RPC fonksiyonu eklendi. Client yalnizca kendi skorunu RPC ile gonderebilir, winner sunucu tarafinda belirlenir.
-  - Ajan: Backend
-  - Bagimlilik: Yok
-  - Kabul: Client baska oyuncunun skorunu veya winner_id'yi degistirememeli
-
-- [x] 1.4 — **[HIGH] Skor gonderimi sunucu dogrulama** — `scores` tablosuna `CHECK (score >= 0)` constraint eklendi. `submit_score()` RPC fonksiyonu olusturuldu (mod bazli maks skor siniri: classic 100K, colorChef 50K, timeTrial 100K, zen 999K, daily 100K, level 50K, duel 100K). `remote_repository.dart`'taki `submitScore()` RPC cagirisi ile guncellendi. Dogrudan INSERT devre disi birakildi.
-  - Ajan: Backend
-  - Kabul: Imkansiz skor degeri reddediliyor
-
-- [x] 1.5 — **[HIGH] GDPR DELETE RLS politikalari** — 6 tablonun tamamina `FOR DELETE` politikasi eklendi: `profiles_delete` (auth.uid()=id), `scores_delete` (auth.uid()=user_id), `daily_tasks_delete` (auth.uid()=user_id), `pvp_matches_delete` (player1/player2), `meta_states_delete` (auth.uid()=user_id), `pvp_obstacles_delete` (match katilimcisi kontrolu).
-  - Ajan: Backend
-  - Kabul: Kullanici kendi verisini tum tablolardan silebilir
-
-- [x] 1.6 — **[HIGH] calculate-elo Edge Function auth kontrolu** — Auth header dogrulamasi + match player kontrolu eklendi. Token'siz istekler 401, match'e dahil olmayan kullanicilar 403 aliyor. CORS headers eklendi.
-  - Ajan: Backend
-  - Kabul: Auth header olmadan 401, match'e dahil olmayan kullanici 403 aliyor
-
-- [x] 1.7 — **[MEDIUM] debugPrint production temizligi** — ~40 `debugPrint()` cagrisini `kDebugMode` guard ile sardi. 8 dosyada toplam 45 debugPrint cagrisinin tamami `if (kDebugMode)` guard icine alindi. `flutter analyze` 0 issue, `flutter test` 723/723 gecti.
-  - Ajan: Developer
-  - Bagimlilik: Yok
-  - Kabul: Release build'de hassas bilgi loglanmamali
+### Final
+- [x] QA entegrasyon: flutter analyze (0 issue) + flutter test (1013/1013 PASS)
+- [x] Security Audit: 0 CRITICAL, 1 HIGH, 4 MEDIUM bulgu (detay: `tasks/qa-report.md`)
 
 ---
 
-## Sprint 2: Backend Kalite & Bug Fix — TAMAMLANDI (4/4)
+## Kalan Gorevler — Oncelik Sirasina Gore
 
-> Ajan: Backend + Developer | QA Entegrasyon: GECTI (30/30 kontrol)
-> flutter analyze: 0 issue | flutter test: 723/723 gecti
+### CRITICAL — Uretime Gecis Oncesi Zorunlu
 
-- [x] 2.1 — **[HIGH] Race condition fix: incrementPvpStats** — Read-then-write pattern'i Supabase RPC ile atomic increment'a donusturuldu. `supabase/schema.sql`'e `increment_pvp_stat(p_stat TEXT)` RPC fonksiyonu eklendi. `remote_repository.dart`'taki `incrementPvpStats()` metodu tek bir `_client.rpc('increment_pvp_stat')` cagrisi yapacak sekilde guncellendi.
-  - Ajan: Backend
-  - Bagimlilik: Yok
-  - Kabul: Esanli yazma durumunda veri kaybi olmamali
+- [ ] C.1 — **Firebase API key kisitlamalari** — Google Cloud Console'dan HTTP referrer + bundle ID kisitlamasi ekle. `firebase_options.dart`'taki key'ler her platformda restrict edilmeli.
+  - Ajan: Security | Harici: Google Cloud Console
+  - Kabul: API key'ler yalnizca `com.gloogame.app` bundle ID'den erisilebilir
 
-- [x] 2.2 — **[HIGH] PvP matchmaking simetri fix** — `_evaluateMatches()` metodunda leksikografik ID karsilastirmasi eklendi. Yalnizca `myId.compareTo(otherId) < 0` olan oyuncu `_createAndJoinMatch()` cagiriyor; diger oyuncu presence sync ile maci algiliyor. Duplicate match riski ortadan kaldirildi.
-  - Ajan: Backend
-  - Bagimlilik: Yok
-  - Kabul: Ayni eslestirme icin tek mac olusturulmali
+- [ ] C.2 — **AdMob test ID → gercek ID degisimi** — Android (`AndroidManifest.xml`) ve iOS (`Info.plist`) icindeki `ca-app-pub-3940256099942544~3347511713` test ID'sini gercek AdMob App ID ile degistir. `ad_manager.dart`'taki ad unit ID'leri de guncelle.
+  - Ajan: DevOps | Harici: AdMob Console
+  - Kabul: Tum platformlarda gercek AdMob ID'leri aktif
 
-- [x] 2.3 — **[MEDIUM] Streak key tutarsizligi** — `getProfile()` ve `saveProfile()` metodlarindaki `'streak'` key'i `'streak_count'` olarak degistirildi. Artik tum streak islemleri (`getProfile`, `saveProfile`, `getStreak`, `checkAndUpdateStreak`) ayni `streak_count` key'ini kullaniyor.
-  - Ajan: Backend
-  - Bagimlilik: Yok
-  - Kabul: Streak degeri her yerde tutarli olmali
+- [ ] C.3 — **Android release signing** — Release keystore olustur, `key.properties` yapilandir, CI workflow'a signing secret'lari ekle.
+  - Ajan: DevOps | Harici: Keystore + CI secrets
+  - Kabul: `flutter build appbundle --release` basarili
 
-- [x] 2.4 — **[LOW] UserProfile.createdAt late init fix** — `late DateTime createdAt` → `DateTime createdAt = DateTime.now()` olarak degistirildi. `LateInitializationError` riski ortadan kaldirildi.
-  - Ajan: Developer
-  - Bagimlilik: Yok
-  - Kabul: `LateInitializationError` olasiligi sifir olmali
+### HIGH — Store Submission Icin Gerekli
 
----
+- [x] S7-SEC-1 — **PvP seed INTEGER overflow** — ~~Migration'a `ALTER COLUMN seed TYPE BIGINT` eklendi. Microsecond epoch 64-bit olarak guvenle saklanir.~~
+  - Ajan: Backend | Kaynak: Security Audit S7-SEC-1
+  - Kabul: PvP mac olusturma INSERT basarili, seed BIGINT tipinde
 
-## Sprint 3: Gorsel & Branding — TAMAMLANDI (2/2, 1 atlandi)
+- [x] H.1 — **Redeem code per-user limitasyonu** — ~~Sprint 7'de tamamlandi~~ (RedeemResult sealed class + Edge Function per-user guard)
 
-> Ajan: UI/UX + DevOps | QA Entegrasyon: GECTI
-> flutter analyze: 0 issue | flutter test: 723/723 gecti
+- [ ] H.2 — **Android payment verification** — `verify-purchase/index.ts` Edge Function'da Android icin Google Play Developer API entegrasyonu eksik. Simdilik sadece temel JSON format kontrol var.
+  - Ajan: Backend | Harici: Google Play Developer API key
+  - Kabul: Android receipt'leri Google API ile dogrulanir
 
-- [x] 3.1 — **[HIGH] Uygulama ikonu tasarla** — `tool/generate_icon.dart` ile 1024x1024 master ikon programatik uretildi. `image` paketi ile koyu gradient arka plan (#010C14) uzerine cyan (#00E5FF) jel damlasi (superellipse blob + glow + specular highlight). `flutter_launcher_icons` ile Android (5 DPI mipmap + adaptive icon w/ #010C14 background), iOS (25 ikon dosyasi), Web (4 ikon + favicon) dagitildi.
-  - Ajan: UI/UX
-  - Bagimlilik: Yok
-  - Kabul: Her uc platform icin ikon uretilmis, varsayilan Flutter ikonu degistirilmis. flutter analyze: 0 issue, flutter test: 723/723 gecti.
+- [ ] H.3 — **iOS App Store hazirligi** — Apple Developer Account + signing + IAP + TestFlight
+  - Ajan: DevOps | Harici: Apple Developer Account ($99/yil) + Xcode + cihaz
+  - Alt gorevler:
+    - [ ] App ID kaydet (`com.gloogame.app`)
+    - [ ] Signing & Capabilities (Development + Distribution)
+    - [ ] In-App Purchase capability + 7 IAP urunu tanimla
+    - [ ] StoreKit Sandbox test (fiziksel cihaz)
+    - [ ] Ekran goruntuleri (6.7", 6.1", 5.5" — 12 dil)
+    - [ ] TestFlight dahili + harici test
+    - [ ] Submit for Review
 
-- [x] 3.2 — **[HIGH] Splash screen / native splash yapilandirmasi** — `flutter_native_splash: ^2.4.0` eklendi (dependencies). Splash rengi `#010C14` (kBgDark). Android (drawable + v31 styles), iOS (LaunchScreen.storyboard + LaunchBackground), Web (CSS + splash script) uretildi. `main.dart`'ta `FlutterNativeSplash.preserve()` / `.remove()` entegrasyonu yapildi. Logo PNG'si henuz mevcut degil — renk bazli splash. flutter analyze: 0 issue (splash ile ilgili), flutter test: 723/723 gecti.
-  - Ajan: DevOps
-  - Bagimlilik: 3.1 (ikon tasarimi — tamamlaninca splash'e eklenecek)
-  - Kabul: Uygulama acilisinda #010C14 arka planli splash gorunmeli
+- [ ] H.4 — **Android Play Store hazirligi** — Google Play Console + store listing + test
+  - Ajan: DevOps | Harici: Google Play Console ($25) + Android cihaz
+  - Alt gorevler:
+    - [ ] Google Play Console'da uygulama olustur
+    - [ ] Store listesi: baslik, aciklama, ekran goruntuleri (12 dil)
+    - [ ] Icerik derecelendirme anketi
+    - [ ] IAP urunlerini Play Console'da tanimla
+    - [ ] Dahili test → Kapali test → Acik test → Uretim
 
-- [x] 3.3 — ~~Gorsel asset'ler~~ — **ATLANDI**: Proje shader + CustomPainter ile render ediyor, rasterize gorsel bagimliligi yok. Bos dizinler gelecek kullanim icin korunuyor.
+- [ ] H.5 — **GitHub CI workflow push** — `.github/workflows/` dosyalari (4 workflow) yerel olarak mevcut ama push edilemedi (OAuth token `workflow` scope eksik). Token guncellendikten sonra push et.
+  - Ajan: DevOps | Harici: GitHub token guncelleme
+  - Kabul: 4 workflow GitHub'da aktif
 
----
+### MEDIUM — Kod Kalitesi & Guvenlik
 
-## Sprint 4: iOS App Store Hazirligi
+- [x] M.1 — **GameScreen parcalama** — ~~Sprint 7'de tamamlandi~~ (3 mixin + dialog refactor)
 
-> Gerekli: Apple Developer Account ($99/yil) + Xcode + Fiziksel cihaz
-> Ajan: DevOps | Tum maddeler HARICI hesap/cihaz gerektiriyor
+- [x] M.2 — **Features → Provider katmani gecisi** — ~~Sprint 7'de tamamlandi~~ (12 feature dosyasi + remoteRepositoryProvider)
 
-- [ ] 4.1 — Apple Developer Account'ta App ID kaydet (`com.gloogame.app`)
-- [ ] 4.2 — Signing & Capabilities ayarla (Xcode — Development + Distribution)
-- [ ] 4.3 — In-App Purchase capability ekle
-- [ ] 4.4 — App Store Connect'te 7 IAP urunu tanimla
-- [ ] 4.5 — StoreKit Sandbox test *(fiziksel cihaz gerekli)*
-- [ ] 4.6 — Ekran goruntuleri (6.7", 6.1", 5.5" — 12 dil)
-- [ ] 4.7 — App Store onizleme videosu
-- [ ] 4.8 — AdMob gercek App ID + ad unit ID'leri (iOS)
-- [ ] 4.9 — TestFlight dahili + harici test
-- [ ] 4.10 — Submit for Review
+- [ ] M.3 — **Firebase App Check** — Android: Play Integrity, iOS: App Attest etkinlestir.
+  - Ajan: Security | Harici: Firebase Console
+  - Kabul: App Check token olmadan API istekleri reddedilir
 
----
+- [x] M.4 — **PvP seed server-side uretim** — ~~Sprint 7'de tamamlandi~~ (DB DEFAULT + client seed kaldirildi)
 
-## Sprint 5: Android Play Store Hazirligi
+- [x] M.5 — **GDPR silme dogrulama** — ~~Sprint 7'de tamamlandi~~ (deleteUserData→bool, 12 dil x 5 string)
 
-> Gerekli: Google Play Console ($25 tek seferlik) + Android SDK + Keystore
-> Ajan: DevOps | Tum maddeler HARICI hesap/cihaz gerektiriyor
+- [x] M.6 — **Android AD_ID + iOS PrivacyInfo** — ~~Sprint 7'de tamamlandi~~ (AD_ID permission + PrivacyInfo.xcprivacy)
 
-- [ ] 5.1 — Android SDK kurulumu + `ANDROID_HOME` tanimlama (bu makinede eksik)
-- [ ] 5.2 — Release keystore olustur + `key.properties` yapilandir
-- [ ] 5.3 — `flutter build appbundle --release` basarili build
-- [ ] 5.4 — Google Play Console'da uygulama olustur
-- [ ] 5.5 — Store listesi: baslik, aciklama, ekran goruntuleri (12 dil)
-- [ ] 5.6 — Icerik derecelendirme anketi
-- [ ] 5.7 — IAP urunlerini Play Console'da tanimla
-- [ ] 5.8 — AdMob gercek App ID + ad unit ID'leri (Android)
-- [ ] 5.9 — Dahili test → Kapali test → Acik test → Uretim
+- [ ] S7-SEC-2 — **Redeem current_uses atomik artirma** — `redeem-code/index.ts` satir 148: read-then-write pattern, paralel farkli-kullanici kullanimi race condition. `current_uses + 1` SQL veya RPC ile atomik artirma gerekli.
+  - Ajan: Backend | Kaynak: Security Audit S7-SEC-2
+  - Kabul: `current_uses` atomik olarak artiriliyor, max_uses siniri dogru uygulanir
 
----
+- [x] S7-SEC-3 — **GDPR eksik tablo silme** — ~~`deleteUserData()`'a `redeem_usages` + `pvp_matches` (player1_id + player2_id) eklendi. 7/7 tablo siliniyor.~~
+  - Ajan: Backend | Kaynak: Security Audit S7-SEC-3
+  - Kabul: 7/7 tablo siliniyor (mevcut 5 + pvp_matches + redeem_usages)
 
-## Sprint 6: Post-Launch Iyilestirmeler (Opsiyonel)
+- [ ] S7-SEC-4 — **GDPR silme transaction wrapping** — Ardisik DELETE'ler transaction icinde degil. Kismi basarisizlik kurtarilamaz.
+  - Ajan: Backend | Kaynak: Security Audit S7-SEC-4
+  - Kabul: Silme islemleri sunucu-tarafli RPC icinde, transaction garantili
 
-> Bunlar store yayini icin zorunlu degil. Kalite ve surdurulebilirlik icin onerilir.
-> **Durum:** TAMAMLANDI (9/9 calistirilan) | Atlanan: 6 (harici arac) | Zaten mevcut: 1
+- [ ] S7-SEC-5 — **PvP seed spoofing korumasi** — Client INSERT'te `seed` degeri gonderebilir, DEFAULT bypass edilir. Match olusturmayi RPC'ye tasimak veya BEFORE INSERT trigger gerekli.
+  - Ajan: Backend | Kaynak: Security Audit S7-SEC-5
+  - Kabul: Client seed override edemez, sunucu seed garanti edilir
 
-### Batch 1: Kod Kalitesi (Paralel)
+### LOW — Opsiyonel Iyilestirmeler
 
-- [x] 6.1 — **[MEDIUM]** `home_screen.dart` parcalama (1,213 satir → `widgets/` altina 8 dosya + ana dosya ~329 satir) — TAMAMLANDI
-  - Ajan: UI/UX
-  - Kabul: 18 widget 8 dosyaya ayrilmis, tum importlar guncel, `flutter analyze` 0 issue, testler gecmeli
-
-- [x] 6.2 — **[MEDIUM]** `AudioSettings` → `AppSettings` yeniden adlandirma — TAMAMLANDI. 7 dosyada tum referanslar guncellendi (`audio_provider.dart`, 4 feature, 3 test). Provider: `appSettingsProvider`.
-  - Ajan: Developer
-  - Kabul: Tum referanslar guncellenmis, provider adi `appSettingsProvider` olarak degismis
-
-- [x] 6.3 — **[LOW]** `core/widgets/glow_orb.dart` → `features/shared/glow_orb.dart` tasinmasi — TAMAMLANDI. 14 dosyada import guncellendi, eski dosya ve bos dizin silindi.
-  - Ajan: Developer
-  - Kabul: Dosya tasinmis, 14 import guncellenmis, `flutter analyze` 0 issue
-
-### Batch 2: Test Kapsami (Paralel)
-
-- [x] 6.6 — **[HIGH]** Remote veri katmani testleri (`remote_repository.dart`, `pvp_realtime_service.dart`) — TAMAMLANDI. 69 test yazildi (36 RemoteRepository + 33 PvpRealtimeService). `_UnconfiguredRemoteRepository` alt sinifi ile `isConfigured=false` guard pattern'i test edildi. Supabase bagimliligi olmadan tum public metodlar dogrulanmis. `flutter analyze` 0 issue, `flutter test test/data/` 143/143 gecti.
+- [x] L.1 — **Viral pipeline testleri** — `ClipRecorder`, `VideoProcessor`, `ShareManager` icin 61 test yazildi.
   - Ajan: QA
-  - Kabul: Birim testler yazilmis, `flutter test` gecmeli
+  - Kabul: 3 test dosyasi, 61 test, flutter analyze 0 issue, flutter test 61/61 gecti
 
-- [x] 6.7 — **[HIGH]** Monetizasyon servis testleri (`ad_manager.dart`, `purchase_service.dart`)
+- [x] L.2 — **Quest/Dialog testleri** — `quest_overlay.dart` ve game dialogs icin 0 test var.
   - Ajan: QA
-  - Kabul: Birim testler yazilmis, `flutter test` gecmeli
-  - Sonuc: 32 AdManager + 35 PurchaseService testi yazildi, 0 analyze issue, tum testler geciyor
+  - Kabul: 2 test dosyasi, 48 test, flutter analyze 0 issue, flutter test 48/48 gecti
 
-- [x] 6.8 — **[MEDIUM]** Feature ekran testleri — TAMAMLANDI. 7 yeni test dosyasi: shop_screen (6 test), leaderboard_screen (5 test), pvp_lobby_screen (6 test), character_screen (5 test), island_screen (4 test), season_pass_screen (5 test), daily_puzzle_screen (5 test). Toplam 36 yeni widget testi. `SupabaseConfig`'a `_initialized` guard eklendi (test ortaminda Supabase.instance crash'i onlendi). `RemoteRepository.isConfigured`'a `isInitialized` kontrolu eklendi.
-  - Ajan: QA
-  - Kabul: 36 yeni test gecti, `flutter analyze` 0 issue, `flutter test test/features/` 68/68 gecti
+- [ ] L.3 — **Fastlane veya Shorebird entegrasyonu** — OTA guncelleme veya otomatik store dagitimi.
+  - Ajan: DevOps | Harici: Kurulum gerekli
+  - Kabul: Build + deploy pipeline otomasyon
 
-### Batch 3: Mimari + CI/CD (Paralel)
+- [ ] L.4 — **Performans profili** — Flutter DevTools ile 60fps hedefi dogrulama.
+  - Ajan: QA | Harici: Fiziksel cihaz
+  - Kabul: Jank-free 60fps
 
-- [x] 6.9 — **[MEDIUM]** Web build CI workflow ekleme (`.github/workflows/web_build.yml`) — TAMAMLANDI. Mevcut Android/iOS build pattern'ina uygun workflow olusturuldu: push to main (paths-ignore: md/docs/tasks), ubuntu-latest runner, 15dk timeout, Flutter 3.41.x stable (cached), `flutter build web --release`, artifact upload (web-release, 7 gun retention). Action versiyonlari: checkout@v4, flutter-action@v2, upload-artifact@v4.
-  - Ajan: DevOps
-  - Kabul: Workflow dosyasi olusturulmus, mevcut CI pattern'a uygun
-
-- [x] 6.15 — **[HIGH]** Singleton servisler → Riverpod Provider'lara tasima (AudioManager, HapticManager, AdManager, PurchaseService, AnalyticsService) — TAMAMLANDI. `lib/providers/service_providers.dart` olusturuldu (5 provider). `AppSettingsNotifier` constructor injection ile guncellendi (lazy fallback ile geriye uyumlu). Singleton pattern korundu. `flutter analyze lib/providers/` 0 issue, `flutter test` 895/895 gecti.
-  - Ajan: Developer
-  - Bagimlilk: 6.2 (AudioSettings rename tamamlanmali)
-  - Kabul: 5 singleton provider ile sarili, testler gecmeli
-
-- [x] 6.16 — **[HIGH]** RemoteRepository tip guvenli DTO siniflari ekleme (raw Map → typed DTO) — 4 DTO sinifi olusturuldu (`LeaderboardEntry`, `DailyPuzzle`, `PvpMatch`, `MetaState`). `RemoteRepository`'deki 4 metod (`getGlobalLeaderboard`, `getDailyPuzzle`, `getPvpMatch`, `loadMetaState`) DTO donecek sekilde guncellendi. 5 caller (LeaderboardScreen, IslandScreen, CharacterScreen, SeasonPassScreen, QuestOverlay) guncellendi. 12 yeni DTO test eklendi. 904 test gecti, 0 analyze issue.
-  - Ajan: Backend
-  - Kabul: DTO siniflari olusturulmus, RemoteRepository donusleri tip guvenli
-
-### Atlanan Gorevler
-
-- [x] 6.10 — ~~Viewport meta tag~~ — **ZATEN MEVCUT**: `web/index.html` satir 97'de tam yapilandirilmis viewport meta tag var
-- [ ] 6.4 — Firebase App Check — **ATLANDI**: Firebase Console erisiimi gerekli
-- [ ] 6.5 — Firebase API key kisitlamalari — **ATLANDI**: Firebase Console erisiimi gerekli
-- [ ] 6.11 — Fastlane/Shorebird — **ATLANDI**: Harici kurulum gerekli
-- [ ] 6.12 — Viral pipeline e2e — **ATLANDI**: Fiziksel cihaz gerekli
-- [ ] 6.13 — TikTok/Instagram share — **ATLANDI**: Fiziksel cihaz + API key gerekli
-- [ ] 6.14 — Performans profili — **ATLANDI**: Fiziksel cihaz gerekli
-
----
-
-## CLAUDE.md Guncelleme Gereklilikleri
-
-> Bu maddeler dokumantasyon tutarsizliklaridir, kod degisikligi gerektirmez.
-
-- [x] `firebase_options.dart` icin "tum degerler PLACEHOLDER" ifadesi guncellendi — gercek degerler (`gloo-f7905`) yansitildi
-- [x] Supabase tablo sayisi CLAUDE.md'de zaten "7 tablo" olarak dogru referanslanmis (ek duzeltme gerekmedi)
+- [ ] L.5 — **TikTok/Instagram direct share** — Viral pipeline'a sosyal medya entegrasyonu.
+  - Ajan: Developer | Harici: Platform API key'leri
+  - Kabul: Paylas butonu TikTok/Instagram'a yonlendiriyor
 
 ---
 
@@ -199,30 +141,30 @@
 
 | Faz | Aciklama |
 |-----|----------|
-| A | 723 birim test (37 dosya, 0 hata) |
-| B | Supabase entegrasyon (7 tablo + 15 RLS + indeksler) |
+| A | 904 birim test (48 dosya, 0 hata) |
+| B | Supabase entegrasyon (8 tablo + 22 RLS + 3 indeks + 3 RPC) |
 | C | PvP Realtime (Presence + Broadcast + bot fallback + ELO) |
 | D | Meta-game backend (meta_states + cross-device sync) |
 | E | Firebase Analytics + Crashlytics (gloo-f7905) |
 | F | 36 ses dosyasi (32 SFX .ogg + 4 muzik .mp3) + 32 iOS .m4a |
 | G | Viral pipeline (screen_recorder + FFmpeg + share) |
-| J | CI/CD (4 GitHub Actions workflow) |
+| J | CI/CD (4 GitHub Actions workflow — yerel, push bekliyor) |
 | K | Kod kalitesi (refactoring, rename, README, GDD) |
 | L | Bundle ID, GDPR/ATT, memory leak fix, dosya refactoring |
-| M | Performans optimizasyonu: 33/33 (4 CRITICAL + 8 HIGH + 15 MEDIUM + 4 LOW) |
+| M | Performans optimizasyonu: 33/33 |
 | N | Sprint 1: Guvenlik hardening 7/7 (IAP receipt, redeem RLS, PvP RPC, skor RPC, GDPR DELETE, ELO auth, debugPrint) |
 | O | Sprint 2: Backend kalite 4/4 (race condition RPC, matchmaking simetri, streak key, createdAt fix) |
-| P | Sprint 3: Gorsel & branding 2/2 (programatik jel damlasi ikon + native splash #010C14) |
-| Q | Sprint 6: Post-launch 9/9 — home_screen parcalama, AppSettings rename, glow_orb tasima, 181 yeni test (904 toplam), web CI, singleton→provider, DTO siniflari |
+| P | Sprint 3: Gorsel & branding 2/2 (programatik jel damlasi ikon + native splash) |
+| Q | Sprint 6: Post-launch 9/9 (home_screen parcalama, AppSettings rename, glow_orb tasima, 181 test, web CI, singleton→provider, DTO) |
 
 ---
 
-## 5-Ajan Analiz Ozeti (2026-03-01)
+## 5-Ajan Analiz Ozeti (2026-03-01, Guncellenmis)
 
 | Ajan | Sonuc |
 |------|-------|
-| **QA** | 723/723 test gecti, 0 analyze issue. Oyun motoru %100 kapsam. Remote/monetizasyon %0 kapsam. |
-| **Architect** | Mimari olgunluk YUKSEK. Katman ayrimi mukemmel (0 ihlal). 0 TODO/FIXME/HACK. |
-| **Backend** | %84 hazirlik. Supabase + Firebase gercek key'ler. Race condition + streak tutarsizligi mevcut. |
-| **Security** | Risk YUKSEK. IAP dogrulama YOK, redeem codes RLS acik, skor dogrulama YOK, anti-cheat YOK. |
-| **DevOps** | iOS kosullu hazir. Android SDK bu makinede YOK. Gorsel asset'ler bos. Test ID'ler aktif. |
+| **QA** | 904/904 test gecti, 0 analyze issue. Oyun motoru + data layer + services iyi kapsam. Feature UI testleri seyrek (1-5/ekran). Viral/effects/quests 0 test. |
+| **Architect** | Mimari olgunluk 7.5/10. Katman ayrimi iyi, ~8-10 minor ihlal (features→data direkt). 0 TODO/FIXME/HACK. GameScreen 900+ satir (en buyuk monolith). Provider yapisi tutarli. |
+| **Backend** | %95 hazirlik. RemoteRepository %100 isConfigured guard. 4 DTO sinifi tam. 3 Edge Function + 3 RPC aktif. Eksik: Android payment API, redeem per-user guard. |
+| **Security** | Risk ORTA. Hardcoded key'ler beklenen (mobil app). Firebase API restrict edilmeli. profiles SELECT cok genis. Redeem per-user yok. PvP seed client-side. debugPrint temiz, HTTP yok, ATT mevcut. |
+| **DevOps** | Web build hazir. Android debug hazir, release keystore eksik. iOS debug hazir, signing gerekli. AdMob test ID aktif (uretim oncesi degistirilmeli). 4 CI workflow yerel (push bekliyor). |

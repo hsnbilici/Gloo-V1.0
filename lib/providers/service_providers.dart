@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../audio/audio_manager.dart';
 import '../audio/haptic_manager.dart';
+import '../data/remote/remote_repository.dart';
 import '../services/ad_manager.dart';
 import '../services/analytics_service.dart';
 import '../services/purchase_service.dart';
@@ -22,3 +23,6 @@ final purchaseServiceProvider =
 
 final analyticsServiceProvider =
     Provider<AnalyticsService>((ref) => AnalyticsService());
+
+final remoteRepositoryProvider =
+    Provider<RemoteRepository>((ref) => RemoteRepository());

@@ -305,4 +305,9 @@ class StringsJa extends AppStrings {
   String get redeemCodeInvalid => '無効または期限切れのコードです';
   @override
   String get redeemCodeAlreadyUsed => 'このコードは既に使用されています';
+
+  @override
+  String get deleteDataSuccess => 'データが正常に削除されました';
+  @override
+  String get deleteDataError => 'データを削除できませんでした。もう一度お試しください。';
 }

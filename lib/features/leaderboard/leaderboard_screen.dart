@@ -9,6 +9,7 @@ import '../shared/glow_orb.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../data/remote/remote_repository.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/service_providers.dart';
 
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
@@ -20,7 +21,7 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final _repo = RemoteRepository();
+  late final RemoteRepository _repo;
 
   bool _weekly = true;
   bool _loading = true;
@@ -30,6 +31,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   void initState() {
     super.initState();
+    _repo = ref.read(remoteRepositoryProvider);
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) _fetchData();

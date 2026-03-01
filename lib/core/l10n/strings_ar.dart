@@ -309,4 +309,9 @@ class StringsAr extends AppStrings {
   String get redeemCodeInvalid => 'رمز غير صالح أو منتهي الصلاحية';
   @override
   String get redeemCodeAlreadyUsed => 'تم استخدام هذا الرمز بالفعل';
+
+  @override
+  String get deleteDataSuccess => 'تم حذف بياناتك بنجاح';
+  @override
+  String get deleteDataError => 'تعذّر حذف بياناتك. يرجى المحاولة مرة أخرى.';
 }

@@ -102,12 +102,47 @@ serve(async (req: Request) => {
       )
     }
 
-    // Kullanici bu kodu daha once kullanmis mi?
-    // redeem_usages tablosu yoksa bu kontrolu atlayabiliriz,
-    // ama ek guvenlik icin profiles.redeemed_codes JSONB alani kullanilabilir.
-    // Su an basit akis: max_uses kontrolu yeterli.
+    // ── Per-user kontrol: ayni kullanici ayni kodu tekrar kullanamasin ────
+    const { data: existingUsage, error: usageCheckError } = await supabase
+      .from('redeem_usages')
+      .select('id')
+      .eq('code_id', codeData.id)
+      .eq('user_id', userId)
+      .maybeSingle()
 
-    // ── Basarili: current_uses artir ────────────────────────────────────────
+    if (usageCheckError) {
+      return new Response(
+        JSON.stringify({ error: 'Failed to check usage history' }),
+        { status: 500, headers: CORS_HEADERS },
+      )
+    }
+
+    if (existingUsage) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'already_redeemed' }),
+        { status: 409, headers: CORS_HEADERS },
+      )
+    }
+
+    // ── Basarili: kullanim kaydini olustur ve current_uses artir ──────────
+    const { error: insertUsageError } = await supabase
+      .from('redeem_usages')
+      .insert({ code_id: codeData.id, user_id: userId })
+
+    if (insertUsageError) {
+      // UNIQUE constraint ihlali — race condition durumunda
+      if (insertUsageError.code === '23505') {
+        return new Response(
+          JSON.stringify({ success: false, error: 'already_redeemed' }),
+          { status: 409, headers: CORS_HEADERS },
+        )
+      }
+      return new Response(
+        JSON.stringify({ error: 'Failed to record usage' }),
+        { status: 500, headers: CORS_HEADERS },
+      )
+    }
+
     const { error: updateError } = await supabase
       .from('redeem_codes')
       .update({ current_uses: codeData.current_uses + 1 })

@@ -306,4 +306,10 @@ class StringsHi extends AppStrings {
   String get redeemCodeInvalid => 'अमान्य या समाप्त कोड';
   @override
   String get redeemCodeAlreadyUsed => 'यह कोड पहले ही उपयोग किया जा चुका है';
+
+  @override
+  String get deleteDataSuccess => 'आपका डेटा सफलतापूर्वक हटा दिया गया';
+  @override
+  String get deleteDataError =>
+      'आपका डेटा हटाया नहीं जा सका। कृपया पुनः प्रयास करें।';
 }

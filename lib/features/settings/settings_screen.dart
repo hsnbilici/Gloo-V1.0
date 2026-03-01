@@ -6,9 +6,8 @@ import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
-import '../../data/remote/remote_repository.dart';
-import '../../services/analytics_service.dart';
 
 // kColorChef: dil bölümü için vurgu rengi (neon mint)
 const _kLangAccent = kColorChef;
@@ -126,7 +125,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (_) {
                   notifier.toggleAnalytics();
                   final newValue = !audio.analyticsEnabled;
-                  AnalyticsService().setEnabled(newValue);
+                  ref.read(analyticsServiceProvider).setEnabled(newValue);
                   ref.read(localRepositoryProvider.future).then((repo) {
                     repo.setAnalyticsEnabled(newValue);
                   });
@@ -140,11 +139,28 @@ class SettingsScreen extends ConsumerWidget {
                 cancelLabel: l.settingsDeleteCancel,
                 onDelete: () async {
                   final repo = await ref.read(localRepositoryProvider.future);
-                  await RemoteRepository().deleteUserData();
-                  await repo.clearAllData();
-                  AnalyticsService().setEnabled(false);
-                  ref.invalidate(appSettingsProvider);
-                  if (context.mounted) context.go('/onboarding');
+                  final success = await ref.read(remoteRepositoryProvider).deleteUserData();
+                  if (!context.mounted) return;
+                  if (success) {
+                    await repo.clearAllData();
+                    ref.read(analyticsServiceProvider).setEnabled(false);
+                    ref.invalidate(appSettingsProvider);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l.deleteDataSuccess),
+                        backgroundColor: const Color(0xFF2E7D32),
+                      ),
+                    );
+                    context.go('/onboarding');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l.deleteDataError),
+                        backgroundColor: _kPrivacyAccent,
+                      ),
+                    );
+                  }
                 },
               ),
               _SectionHeader(title: l.settingsSectionAbout, color: kMuted),

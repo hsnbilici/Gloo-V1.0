@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../game/world/game_world.dart';
 import 'chef_level_overlay.dart';
+import 'game_over_overlay.dart';
 import 'level_complete_overlay.dart';
 
 /// Chef level complete dialog'unu goster.
@@ -41,6 +43,57 @@ void showChefLevelComplete({
         onHome: () {
           Navigator.of(ctx).pop();
           context.go('/');
+        },
+      ),
+    );
+  });
+}
+
+/// Game over dialog'unu goster.
+void showGameOver({
+  required BuildContext context,
+  required int score,
+  required GameMode mode,
+  required int filledCells,
+  required int totalCells,
+  required bool isNewHighScore,
+  required bool showSecondChance,
+  required VoidCallback? onSecondChance,
+  required VoidCallback onReplay,
+  required VoidCallback onHome,
+}) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!context.mounted) return;
+    showGeneralDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      barrierLabel: '',
+      transitionDuration: const Duration(milliseconds: 380),
+      transitionBuilder: (ctx, anim, _, child) => FadeTransition(
+        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.96, end: 1.0).animate(
+            CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
+          ),
+          child: child,
+        ),
+      ),
+      pageBuilder: (ctx, _, __) => GameOverOverlay(
+        score: score,
+        mode: mode,
+        filledCells: filledCells,
+        totalCells: totalCells,
+        isNewHighScore: isNewHighScore,
+        showSecondChance: showSecondChance,
+        onSecondChance: onSecondChance,
+        onReplay: () {
+          Navigator.of(ctx).pop();
+          onReplay();
+        },
+        onHome: () {
+          Navigator.of(ctx).pop();
+          onHome();
         },
       ),
     );

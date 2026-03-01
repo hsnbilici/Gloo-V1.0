@@ -192,8 +192,9 @@ class MatchmakingManager {
     return eloDiff <= maxRange;
   }
 
-  /// Bot eşleştirme seed'i oluştur.
-  static int generateMatchSeed() {
+  /// Bot eslestirme icin client-side seed uretir.
+  /// Gercek PvP maclarda seed sunucu tarafinda uretilir (DB DEFAULT).
+  static int generateBotMatchSeed() {
     final now = DateTime.now();
     return now.microsecondsSinceEpoch;
   }

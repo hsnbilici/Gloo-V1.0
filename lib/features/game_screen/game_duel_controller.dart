@@ -5,12 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/remote/pvp_realtime_service.dart';
-import '../../data/remote/remote_repository.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/pvp_provider.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
-import '../../services/analytics_service.dart';
 import '../pvp/duel_result_overlay.dart';
 
 /// PvP Duel realtime senkronizasyon ve sonuc yonetimi.
@@ -191,7 +190,7 @@ class GameDuelController {
     repo.saveGelOzu(repo.getGelOzu() + gelReward);
 
     // Backend sync
-    final remote = RemoteRepository();
+    final remote = ref.read(remoteRepositoryProvider);
     remote.updateElo(newElo: newElo);
     remote.incrementPvpStats(isWin: outcome == DuelOutcome.win);
     if (duelState.matchId != null && duelState.matchId != 'local') {
@@ -201,7 +200,7 @@ class GameDuelController {
       );
     }
 
-    AnalyticsService().logPvpResult(
+    ref.read(analyticsServiceProvider).logPvpResult(
       outcome: outcome.name,
       eloChange: eloChange,
       isBot: isBot,

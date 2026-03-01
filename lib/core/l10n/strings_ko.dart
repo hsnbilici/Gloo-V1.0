@@ -306,4 +306,9 @@ class StringsKo extends AppStrings {
   String get redeemCodeInvalid => '유효하지 않거나 만료된 코드입니다';
   @override
   String get redeemCodeAlreadyUsed => '이 코드는 이미 사용되었습니다';
+
+  @override
+  String get deleteDataSuccess => '데이터가 성공적으로 삭제되었습니다';
+  @override
+  String get deleteDataError => '데이터를 삭제할 수 없습니다. 다시 시도해 주세요.';
 }

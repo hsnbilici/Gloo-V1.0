@@ -306,8 +306,8 @@ void main() {
       });
     });
 
-    test('generateMatchSeed returns non-zero', () {
-      final seed = MatchmakingManager.generateMatchSeed();
+    test('generateBotMatchSeed returns non-zero', () {
+      final seed = MatchmakingManager.generateBotMatchSeed();
       expect(seed, isNonZero);
     });
 

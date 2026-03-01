@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../data/remote/remote_repository.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 
 // ─── Karakter Ekrani ─────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     setState(() => _loaded = true);
 
     // Backend'den sync
-    final remote = RemoteRepository();
+    final remote = ref.read(remoteRepositoryProvider);
     final meta = await remote.loadMetaState();
     if (meta != null && mounted) {
       final backendChar = meta.characterState;
@@ -68,7 +68,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
       setState(() {});
 
       // Backend sync (fire-and-forget)
-      RemoteRepository().saveMetaState(
+      ref.read(remoteRepositoryProvider).saveMetaState(
         characterState: _character.toMap(),
         gelEnergy: _resources.energy,
       );

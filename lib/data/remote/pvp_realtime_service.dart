@@ -105,7 +105,6 @@ class PvpRealtimeService {
 
         if (MatchmakingManager.isCompatible(request, otherRequest)) {
           _matchmakingTimeout?.cancel();
-          final seed = MatchmakingManager.generateMatchSeed();
 
           final myId = request.userId;
 
@@ -114,15 +113,15 @@ class PvpRealtimeService {
           // Diger oyuncu presence sync ile maci algilayacak.
           if (myId.compareTo(otherId) < 0) {
             _repository
-                .createPvpMatch(seed: seed, opponentId: otherId)
-                .then((matchId) {
-              if (matchId != null) {
+                .createPvpMatch(opponentId: otherId)
+                .then((result) {
+              if (result != null) {
                 _leaveMatchmakingQueue();
                 onMatch(MatchResult(
-                  matchId: matchId,
+                  matchId: result.id,
                   player1Id: myId,
                   player2Id: otherId,
-                  seed: seed,
+                  seed: result.seed,
                   isBot: false,
                 ));
               }
@@ -142,7 +141,7 @@ class PvpRealtimeService {
     void Function(MatchResult) onMatch,
   ) {
     _leaveMatchmakingQueue();
-    final seed = MatchmakingManager.generateMatchSeed();
+    final seed = MatchmakingManager.generateBotMatchSeed();
     final botId = 'bot_${Random().nextInt(99999).toString().padLeft(5, '0')}';
 
     // Bot maci veritabanina kaydetmeye gerek yok — lokal oynanir

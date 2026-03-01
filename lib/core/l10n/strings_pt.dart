@@ -306,4 +306,10 @@ class StringsPt extends AppStrings {
   String get redeemCodeInvalid => 'Código inválido ou expirado';
   @override
   String get redeemCodeAlreadyUsed => 'Este código já foi utilizado';
+
+  @override
+  String get deleteDataSuccess => 'Seus dados foram excluídos com sucesso';
+  @override
+  String get deleteDataError =>
+      'Não foi possível excluir seus dados. Tente novamente.';
 }

@@ -198,6 +198,10 @@ abstract class AppStrings {
   String get redeemCodeInvalid;
   String get redeemCodeAlreadyUsed;
 
+  // GDPR Silme Sonucu
+  String get deleteDataSuccess;
+  String get deleteDataError;
+
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {
     return switch (locale.languageCode) {

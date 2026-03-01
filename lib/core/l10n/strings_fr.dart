@@ -307,4 +307,10 @@ class StringsFr extends AppStrings {
   String get redeemCodeInvalid => 'Code invalide ou expiré';
   @override
   String get redeemCodeAlreadyUsed => 'Ce code a déjà été utilisé';
+
+  @override
+  String get deleteDataSuccess => 'Vos données ont été supprimées avec succès';
+  @override
+  String get deleteDataError =>
+      'Impossible de supprimer vos données. Veuillez réessayer.';
 }

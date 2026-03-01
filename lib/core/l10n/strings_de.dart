@@ -310,4 +310,10 @@ class StringsDe extends AppStrings {
   String get redeemCodeInvalid => 'Ungültiger oder abgelaufener Code';
   @override
   String get redeemCodeAlreadyUsed => 'Dieser Code wurde bereits verwendet';
+
+  @override
+  String get deleteDataSuccess => 'Ihre Daten wurden erfolgreich gelöscht';
+  @override
+  String get deleteDataError =>
+      'Ihre Daten konnten nicht gelöscht werden. Bitte versuchen Sie es erneut.';
 }

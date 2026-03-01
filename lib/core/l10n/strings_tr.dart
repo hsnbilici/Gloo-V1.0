@@ -305,4 +305,10 @@ class StringsTr extends AppStrings {
   String get redeemCodeInvalid => 'Geçersiz veya süresi dolmuş kod';
   @override
   String get redeemCodeAlreadyUsed => 'Bu kod zaten kullanılmış';
+
+  @override
+  String get deleteDataSuccess => 'Verileriniz başarıyla silindi';
+  @override
+  String get deleteDataError =>
+      'Verileriniz silinemedi. Lütfen tekrar deneyin.';
 }
