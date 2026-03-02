@@ -1,8 +1,7 @@
-import 'dart:io' show Platform;
 import 'dart:math' as math;
 
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../core/constants/audio_constants.dart';
@@ -42,7 +41,7 @@ class AudioManager {
 
   Future<void> initialize() async {
     // iOS audio session — ambient kategorisi: diğer seslerle karışır, sessiz modda sessiz
-    if (!kIsWeb && Platform.isIOS) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
       final session = await AudioSession.instance;
       await session.configure(const AudioSessionConfiguration(
         avAudioSessionCategory: AVAudioSessionCategory.ambient,

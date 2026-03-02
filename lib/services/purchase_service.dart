@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -78,29 +77,33 @@ class PurchaseService {
 
   // ── Yaşam döngüsü ──────────────────────────────────────────────────────
   Future<void> initialize() async {
-    _available = await _iap.isAvailable();
-    if (!_available) {
-      if (kDebugMode) debugPrint('PurchaseService: IAP not available');
-      return;
-    }
+    try {
+      _available = await _iap.isAvailable();
+      if (!_available) {
+        if (kDebugMode) debugPrint('PurchaseService: IAP not available');
+        return;
+      }
 
-    // Satın alma akışını dinle
-    _subscription = _iap.purchaseStream.listen(
-      _handlePurchaseUpdate,
-      onDone: () => _subscription?.cancel(),
-      onError: (error) { if (kDebugMode) debugPrint('PurchaseService: stream error $error'); },
-    );
+      // Satın alma akışını dinle
+      _subscription = _iap.purchaseStream.listen(
+        _handlePurchaseUpdate,
+        onDone: () => _subscription?.cancel(),
+        onError: (error) { if (kDebugMode) debugPrint('PurchaseService: stream error $error'); },
+      );
 
-    // Ürünleri yükle
-    final response = await _iap.queryProductDetails(allProductIds);
-    if (response.notFoundIDs.isNotEmpty) {
-      if (kDebugMode) debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
-    }
-    for (final product in response.productDetails) {
-      _products[product.id] = product;
-    }
+      // Ürünleri yükle
+      final response = await _iap.queryProductDetails(allProductIds);
+      if (response.notFoundIDs.isNotEmpty) {
+        if (kDebugMode) debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
+      }
+      for (final product in response.productDetails) {
+        _products[product.id] = product;
+      }
 
-    if (kDebugMode) debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
+      if (kDebugMode) debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
+    } catch (e) {
+      if (kDebugMode) debugPrint('PurchaseService: initialize error: $e');
+    }
   }
 
   void dispose() {
@@ -165,7 +168,7 @@ class PurchaseService {
   /// Network hatasinda graceful degradation: yerel olarak ekler, flag'ler.
   Future<void> _verifyAndUnlock(PurchaseDetails purchase) async {
     final repo = RemoteRepository();
-    final platform = Platform.isIOS ? 'ios' : 'android';
+    final platform = defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
     final receipt = purchase.verificationData.serverVerificationData;
 
     final result = await repo.verifyPurchase(

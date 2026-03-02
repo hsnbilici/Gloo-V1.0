@@ -177,6 +177,7 @@ class PvpRealtimeService {
 
   /// Duello odasina baglan.
   Future<void> joinDuelRoom(String matchId) async {
+    if (!SupabaseConfig.isConfigured) return;
     _duelChannel = _client.channel(
       'duel:$matchId',
       opts: const RealtimeChannelConfig(self: false),

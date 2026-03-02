@@ -51,7 +51,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
             currentScore: game.score,
             highScore: game.highScore,
           )) {
-        setState(() => showHighScoreBadge = true);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) setState(() => showHighScoreBadge = true);
+        });
       }
     };
 

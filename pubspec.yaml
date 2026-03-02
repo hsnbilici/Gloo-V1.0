@@ -33,7 +33,7 @@ dependencies:
   # Paylaşım & Viral Pipeline
   share_plus: ^10.0.2
   screen_recorder: ^0.3.0                # Frame capture (iOS/Android — web uyumsuz)
-  ffmpeg_kit_flutter_full_gpl: ^6.0.3    # FFmpeg video isleme (iOS/Android — web uyumsuz)
+  # ffmpeg_kit_flutter_full_gpl: ^6.0.3    # FFmpeg video isleme — DISABLED: paket discontinued, GitHub release 404
 
   # Ses
   just_audio: ^0.9.40
@@ -56,6 +56,7 @@ dependencies:
 
   # Native Splash Screen
   flutter_native_splash: ^2.4.0
+  firebase_app_check: ^0.3.2+10
 
 dev_dependencies:
   flutter_test:

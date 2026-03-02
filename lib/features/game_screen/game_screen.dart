@@ -197,6 +197,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: kBgDark,
       body: Stack(
         children: [

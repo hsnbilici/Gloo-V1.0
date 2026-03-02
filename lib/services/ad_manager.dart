@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -58,7 +56,7 @@ class AdManager {
       ? 'ca-app-pub-3940256099942544/1712485313' // iOS test rewarded
       : 'ca-app-pub-3940256099942544/5224354917'; // Android test rewarded
 
-  static bool get _isIOS => !kIsWeb && Platform.isIOS;
+  static bool get _isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   // Faz 4: Sabitler
   static const int _maxDailyInterstitial = 8;

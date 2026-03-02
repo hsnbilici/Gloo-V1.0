@@ -1,5 +1,4 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+platform :ios, '16.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -39,5 +38,30 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    # Suppress Xcode 26 quoted-include-in-framework-header error for all targets
+    target.build_configurations.each do |config|
+      config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+      config.build_settings['OTHER_CFLAGS'] = '$(inherited) -Wno-quoted-include-in-framework-header'
+    end
+  end
+
+  # Fix double-quoted includes in framework umbrella headers (Xcode 26+ strict enforcement)
+  pods_root = File.dirname(installer.pods_project.path)
+  installer.pod_targets.each do |pod_target|
+    umbrella_path = File.join(
+      pods_root,
+      'Target Support Files',
+      pod_target.name,
+      "#{pod_target.name}-umbrella.h"
+    )
+    next unless File.exist?(umbrella_path)
+    content = File.read(umbrella_path)
+    # Replace double-quoted imports with the pod's own module name
+    product_module = pod_target.product_module_name
+    fixed = content.gsub(/#import "([^"]+\.h)"/) do
+      header_name = $1
+      "#import <#{product_module}/#{header_name}>"
+    end
+    File.write(umbrella_path, fixed) if fixed != content
   end
 end

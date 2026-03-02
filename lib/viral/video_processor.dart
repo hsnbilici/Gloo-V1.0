@@ -1,5 +1,5 @@
-import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
+// ffmpeg_kit_flutter_full_gpl disabled — paket discontinued, GitHub release 404.
+// Video processing geçici olarak devre dışı. Oyun fonksiyonelliği etkilenmez.
 import 'package:flutter/foundation.dart';
 
 /// Kaydedilen frame'leri viral klip haline getiren işlemci.
@@ -31,41 +31,13 @@ class VideoProcessor {
   /// Frame dizisini yavaş çekim + renk grading + filigranla MP4'e çevirir.
   ///
   /// Döner: çıkış dosyasının yolu (başarılı) veya null (hata/web)
+  ///
+  /// NOT: ffmpeg_kit_flutter_full_gpl discontinued olduğu için geçici olarak
+  /// devre dışı. Paket yeniden kullanılabilir olduğunda geri alınacak.
   Future<String?> processClip(VideoProcessRequest req) async {
-    if (kIsWeb) return null;
-
-    final pts = req.slowMotionFactor.toStringAsFixed(1);
-    final baseFilter = 'setpts=$pts*PTS,eq=saturation=1.3:contrast=1.1';
-
-    String cmd;
-    if (req.watermarkAssetPath != null) {
-      cmd = '-r 30 -i ${req.framesDir}/frame_%04d.png '
-          '-i ${req.watermarkAssetPath} '
-          '-filter_complex "[$baseFilter][1:v]overlay=W-w-10:10" '
-          '-c:v libx264 -pix_fmt yuv420p -y ${req.outputPath}';
-    } else {
-      cmd = '-r 30 -i ${req.framesDir}/frame_%04d.png '
-          '-filter:v "$baseFilter" '
-          '-c:v libx264 -pix_fmt yuv420p -y ${req.outputPath}';
+    if (kDebugMode) {
+      debugPrint('VideoProcessor: ffmpeg_kit disabled — returning null');
     }
-
-    try {
-      final session = await FFmpegKit.execute(cmd);
-      final returnCode = await session.getReturnCode();
-      if (ReturnCode.isSuccess(returnCode)) {
-        if (kDebugMode) debugPrint('VideoProcessor: success → ${req.outputPath}');
-        return req.outputPath;
-      }
-      final logs = await session.getLogs();
-      if (kDebugMode) {
-        debugPrint(
-          'VideoProcessor error: ${logs.map((l) => l.getMessage()).join('\n')}',
-        );
-      }
-      return null;
-    } catch (e) {
-      if (kDebugMode) debugPrint('VideoProcessor.processClip error: $e');
-      return null;
-    }
+    return null;
   }
 }

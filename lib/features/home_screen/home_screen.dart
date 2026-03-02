@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Future<void> _requestATTIfNeeded() async {
     if (kIsWeb) return;
-    if (!Platform.isIOS) return;
+    if (defaultTargetPlatform != TargetPlatform.iOS) return;
     try {
       await AppTrackingTransparency.requestTrackingAuthorization();
     } catch (_) {

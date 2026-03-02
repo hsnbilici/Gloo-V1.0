@@ -79,7 +79,6 @@ class GlooGame {
       onChefLevelComplete;
 
   // Faz 4: Yeni callback'ler
-  void Function(int gelOzu)? onCurrencyEarned;
   void Function(PowerUpType type, PowerUpResult result)? onPowerUpUsed;
   void Function(int movesUsed)? onMoveCompleted;
   void Function()? onLevelComplete;
@@ -417,6 +416,7 @@ class GlooGame {
     final result = powerUpSystem.useUndo(_gridManager);
     if (result != null) {
       _movesUsed--;
+      if (_handIndex > 0) _handIndex--;
     }
     return result?.restoredCells;
   }
@@ -426,6 +426,7 @@ class GlooGame {
     final result = powerUpSystem.useFreeze();
     if (result == null) return false;
     status = GameStatus.frozen;
+    _freezeTimer?.cancel();
     _freezeTimer = Timer(Duration(seconds: result.frozenSeconds), () {
       if (status == GameStatus.frozen) {
         status = GameStatus.playing;

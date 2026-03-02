@@ -1,4 +1,5 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:io' show Directory, File;
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,7 @@ class ClipRecorder {
   static const _maxFrames = 150;
 
   RecordingState _state = RecordingState.idle;
-  bool _autoStopScheduled = false;
+  Timer? _autoStopTimer;
   final List<ui.Image> _capturedFrames = [];
 
   RecordingState get state => _state;
@@ -68,10 +69,8 @@ class ClipRecorder {
   void _triggerCapture() {
     if (_state == RecordingState.buffering) return;
     _beginCapture();
-    if (!_autoStopScheduled) {
-      _autoStopScheduled = true;
-      Future.delayed(const Duration(seconds: 5), () {
-        _autoStopScheduled = false;
+    if (_autoStopTimer == null || !_autoStopTimer!.isActive) {
+      _autoStopTimer = Timer(const Duration(seconds: 5), () {
         if (_state == RecordingState.buffering) _finalizeClip();
       });
     }
@@ -155,6 +154,7 @@ class ClipRecorder {
   }
 
   void dispose() {
+    _autoStopTimer?.cancel();
     for (final img in _capturedFrames) {
       img.dispose();
     }

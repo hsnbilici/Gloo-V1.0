@@ -469,16 +469,6 @@ void main() {
       expect(result!.totalLines, greaterThanOrEqualTo(1));
     });
 
-    test('onCurrencyEarned fires on line clear', () {
-      final game = GlooGame(mode: GameMode.classic);
-      game.startGame();
-      game.onCurrencyEarned = (amount) {};
-
-      // Note: onCurrencyEarned is not directly wired in _evaluateBoard,
-      // but CurrencyManager.onBalanceChanged could be used.
-      // The game fires onJelEnergyEarned instead.
-    });
-
     test('onGameOver callback fires', () {
       final game = GlooGame(mode: GameMode.classic);
       game.startGame();

@@ -127,6 +127,7 @@ class AnalyticsService {
   }
 
   void setUserId(String userId) {
+    if (!_enabled) return;
     _safeAnalytics?.setUserId(id: userId);
     _safeCrashlytics?.setUserIdentifier(userId);
   }
