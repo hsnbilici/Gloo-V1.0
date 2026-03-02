@@ -57,3 +57,31 @@ end
 3. `post_install` hook'ta pod target'lara erisirken `installer.pod_targets` kullan, `installer.aggregate_targets` degil.
 4. Pod module adi (framework adi) ile pod adi farkli olabilir: `pod_target.product_module_name` kullan.
 5. `flutter build ios` komutu ic olarak `pod install` cagiriyor — bu yuzden manuel `pod install` ile fix yapilsa bile `flutter build` sirasinda tekrar uzerine yaziliyor. Fix'i her zaman `post_install` hook'ta uygula.
+
+---
+
+## 2026-03-02 — CI Android/iOS Build Sorunları
+
+### Kotlin DSL (.kts) — java.util / java.io Unresolved Reference
+**Hata:** `build.gradle.kts` içinde `java.util.Properties()` ve `java.io.FileInputStream()` Unresolved reference hatası.
+**Kök neden:** Kotlin Script dosyalarında tam nitelikli Java sınıfları otomatik import edilmez.
+**Çözüm:** Dosyanın başına `import java.util.Properties` ve `import java.io.FileInputStream` ekle. `getProperty()` metodunu kullan (`["key"] as String` cast yerine).
+**Kural:** `.kts` dosyalarında Java sınıfları için her zaman explicit import yaz.
+
+### R8 Minification — Missing Play Core Classes
+**Hata:** `minifyReleaseWithR8` görevi "Missing class com.google.android.play.core.**" ile başarısız.
+**Kök neden:** Flutter engine deferred components isteğe bağlı Play Core bağımlılığına referans veriyor, ancak proje bunu içermiyor.
+**Çözüm:** `android/app/proguard-rules.pro` dosyasına `-dontwarn com.google.android.play.core.**` ekle.
+**Kural:** Release build R8 başarısızlığında önce "Missing class" uyarılarına bak. Flutter engine Play Core'u isteğe bağlı kullanır.
+
+### GitHub Actions — macOS base64 Satır Sonu Sorunu
+**Hata:** `base64: invalid input` — macOS'ta üretilen base64 string GitHub Secrets'tan alınıp Linux runner'da decode edilemiyor.
+**Kök neden:** macOS `base64` varsayılan olarak 76 karakter sonra satır sonu ekler. Bazı ortamlarda bu `invalid input` hatasına yol açar.
+**Çözüm:** Workflow'da `echo "$VAR" | base64 --decode` yerine `printf '%s' "$VAR" | base64 --ignore-garbage --decode` kullan.
+**Kural:** CI'da base64 decode yaparken her zaman `--ignore-garbage` flag ekle veya `printf '%s'` kullan.
+
+### iOS CI — Crashlytics Symbol Upload Hatası
+**Hata:** `Command PhaseScriptExecution failed` — 'FlutterFire: flutterfire upload-crashlytics-symbols' CI'da başarısız.
+**Kök neden:** Release build için Crashlytics sembol upload scripti çalışıyor ancak CI ortamında geçerli Firebase kimlik bilgileri yok.
+**Çözüm:** `ios_build.yml`'da `flutter build ios --no-codesign` yerine `flutter build ios --simulator` kullan. Simulator build'lar sembol upload scriptini tetiklemez.
+**Kural:** CI'da iOS build için `--simulator` kullan (cihaz build'ı değil). Artifact path: `build/ios/iphonesimulator/Runner.app`.

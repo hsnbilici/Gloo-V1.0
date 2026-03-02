@@ -1,6 +1,6 @@
 # QA Raporu — Gloo v1.0
 
-> Son guncelleme: 2026-03-02 | Sprint 17 sonrasi
+> Son guncelleme: 2026-03-02 | Sprint 18 sonrasi
 > flutter analyze: 0 issue | flutter test: 1204/1204
 
 ---
@@ -24,6 +24,7 @@
 | 16 | debugNeedsLayout crash fix (addPostFrameCallback) |
 | 16 | Bottom overflow fix (resizeToAvoidBottomInset: false) |
 | 17 | Android release keystore + CI signing + workflow permissions |
+| 18 | CI düzeltmeleri: build.gradle.kts Kotlin DSL, ProGuard Play Core dontwarn, Firebase config unignore, base64 decode robustness, iOS simulator CI build |
 
 ---
 
@@ -33,5 +34,5 @@
 |------|-----|
 | AdMob | Test ID aktif — uretime geciste gercek ID gerekli |
 | Firebase App Check | Kod hazir — Console enforce adimi bekleniyor |
-| Android signing | Keystore yerel — GitHub Secrets yuklenmesi kaldi |
+| Android signing | CI dogrulandi — GitHub Secrets yuklendi, release APK signing aktif |
 | Store submission | Apple + Google hesap dogrulama bekleniyor |

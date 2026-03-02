@@ -1,8 +1,8 @@
 # Gloo v1.0 — Yol Haritasi
 
 > Son guncelleme: 2026-03-02
-> **Durum:** Sprint 17 TAMAMLANDI | flutter analyze: 0 issue | flutter test: 1204/1204
-> **Proje skoru:** 9.8 / 10 | Tamamlanan fazlar: 28 (A-Z + AA + AB)
+> **Durum:** Sprint 18 TAMAMLANDI | flutter analyze: 0 issue | flutter test: 1204/1204
+> **Proje skoru:** 9.8 / 10 | Tamamlanan fazlar: 29 (A-Z + AA + AB + AC)
 > **Kalan:** Store dogrulama bekliyor (Apple + Google)
 
 ---
@@ -15,7 +15,7 @@
 |---|-------|------|------------------|
 | C.1 | Firebase API key kisitlamalari — Debug SHA-1 eklendi. Release + Play Console SHA-1 eksik. Rehber: `tasks/c1_firebase_key_restrictions_guide.md` | Security | Release keystore + Play Store kaydi |
 | C.2 | AdMob test ID → gercek ID degisimi (Android + iOS + ad_manager.dart) | DevOps | AdMob Console |
-| ~~C.3~~ | ~~Android release signing~~ — Keystore + key.properties hazir. GitHub Secrets yuklenmesi kaldi. | DevOps | GitHub Secrets yukleme |
+| ~~C.3~~ | ~~Android release signing~~ — Keystore + key.properties hazir. CI signing dogrulandi. GitHub Secrets yuklendi ve dogrulandi. | DevOps | ~~GitHub Secrets yukleme~~ |
 
 ### HIGH — Store Submission Icin Gerekli
 
@@ -50,7 +50,7 @@
 | Security | **10.0** / 10 | 10.0 |
 | Architect | **9.5** / 10 | 9.5 |
 | Backend | **10.0** / 10 | 10.0 |
-| DevOps | **8.0** / 10 | 10.0 (C.2, C.3, H.3-5) |
+| DevOps | **8.5** / 10 | 10.0 (C.2, H.3-5) |
 | **ORTALAMA** | **9.8** / 10 | 9.8 |
 
 ---
@@ -85,3 +85,4 @@
 | Z | Sprint 15: K.1-K.4 servis duzeltmeleri 4/4 (isConfigured guard, kDebugMode, try-catch, GDPR) |
 | AA | Sprint 16: 2 bug fix (debugNeedsLayout→addPostFrameCallback, resizeToAvoidBottomInset:false) |
 | AB | Sprint 17: C.3+H.5 — Release keystore, key.properties, CI signing, 4 workflow permissions |
+| AC | Sprint 18: CI düzeltmeleri 6/6 (build.gradle.kts Kotlin DSL, ProGuard Play Core, Firebase config commit, base64 decode, iOS simulator build, dart format) |
