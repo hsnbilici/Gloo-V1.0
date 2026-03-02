@@ -1,3 +1,6 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -12,14 +15,14 @@ plugins {
 // Release signing — key.properties dosyasini olustur:
 //   storePassword=...
 //   keyPassword=...
-//   keyAlias=gloo
+//   keyAlias=gloo-release
 //   storeFile=gloo-release.keystore
 // Keystore uret: keytool -genkey -v -keystore android/app/gloo-release.keystore \
-//   -alias gloo -keyalg RSA -keysize 2048 -validity 10000
-val keystoreProperties = java.util.Properties()
+//   -alias gloo-release -keyalg RSA -keysize 2048 -validity 10000
+val keystoreProperties = Properties()
 val keystoreFile = rootProject.file("app/key.properties")
 if (keystoreFile.exists()) {
-    keystoreProperties.load(java.io.FileInputStream(keystoreFile))
+    keystoreFile.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
@@ -33,7 +36,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
@@ -47,10 +50,10 @@ android {
     signingConfigs {
         if (keystoreFile.exists()) {
             create("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String
-                keyPassword = keystoreProperties["keyPassword"] as String
-                storeFile = file(keystoreProperties["storeFile"] as String)
-                storePassword = keystoreProperties["storePassword"] as String
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
             }
         }
     }
