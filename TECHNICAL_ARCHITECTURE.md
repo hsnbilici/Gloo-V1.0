@@ -1,5 +1,5 @@
 # Gloo: Teknik Mimari Belgesi
-## v0.3 — 2026-03-01
+## v0.4 — 2026-03-02
 
 ---
 
@@ -40,7 +40,7 @@
 
 ```
 lib/
-+-- main.dart                          # Entry point (52 satir)
++-- main.dart                          # Entry point (123 satir)
 +-- app/
 |   +-- app.dart                       # MaterialApp, tema, locale
 |   +-- router.dart                    # GoRouter route tanimlari

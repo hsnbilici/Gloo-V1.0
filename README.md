@@ -1,5 +1,5 @@
 # Gloo: ASMR Jel Puzzle
-**Durum:** Beta / Uretime Hazirlik (%93)
+**Durum:** Beta / Uretime Hazirlik (%97)
 **Platform:** Android + iOS + Web (Flutter 3.41.2)
 
 ---
@@ -88,7 +88,7 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 
 - ~90+ Dart dosyasi
 - ~22,000+ satir kod
-- 1205 birim test, 60+ test dosyasi, 0 hata
+- 1204 birim test, 60+ test dosyasi, 0 hata
 - 14 feature dizini (game_screen, home_screen, onboarding, daily_puzzle, settings, leaderboard, shop, collection, level_select, pvp, island, character, season_pass, quests)
 
 ---
@@ -103,14 +103,14 @@ Block Blast izgara mekanigini ASMR tabanli jel fizigi ve renk sentezi ile harman
 | Faz 4 — Hybrid-Casual | Tamamlandi (14 ekran + 7 VFX + Supabase backend + PvP Realtime + CI/CD) |
 | Sprint 1-3 | Tamamlandi (guvenlik hardening, backend kalite, gorsel branding) |
 | Sprint 6-7 | Tamamlandi (home refactor, GameScreen refactor, provider migration, 290 test) |
-| Sprint 8-10 | Tamamlandi (guvenlik fix, mimari polish, test genisletme — toplam 1205 test) |
+| Sprint 8-10 | Tamamlandi (guvenlik fix, mimari polish, test genisletme — toplam 1204 test) |
 
 ---
 
 ## Test
 
 ```bash
-flutter test    # 1205 test, 0 hata
+flutter test    # 1204 test, 0 hata
 flutter analyze # 0 issue
 ```
 

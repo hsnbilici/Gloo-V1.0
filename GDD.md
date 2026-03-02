@@ -4,7 +4,7 @@
 **Tür:** Casual / Puzzle / Satisfying
 **Platform:** iOS 16+ / Android 10+
 **Hedef Kitle:** 18–35 yaş, ASMR içerik tüketicileri, "satisfying" video takipçileri
-**Belge Tarihi:** 2026-02-26
+**Belge Tarihi:** 2026-03-02
 
 ---
 
