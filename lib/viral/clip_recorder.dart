@@ -103,7 +103,8 @@ class ClipRecorder {
   Future<void> _finalizeClip() async {
     if (_state != RecordingState.buffering) return;
     _state = RecordingState.processing;
-    if (kDebugMode) debugPrint('ClipRecorder: processing ${_capturedFrames.length} frames');
+    if (kDebugMode)
+      debugPrint('ClipRecorder: processing ${_capturedFrames.length} frames');
 
     if (_capturedFrames.isEmpty) {
       _state = RecordingState.idle;

@@ -48,9 +48,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (!showHighScoreBadge &&
           game.highScore > 0 &&
           ref.read(adManagerProvider).canShowHighScoreContinue(
-            currentScore: game.score,
-            highScore: game.highScore,
-          )) {
+                currentScore: game.score,
+                highScore: game.highScore,
+              )) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) setState(() => showHighScoreBadge = true);
         });
@@ -118,7 +118,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         setState(() {
           activeNearMiss = event;
           nearMissKeyIndex++;
-          if (event.isCritical && ref.read(adManagerProvider).canShowNearMissRescue()) {
+          if (event.isCritical &&
+              ref.read(adManagerProvider).canShowNearMissRescue()) {
             showNearMissRescueBadge = true;
           }
         });
@@ -205,9 +206,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         repo.saveTotalEarnedEnergy(totalEarned);
 
         ref.read(remoteRepositoryProvider).saveMetaState(
-          gelEnergy: updated,
-          totalEarnedEnergy: totalEarned,
-        );
+              gelEnergy: updated,
+              totalEarnedEnergy: totalEarned,
+            );
       });
     };
 
@@ -235,14 +236,20 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         repo.updateAverageScore(score);
         if (widget.mode == GameMode.daily) {
           repo.saveDailyResult(score);
-          ref.read(remoteRepositoryProvider).submitDailyResult(score: score, completed: true);
+          ref
+              .read(remoteRepositoryProvider)
+              .submitDailyResult(score: score, completed: true);
         }
         if (widget.mode == GameMode.level && widget.levelData != null) {
           repo.saveLevelHighScore(widget.levelData!.id, score);
         }
       });
-      ref.read(remoteRepositoryProvider).submitScore(mode: widget.mode.name, value: score);
-      ref.read(analyticsServiceProvider).logGameOver(mode: widget.mode.name, score: score);
+      ref
+          .read(remoteRepositoryProvider)
+          .submitScore(mode: widget.mode.name, value: score);
+      ref
+          .read(analyticsServiceProvider)
+          .logGameOver(mode: widget.mode.name, score: score);
 
       // Duel: skor broadcast'ini durdur ve oyun bitis sinyali gonder
       if (widget.mode == GameMode.duel) {

@@ -86,8 +86,7 @@ void main() {
       );
     });
 
-    test(
-        'canShowSecondChance returns false when within new player protection',
+    test('canShowSecondChance returns false when within new player protection',
         () {
       ad.setGamesPlayed(1); // <= 3
       expect(

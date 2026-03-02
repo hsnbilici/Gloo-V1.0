@@ -115,8 +115,7 @@ void main() {
 
     test('all weekly quests have isWeekly == true', () {
       for (final q in kWeeklyQuestPool) {
-        expect(q.isWeekly, isTrue,
-            reason: '${q.description} should be weekly');
+        expect(q.isWeekly, isTrue, reason: '${q.description} should be weekly');
       }
     });
 
@@ -151,10 +150,12 @@ void main() {
     });
 
     test('weekly rewards are larger than daily rewards', () {
-      final dailyMaxXp =
-          kDailyQuestPool.map((q) => q.xpReward).reduce((a, b) => a > b ? a : b);
-      final weeklyMinXp =
-          kWeeklyQuestPool.map((q) => q.xpReward).reduce((a, b) => a < b ? a : b);
+      final dailyMaxXp = kDailyQuestPool
+          .map((q) => q.xpReward)
+          .reduce((a, b) => a > b ? a : b);
+      final weeklyMinXp = kWeeklyQuestPool
+          .map((q) => q.xpReward)
+          .reduce((a, b) => a < b ? a : b);
       expect(weeklyMinXp, greaterThan(dailyMaxXp));
     });
   });

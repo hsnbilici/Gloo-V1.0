@@ -13,8 +13,7 @@ import '../services/purchase_service.dart';
 /// override ile mock/fake inject edilmesini saglar.
 final audioManagerProvider = Provider<AudioManager>((ref) => AudioManager());
 
-final hapticManagerProvider =
-    Provider<HapticManager>((ref) => HapticManager());
+final hapticManagerProvider = Provider<HapticManager>((ref) => HapticManager());
 
 final adManagerProvider = Provider<AdManager>((ref) => AdManager());
 

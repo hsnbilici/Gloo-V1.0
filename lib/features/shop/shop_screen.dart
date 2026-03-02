@@ -189,7 +189,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 monthlyPrice: ref.read(purchaseServiceProvider).priceOf(
                     PurchaseService.kGlooPlusMonthly,
                     fallback: '\$1.99'),
-                yearlyPrice: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kGlooPlusYearly,
+                yearlyPrice: ref.read(purchaseServiceProvider).priceOf(
+                    PurchaseService.kGlooPlusYearly,
                     fallback: '\$9.99'),
                 isSubscribed: settings.glooPlus,
                 onMonthly: () => _buy(PurchaseService.kGlooPlusMonthly),
@@ -205,8 +206,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.block_rounded,
                 label: l.shopRemoveAds,
                 desc: l.shopRemoveAdsDesc,
-                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kRemoveAds,
-                    fallback: '\$2.99'),
+                price: ref
+                    .read(purchaseServiceProvider)
+                    .priceOf(PurchaseService.kRemoveAds, fallback: '\$2.99'),
                 color: _kCoral,
                 purchased: settings.adsRemoved,
                 onBuy: () => _buy(PurchaseService.kRemoveAds),
@@ -221,10 +223,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.graphic_eq_rounded,
                 label: l.shopSoundCrystal,
                 desc: l.shopSoundCrystalDesc,
-                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kSoundCrystal,
-                    fallback: '\$1.99'),
+                price: ref
+                    .read(purchaseServiceProvider)
+                    .priceOf(PurchaseService.kSoundCrystal, fallback: '\$1.99'),
                 color: kCyan,
-                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kSoundCrystal),
+                purchased: ref
+                    .read(purchaseServiceProvider)
+                    .isPurchased(PurchaseService.kSoundCrystal),
                 onBuy: () => _buy(PurchaseService.kSoundCrystal),
               )
                   .animate(delay: 180.ms)
@@ -234,10 +239,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.forest_rounded,
                 label: l.shopSoundForest,
                 desc: l.shopSoundForestDesc,
-                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kSoundForest,
-                    fallback: '\$1.99'),
+                price: ref
+                    .read(purchaseServiceProvider)
+                    .priceOf(PurchaseService.kSoundForest, fallback: '\$1.99'),
                 color: kCyan,
-                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kSoundForest),
+                purchased: ref
+                    .read(purchaseServiceProvider)
+                    .isPurchased(PurchaseService.kSoundForest),
                 onBuy: () => _buy(PurchaseService.kSoundForest),
               )
                   .animate(delay: 220.ms)
@@ -250,10 +258,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.texture_rounded,
                 label: l.shopTexturePack,
                 desc: l.shopTexturePackDesc,
-                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kTexturePack,
-                    fallback: '\$2.99'),
+                price: ref
+                    .read(purchaseServiceProvider)
+                    .priceOf(PurchaseService.kTexturePack, fallback: '\$2.99'),
                 color: _kViolet,
-                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kTexturePack),
+                purchased: ref
+                    .read(purchaseServiceProvider)
+                    .isPurchased(PurchaseService.kTexturePack),
                 onBuy: () => _buy(PurchaseService.kTexturePack),
               )
                   .animate(delay: 280.ms)
@@ -265,10 +276,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                 icon: Icons.star_rounded,
                 label: l.shopStarterPack,
                 desc: l.shopStarterPackDesc,
-                price: ref.read(purchaseServiceProvider).priceOf(PurchaseService.kStarterPack,
-                    fallback: '\$4.99'),
+                price: ref
+                    .read(purchaseServiceProvider)
+                    .priceOf(PurchaseService.kStarterPack, fallback: '\$4.99'),
                 color: _kGold,
-                purchased: ref.read(purchaseServiceProvider).isPurchased(PurchaseService.kStarterPack),
+                purchased: ref
+                    .read(purchaseServiceProvider)
+                    .isPurchased(PurchaseService.kStarterPack),
                 onBuy: () => _buy(PurchaseService.kStarterPack),
                 isFeatured: true,
               )
@@ -296,7 +310,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
               // ── Geri Yükle ────────────────────────────────────────────
               Center(
                 child: GestureDetector(
-                  onTap: () => ref.read(purchaseServiceProvider).restorePurchases(),
+                  onTap: () =>
+                      ref.read(purchaseServiceProvider).restorePurchases(),
                   child: Text(
                     l.shopRestorePurchases,
                     style: TextStyle(

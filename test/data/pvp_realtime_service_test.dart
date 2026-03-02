@@ -71,13 +71,11 @@ void main() {
   // ── leaveDuelRoom ───────────────────────────────────────────────────
 
   group('leaveDuelRoom', () {
-    test('leaveDuelRoom completes without error when no room joined',
-        () async {
+    test('leaveDuelRoom completes without error when no room joined', () async {
       await service.leaveDuelRoom('match_1');
     });
 
-    test('leaveDuelRoom can be called multiple times for same match',
-        () async {
+    test('leaveDuelRoom can be called multiple times for same match', () async {
       await service.leaveDuelRoom('match_1');
       await service.leaveDuelRoom('match_1');
     });

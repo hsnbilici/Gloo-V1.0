@@ -20,7 +20,8 @@ class RemoteRepository {
   String? get _userId => SupabaseConfig.currentUserId;
 
   /// Supabase yapilandirilmis ve initialize edilmis mi?
-  bool get isConfigured => SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
+  bool get isConfigured =>
+      SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
 
   // ── Skor kaydet ─────────────────────────────────────────────────────────
   /// Skoru sunucu tarafinda dogrulayan RPC fonksiyonu uzerinden gonderir.
@@ -39,7 +40,9 @@ class RemoteRepository {
       });
 
       if (result is Map && result['error'] != null) {
-        if (kDebugMode) debugPrint('RemoteRepository.submitScore rejected: ${result['error']}');
+        if (kDebugMode)
+          debugPrint(
+              'RemoteRepository.submitScore rejected: ${result['error']}');
       }
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.submitScore error: $e');
@@ -74,7 +77,8 @@ class RemoteRepository {
               LeaderboardEntry.fromMap(Map<String, dynamic>.from(e as Map)))
           .toList();
     } catch (e) {
-      if (kDebugMode) debugPrint('RemoteRepository.getGlobalLeaderboard error: $e');
+      if (kDebugMode)
+        debugPrint('RemoteRepository.getGlobalLeaderboard error: $e');
       return [];
     }
   }
@@ -171,7 +175,8 @@ class RemoteRepository {
         'completed_at': completed ? DateTime.now().toIso8601String() : null,
       });
     } catch (e) {
-      if (kDebugMode) debugPrint('RemoteRepository.submitDailyResult error: $e');
+      if (kDebugMode)
+        debugPrint('RemoteRepository.submitDailyResult error: $e');
     }
   }
 
@@ -262,7 +267,8 @@ class RemoteRepository {
         'p_stat': isWin ? 'win' : 'loss',
       });
     } catch (e) {
-      if (kDebugMode) debugPrint('RemoteRepository.incrementPvpStats error: $e');
+      if (kDebugMode)
+        debugPrint('RemoteRepository.incrementPvpStats error: $e');
     }
   }
 
@@ -334,7 +340,8 @@ class RemoteRepository {
         return RedeemResult.alreadyRedeemed;
       }
 
-      if (kDebugMode) debugPrint('RemoteRepository.redeemCode rejected: ${response.data}');
+      if (kDebugMode)
+        debugPrint('RemoteRepository.redeemCode rejected: ${response.data}');
       return RedeemResult.error;
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.redeemCode error: $e');

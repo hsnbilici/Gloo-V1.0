@@ -80,10 +80,10 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
 
       // Backend sync (fire-and-forget)
       ref.read(remoteRepositoryProvider).saveMetaState(
-        islandState: _island.toMap(),
-        gelEnergy: _resources.energy,
-        totalEarnedEnergy: _resources.totalEarnedLifetime,
-      );
+            islandState: _island.toMap(),
+            gelEnergy: _resources.energy,
+            totalEarnedEnergy: _resources.totalEarnedLifetime,
+          );
     }
   }
 

@@ -165,12 +165,10 @@ void main() {
       final levelIndex = paths.indexOf('/game/level/:levelId');
       final genericIndex = paths.indexOf('/game/:mode');
 
-      expect(levelIndex, isNot(-1),
-          reason: '/game/level/:levelId must exist');
+      expect(levelIndex, isNot(-1), reason: '/game/level/:levelId must exist');
       expect(genericIndex, isNot(-1), reason: '/game/:mode must exist');
       expect(levelIndex, lessThan(genericIndex),
-          reason:
-              '/game/level/:levelId must come BEFORE /game/:mode');
+          reason: '/game/level/:levelId must come BEFORE /game/:mode');
     });
 
     test('/game/duel is defined before /game/:mode', () {
@@ -194,8 +192,7 @@ void main() {
       final duelIndex = paths.indexOf('/game/duel');
 
       expect(levelIndex, lessThan(duelIndex),
-          reason:
-              '/game/level/:levelId should come before /game/duel');
+          reason: '/game/level/:levelId should come before /game/duel');
     });
   });
 
@@ -246,8 +243,7 @@ void main() {
       expect(find.text('matched:/game/duel'), findsOneWidget);
     });
 
-    testWidgets('/game/classic matches /game/:mode pattern',
-        (tester) async {
+    testWidgets('/game/classic matches /game/:mode pattern', (tester) async {
       final router = _buildProbeRouter();
       router.go('/game/classic');
 
@@ -267,8 +263,7 @@ void main() {
       expect(find.text('matched:/game/:mode'), findsOneWidget);
     });
 
-    testWidgets('/game/colorChef matches /game/:mode pattern',
-        (tester) async {
+    testWidgets('/game/colorChef matches /game/:mode pattern', (tester) async {
       final router = _buildProbeRouter();
       router.go('/game/colorChef');
 
@@ -278,8 +273,7 @@ void main() {
       expect(find.text('matched:/game/:mode'), findsOneWidget);
     });
 
-    testWidgets('/game/timeTrial matches /game/:mode pattern',
-        (tester) async {
+    testWidgets('/game/timeTrial matches /game/:mode pattern', (tester) async {
       final router = _buildProbeRouter();
       router.go('/game/timeTrial');
 

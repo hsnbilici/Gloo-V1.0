@@ -313,7 +313,8 @@ void main() {
     });
 
     test('generateBotMatchSeed returns different values', () {
-      final seeds = List.generate(10, (_) => MatchmakingManager.generateBotMatchSeed());
+      final seeds =
+          List.generate(10, (_) => MatchmakingManager.generateBotMatchSeed());
       // Secure random ile 10 cagri arasinda en az 2 farkli deger olmali
       expect(seeds.toSet().length, greaterThan(1));
     });

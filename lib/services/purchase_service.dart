@@ -88,19 +88,23 @@ class PurchaseService {
       _subscription = _iap.purchaseStream.listen(
         _handlePurchaseUpdate,
         onDone: () => _subscription?.cancel(),
-        onError: (error) { if (kDebugMode) debugPrint('PurchaseService: stream error $error'); },
+        onError: (error) {
+          if (kDebugMode) debugPrint('PurchaseService: stream error $error');
+        },
       );
 
       // Ürünleri yükle
       final response = await _iap.queryProductDetails(allProductIds);
       if (response.notFoundIDs.isNotEmpty) {
-        if (kDebugMode) debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
+        if (kDebugMode)
+          debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
       }
       for (final product in response.productDetails) {
         _products[product.id] = product;
       }
 
-      if (kDebugMode) debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
+      if (kDebugMode)
+        debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
     } catch (e) {
       if (kDebugMode) debugPrint('PurchaseService: initialize error: $e');
     }
@@ -168,7 +172,8 @@ class PurchaseService {
   /// Network hatasinda graceful degradation: yerel olarak ekler, flag'ler.
   Future<void> _verifyAndUnlock(PurchaseDetails purchase) async {
     final repo = RemoteRepository();
-    final platform = defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
+    final platform =
+        defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
     final receipt = purchase.verificationData.serverVerificationData;
 
     final result = await repo.verifyPurchase(

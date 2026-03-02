@@ -201,10 +201,10 @@ class GameDuelController {
     }
 
     ref.read(analyticsServiceProvider).logPvpResult(
-      outcome: outcome.name,
-      eloChange: eloChange,
-      isBot: isBot,
-    );
+          outcome: outcome.name,
+          eloChange: eloChange,
+          isBot: isBot,
+        );
 
     final result = DuelResult(
       outcome: outcome,

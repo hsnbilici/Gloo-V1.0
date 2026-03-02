@@ -69,9 +69,9 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
 
       // Backend sync (fire-and-forget)
       ref.read(remoteRepositoryProvider).saveMetaState(
-        characterState: _character.toMap(),
-        gelEnergy: _resources.energy,
-      );
+            characterState: _character.toMap(),
+            gelEnergy: _resources.energy,
+          );
     }
   }
 

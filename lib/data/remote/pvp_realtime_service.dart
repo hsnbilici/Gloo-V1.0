@@ -115,9 +115,7 @@ class PvpRealtimeService {
           // Bu, iki oyuncunun ayni anda mac olusturmasini (duplicate match) onler.
           // Diger oyuncu presence sync ile maci algilayacak.
           if (myId.compareTo(otherId) < 0) {
-            _repository
-                .createPvpMatch(opponentId: otherId)
-                .then((result) {
+            _repository.createPvpMatch(opponentId: otherId).then((result) {
               if (result != null) {
                 _leaveMatchmakingQueue();
                 onMatch(MatchResult(
@@ -227,7 +225,8 @@ class PvpRealtimeService {
         'area_size': packet.areaSize,
       });
     } catch (e) {
-      if (kDebugMode) debugPrint('PvpRealtimeService.sendObstacle DB error: $e');
+      if (kDebugMode)
+        debugPrint('PvpRealtimeService.sendObstacle DB error: $e');
     }
   }
 

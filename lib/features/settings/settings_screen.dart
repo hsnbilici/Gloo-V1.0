@@ -89,8 +89,7 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kCyan,
                 onChanged: (_) => notifier.toggleMusic(),
               ),
-              SectionHeader(
-                  title: l.settingsSectionFeedback, color: kColorZen),
+              SectionHeader(title: l.settingsSectionFeedback, color: kColorZen),
               _ToggleTile(
                 label: l.settingsHaptics,
                 icon: Icons.vibration_rounded,
@@ -140,7 +139,8 @@ class SettingsScreen extends ConsumerWidget {
                 cancelLabel: l.settingsDeleteCancel,
                 onDelete: () async {
                   final repo = await ref.read(localRepositoryProvider.future);
-                  final success = await ref.read(remoteRepositoryProvider).deleteUserData();
+                  final success =
+                      await ref.read(remoteRepositoryProvider).deleteUserData();
                   if (!context.mounted) return;
                   if (success) {
                     await repo.clearAllData();

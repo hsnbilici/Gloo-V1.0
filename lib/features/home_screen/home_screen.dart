@@ -239,8 +239,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             subtitle: l.modeZenDesc,
                             color: kColorZen,
                             icon: Icons.spa_rounded,
-                            isLocked:
-                                !ref.watch(appSettingsProvider).glooPlus,
+                            isLocked: !ref.watch(appSettingsProvider).glooPlus,
                             lockLabel: 'GLOO+',
                             onTap: () {
                               if (ref.read(appSettingsProvider).glooPlus) {

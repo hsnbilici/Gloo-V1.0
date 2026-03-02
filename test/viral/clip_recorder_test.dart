@@ -164,7 +164,8 @@ void main() {
       recorder.stopRecording();
       // After async _finalizeClip with empty frames, state becomes idle
       // We need to pump async to let it complete
-      expect(recorder.state, isIn([RecordingState.processing, RecordingState.idle]));
+      expect(recorder.state,
+          isIn([RecordingState.processing, RecordingState.idle]));
     });
   });
 
@@ -176,7 +177,8 @@ void main() {
       expect(recorder.state, RecordingState.idle);
     });
 
-    test('captureFrame in buffering state does not throw (no boundary)', () async {
+    test('captureFrame in buffering state does not throw (no boundary)',
+        () async {
       final recorder = ClipRecorder();
       recorder.startRecording();
       // repaintKey has no context so boundary is null, should gracefully return

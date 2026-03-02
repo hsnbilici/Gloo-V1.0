@@ -31,7 +31,8 @@ class SupabaseConfig {
   /// `main()` içinde çağrılır — Firebase init'ten sonra.
   static Future<void> initialize() async {
     if (!isConfigured) {
-      if (kDebugMode) debugPrint('SupabaseConfig: placeholder credentials — skipping init');
+      if (kDebugMode)
+        debugPrint('SupabaseConfig: placeholder credentials — skipping init');
       return;
     }
 
@@ -56,9 +57,11 @@ class SupabaseConfig {
             'id': uid,
             'username': 'Player_${uid.substring(0, 6)}',
           });
-          if (kDebugMode) debugPrint('SupabaseConfig: profile created for $uid');
+          if (kDebugMode)
+            debugPrint('SupabaseConfig: profile created for $uid');
         } catch (e) {
-          if (kDebugMode) debugPrint('SupabaseConfig: profile creation failed ($e)');
+          if (kDebugMode)
+            debugPrint('SupabaseConfig: profile creation failed ($e)');
         }
       }
     }

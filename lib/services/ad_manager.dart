@@ -56,7 +56,8 @@ class AdManager {
       ? 'ca-app-pub-3940256099942544/1712485313' // iOS test rewarded
       : 'ca-app-pub-3940256099942544/5224354917'; // Android test rewarded
 
-  static bool get _isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get _isIOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   // Faz 4: Sabitler
   static const int _maxDailyInterstitial = 8;
@@ -111,7 +112,8 @@ class AdManager {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) => _interstitialAd = ad,
         onAdFailedToLoad: (error) {
-          if (kDebugMode) debugPrint('AdManager: interstitial load failed: $error');
+          if (kDebugMode)
+            debugPrint('AdManager: interstitial load failed: $error');
           _interstitialAd = null;
         },
       ),
@@ -300,7 +302,9 @@ class AdManager {
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) { if (kDebugMode) debugPrint('AdManager: banner loaded'); },
+        onAdLoaded: (_) {
+          if (kDebugMode) debugPrint('AdManager: banner loaded');
+        },
         onAdFailedToLoad: (ad, error) {
           if (kDebugMode) debugPrint('AdManager: banner failed: $error');
           ad.dispose();

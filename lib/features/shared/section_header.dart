@@ -38,8 +38,10 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectivePadding =
-        padding ?? (icon != null ? EdgeInsets.zero : const EdgeInsets.only(top: 28, bottom: 10));
+    final effectivePadding = padding ??
+        (icon != null
+            ? EdgeInsets.zero
+            : const EdgeInsets.only(top: 28, bottom: 10));
 
     return Padding(
       padding: effectivePadding,

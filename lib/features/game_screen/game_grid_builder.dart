@@ -173,8 +173,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                           key: ValueKey(placeFeedback!.key),
                           count: placeFeedback!.count,
                           color: placeFeedback!.color,
-                          onDismiss: () =>
-                              setState(() => placeFeedback = null),
+                          onDismiss: () => setState(() => placeFeedback = null),
                         ),
                       ),
                     ),
@@ -190,8 +189,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                         child: BombExplosionEffect(
                           key: ValueKey(bombExplosion!.key),
                           cellSize: cell,
-                          onDismiss: () =>
-                              setState(() => bombExplosion = null),
+                          onDismiss: () => setState(() => bombExplosion = null),
                         ),
                       ),
                     ),
@@ -242,10 +240,9 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
           shakeTimer?.cancel();
           shakeTimer = Timer(
             Duration(
-                milliseconds:
-                    shakeIntensity >= GameConstants.shakeAmplitudeEpic
-                        ? GameConstants.shakeDurationEpic
-                        : GameConstants.shakeDurationLarge),
+                milliseconds: shakeIntensity >= GameConstants.shakeAmplitudeEpic
+                    ? GameConstants.shakeDurationEpic
+                    : GameConstants.shakeDurationLarge),
             () {
               if (mounted) setState(() => shakeIntensity = 0.0);
             },

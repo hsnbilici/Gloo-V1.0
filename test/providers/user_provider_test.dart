@@ -83,8 +83,7 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final classic =
-          await container.read(highScoreProvider('classic').future);
+      final classic = await container.read(highScoreProvider('classic').future);
       final timeTrial =
           await container.read(highScoreProvider('timeTrial').future);
       expect(classic, 1500);
@@ -98,8 +97,7 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      final classic =
-          await container.read(highScoreProvider('classic').future);
+      final classic = await container.read(highScoreProvider('classic').future);
       final zen = await container.read(highScoreProvider('zen').future);
       expect(classic, 2000);
       expect(zen, 0);

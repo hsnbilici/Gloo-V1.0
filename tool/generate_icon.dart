@@ -66,12 +66,11 @@ img.Image _generateAppIcon(int size) {
   _drawGelBlob(image, center, center, size * 0.28, kCyanR, kCyanG, kCyanB);
 
   // 4) Ic parlama — daha kucuk, daha parlak glow
-  _drawGlow(
-      image, center, center * 0.92, size * 0.18, 255, 255, 255, 0.12);
+  _drawGlow(image, center, center * 0.92, size * 0.18, 255, 255, 255, 0.12);
 
   // 5) Specular highlight — blob'un ust kisminda beyaz parlama
-  _drawHighlight(image, center - size * 0.06, center - size * 0.12,
-      size * 0.08, size * 0.04);
+  _drawHighlight(image, center - size * 0.06, center - size * 0.12, size * 0.08,
+      size * 0.04);
 
   return image;
 }
@@ -97,12 +96,11 @@ img.Image _generateForeground(int size) {
   _drawGelBlob(image, center, center, size * 0.22, kCyanR, kCyanG, kCyanB);
 
   // Ic parlama
-  _drawGlow(
-      image, center, center * 0.94, size * 0.14, 255, 255, 255, 0.10);
+  _drawGlow(image, center, center * 0.94, size * 0.14, 255, 255, 255, 0.10);
 
   // Specular highlight
-  _drawHighlight(image, center - size * 0.04, center - size * 0.09,
-      size * 0.06, size * 0.03);
+  _drawHighlight(image, center - size * 0.04, center - size * 0.09, size * 0.06,
+      size * 0.03);
 
   return image;
 }

@@ -36,7 +36,8 @@ void main() {
       expect(result, isEmpty);
     });
 
-    test('getGlobalLeaderboard with weekly returns empty list when not configured',
+    test(
+        'getGlobalLeaderboard with weekly returns empty list when not configured',
         () async {
       final result = await repo.getGlobalLeaderboard(
         mode: 'timetrial',
@@ -62,7 +63,8 @@ void main() {
       // Hata atilmadan tamamlanmasi beklenir
     });
 
-    test('ensureProfile without username returns immediately when not configured',
+    test(
+        'ensureProfile without username returns immediately when not configured',
         () async {
       await repo.ensureProfile();
       // Hata atilmadan tamamlanmasi beklenir
@@ -140,7 +142,8 @@ void main() {
       // Hata atilmadan tamamlanmasi beklenir
     });
 
-    test('saveMetaState with all parameters returns immediately when not configured',
+    test(
+        'saveMetaState with all parameters returns immediately when not configured',
         () async {
       await repo.saveMetaState(
         islandState: {'island_1': 2},
