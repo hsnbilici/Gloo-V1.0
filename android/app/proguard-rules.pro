@@ -19,5 +19,8 @@
 # FFmpeg Kit
 -keep class com.arthenica.ffmpegkit.** { *; }
 
+# Google Play Core (Flutter engine deferred components — optional dep)
+-dontwarn com.google.android.play.core.**
+
 # Keep native methods
 -keepclasseswithmembernames class * { native <methods>; }
