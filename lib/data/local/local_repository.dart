@@ -332,6 +332,16 @@ class LocalRepository {
     await _prefs.setString('daily_quest_date', date);
   }
 
+  // ─── IAP Pending Verification ───────────────────────────────────────────
+
+  List<String> getPendingVerification() {
+    return _prefs.getStringList('pending_verification') ?? [];
+  }
+
+  Future<void> savePendingVerification(List<String> productIds) async {
+    await _prefs.setStringList('pending_verification', productIds);
+  }
+
   // ─── Redeem Code ────────────────────────────────────────────────────────
 
   List<String> getRedeemedCodes() {

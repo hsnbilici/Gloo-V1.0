@@ -103,7 +103,7 @@ class ChefLevelOverlay extends ConsumerWidget {
                       const SizedBox(height: 12),
                       // Hedef renk adı
                       Text(
-                        targetColor.displayName,
+                        l.colorName(targetColor),
                         style: TextStyle(
                           color: color,
                           fontSize: 16,

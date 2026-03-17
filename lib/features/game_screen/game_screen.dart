@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
+import '../../data/local/local_repository.dart';
 import '../../core/utils/near_miss_detector.dart';
 import '../../game/levels/level_data.dart';
 import '../../game/shapes/gel_shape.dart';
@@ -255,7 +256,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               top: topPadding + 52,
               right: 16,
               child: RewardBadge(
-                label: 'Kurtarilabilir!',
+                label: ref.read(stringsProvider).toastRescueBadge,
                 icon: Icons.shield_rounded,
                 color: const Color(0xFFFF7B3C),
                 onTap: () {
@@ -263,7 +264,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     onRewarded: () {
                       game.powerUpSystem.grantFreePowerUp(PowerUpType.bomb);
                       setState(() => showNearMissRescueBadge = false);
-                      showToast('Bomb kazandin!');
+                      showToast(ref.read(stringsProvider).toastBombEarned);
                     },
                   );
                 },
@@ -274,7 +275,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               top: topPadding + 52,
               left: 16,
               child: RewardBadge(
-                label: 'Rekoruna yakinsin!',
+                label: ref.read(stringsProvider).toastHighScoreBadge,
                 icon: Icons.star_rounded,
                 color: const Color(0xFFFFD700),
                 onTap: () {
@@ -282,7 +283,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     onRewarded: () {
                       game.continueWithExtraMoves(5);
                       setState(() => showHighScoreBadge = false);
-                      showToast('+5 Hamle!');
+                      showToast(ref.read(stringsProvider).toastExtraMoves);
                     },
                   );
                 },

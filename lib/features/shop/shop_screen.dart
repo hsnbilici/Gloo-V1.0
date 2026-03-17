@@ -129,6 +129,80 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
     });
   }
 
+  List<Widget> _buildProductTiles(dynamic l) {
+    final purchase = ref.read(purchaseServiceProvider);
+    final products = [
+      (
+        id: PurchaseService.kSoundCrystal,
+        icon: Icons.graphic_eq_rounded,
+        label: l.shopSoundCrystal as String,
+        desc: l.shopSoundCrystalDesc as String,
+        fallback: '\$1.99',
+        color: kCyan,
+        delay: 180,
+        isFeatured: false,
+        section: null as ({String title, Color color})?,
+      ),
+      (
+        id: PurchaseService.kSoundForest,
+        icon: Icons.forest_rounded,
+        label: l.shopSoundForest as String,
+        desc: l.shopSoundForestDesc as String,
+        fallback: '\$1.99',
+        color: kCyan,
+        delay: 220,
+        isFeatured: false,
+        section: null,
+      ),
+      (
+        id: PurchaseService.kTexturePack,
+        icon: Icons.texture_rounded,
+        label: l.shopTexturePack as String,
+        desc: l.shopTexturePackDesc as String,
+        fallback: '\$2.99',
+        color: _kViolet,
+        delay: 280,
+        isFeatured: false,
+        section: (title: l.shopSectionTexturePacks as String, color: _kViolet),
+      ),
+      (
+        id: PurchaseService.kStarterPack,
+        icon: Icons.star_rounded,
+        label: l.shopStarterPack as String,
+        desc: l.shopStarterPackDesc as String,
+        fallback: '\$4.99',
+        color: _kGold,
+        delay: 340,
+        isFeatured: true,
+        section: null,
+      ),
+    ];
+
+    final widgets = <Widget>[];
+    for (final p in products) {
+      if (p.section != null) {
+        widgets.add(
+            SectionHeader(title: p.section!.title, color: p.section!.color));
+      }
+      widgets.add(
+        _ProductTile(
+          icon: p.icon,
+          label: p.label,
+          desc: p.desc,
+          price: purchase.priceOf(p.id, fallback: p.fallback),
+          color: p.color,
+          purchased: purchase.isPurchased(p.id),
+          onBuy: () => _buy(p.id),
+          isFeatured: p.isFeatured,
+        )
+            .animate(delay: Duration(milliseconds: p.delay))
+            .fadeIn(duration: 350.ms)
+            .slideY(begin: 0.08, end: 0, duration: 350.ms),
+      );
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
@@ -219,76 +293,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
 
               // ── Ses Paketleri ─────────────────────────────────────────
               SectionHeader(title: l.shopSectionSoundPacks, color: kCyan),
-              _ProductTile(
-                icon: Icons.graphic_eq_rounded,
-                label: l.shopSoundCrystal,
-                desc: l.shopSoundCrystalDesc,
-                price: ref
-                    .read(purchaseServiceProvider)
-                    .priceOf(PurchaseService.kSoundCrystal, fallback: '\$1.99'),
-                color: kCyan,
-                purchased: ref
-                    .read(purchaseServiceProvider)
-                    .isPurchased(PurchaseService.kSoundCrystal),
-                onBuy: () => _buy(PurchaseService.kSoundCrystal),
-              )
-                  .animate(delay: 180.ms)
-                  .fadeIn(duration: 350.ms)
-                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
-              _ProductTile(
-                icon: Icons.forest_rounded,
-                label: l.shopSoundForest,
-                desc: l.shopSoundForestDesc,
-                price: ref
-                    .read(purchaseServiceProvider)
-                    .priceOf(PurchaseService.kSoundForest, fallback: '\$1.99'),
-                color: kCyan,
-                purchased: ref
-                    .read(purchaseServiceProvider)
-                    .isPurchased(PurchaseService.kSoundForest),
-                onBuy: () => _buy(PurchaseService.kSoundForest),
-              )
-                  .animate(delay: 220.ms)
-                  .fadeIn(duration: 350.ms)
-                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
-              // ── Doku Paketleri ────────────────────────────────────────
-              SectionHeader(title: l.shopSectionTexturePacks, color: _kViolet),
-              _ProductTile(
-                icon: Icons.texture_rounded,
-                label: l.shopTexturePack,
-                desc: l.shopTexturePackDesc,
-                price: ref
-                    .read(purchaseServiceProvider)
-                    .priceOf(PurchaseService.kTexturePack, fallback: '\$2.99'),
-                color: _kViolet,
-                purchased: ref
-                    .read(purchaseServiceProvider)
-                    .isPurchased(PurchaseService.kTexturePack),
-                onBuy: () => _buy(PurchaseService.kTexturePack),
-              )
-                  .animate(delay: 280.ms)
-                  .fadeIn(duration: 350.ms)
-                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
-
-              // ── Starter Pack ──────────────────────────────────────────
-              _ProductTile(
-                icon: Icons.star_rounded,
-                label: l.shopStarterPack,
-                desc: l.shopStarterPackDesc,
-                price: ref
-                    .read(purchaseServiceProvider)
-                    .priceOf(PurchaseService.kStarterPack, fallback: '\$4.99'),
-                color: _kGold,
-                purchased: ref
-                    .read(purchaseServiceProvider)
-                    .isPurchased(PurchaseService.kStarterPack),
-                onBuy: () => _buy(PurchaseService.kStarterPack),
-                isFeatured: true,
-              )
-                  .animate(delay: 340.ms)
-                  .fadeIn(duration: 350.ms)
-                  .slideY(begin: 0.08, end: 0, duration: 350.ms),
+              // ── Doku Paketleri + Starter Pack ────────────────────────
+              ..._buildProductTiles(l),
 
               const SizedBox(height: 20),
 

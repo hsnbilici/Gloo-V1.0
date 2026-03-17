@@ -314,4 +314,46 @@ class StringsAr extends AppStrings {
   String get deleteDataSuccess => 'تم حذف بياناتك بنجاح';
   @override
   String get deleteDataError => 'تعذّر حذف بياناتك. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get toastRescueBadge => 'قابل للإنقاذ!';
+  @override
+  String get toastBombEarned => 'حصلت على قنبلة!';
+  @override
+  String get toastHighScoreBadge => 'قريب من رقمك القياسي!';
+  @override
+  String get toastExtraMoves => '+٥ حركات!';
+  @override
+  String get toastBombFailed => 'تعذر استخدام القنبلة';
+  @override
+  String get toastSelectShapeFirst => 'اختر شكلاً أولاً';
+  @override
+  String get toastBombSelectCenter => 'اختر مركز القنبلة';
+  @override
+  String get toastFrozen => 'تجميد ١٠ ثوانٍ!';
+
+  @override
+  String get colorRed => 'أحمر';
+  @override
+  String get colorYellow => 'أصفر';
+  @override
+  String get colorBlue => 'أزرق';
+  @override
+  String get colorOrange => 'برتقالي';
+  @override
+  String get colorGreen => 'أخضر';
+  @override
+  String get colorPurple => 'بنفسجي';
+  @override
+  String get colorPink => 'وردي';
+  @override
+  String get colorLightBlue => 'أزرق فاتح';
+  @override
+  String get colorLime => 'ليموني';
+  @override
+  String get colorMaroon => 'كستنائي';
+  @override
+  String get colorBrown => 'بني';
+  @override
+  String get colorWhite => 'أبيض';
 }

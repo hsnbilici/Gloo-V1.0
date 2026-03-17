@@ -134,6 +134,7 @@ class CollectionScreen extends ConsumerWidget {
                     return _ColorCard(
                       gelColor: gelColor,
                       isDiscovered: isDiscovered,
+                      colorName: l.colorName(gelColor),
                       discoveredLabel: l.collectionDiscovered,
                       lockedLabel: l.collectionLocked,
                       recipe: recipe,
@@ -191,6 +192,7 @@ class _ColorCard extends StatelessWidget {
   const _ColorCard({
     required this.gelColor,
     required this.isDiscovered,
+    required this.colorName,
     required this.discoveredLabel,
     required this.lockedLabel,
     required this.recipe,
@@ -198,6 +200,7 @@ class _ColorCard extends StatelessWidget {
 
   final GelColor gelColor;
   final bool isDiscovered;
+  final String colorName;
   final String discoveredLabel;
   final String lockedLabel;
   final (GelColor, GelColor)? recipe;
@@ -267,7 +270,7 @@ class _ColorCard extends StatelessWidget {
           const SizedBox(height: 10),
           // Renk adı
           Text(
-            isDiscovered ? gelColor.displayName : '???',
+            isDiscovered ? colorName : '???',
             style: TextStyle(
               color: isDiscovered ? Colors.white : kMuted,
               fontSize: 13,

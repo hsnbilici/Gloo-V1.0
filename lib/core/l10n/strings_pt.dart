@@ -312,4 +312,46 @@ class StringsPt extends AppStrings {
   @override
   String get deleteDataError =>
       'Não foi possível excluir seus dados. Tente novamente.';
+
+  @override
+  String get toastRescueBadge => 'Resgatável!';
+  @override
+  String get toastBombEarned => 'Bomba ganha!';
+  @override
+  String get toastHighScoreBadge => 'Perto do recorde!';
+  @override
+  String get toastExtraMoves => '+5 Jogadas!';
+  @override
+  String get toastBombFailed => 'Bomba não pôde ser usada';
+  @override
+  String get toastSelectShapeFirst => 'Selecione uma forma primeiro';
+  @override
+  String get toastBombSelectCenter => 'Selecione o centro da bomba';
+  @override
+  String get toastFrozen => 'Congelado 10s!';
+
+  @override
+  String get colorRed => 'Vermelho';
+  @override
+  String get colorYellow => 'Amarelo';
+  @override
+  String get colorBlue => 'Azul';
+  @override
+  String get colorOrange => 'Laranja';
+  @override
+  String get colorGreen => 'Verde';
+  @override
+  String get colorPurple => 'Roxo';
+  @override
+  String get colorPink => 'Rosa';
+  @override
+  String get colorLightBlue => 'Azul Claro';
+  @override
+  String get colorLime => 'Lima';
+  @override
+  String get colorMaroon => 'Bordô';
+  @override
+  String get colorBrown => 'Marrom';
+  @override
+  String get colorWhite => 'Branco';
 }

@@ -4,11 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:gloo/core/constants/color_constants.dart';
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/features/game_screen/chef_level_overlay.dart';
 import 'package:gloo/features/game_screen/game_dialogs.dart';
 import 'package:gloo/features/game_screen/game_over_overlay.dart';
 import 'package:gloo/features/game_screen/level_complete_overlay.dart';
 import 'package:gloo/game/world/game_world.dart';
+import 'package:gloo/providers/locale_provider.dart';
 
 // All overlay widgets use flutter_animate, which creates non-settling timers.
 // We use pump() with a sufficient duration instead of pumpAndSettle().
@@ -151,6 +153,9 @@ void main() {
       bool isAllComplete = false,
     }) {
       return ProviderScope(
+        overrides: [
+          stringsProvider.overrideWithValue(StringsEn()),
+        ],
         child: MaterialApp(
           home: ChefLevelOverlay(
             completedLevelIndex: completedLevelIndex,
@@ -172,7 +177,7 @@ void main() {
     testWidgets('shows target color display name', (tester) async {
       await tester.pumpWidget(buildChefOverlay(targetColor: GelColor.orange));
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Turuncu'), findsOneWidget);
+      expect(find.text('Orange'), findsOneWidget);
     });
 
     testWidgets('shows level number badge', (tester) async {

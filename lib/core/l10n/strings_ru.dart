@@ -317,4 +317,46 @@ class StringsRu extends AppStrings {
   @override
   String get deleteDataError =>
       'Не удалось удалить ваши данные. Пожалуйста, попробуйте снова.';
+
+  @override
+  String get toastRescueBadge => 'Можно спасти!';
+  @override
+  String get toastBombEarned => 'Бомба получена!';
+  @override
+  String get toastHighScoreBadge => 'Близко к рекорду!';
+  @override
+  String get toastExtraMoves => '+5 Ходов!';
+  @override
+  String get toastBombFailed => 'Бомба не может быть использована';
+  @override
+  String get toastSelectShapeFirst => 'Сначала выберите фигуру';
+  @override
+  String get toastBombSelectCenter => 'Выберите центр бомбы';
+  @override
+  String get toastFrozen => 'Заморожено на 10с!';
+
+  @override
+  String get colorRed => 'Красный';
+  @override
+  String get colorYellow => 'Жёлтый';
+  @override
+  String get colorBlue => 'Синий';
+  @override
+  String get colorOrange => 'Оранжевый';
+  @override
+  String get colorGreen => 'Зелёный';
+  @override
+  String get colorPurple => 'Фиолетовый';
+  @override
+  String get colorPink => 'Розовый';
+  @override
+  String get colorLightBlue => 'Голубой';
+  @override
+  String get colorLime => 'Лайм';
+  @override
+  String get colorMaroon => 'Бордовый';
+  @override
+  String get colorBrown => 'Коричневый';
+  @override
+  String get colorWhite => 'Белый';
 }

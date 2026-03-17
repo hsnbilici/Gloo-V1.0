@@ -313,4 +313,46 @@ class StringsFr extends AppStrings {
   @override
   String get deleteDataError =>
       'Impossible de supprimer vos données. Veuillez réessayer.';
+
+  @override
+  String get toastRescueBadge => 'Sauvable !';
+  @override
+  String get toastBombEarned => 'Bombe gagnée !';
+  @override
+  String get toastHighScoreBadge => 'Proche du record !';
+  @override
+  String get toastExtraMoves => '+5 Coups !';
+  @override
+  String get toastBombFailed => 'Impossible d\'utiliser la bombe';
+  @override
+  String get toastSelectShapeFirst => 'Sélectionnez d\'abord une forme';
+  @override
+  String get toastBombSelectCenter => 'Sélectionnez le centre de la bombe';
+  @override
+  String get toastFrozen => 'Gelé 10s !';
+
+  @override
+  String get colorRed => 'Rouge';
+  @override
+  String get colorYellow => 'Jaune';
+  @override
+  String get colorBlue => 'Bleu';
+  @override
+  String get colorOrange => 'Orange';
+  @override
+  String get colorGreen => 'Vert';
+  @override
+  String get colorPurple => 'Violet';
+  @override
+  String get colorPink => 'Rose';
+  @override
+  String get colorLightBlue => 'Bleu Clair';
+  @override
+  String get colorLime => 'Citron Vert';
+  @override
+  String get colorMaroon => 'Bordeaux';
+  @override
+  String get colorBrown => 'Marron';
+  @override
+  String get colorWhite => 'Blanc';
 }

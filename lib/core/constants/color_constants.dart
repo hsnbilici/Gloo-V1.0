@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../game/world/game_world.dart';
-
 enum GelColor {
   red,
   yellow,
@@ -47,20 +45,6 @@ enum GelColor {
         GelColor.white => const Color(0xFFF0F0F0),
       };
 
-  String get displayName => switch (this) {
-        GelColor.red => 'Kırmızı',
-        GelColor.yellow => 'Sarı',
-        GelColor.blue => 'Mavi',
-        GelColor.orange => 'Turuncu',
-        GelColor.green => 'Yeşil',
-        GelColor.purple => 'Mor',
-        GelColor.pink => 'Pembe',
-        GelColor.lightBlue => 'Açık Mavi',
-        GelColor.lime => 'Lime',
-        GelColor.maroon => 'Bordo',
-        GelColor.brown => 'Kahverengi',
-        GelColor.white => 'Beyaz',
-      };
 }
 
 /// Renk sentezi tablosu — iki jel birleştiğinde hangi rengi üretir
@@ -104,16 +88,3 @@ const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
 const Color kColorZen = Color(0xFF9D5CFF);
 
-// ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
-// Tek tanım noktası: game_overlay, game_over_overlay, game_screen bu map'i
-// kullanır; lokal modeColor tanımı yapılmaz.
-
-const Map<GameMode, Color> kModeColors = {
-  GameMode.classic: kColorClassic,
-  GameMode.colorChef: kColorChef,
-  GameMode.timeTrial: kColorTimeTrial,
-  GameMode.zen: kColorZen,
-  GameMode.daily: kCyan,
-  GameMode.level: kColorChef,
-  GameMode.duel: kColorClassic,
-};

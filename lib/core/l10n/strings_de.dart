@@ -316,4 +316,46 @@ class StringsDe extends AppStrings {
   @override
   String get deleteDataError =>
       'Ihre Daten konnten nicht gelöscht werden. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get toastRescueBadge => 'Rettbar!';
+  @override
+  String get toastBombEarned => 'Bombe verdient!';
+  @override
+  String get toastHighScoreBadge => 'Nahe am Rekord!';
+  @override
+  String get toastExtraMoves => '+5 Züge!';
+  @override
+  String get toastBombFailed => 'Bombe konnte nicht verwendet werden';
+  @override
+  String get toastSelectShapeFirst => 'Wähle zuerst eine Form';
+  @override
+  String get toastBombSelectCenter => 'Bombenzentrum wählen';
+  @override
+  String get toastFrozen => '10s eingefroren!';
+
+  @override
+  String get colorRed => 'Rot';
+  @override
+  String get colorYellow => 'Gelb';
+  @override
+  String get colorBlue => 'Blau';
+  @override
+  String get colorOrange => 'Orange';
+  @override
+  String get colorGreen => 'Grün';
+  @override
+  String get colorPurple => 'Lila';
+  @override
+  String get colorPink => 'Rosa';
+  @override
+  String get colorLightBlue => 'Hellblau';
+  @override
+  String get colorLime => 'Limette';
+  @override
+  String get colorMaroon => 'Kastanienbraun';
+  @override
+  String get colorBrown => 'Braun';
+  @override
+  String get colorWhite => 'Weiß';
 }

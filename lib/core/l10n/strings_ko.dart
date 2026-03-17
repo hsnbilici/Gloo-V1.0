@@ -311,4 +311,46 @@ class StringsKo extends AppStrings {
   String get deleteDataSuccess => '데이터가 성공적으로 삭제되었습니다';
   @override
   String get deleteDataError => '데이터를 삭제할 수 없습니다. 다시 시도해 주세요.';
+
+  @override
+  String get toastRescueBadge => '구출 가능!';
+  @override
+  String get toastBombEarned => '폭탄 획득!';
+  @override
+  String get toastHighScoreBadge => '기록에 가까워요!';
+  @override
+  String get toastExtraMoves => '+5 수!';
+  @override
+  String get toastBombFailed => '폭탄을 사용할 수 없습니다';
+  @override
+  String get toastSelectShapeFirst => '먼저 모양을 선택하세요';
+  @override
+  String get toastBombSelectCenter => '폭탄 중심을 선택하세요';
+  @override
+  String get toastFrozen => '10초 동결!';
+
+  @override
+  String get colorRed => '빨강';
+  @override
+  String get colorYellow => '노랑';
+  @override
+  String get colorBlue => '파랑';
+  @override
+  String get colorOrange => '주황';
+  @override
+  String get colorGreen => '초록';
+  @override
+  String get colorPurple => '보라';
+  @override
+  String get colorPink => '분홍';
+  @override
+  String get colorLightBlue => '하늘색';
+  @override
+  String get colorLime => '라임';
+  @override
+  String get colorMaroon => '밤색';
+  @override
+  String get colorBrown => '갈색';
+  @override
+  String get colorWhite => '흰색';
 }

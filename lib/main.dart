@@ -8,7 +8,11 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'app/app.dart';
+import 'core/constants/color_constants.dart';
+import 'data/local/local_repository.dart';
 import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
 import 'services/ad_manager.dart';
@@ -59,6 +63,19 @@ Future<void> main() async {
       // Ag baglantisi yok veya servis down — uygulama calismaya devam eder
     }
 
+    // Onceki oturumdan kalan dogrulanamamis IAP'leri yeniden dogrula
+    // ve suresi dolmus abonelikleri temizle
+    if (!kIsWeb) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final localRepo = LocalRepository(prefs);
+        await PurchaseService().loadPendingVerifications(localRepo);
+        await PurchaseService().syncLocalProducts(localRepo);
+      } catch (_) {
+        // Network hatasi — sonraki baslatmada tekrar denenir
+      }
+    }
+
     await SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -75,7 +92,7 @@ Future<void> main() async {
     // Widget build hatalarinda kullanici dostu hata ekrani
     ErrorWidget.builder = (FlutterErrorDetails details) {
       return Container(
-        color: const Color(0xFF010C14), // kBgDark
+        color: kBgDark,
         padding: const EdgeInsets.all(24),
         alignment: Alignment.center,
         child: Column(

@@ -310,4 +310,46 @@ class StringsJa extends AppStrings {
   String get deleteDataSuccess => 'データが正常に削除されました';
   @override
   String get deleteDataError => 'データを削除できませんでした。もう一度お試しください。';
+
+  @override
+  String get toastRescueBadge => '救出可能！';
+  @override
+  String get toastBombEarned => 'ボムを獲得！';
+  @override
+  String get toastHighScoreBadge => '記録に近い！';
+  @override
+  String get toastExtraMoves => '+5手！';
+  @override
+  String get toastBombFailed => 'ボムを使用できません';
+  @override
+  String get toastSelectShapeFirst => '先に形を選んでください';
+  @override
+  String get toastBombSelectCenter => 'ボムの中心を選択';
+  @override
+  String get toastFrozen => '10秒凍結！';
+
+  @override
+  String get colorRed => '赤';
+  @override
+  String get colorYellow => '黄';
+  @override
+  String get colorBlue => '青';
+  @override
+  String get colorOrange => 'オレンジ';
+  @override
+  String get colorGreen => '緑';
+  @override
+  String get colorPurple => '紫';
+  @override
+  String get colorPink => 'ピンク';
+  @override
+  String get colorLightBlue => '水色';
+  @override
+  String get colorLime => 'ライム';
+  @override
+  String get colorMaroon => 'えんじ';
+  @override
+  String get colorBrown => '茶';
+  @override
+  String get colorWhite => '白';
 }

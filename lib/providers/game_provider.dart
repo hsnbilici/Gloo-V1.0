@@ -75,15 +75,22 @@ class GameNotifier extends StateNotifier<GameState> {
       state = state.copyWith(filledCells: filledCells);
   void updateStatus(GameStatus status) =>
       state = state.copyWith(status: status);
-  void updateRemainingSeconds(int seconds) =>
-      state = state.copyWith(remainingSeconds: seconds);
+  void updateRemainingSeconds(int seconds) {
+    if (state.remainingSeconds == seconds) return;
+    state = state.copyWith(remainingSeconds: seconds);
+  }
 
-  void updateChef(int progress, int required) =>
-      state = state.copyWith(chefProgress: progress, chefRequired: required);
+  void updateChef(int progress, int required) {
+    if (state.chefProgress == progress && state.chefRequired == required) return;
+    state = state.copyWith(chefProgress: progress, chefRequired: required);
+  }
 
   // Faz 4
   void updateGelOzu(int value) => state = state.copyWith(gelOzu: value);
-  void updateMovesUsed(int value) => state = state.copyWith(movesUsed: value);
+  void updateMovesUsed(int value) {
+    if (state.movesUsed == value) return;
+    state = state.copyWith(movesUsed: value);
+  }
   void updateLevel(int level, int targetScore) => state =
       state.copyWith(currentLevel: level, levelTargetScore: targetScore);
   void updateElo(int value) => state = state.copyWith(elo: value);

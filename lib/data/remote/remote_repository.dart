@@ -23,6 +23,19 @@ class RemoteRepository {
   bool get isConfigured =>
       SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
 
+  /// Basit retry mekanizmasi — network hatasinda exponential backoff ile tekrar dener.
+  Future<T?> _retry<T>(Future<T> Function() action, {int maxAttempts = 3}) async {
+    for (var i = 0; i < maxAttempts; i++) {
+      try {
+        return await action();
+      } catch (e) {
+        if (i == maxAttempts - 1) rethrow;
+        await Future<void>.delayed(Duration(milliseconds: 500 * (i + 1)));
+      }
+    }
+    return null;
+  }
+
   // ── Skor kaydet ─────────────────────────────────────────────────────────
   /// Skoru sunucu tarafinda dogrulayan RPC fonksiyonu uzerinden gonderir.
   /// Mod bazli maks skor siniri sunucu tarafinda uygulanir.
@@ -34,10 +47,10 @@ class RemoteRepository {
     final uid = _userId;
     if (uid == null) return;
     try {
-      final result = await _client.rpc('submit_score', params: {
-        'p_mode': mode,
-        'p_score': value,
-      });
+      final result = await _retry(() => _client.rpc('submit_score', params: {
+            'p_mode': mode,
+            'p_score': value,
+          }));
 
       if (result is Map && result['error'] != null) {
         if (kDebugMode)
@@ -217,10 +230,10 @@ class RemoteRepository {
     final uid = _userId;
     if (uid == null) return;
     try {
-      await _client.rpc('submit_pvp_score', params: {
-        'p_match_id': matchId,
-        'p_score': score,
-      });
+      await _retry(() => _client.rpc('submit_pvp_score', params: {
+            'p_match_id': matchId,
+            'p_score': score,
+          }));
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.submitPvpResult error: $e');
     }

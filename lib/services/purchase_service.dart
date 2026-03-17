@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+import '../data/local/local_repository.dart';
 import '../data/remote/remote_repository.dart';
 
 /// Uygulama içi satın alma (IAP) ve Gloo+ abonelik yöneticisi.
@@ -53,6 +54,7 @@ class PurchaseService {
   bool _available = false;
   final Map<String, ProductDetails> _products = {};
   final Set<String> _purchasedIds = {};
+  LocalRepository? _localRepo;
 
   bool get isAvailable => _available;
   Map<String, ProductDetails> get products => Map.unmodifiable(_products);
@@ -105,6 +107,10 @@ class PurchaseService {
 
       if (kDebugMode)
         debugPrint('PurchaseService: ${_products.length} ürün yüklendi');
+
+      // Önceki satın alımları ve aktif abonelikleri geri yükle.
+      // Süresi dolmuş abonelikler restore edilmez → _purchasedIds'e eklenmez.
+      await _iap.restorePurchases();
     } catch (e) {
       if (kDebugMode) debugPrint('PurchaseService: initialize error: $e');
     }
@@ -136,11 +142,71 @@ class PurchaseService {
   }
 
   // Sunucu dogrulamasi beklemeden eklenen urunler (network hatasi durumunda).
-  // Sonraki baslatmada tekrar dogrulanmali.
+  // SharedPreferences'a persist edilir, sonraki baslatmada tekrar dogrulanir.
   final Set<String> _pendingVerification = {};
 
   /// Network hatasi nedeniyle dogrulanamamis urunler.
   Set<String> get pendingVerification => Set.unmodifiable(_pendingVerification);
+
+  /// Önceki oturumdan kalan doğrulanamamış ürünleri yükler ve yeniden doğrular.
+  Future<void> loadPendingVerifications(LocalRepository localRepo) async {
+    _localRepo = localRepo;
+    final pending = localRepo.getPendingVerification();
+    if (pending.isEmpty) return;
+    _pendingVerification.addAll(pending);
+    if (kDebugMode) {
+      debugPrint('PurchaseService: retrying ${pending.length} pending verifications');
+    }
+    final repo = RemoteRepository();
+    for (final productId in List<String>.of(pending)) {
+      final result = await repo.verifyPurchase(
+        platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
+        receipt: '',
+        productId: productId,
+      );
+      if (result == true) {
+        _pendingVerification.remove(productId);
+        if (kDebugMode) {
+          debugPrint('PurchaseService: retry verified $productId');
+        }
+      } else if (result == false) {
+        // Sunucu reddetti — pending'den cikar, urunu kaldir
+        _pendingVerification.remove(productId);
+        _purchasedIds.remove(productId);
+        if (kDebugMode) {
+          debugPrint('PurchaseService: retry rejected $productId');
+        }
+      }
+      // result == null (network hatasi) → pending'de birak
+    }
+    await _persistPending();
+    if (_pendingVerification.length != pending.length) {
+      onPurchaseUpdate?.call(_purchasedIds);
+    }
+  }
+
+  Future<void> _persistPending() async {
+    await _localRepo?.savePendingVerification(_pendingVerification.toList());
+  }
+
+  /// Yerel depodan yüklenen ürünleri mevcut durum ile senkronize eder.
+  /// Süresi dolmuş abonelikler (restore edilmemiş) yerel depodan kaldırılır.
+  Future<void> syncLocalProducts(LocalRepository localRepo) async {
+    final saved = localRepo.getUnlockedProducts();
+    if (saved.isEmpty) return;
+    // Kayıtlı ama artık aktif olmayan abonelikleri kaldır
+    final expired = saved.where(
+      (id) => _kSubscriptionIds.contains(id) && !_purchasedIds.contains(id),
+    ).toList();
+    if (expired.isNotEmpty) {
+      final updated = saved.where((id) => !expired.contains(id)).toList();
+      await localRepo.addUnlockedProducts(updated);
+      if (kDebugMode) {
+        debugPrint('PurchaseService: expired subscriptions removed: $expired');
+      }
+      onPurchaseUpdate?.call(_purchasedIds);
+    }
+  }
 
   // ── Satın alma stream handler ─────────────────────────────────────────
   void _handlePurchaseUpdate(List<PurchaseDetails> purchaseDetailsList) {
@@ -186,6 +252,7 @@ class PurchaseService {
       // Sunucu dogruladi
       _addProduct(purchase.productID);
       _pendingVerification.remove(purchase.productID);
+      await _persistPending();
       if (kDebugMode) {
         debugPrint('PurchaseService: server verified ${purchase.productID}');
       }
@@ -193,6 +260,7 @@ class PurchaseService {
       // Network hatasi — graceful degradation: yerel olarak ekle, flag'le
       _addProduct(purchase.productID);
       _pendingVerification.add(purchase.productID);
+      await _persistPending();
       if (kDebugMode) {
         debugPrint(
           'PurchaseService: network error, locally added ${purchase.productID}',

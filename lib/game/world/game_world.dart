@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/utils/near_miss_detector.dart';
@@ -29,6 +31,17 @@ enum GameMode {
     );
   }
 }
+
+// ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
+const Map<GameMode, Color> kModeColors = {
+  GameMode.classic: kColorClassic,
+  GameMode.colorChef: kColorChef,
+  GameMode.timeTrial: kColorTimeTrial,
+  GameMode.zen: kColorZen,
+  GameMode.daily: kCyan,
+  GameMode.level: kColorChef,
+  GameMode.duel: kColorClassic,
+};
 
 enum GameStatus { idle, playing, paused, gameOver, frozen }
 

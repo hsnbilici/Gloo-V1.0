@@ -90,7 +90,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
         });
       } else {
         setState(() => activePowerUpMode = null);
-        showToast('Bomba kullanilamadi');
+        showToast(ref.read(stringsProvider).toastBombFailed);
       }
       return;
     }
@@ -161,7 +161,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     switch (type) {
       case PowerUpType.rotate:
         if (selectedSlot == null || hand[selectedSlot!] == null) {
-          showToast('Once bir sekil sec');
+          showToast(ref.read(stringsProvider).toastSelectShapeFirst);
           return;
         }
         final (shape, color) = hand[selectedSlot!]!;
@@ -183,7 +183,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
           return;
         }
         setState(() => activePowerUpMode = PowerUpType.bomb);
-        showToast('Bomba merkezi sec');
+        showToast(ref.read(stringsProvider).toastBombSelectCenter);
 
       case PowerUpType.undo:
         final result = game.useUndo();
@@ -196,7 +196,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       case PowerUpType.freeze:
         final success = game.useFreeze();
         if (success) {
-          showToast('10sn donduruldu!');
+          showToast(ref.read(stringsProvider).toastFrozen);
         }
 
       case PowerUpType.peek:

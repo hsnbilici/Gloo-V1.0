@@ -310,4 +310,46 @@ class StringsEn extends AppStrings {
   @override
   String get deleteDataError =>
       'Your data could not be deleted. Please try again.';
+
+  @override
+  String get toastRescueBadge => 'Rescuable!';
+  @override
+  String get toastBombEarned => 'Bomb earned!';
+  @override
+  String get toastHighScoreBadge => 'Near your record!';
+  @override
+  String get toastExtraMoves => '+5 Moves!';
+  @override
+  String get toastBombFailed => 'Bomb could not be used';
+  @override
+  String get toastSelectShapeFirst => 'Select a shape first';
+  @override
+  String get toastBombSelectCenter => 'Select bomb center';
+  @override
+  String get toastFrozen => '10s frozen!';
+
+  @override
+  String get colorRed => 'Red';
+  @override
+  String get colorYellow => 'Yellow';
+  @override
+  String get colorBlue => 'Blue';
+  @override
+  String get colorOrange => 'Orange';
+  @override
+  String get colorGreen => 'Green';
+  @override
+  String get colorPurple => 'Purple';
+  @override
+  String get colorPink => 'Pink';
+  @override
+  String get colorLightBlue => 'Light Blue';
+  @override
+  String get colorLime => 'Lime';
+  @override
+  String get colorMaroon => 'Maroon';
+  @override
+  String get colorBrown => 'Brown';
+  @override
+  String get colorWhite => 'White';
 }

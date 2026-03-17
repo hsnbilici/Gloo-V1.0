@@ -4,79 +4,63 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **GitHub:** `https://github.com/hsnbilici/Gloo.git` (branch: `main`)
 
-## Hizli Baslangic
-
-```bash
-flutter pub get
-flutter analyze
-flutter test
-flutter run -d chrome
-```
-
-## Gereksinimler
-
-- **Flutter SDK** 3.19+ (mevcut: 3.41.2). Dart SDK: `>=3.3.0 <4.0.0`
-- **Android**: `ANDROID_HOME` tanimli, AVD `Gloo_Pixel8` (1080x2400)
-- **iOS**: macOS + Xcode.app. Flutter 3.41+ iOS'ta Swift Package Manager kullanir (CocoaPods gereksiz)
-
 ## Komutlar
 
 ```bash
 flutter pub get                                # bagimliliklari indir
-flutter analyze                                # lint (0 issue olmali)
+flutter analyze                                # lint (0 error/warning olmali)
 flutter test                                   # tum testler (1204 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
+flutter test --name "ComboDetector"             # isimle filtrele
 flutter build web --release                    # web build
 flutter build apk --debug                      # android debug
 flutter run -d chrome                          # web'de calistir
 flutter run -d "iPhone 16 Pro"                 # iOS simulator'de calistir
 ```
 
-### Build Workaround (Non-ASCII yol)
+### Build Workaround
 
-Flutter `impellerc` shader compiler, proje yolunda non-ASCII karakter varsa cokuyor. Projeyi ASCII-safe bir yola kopyalayip build edin. Web build'lar etkilenmez.
+Flutter `impellerc` shader compiler, proje yolunda non-ASCII karakter varsa cokuyor. ASCII-safe yola kopyalayip build edin. Web build'lar etkilenmez.
 
-### Android / ADB
+### Android Emulator
 
 ```bash
 emulator -avd Gloo_Pixel8 -no-snapshot-load
 adb install -r build/app/outputs/flutter-apk/app-debug.apk
 ```
 
-## Mimari Genel Bakis
+## Gereksinimler
 
-### Katman Yapisi
+- **Flutter SDK** 3.19+ (mevcut: 3.41.2). Dart SDK: `>=3.3.0 <4.0.0`
+- **Android**: `ANDROID_HOME` tanimli, AVD `Gloo_Pixel8` (1080x2400)
+- **iOS**: macOS + Xcode. Flutter 3.41+ iOS'ta Swift Package Manager kullanir (CocoaPods gereksiz)
+
+## Mimari
+
+### Katman Yapisi ve Bagimlilik Yonu
 
 ```
-lib/
-├── core/          ← Saf Dart; UI bagimliligi yok
-│   ├── constants/ ← game_constants, color_constants, audio_constants, ui_constants
-│   ├── utils/     ← color_mixer, near_miss_detector
-│   ├── l10n/      ← app_strings (abstract) + 12 dil dosyasi
-│   └── extensions/← color_extensions
-├── game/          ← Saf Dart oyun motoru (Flutter'dan bagimsiz)
-│   ├── shapes/    ← GelShape, ShapeGenerator (Smart RNG + merhamet)
-│   ├── systems/   ← ScoreSystem, ComboDetector, ColorSynthesisSystem, PowerUpSystem
-│   ├── world/     ← GlooGame (orkestrator), GridManager, Cell/CellType
-│   ├── levels/    ← LevelData, LevelProgression (50 seviye + prosedurel)
-│   ├── economy/   ← CurrencyManager (Jel Ozu)
-│   ├── meta/      ← ResourceManager (ada, karakter, sezon pasi, gorevler)
-│   ├── pvp/       ← Matchmaking (ELO), ObstacleGenerator, AsyncDuelState
-│   └── physics/   ← gel_deformer, spring_physics
-├── audio/         ← AudioManager (just_audio), HapticManager, SoundBank
-├── viral/         ← ClipRecorder, VideoProcessor (FFmpeg), ShareManager
-├── services/      ← AnalyticsService (Firebase), AdManager, PurchaseService
-├── data/
-│   ├── local/     ← LocalRepository (SharedPreferences), data_models
-│   └── remote/    ← RemoteRepository (Supabase), supabase_client, pvp_realtime_service
-├── providers/     ← Riverpod: game, audio, user, locale, pvp providers
-├── features/      ← Flutter widget'lari (14 ekran)
-└── app/           ← app.dart (MaterialApp), router.dart (GoRouter)
+app/ → features/ → providers/ → game/ → core/
+                  → providers/ → data/ → core/
+                  → providers/ → services/
+                               → audio/
 ```
 
-### Oyun Mantigi Akisi
+- `core/` — Saf Dart; Flutter bagimliligi yok. Sabitler, utils, l10n, extensions.
+- `game/` — Saf Dart oyun motoru (Flutter'dan bagimsiz). GlooGame, GridManager, systems, shapes, levels, economy, pvp, physics.
+- `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin ile bolunmus: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`.
+- `data/` — `local/` (SharedPreferences), `remote/` (Supabase). Tum remote metodlarda `isConfigured` guard zorunlu.
+- `services/` — AnalyticsService (Firebase), AdManager, PurchaseService.
+- `providers/` — Riverpod: game, audio, user, locale, pvp, service providers.
 
-`GlooGame` saf Dart sinifidir (Flame kullanmaz). Her hamle su pipeline'i tetikler:
+**Bilinen katman ihlalleri** (todo'da duzeltme planli):
+- `core/constants/color_constants.dart` → `game/world/game_world.dart` import ediyor (ters bagimlilik)
+- `audio/sound_bank.dart` → `game/systems/combo_detector.dart` import ediyor
+- 3 feature dosyasi `data/remote/` siniflarini provider atlayarak dogrudan kullaniyor
+
+### Oyun Motoru
+
+`GlooGame` saf Dart sinifidir (Flame kullanmaz). Her hamle pipeline:
 
 ```
 GameScreen._onCellTap()
@@ -97,15 +81,11 @@ GameScreen._onCellTap()
   → GlooGame.checkGameOver(handShapes)
 ```
 
-`GlooGame` UI'ya callback'ler uzerinden bildirir (`onScoreGained`, `onCombo`, `onGameOver`, `onCurrencyEarned`, `onLevelComplete` vb.); Riverpod provider'larini dogrudan cagirmaz.
-
-### GameMode Enum (7 mod)
-
-`classic`, `colorChef`, `timeTrial`, `zen` (Gloo+ gerekli), `daily` (seeded), `level` (50+prosedurel), `duel` (120sn, ELO, seeded)
+`GlooGame` UI'ya 15 callback ile bildirir (`onScoreGained`, `onCombo`, `onGameOver`, `onLevelComplete` vb.); Riverpod provider'larini dogrudan cagirmaz.
 
 ### State Mulkiyeti
 
-`GameScreen` bir `GlooGame` ornegini `State` icinde dogrudan tutar (Riverpod ile degil). Riverpod yalnizca UI gosterimi icin kullanilir:
+`GameScreen` bir `GlooGame` ornegini `State` icinde dogrudan tutar (Riverpod ile degil). Riverpod yalnizca UI gosterimi icin:
 
 | Provider | Icerik |
 |---|---|
@@ -117,7 +97,13 @@ GameScreen._onCellTap()
 | `eloProvider` | PvP ELO puani |
 | `duelProvider` | DuelState (matchId, seed, opponentScore, isBot) |
 
-### Hucre ve Izgara Sistemi
+**Not:** `StateNotifierProvider` kullaniliyor; Riverpod 2.x'te deprecated. `NotifierProvider`'a gecis planli (M.5).
+
+### GameMode Enum (7 mod)
+
+`classic`, `colorChef`, `timeTrial`, `zen` (Gloo+ gerekli), `daily` (seeded), `level` (50+prosedurel), `duel` (120sn, ELO, seeded)
+
+### Hucre ve Izgara
 
 Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10x12).
 
@@ -125,13 +111,13 @@ Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10
 
 ### Renk Sistemi
 
-`GelColor` enum 12 renk. Elden yalnizca 4 birincil renk cikar: `red`, `yellow`, `blue`, `white`. 8 sentez rengi yalnizca birlesimle olusur.
+`GelColor` enum 12 renk. Elden yalnizca 4 birincil renk cikar: `red`, `yellow`, `blue`, `white`. 8 sentez rengi birlesimle olusur.
 
-`kColorMixingTable` (`color_constants.dart`): sira bagimsiz arama. Yeni kombinasyon icin yalnizca bu tabloya giris eklenmesi yeterli.
+`kColorMixingTable` (`color_constants.dart`): sira bagimsiz arama. Yeni kombinasyon icin yalnizca bu tabloya giris ekle.
 
 `GelColor.shortLabel`: Renk koru modu icin dil bagimsiz kisaltma — degistirilmemeli.
 
-UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kColorClassic/Chef/TimeTrial/Zen`. Ekranlarda yerel olarak tekrar tanimlanmamali.
+UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kModeColors`. Ekranlarda yerel renk sabiti tanimlanmamali.
 
 ### Routing
 
@@ -142,37 +128,33 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 
 `GameMode.fromString()` gecersiz degerleri `classic`'e dusurur.
 
-Diger rotalar: `/`, `/onboarding`, `/daily`, `/settings`, `/shop`, `/leaderboard`, `/collection`, `/levels`, `/pvp-lobby`, `/island`, `/character`, `/season-pass`
-
 ## Onemli Kisitlamalar
 
-### Flutter API Degisiklikleri
-- `withOpacity()` yerine `withValues(alpha:)` kullanilmali (Flutter 3.41+ deprecation)
-- `Color.red`/`.green`/`.blue` yerine `(color.r * 255).round()` kullanilmali
-- `color.value` yerine `color.toARGB32()` kullanilmali
+### Flutter API (3.41+)
+- `withOpacity()` → `withValues(alpha:)` kullan
+- `Color.red`/`.green`/`.blue` → `(color.r * 255).round()` kullan
+- `color.value` → `color.toARGB32()` kullan
+- Platform kontrolu: `Platform.isIOS` → `defaultTargetPlatform == TargetPlatform.iOS` kullan (`dart:io` import'u gerektirmez)
 
 ### Platform Guard'lar
-- `main.dart`: Firebase init try-catch ile sarili (placeholder anahtarlarla sessizce atlar). Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard ile korunur. iOS `edgeToEdge`, diger `immersiveSticky`.
-- `AndroidManifest.xml`: AdMob test App ID zorunlu — olmadan FATAL EXCEPTION. Uretime geciste gercek ID gerekir.
-- `ios/Runner/Info.plist`: `GADApplicationIdentifier` (test), `NSUserTrackingUsageDescription` (ATT) mevcut.
-- Web uyumsuz paketler: `ffmpeg_kit_flutter`, `google_mobile_ads`, `screen_recorder`. `just_audio` web-uyumlu.
+- `main.dart`: Firebase init try-catch sarili. Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard. iOS `edgeToEdge`, diger `immersiveSticky`.
+- `AndroidManifest.xml`: AdMob App ID zorunlu — olmadan FATAL EXCEPTION. Simdi test ID aktif.
+- Web uyumsuz paketler: `ffmpeg_kit_flutter` (discontinued), `google_mobile_ads`, `screen_recorder`. `just_audio` web-uyumlu.
 
 ### Veri Katmani
-- `LocalRepository`: SharedPreferences wrapper, 40+ anahtar (skor, profil, ayar, seviye, ekonomi, meta-game, PvP). Tum anahtarlar `local_repository.dart`'ta.
-- `RemoteRepository`: Supabase ile leaderboard, daily puzzle, redeem code, PvP, meta-game sync. Tum metodlarda `isConfigured` guard var.
-- `supabase_client.dart`: Gercek Supabase anahtarlari girilmis. `SupabaseConfig.isConfigured` ile kontrol.
-- `AnalyticsService`: Lazy/null-safe Firebase wrapper — Firebase yoksa sessizce no-op.
-- `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast) ile eslestirme ve duello senkronizasyonu.
-- `data_models.dart`: `Score` ve `UserProfile` veri siniflari (Isar yok).
-- `firebase_options.dart`: Gercek Firebase degerleri girilmis (`gloo-f7905` projesi). Uretime geciste `flutterfire configure` ile dogrulanmali.
+- `LocalRepository`: SharedPreferences, 40+ key. Tum anahtarlar `local_repository.dart`'ta tanimli. Encryption yok — hassas veriler (ELO, unlocked_products) duz metin.
+- `RemoteRepository`: Supabase. Tum metodlarda `isConfigured` guard ve try-catch zorunlu. `kDebugMode` guard'li debugPrint.
+- `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast). Duplicate match onlemi: leksikografik ID karsilastirmasi.
+- `AnalyticsService`: Lazy/null-safe Firebase wrapper — yoksa sessizce no-op.
+- `firebase_options.dart` ve `supabase_client.dart`: Gercek key'ler kaynak kodda (bilinen sorun, C.4 ile `--dart-define`'a tasinacak).
 
 ### Ses ve Haptik
-- `AudioManager` ses dosyalarini `assets/audio/sfx/` ve `assets/audio/music/` altindan yukler. Dosya bulunamazsa sessizce atlar.
-- `audio_constants.dart`: 30+ ses yolu tanimli. OGG dosyalari henuz uretilmedi.
-- `HapticManager`: 13 haptic profil, tam implementasyon.
-- `.ogg` formati iOS'ta native desteklenmez — ses uretildiginde `.ogg` + `.m4a` ikili format onerilir.
+- `AudioManager`: `assets/audio/sfx/` ve `assets/audio/music/`. Dosya bulunamazsa sessizce atlar.
+- `HapticManager`: 14 haptic profil, tam implementasyon.
+- `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format kullanilmali.
+- `SoundBank.onLineClear` ve `onGameOver` bos — ses pipeline henuz tamamlanmamis.
 
-## Coklu Dil (l10n)
+## l10n
 
 12 dil: `en` (fallback), `tr`, `de`, `zh`, `ja`, `ko`, `ru`, `es`, `ar`, `fr`, `hi`, `pt`
 
@@ -183,38 +165,36 @@ Text(l.scoreLabel)
 
 Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula.
 
-## Linting Kurallari
+**Bilinen sorun:** `GelColor.displayName` ve `game_screen.dart`'taki 5 string Turkce hardcoded — l10n'a tasinmali (M.4).
 
-`flutter_lints` temel, ek kurallar: `prefer_single_quotes`, `prefer_const_constructors`, `prefer_const_declarations`, `prefer_final_fields`, `sort_child_properties_last`, `use_super_parameters`, `avoid_print`, `always_declare_return_types`
+## Linting
 
-## Test
+`flutter_lints` temel. Ek kurallar: `prefer_single_quotes`, `prefer_const_constructors`, `prefer_const_declarations`, `prefer_final_fields`, `sort_child_properties_last`, `use_super_parameters`, `avoid_print`, `always_declare_return_types`.
 
-1204 test, 60+ dosya, 0 hata. Test alanlari: game engine (grid, synthesis, score, combo, shapes, levels, powerups, matchmaking, resource manager, spring physics, gel deformer, color chef levels), core (constants, color mixer, near miss, cell types, l10n, color extensions), data (local repository, data models, DTOs, remote repository), providers (game, audio, locale, pvp, user, service), services (analytics, ad manager, purchase), features (home, onboarding, game overlay, settings, collection, level select, effects, viral, quests, dialogs), audio (audio manager, haptic manager, sound bank), app (router).
-
-```bash
-flutter test                                   # tum testler
-flutter test test/game/grid_manager_test.dart   # tek dosya
-flutter test --name "ComboDetector"             # isimle filtrele
-```
+13 info-seviyesi sorun mevcut (tumu `curly_braces_in_flow_control_structures`). 0 error, 0 warning.
 
 ## Monetizasyon
 
 - **Zen modu**: Gloo+ abonelik ile kilitli
 - **AdManager**: Interstitial (4 oyunda 1), rewarded (ikinci sans), banner. Anti-frustration: 5dk'da 2 kayip → reklam yok. Test ID'ler aktif.
-- **PurchaseService**: 7 IAP urunu. Store'da tanimlanmali.
-- **Redeem Code**: `ShopScreen` → `RemoteRepository.redeemCode()` → Supabase dogrulama → `PurchaseService.unlockProducts()`
+- **PurchaseService**: 7 IAP urunu. Sunucu tarafinda receipt dogrulama (Supabase Edge Function). `_pendingVerification` bellekte — persist edilmeli (H.8).
+- **Redeem Code**: `ShopScreen` → `RemoteRepository.redeemCode()` → Supabase Edge Function → `PurchaseService.unlockProducts()`
 
-## Entry Point (main.dart)
+## Proje Durumu (2026-03-17)
 
-`main()` sirasi: `WidgetsFlutterBinding` → Firebase init (try-catch) → Supabase init → `!kIsWeb` ise AdManager + PurchaseService → portraitUp kilit → iOS `edgeToEdge` / diger `immersiveSticky` → `runApp(ProviderScope(child: GlooApp()))`
+**Scorecard:** 77/100 (7 ajan denetimi)
 
-## Mevcut Platform Durumu
+| Alan | Puan | En Kritik Sorun |
+|------|:----:|-----------------|
+| Mimari | 79 | core→game ters bagimlilik |
+| Gameplay | 83 | `_evaluateBoard()` 130+ satir |
+| UI/UX | 79 | Erisilebilirlik 55/100 |
+| QA | 81 | Integration test sifir |
+| DevOps | 71 | iOS signing + release hazirlik eksik |
+| Backend | 79 | Retry mekanizmasi yok |
+| Guvenlik | 64 | API key'ler kaynak kodda |
 
-| Platform | Durum |
-|---|---|
-| Web (Chrome/Edge) | Calisir |
-| Android | Calisir — AVD `Gloo_Pixel8` |
-| iOS | Calisir — Xcode 26.3, iOS Simulator 26.2, deployment target 16.0 |
+Detayli gorev listesi ve alt alan puanlari: `tasks/todo.md`
 
 ## Detayli Dokumantasyon
 
@@ -222,4 +202,5 @@ flutter test --name "ComboDetector"             # isimle filtrele
 |---|---|
 | `GDD.md` | Game Design Document — mekanikler, monetizasyon, ASO |
 | `TECHNICAL_ARCHITECTURE.md` | Sistem diyagrami, algoritma ornekleri |
-| `tasks/todo.md` | Kalan isler ve yol haritasi (7 madde — tumu harici bagimlilk) |
+| `tasks/todo.md` | Yol haritasi, scorecard, 30+ gorev (P0-P3 oncelikli) |
+| `tasks/lessons.md` | Sprint bazli dersler ve kurallar |

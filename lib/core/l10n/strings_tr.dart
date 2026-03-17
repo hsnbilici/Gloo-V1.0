@@ -311,4 +311,46 @@ class StringsTr extends AppStrings {
   @override
   String get deleteDataError =>
       'Verileriniz silinemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get toastRescueBadge => 'Kurtarılabilir!';
+  @override
+  String get toastBombEarned => 'Bomba kazandın!';
+  @override
+  String get toastHighScoreBadge => 'Rekoruna yakınsın!';
+  @override
+  String get toastExtraMoves => '+5 Hamle!';
+  @override
+  String get toastBombFailed => 'Bomba kullanılamadı';
+  @override
+  String get toastSelectShapeFirst => 'Önce bir şekil seç';
+  @override
+  String get toastBombSelectCenter => 'Bomba merkezi seç';
+  @override
+  String get toastFrozen => '10sn donduruldu!';
+
+  @override
+  String get colorRed => 'Kırmızı';
+  @override
+  String get colorYellow => 'Sarı';
+  @override
+  String get colorBlue => 'Mavi';
+  @override
+  String get colorOrange => 'Turuncu';
+  @override
+  String get colorGreen => 'Yeşil';
+  @override
+  String get colorPurple => 'Mor';
+  @override
+  String get colorPink => 'Pembe';
+  @override
+  String get colorLightBlue => 'Açık Mavi';
+  @override
+  String get colorLime => 'Lime';
+  @override
+  String get colorMaroon => 'Bordo';
+  @override
+  String get colorBrown => 'Kahverengi';
+  @override
+  String get colorWhite => 'Beyaz';
 }

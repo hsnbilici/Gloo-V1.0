@@ -317,4 +317,46 @@ class StringsEs extends AppStrings {
   @override
   String get deleteDataError =>
       'No se pudieron eliminar sus datos. Inténtelo de nuevo.';
+
+  @override
+  String get toastRescueBadge => '¡Rescatable!';
+  @override
+  String get toastBombEarned => '¡Bomba ganada!';
+  @override
+  String get toastHighScoreBadge => '¡Cerca de tu récord!';
+  @override
+  String get toastExtraMoves => '+5 Movimientos!';
+  @override
+  String get toastBombFailed => 'No se pudo usar la bomba';
+  @override
+  String get toastSelectShapeFirst => 'Selecciona una forma primero';
+  @override
+  String get toastBombSelectCenter => 'Selecciona el centro de la bomba';
+  @override
+  String get toastFrozen => '¡10s congelado!';
+
+  @override
+  String get colorRed => 'Rojo';
+  @override
+  String get colorYellow => 'Amarillo';
+  @override
+  String get colorBlue => 'Azul';
+  @override
+  String get colorOrange => 'Naranja';
+  @override
+  String get colorGreen => 'Verde';
+  @override
+  String get colorPurple => 'Púrpura';
+  @override
+  String get colorPink => 'Rosa';
+  @override
+  String get colorLightBlue => 'Azul Claro';
+  @override
+  String get colorLime => 'Lima';
+  @override
+  String get colorMaroon => 'Granate';
+  @override
+  String get colorBrown => 'Marrón';
+  @override
+  String get colorWhite => 'Blanco';
 }

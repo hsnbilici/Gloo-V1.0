@@ -62,3 +62,6 @@ Podfile.lock
 *.env.local
 supabase_keys.dart
 supabase/.temp/
+
+# Git worktrees
+.worktrees/

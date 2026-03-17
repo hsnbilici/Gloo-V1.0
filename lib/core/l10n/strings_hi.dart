@@ -312,4 +312,46 @@ class StringsHi extends AppStrings {
   @override
   String get deleteDataError =>
       'आपका डेटा हटाया नहीं जा सका। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get toastRescueBadge => 'बचाया जा सकता है!';
+  @override
+  String get toastBombEarned => 'बम मिला!';
+  @override
+  String get toastHighScoreBadge => 'रिकॉर्ड के करीब!';
+  @override
+  String get toastExtraMoves => '+5 चालें!';
+  @override
+  String get toastBombFailed => 'बम का उपयोग नहीं हो सका';
+  @override
+  String get toastSelectShapeFirst => 'पहले एक आकार चुनें';
+  @override
+  String get toastBombSelectCenter => 'बम का केंद्र चुनें';
+  @override
+  String get toastFrozen => '10 सेकंड जमा!';
+
+  @override
+  String get colorRed => 'लाल';
+  @override
+  String get colorYellow => 'पीला';
+  @override
+  String get colorBlue => 'नीला';
+  @override
+  String get colorOrange => 'नारंगी';
+  @override
+  String get colorGreen => 'हरा';
+  @override
+  String get colorPurple => 'बैंगनी';
+  @override
+  String get colorPink => 'गुलाबी';
+  @override
+  String get colorLightBlue => 'हल्का नीला';
+  @override
+  String get colorLime => 'नींबू';
+  @override
+  String get colorMaroon => 'मैरून';
+  @override
+  String get colorBrown => 'भूरा';
+  @override
+  String get colorWhite => 'सफ़ेद';
 }

@@ -42,7 +42,16 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   void refillHand();
   void handleGameOverDialog();
 
+  /// initState'te resolve edilen LocalRepository cache'i.
+  /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
+  LocalRepository? _cachedRepo;
+
   void setupCallbacks() {
+    // Repo'yu bir kez resolve et — callback'lerde tekrar future.then() gerekmez
+    ref.read(localRepositoryProvider.future).then((repo) {
+      _cachedRepo = repo;
+    });
+
     game.onScoreGained = (points) {
       ref.read(gameProvider(widget.mode).notifier).updateScore(game.score);
       if (!showHighScoreBadge &&
@@ -171,9 +180,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     game.currencyManager.onBalanceChanged = (balance) {
       if (mounted) {
         ref.read(gameProvider(widget.mode).notifier).updateGelOzu(balance);
-        ref.read(localRepositoryProvider.future).then((repo) {
-          repo.saveGelOzu(balance);
-        });
+        _cachedRepo?.saveGelOzu(balance);
       }
     };
 
@@ -189,27 +196,25 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (!mounted) return;
       final levelId = widget.levelData?.id ?? 0;
       final score = game.score;
-      ref.read(localRepositoryProvider.future).then((repo) {
-        repo.setLevelCompleted(levelId, score);
-      });
+      _cachedRepo?.setLevelCompleted(levelId, score);
       showLevelComplete(context: context, score: score, levelId: levelId);
     };
 
     // Jel Enerjisi kazanimi (meta-game kaynak)
     game.onJelEnergyEarned = (amount) {
       if (!mounted) return;
-      ref.read(localRepositoryProvider.future).then((repo) {
-        final current = repo.getGelEnergy();
-        final updated = current + amount;
-        repo.saveGelEnergy(updated);
-        final totalEarned = repo.getTotalEarnedEnergy() + amount;
-        repo.saveTotalEarnedEnergy(totalEarned);
+      final repo = _cachedRepo;
+      if (repo == null) return;
+      final current = repo.getGelEnergy();
+      final updated = current + amount;
+      repo.saveGelEnergy(updated);
+      final totalEarned = repo.getTotalEarnedEnergy() + amount;
+      repo.saveTotalEarnedEnergy(totalEarned);
 
-        ref.read(remoteRepositoryProvider).saveMetaState(
-              gelEnergy: updated,
-              totalEarnedEnergy: totalEarned,
-            );
-      });
+      ref.read(remoteRepositoryProvider).saveMetaState(
+            gelEnergy: updated,
+            totalEarnedEnergy: totalEarned,
+          );
     };
 
     game.onColorSynthesis = (resultColor, position) {
@@ -230,7 +235,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     game.onGameOver = () {
       if (!mounted) return;
       final score = game.score;
-      ref.read(localRepositoryProvider.future).then((repo) {
+      final repo = _cachedRepo;
+      if (repo != null) {
         repo.saveScore(mode: widget.mode.name, value: score);
         repo.incrementGamesPlayed();
         repo.updateAverageScore(score);
@@ -243,7 +249,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         if (widget.mode == GameMode.level && widget.levelData != null) {
           repo.saveLevelHighScore(widget.levelData!.id, score);
         }
-      });
+      }
       ref
           .read(remoteRepositoryProvider)
           .submitScore(mode: widget.mode.name, value: score);

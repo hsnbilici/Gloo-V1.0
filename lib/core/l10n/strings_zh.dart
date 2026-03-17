@@ -307,4 +307,46 @@ class StringsZh extends AppStrings {
   String get deleteDataSuccess => '您的数据已成功删除';
   @override
   String get deleteDataError => '无法删除您的数据，请重试。';
+
+  @override
+  String get toastRescueBadge => '可拯救！';
+  @override
+  String get toastBombEarned => '获得炸弹！';
+  @override
+  String get toastHighScoreBadge => '接近纪录！';
+  @override
+  String get toastExtraMoves => '+5步！';
+  @override
+  String get toastBombFailed => '无法使用炸弹';
+  @override
+  String get toastSelectShapeFirst => '请先选择形状';
+  @override
+  String get toastBombSelectCenter => '选择炸弹中心';
+  @override
+  String get toastFrozen => '冻结10秒！';
+
+  @override
+  String get colorRed => '红色';
+  @override
+  String get colorYellow => '黄色';
+  @override
+  String get colorBlue => '蓝色';
+  @override
+  String get colorOrange => '橙色';
+  @override
+  String get colorGreen => '绿色';
+  @override
+  String get colorPurple => '紫色';
+  @override
+  String get colorPink => '粉色';
+  @override
+  String get colorLightBlue => '浅蓝色';
+  @override
+  String get colorLime => '青柠色';
+  @override
+  String get colorMaroon => '栗色';
+  @override
+  String get colorBrown => '棕色';
+  @override
+  String get colorWhite => '白色';
 }

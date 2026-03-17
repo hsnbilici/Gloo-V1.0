@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../constants/color_constants.dart';
 import 'strings_ar.dart';
 import 'strings_de.dart';
 import 'strings_en.dart';
@@ -201,6 +202,46 @@ abstract class AppStrings {
   // GDPR Silme Sonucu
   String get deleteDataSuccess;
   String get deleteDataError;
+
+  // Oyun içi toast & badge
+  String get toastRescueBadge;
+  String get toastBombEarned;
+  String get toastHighScoreBadge;
+  String get toastExtraMoves;
+  String get toastBombFailed;
+  String get toastSelectShapeFirst;
+  String get toastBombSelectCenter;
+  String get toastFrozen;
+
+  // Renk adları (Color Chef & Koleksiyon)
+  String get colorRed;
+  String get colorYellow;
+  String get colorBlue;
+  String get colorOrange;
+  String get colorGreen;
+  String get colorPurple;
+  String get colorPink;
+  String get colorLightBlue;
+  String get colorLime;
+  String get colorMaroon;
+  String get colorBrown;
+  String get colorWhite;
+
+  /// GelColor enum'undan çevrilmiş renk adını döner.
+  String colorName(GelColor color) => switch (color) {
+        GelColor.red => colorRed,
+        GelColor.yellow => colorYellow,
+        GelColor.blue => colorBlue,
+        GelColor.orange => colorOrange,
+        GelColor.green => colorGreen,
+        GelColor.purple => colorPurple,
+        GelColor.pink => colorPink,
+        GelColor.lightBlue => colorLightBlue,
+        GelColor.lime => colorLime,
+        GelColor.maroon => colorMaroon,
+        GelColor.brown => colorBrown,
+        GelColor.white => colorWhite,
+      };
 
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {

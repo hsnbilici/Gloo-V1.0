@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gloo/core/constants/audio_constants.dart';
 import 'package:gloo/core/constants/color_constants.dart';
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/core/constants/game_constants.dart';
 import 'package:gloo/core/constants/ui_constants.dart';
 import 'package:gloo/game/economy/currency_manager.dart';
@@ -80,9 +81,10 @@ void main() {
       }
     });
 
-    test('displayName is non-empty for all colors', () {
+    test('colorName returns non-empty for all colors via l10n', () {
+      final l = StringsEn();
       for (final color in GelColor.values) {
-        expect(color.displayName.isNotEmpty, isTrue);
+        expect(l.colorName(color).isNotEmpty, isTrue);
       }
     });
   });
