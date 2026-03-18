@@ -112,21 +112,24 @@ class ShapeGenerator {
   void recordClear() => _movesSinceLastClear = 0;
   void recordMoveWithoutClear() => _movesSinceLastClear++;
 
-  (GelShape, GelColor) _randomPiece() {
+  (GelShape, GelColor) _randomPiece([List<GelColor>? availableColors]) {
     final shape = kAllShapes[_rng.nextInt(kAllShapes.length)];
-    final color = kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
+    final colors = availableColors ?? kPrimaryColors;
+    final color = colors[_rng.nextInt(colors.length)];
     return (shape, color);
   }
 
   /// [GameConstants.shapesInHand] adet rastgele parça üretir.
-  List<(GelShape, GelColor)> generateHand() =>
-      List.generate(GameConstants.shapesInHand, (_) => _randomPiece());
+  List<(GelShape, GelColor)> generateHand({List<GelColor>? availableColors}) =>
+      List.generate(
+          GameConstants.shapesInHand, (_) => _randomPiece(availableColors));
 
   /// Akıllı el üretimi: zorluk, adalet ve merhamet mekanizması dahil.
   List<(GelShape, GelColor)> generateSmartHand({
     required GridManager gridManager,
     required double difficulty,
     int gamesPlayed = 0,
+    List<GelColor>? availableColors,
   }) {
     // Merhamet: 3 ardışık kayıp → zorluk düşürme
     var effectiveDifficulty = difficulty;
@@ -144,18 +147,18 @@ class ShapeGenerator {
       if (forceMercy && i == 0) {
         // Kurtarıcı şekil: küçük + sentez dostu renk
         final shape = kSmallShapes[_rng.nextInt(kSmallShapes.length)];
-        final color = _weightedRandomColor(grid);
+        final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       } else {
         final shape = _weightedRandomShape(effectiveDifficulty);
-        final color = _weightedRandomColor(grid);
+        final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       }
     }
 
     // Adalet kontrolü: en az 1 yerleştirilebilir şekil garantisi
     if (!_canAnyBePlaced(gridManager, candidates)) {
-      candidates[0] = _findPlaceableShape(gridManager);
+      candidates[0] = _findPlaceableShape(gridManager, availableColors);
     }
 
     return candidates;
@@ -188,15 +191,17 @@ class ShapeGenerator {
 
   /// Izgaradaki renk dağılımına göre ağırlıklı renk seçimi.
   /// Az bulunan birincil renkler daha yüksek ağırlık alır → sentez fırsatı.
-  GelColor _weightedRandomColor(Grid grid) {
+  GelColor _weightedRandomColor(Grid grid,
+      [List<GelColor>? availableColors]) {
+    final colors = availableColors ?? kPrimaryColors;
     // Izgaradaki renk dağılımını analiz et
     final colorCounts = <GelColor, int>{};
-    for (final color in kPrimaryColors) {
+    for (final color in colors) {
       colorCounts[color] = 0;
     }
     for (final row in grid) {
       for (final cell in row) {
-        if (cell != null && kPrimaryColors.contains(cell)) {
+        if (cell != null && colors.contains(cell)) {
           colorCounts[cell] = (colorCounts[cell] ?? 0) + 1;
         }
       }
@@ -205,7 +210,7 @@ class ShapeGenerator {
     final totalColors = colorCounts.values.fold(0, (a, b) => a + b);
     if (totalColors == 0) {
       // Boş ızgara — tamamen rastgele
-      return kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
+      return colors[_rng.nextInt(colors.length)];
     }
 
     // Ters ağırlıklandırma: az bulunan renklere daha yüksek şans
@@ -225,7 +230,7 @@ class ShapeGenerator {
       if (roll <= 0) return entry.key;
     }
 
-    return kPrimaryColors.last;
+    return colors.last;
   }
 
   /// Eldeki şekillerden herhangi biri ızgaraya yerleştirilebilir mi?
@@ -246,12 +251,14 @@ class ShapeGenerator {
   }
 
   /// Izgaraya yerleştirilebilir garanti bir şekil bul.
-  (GelShape, GelColor) _findPlaceableShape(GridManager gridManager) {
+  (GelShape, GelColor) _findPlaceableShape(GridManager gridManager,
+      [List<GelColor>? availableColors]) {
+    final colors = availableColors ?? kPrimaryColors;
     // Önce küçük şekillerden dene
     for (final pool in [kSmallShapes, kMediumShapes, kLargeShapes]) {
       final shuffled = List<GelShape>.from(pool)..shuffle(_rng);
       for (final shape in shuffled) {
-        for (final color in kPrimaryColors) {
+        for (final color in colors) {
           final maxR = gridManager.rows - shape.rowCount;
           final maxC = gridManager.cols - shape.colCount;
           for (int r = 0; r <= maxR; r++) {
@@ -267,7 +274,7 @@ class ShapeGenerator {
     // Fallback: dot her zaman sığar
     return (
       kAllShapes.first,
-      kPrimaryColors[_rng.nextInt(kPrimaryColors.length)]
+      colors[_rng.nextInt(colors.length)],
     );
   }
 
@@ -280,13 +287,15 @@ class ShapeGenerator {
 
   /// Günün tarihinden türetilen seed ile deterministik el oluşturur.
   /// Aynı seed → aynı el (tüm oyuncular aynı başlangıç parçalarını görür).
-  static List<(GelShape, GelColor)> generateSeededHand(int seed) {
+  static List<(GelShape, GelColor)> generateSeededHand(int seed,
+      {List<GelColor>? availableColors}) {
     final rng = Random(seed);
+    final colors = availableColors ?? kPrimaryColors;
     return List.generate(
       GameConstants.shapesInHand,
       (_) {
         final shape = kAllShapes[rng.nextInt(kAllShapes.length)];
-        final color = kPrimaryColors[rng.nextInt(kPrimaryColors.length)];
+        final color = colors[rng.nextInt(colors.length)];
         return (shape, color);
       },
     );
@@ -297,9 +306,10 @@ class ShapeGenerator {
     required int baseSeed,
     required int handIndex,
     required int moveCount,
+    List<GelColor>? availableColors,
   }) {
     final seed = baseSeed * 31 + handIndex * 7 + moveCount;
-    return generateSeededHand(seed);
+    return generateSeededHand(seed, availableColors: availableColors);
   }
 
   /// Bugünün tarihinden seed üretir: yyyymmdd formatında tamsayı.

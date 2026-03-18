@@ -235,6 +235,7 @@ class GlooGame {
       gridManager: _gridManager,
       difficulty: difficulty,
       gamesPlayed: _totalGamesPlayed,
+      availableColors: levelData?.availableColors,
     );
   }
 

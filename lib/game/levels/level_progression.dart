@@ -196,7 +196,12 @@ final List<LevelData> _predefinedLevels = [
   const LevelData(id: 12, rows: 8, cols: 8, targetScore: 700),
   const LevelData(id: 13, rows: 9, cols: 8, targetScore: 750),
   const LevelData(id: 14, rows: 9, cols: 8, targetScore: 800),
-  const LevelData(id: 15, rows: 9, cols: 8, targetScore: 850),
+  const LevelData(
+      id: 15,
+      rows: 9,
+      cols: 8,
+      targetScore: 850,
+      availableColors: [GelColor.red, GelColor.yellow, GelColor.blue]),
   const LevelData(id: 16, rows: 10, cols: 8, targetScore: 900),
   const LevelData(id: 17, rows: 10, cols: 8, targetScore: 950),
   const LevelData(id: 18, rows: 10, cols: 8, targetScore: 1000),
@@ -227,7 +232,12 @@ final List<LevelData> _predefinedLevels = [
     (8, 0): CellConfig(type: CellType.ice, iceLayer: 1),
     (8, 7): CellConfig(type: CellType.ice, iceLayer: 1),
   }),
-  const LevelData(id: 25, rows: 9, cols: 8, targetScore: 1000),
+  const LevelData(
+      id: 25,
+      rows: 9,
+      cols: 8,
+      targetScore: 1000,
+      availableColors: [GelColor.red, GelColor.blue]),
   const LevelData(id: 26, rows: 10, cols: 8, targetScore: 1050, specialCells: {
     (2, 2): CellConfig(type: CellType.ice, iceLayer: 1),
     (2, 5): CellConfig(type: CellType.ice, iceLayer: 1),
