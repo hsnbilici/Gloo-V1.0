@@ -145,6 +145,9 @@ void main() {
       bank = SoundBank(audio: audio, haptic: haptic);
 
       when(() => audio.playSfx(any())).thenAnswer((_) async {});
+      when(
+        () => audio.playSfx(any(), volume: any(named: 'volume')),
+      ).thenAnswer((_) async {});
       when(() => haptic.trigger(any())).thenAnswer((_) async {});
     });
 
@@ -203,10 +206,13 @@ void main() {
       verifyNever(() => haptic.trigger(any()));
     });
 
-    test('onCombo(small) plays comboSmall SFX, no haptic', () async {
+    test('onCombo(small) plays comboSmall SFX at 0.5 volume, no haptic',
+        () async {
       const combo = ComboEvent(size: 2, tier: ComboTier.small, multiplier: 1.2);
       await bank.onCombo(combo);
-      verify(() => audio.playSfx(AudioPaths.comboSmall)).called(1);
+      verify(
+        () => audio.playSfx(AudioPaths.comboSmall, volume: 0.5),
+      ).called(1);
       verifyNever(() => haptic.trigger(any()));
     });
 
@@ -214,21 +220,21 @@ void main() {
       const combo =
           ComboEvent(size: 4, tier: ComboTier.medium, multiplier: 1.5);
       await bank.onCombo(combo);
-      verify(() => audio.playSfx(AudioPaths.comboMedium)).called(1);
+      verify(() => audio.playSfx(AudioPaths.comboMedium, volume: 1.0)).called(1);
       verifyNever(() => haptic.trigger(any()));
     });
 
     test('onCombo(large) plays comboLarge SFX, no haptic', () async {
       const combo = ComboEvent(size: 7, tier: ComboTier.large, multiplier: 2.0);
       await bank.onCombo(combo);
-      verify(() => audio.playSfx(AudioPaths.comboLarge)).called(1);
+      verify(() => audio.playSfx(AudioPaths.comboLarge, volume: 1.0)).called(1);
       verifyNever(() => haptic.trigger(any()));
     });
 
     test('onCombo(epic) plays comboEpic SFX and comboEpic haptic', () async {
       const combo = ComboEvent(size: 10, tier: ComboTier.epic, multiplier: 3.0);
       await bank.onCombo(combo);
-      verify(() => audio.playSfx(AudioPaths.comboEpic)).called(1);
+      verify(() => audio.playSfx(AudioPaths.comboEpic, volume: 1.0)).called(1);
       verify(() => haptic.trigger(HapticProfile.comboEpic)).called(1);
     });
 

@@ -44,7 +44,10 @@ class SoundBank {
       ComboTier.epic => AudioPaths.comboEpic,
       ComboTier.none => null,
     };
-    if (sfx != null) await _audio.playSfx(sfx);
+    if (sfx != null) {
+      final volume = combo.tier == ComboTier.small ? 0.5 : 1.0;
+      await _audio.playSfx(sfx, volume: volume);
+    }
     if (combo.tier == ComboTier.epic) {
       await _haptic.trigger(HapticProfile.comboEpic);
     }
