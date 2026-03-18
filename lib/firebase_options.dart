@@ -24,41 +24,45 @@ class DefaultFirebaseOptions {
     }
   }
 
+  /// Firebase key'leri --dart-define ile verilmis mi?
+  static bool get isConfigured =>
+      _apiKeyWeb.isNotEmpty && _projectId.isNotEmpty;
+
   static const _apiKeyWeb = String.fromEnvironment(
     'FIREBASE_API_KEY_WEB',
-    defaultValue: 'AIzaSyASVKy7u5DSOZYtZ3ikYVnVqEv3ITYHaLE',
+    defaultValue: '',
   );
   static const _apiKeyAndroid = String.fromEnvironment(
     'FIREBASE_API_KEY_ANDROID',
-    defaultValue: 'AIzaSyC-8m-bPO7vv-7M_EHY1AitfMpPNa0HbDo',
+    defaultValue: '',
   );
   static const _apiKeyIos = String.fromEnvironment(
     'FIREBASE_API_KEY_IOS',
-    defaultValue: 'AIzaSyBB55ddtzDqtvq4BVPgCW_fWJLB_gSwbJs',
+    defaultValue: '',
   );
   static const _appIdWeb = String.fromEnvironment(
     'FIREBASE_APP_ID_WEB',
-    defaultValue: '1:473072331709:web:2ac65616ac1bb901aa80d4',
+    defaultValue: '',
   );
   static const _appIdAndroid = String.fromEnvironment(
     'FIREBASE_APP_ID_ANDROID',
-    defaultValue: '1:473072331709:android:bac6c3d395677a9eaa80d4',
+    defaultValue: '',
   );
   static const _appIdIos = String.fromEnvironment(
     'FIREBASE_APP_ID_IOS',
-    defaultValue: '1:473072331709:ios:3e271024cbb55d9eaa80d4',
+    defaultValue: '',
   );
   static const _messagingSenderId = String.fromEnvironment(
     'FIREBASE_MESSAGING_SENDER_ID',
-    defaultValue: '473072331709',
+    defaultValue: '',
   );
   static const _projectId = String.fromEnvironment(
     'FIREBASE_PROJECT_ID',
-    defaultValue: 'gloo-f7905',
+    defaultValue: '',
   );
   static const _storageBucket = String.fromEnvironment(
     'FIREBASE_STORAGE_BUCKET',
-    defaultValue: 'gloo-f7905.firebasestorage.app',
+    defaultValue: '',
   );
 
   static final FirebaseOptions web = FirebaseOptions(

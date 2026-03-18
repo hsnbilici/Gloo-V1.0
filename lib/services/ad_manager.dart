@@ -41,22 +41,42 @@ class AdManager {
   BannerAd? _bannerAd;
 
   // ── Reklam ID'leri ───────────────────────────────────────────────────────
-  // Test ID'leri her iki platformda da aynıdır (Google test ad units).
-  // Üretime geçişte platform bazlı gerçek ID'ler ile değiştirilmelidir.
-  //
-  // Üretim örneği:
-  //   static String get _kBanner => Platform.isIOS
-  //       ? 'ca-app-pub-XXXX/IOS_BANNER_ID'
-  //       : 'ca-app-pub-XXXX/ANDROID_BANNER_ID';
+  // --dart-define ile inject edilir. Boş ise test ID kullanılır.
+  static const _bannerIdIos = String.fromEnvironment('AD_BANNER_IOS');
+  static const _bannerIdAndroid = String.fromEnvironment('AD_BANNER_ANDROID');
+  static const _interstitialIdIos =
+      String.fromEnvironment('AD_INTERSTITIAL_IOS');
+  static const _interstitialIdAndroid =
+      String.fromEnvironment('AD_INTERSTITIAL_ANDROID');
+  static const _rewardedIdIos = String.fromEnvironment('AD_REWARDED_IOS');
+  static const _rewardedIdAndroid =
+      String.fromEnvironment('AD_REWARDED_ANDROID');
+
+  static const _kTestBannerIos = 'ca-app-pub-3940256099942544/2435281174';
+  static const _kTestBannerAndroid = 'ca-app-pub-3940256099942544/6300978111';
+  static const _kTestInterstitialIos =
+      'ca-app-pub-3940256099942544/4411468910';
+  static const _kTestInterstitialAndroid =
+      'ca-app-pub-3940256099942544/1033173712';
+  static const _kTestRewardedIos = 'ca-app-pub-3940256099942544/1712485313';
+  static const _kTestRewardedAndroid =
+      'ca-app-pub-3940256099942544/5224354917';
+
   static String get _kBanner => _isIOS
-      ? 'ca-app-pub-3940256099942544/2435281174' // iOS test banner
-      : 'ca-app-pub-3940256099942544/6300978111'; // Android test banner
+      ? (_bannerIdIos.isNotEmpty ? _bannerIdIos : _kTestBannerIos)
+      : (_bannerIdAndroid.isNotEmpty ? _bannerIdAndroid : _kTestBannerAndroid);
   static String get _kInterstitial => _isIOS
-      ? 'ca-app-pub-3940256099942544/4411468910' // iOS test interstitial
-      : 'ca-app-pub-3940256099942544/1033173712'; // Android test interstitial
+      ? (_interstitialIdIos.isNotEmpty
+          ? _interstitialIdIos
+          : _kTestInterstitialIos)
+      : (_interstitialIdAndroid.isNotEmpty
+          ? _interstitialIdAndroid
+          : _kTestInterstitialAndroid);
   static String get _kRewarded => _isIOS
-      ? 'ca-app-pub-3940256099942544/1712485313' // iOS test rewarded
-      : 'ca-app-pub-3940256099942544/5224354917'; // Android test rewarded
+      ? (_rewardedIdIos.isNotEmpty ? _rewardedIdIos : _kTestRewardedIos)
+      : (_rewardedIdAndroid.isNotEmpty
+          ? _rewardedIdAndroid
+          : _kTestRewardedAndroid);
 
   static bool get _isIOS =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;

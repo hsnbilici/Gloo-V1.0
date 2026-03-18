@@ -16,6 +16,8 @@ flutter build web --release                    # web build
 flutter build apk --debug                      # android debug
 flutter run -d chrome                          # web'de calistir
 flutter run -d "iPhone 16 Pro"                 # iOS simulator'de calistir
+./scripts/run_local.sh -d chrome               # .env ile web'de calistir
+./scripts/run_local.sh -d "iPhone 17 Pro"      # .env ile iOS'ta calistir
 ```
 
 ### Build Workaround

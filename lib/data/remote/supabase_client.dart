@@ -13,17 +13,16 @@ class SupabaseConfig {
 
   static const supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
-    defaultValue: 'https://kxrdblgdydixgeruejpc.supabase.co',
+    defaultValue: '',
   );
   static const supabaseAnonKey = String.fromEnvironment(
     'SUPABASE_ANON_KEY',
-    defaultValue: 'sb_publishable_GFHzI1sXorZwe7qNH5I--A_lbKUysaW',
+    defaultValue: '',
   );
 
-  /// Placeholder degerler doldurulan gercek projeden mi yoksa sahte mi?
+  /// Supabase key'leri --dart-define ile verilmis mi?
   static bool get isConfigured =>
-      supabaseUrl != 'https://YOUR_PROJECT.supabase.co' &&
-      supabaseAnonKey != 'YOUR_ANON_KEY';
+      supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
 
   /// Supabase runtime'da initialize edilmis mi?
   static bool _initialized = false;
