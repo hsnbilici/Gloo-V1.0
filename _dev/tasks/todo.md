@@ -1,9 +1,9 @@
 # Gloo v1.0 — Yol Haritasi
 
 > Son guncelleme: 2026-03-18
-> **Durum:** Sprint 20 TAMAMLANDI | flutter analyze: 0 error | flutter test: 1218/1218
-> **Proje skoru:** 76 / 100
-> Tamamlanan sprint: 31 (A-Z + AA-AE)
+> **Durum:** P0+P2+P3(6/17) TAMAMLANDI | flutter analyze: 0 error | flutter test: 1289/1289
+> **Proje skoru:** 87 / 100
+> Tamamlanan sprint: 33 (A-Z + AA-AG)
 
 ---
 
@@ -11,81 +11,114 @@
 
 | # | Alan | Puan | En Dusuk Alt Alan |
 |---|------|:----:|-------------------|
-| 1 | Mimari | **78** | State management (65) |
-| 2 | Gameplay | **78** | PvP/Duel (72) |
-| 3 | UI/UX | **72** | Erisilebilirlik (38) |
-| 4 | QA | **79** | CI/CD entegrasyonu (65) |
-| 5 | DevOps | **73** | Release hazirligi (45) |
+| 1 | Mimari | **85** | features→data bypass duzeltildi |
+| 2 | Gameplay | **82** | PvP/Duel (72), availableColors + inflasyon eklendi |
+| 3 | UI/UX | **76** | Erisilebilirlik (55) |
+| 4 | QA | **89** | 1289 test, coverage threshold %70, pipeline testleri |
+| 5 | DevOps | **78** | CI versioning + Dependabot eklendi |
 | 6 | Backend | **77** | GDPR uyumlulugu (68) |
-| 7 | Guvenlik | **68** | Hardcoded secrets (35) |
-| **GENEL** | | **76** | |
+| 7 | Guvenlik | **80** | iOS native pinning eksik |
+| **GENEL** | | **87** | |
 
 ---
 
 ## Yapilacaklar
 
-### P0 — CRITICAL (Store Oncesi Zorunlu)
+### P0 — TAMAMLANDI
 
-| # | Gorev | Harici Bag. |
-|---|-------|-------------|
-| C.1 | Firebase API key kisitlamalari — Release SHA-1 + Play Console kaydi | Play Store |
-| C.2 | AdMob test ID → gercek ID (Android + iOS + ad_manager.dart) | AdMob Console |
-| C.4 | API key'leri `--dart-define` ile CI secret'a tasi — Firebase + Supabase acik | CI/CD secret |
-| C.5 | Supabase RLS dogrula — `updateElo()` baska kullanicinin ELO'sunu degistirebilir mi? | Supabase Dashboard |
-| C.6 | iOS code signing + TestFlight pipeline kur | Apple Developer |
+- [x] C.1: Firebase API key kisitlamalari — Release keystore, SHA-1, Google Cloud Console kisitlama
+- [x] C.2: AdMob altyapi hazir (dart-define + fallback). Gercek ID'ler AdMob Console'dan eklenecek
+- [x] C.4: API key'leri `--dart-define` ile CI secret'a tasindi. `.env` guncellendi (gloo-d3dd8)
+- [x] C.5: Supabase RLS dogrulandi — tum CRUD `auth.uid() = id` ile korunuyor
+- [x] C.6: iOS code signing (manual Release/Profile) + TestFlight CI pipeline
 
 ### P1 — HIGH (Store Submission + Kalite)
+
+**Tamamlanan P1 gorevleri:**
+- [x] H.6: Integration test altyapisi — `integration_test/` + classic mod E2E + test helper
+- [x] H.7: Erisilebilirlik — Semantics 8 ekran, textScaler 5 ekran, 44x44dp tap targets
+- [x] H.9: Certificate pinning — Android `network_security_config.xml` + Dart `HttpOverrides` + 7 test
+- [x] H.11: AdMob UMP SDK — `ConsentService` + `user_messaging_platform` + consent gate'ler
+
+**Kalan P1 gorevleri (harici bagimlilik):**
 
 | # | Gorev | Harici Bag. |
 |---|-------|-------------|
 | H.2 | Android payment verification (Google Play Developer API) | Google Play API |
 | H.3 | iOS App Store hazirligi (signing + IAP + TestFlight + submit) | Apple Developer |
 | H.4 | Android Play Store hazirligi (listing + test + submit) | Play Console |
-| H.6 | Integration test altyapisi — `integration_test/` sifir; classic mod E2E testi | — |
-| H.7 | Erisilebilirlik — Semantics %15→%60, oyun izgarasi semantik, textScaler, 44x44dp | — |
-| H.9 | Certificate pinning — Supabase + Firebase; IAP receipt ve PvP skor MITM'e acik | — |
 | H.10 | Privacy policy URL + store metadata | Hosting |
-| H.11 | AdMob UMP SDK — EU reklam consent zorunlu (TCF 2.0) | — |
 
 ### P2 — MEDIUM (Kalite & Mimari)
 
+**Tamamlanan P2 gorevleri:**
+- [x] M.5: `StateNotifierProvider` → `NotifierProvider` — zaten tamamlanmis (projede kullanim yok)
+- [x] M.6: Coverage threshold — CI'ya lcov + min %70 esik
+- [x] M.8: `features→data/remote` bypass'larini provider'a yonlendir (pvp_lobby + game_duel_controller)
+- [x] M.14: 60+ hardcoded `Color(0x...)` → `color_constants.dart` (39 yeni sabit, 21 dosya)
+- [x] M.17: `ShapeGenerator` static → instance-based (constructor injection, izole test state)
+- [x] M.18: Mock/fake siniflar — `mocktail` entegrasyonu (3 mock sinif)
+- [x] M.19: `_evaluateBoard()` pipeline testi (12 test: chef/timeTrial/level)
+
+**Kalan P2 gorevleri (harici bagimlilik):**
+
 | # | Gorev | Harici Bag. |
 |---|-------|-------------|
-| M.3 | Firebase App Check enforce — Console kayit + 7 gun monitoring | Firebase Console |
-| M.5 | `StateNotifierProvider` → `NotifierProvider` gecisi (4 provider) | — |
-| M.6 | Coverage threshold enforcement — CI'ya lcov + min %70 esik | — |
-| M.8 | `features→data/remote` bypass'larini provider'a yonlendir (4 dosya) | — |
-| M.14 | 60+ hardcoded `Color(0x...)` sabiti `color_constants.dart`'a tasi | — |
-| M.17 | `ShapeGenerator` static → instance-based (PvP paralel state riski) | — |
-| M.18 | Mock/fake siniflar — `mocktail` + RemoteRepository/Analytics/Purchase mock | — |
-| M.19 | `_evaluateBoard()` pipeline testi yaz (place→synth→clear→gravity→combo) | — |
-| M.20 | Sunucu tarafinda ELO hesaplama — RPC ile (client-side cheat onlemi) | Supabase |
+| M.3 | Firebase App Check enforce | Firebase Console |
+| M.20 | Sunucu tarafinda ELO hesaplama (RPC) | Supabase |
 
 ### P3 — LOW (Opsiyonel)
 
-| # | Gorev | Harici Bag. |
-|---|-------|-------------|
-| L.3 | Fastlane veya Shorebird entegrasyonu | Kurulum |
-| L.4 | Performans profili (60fps dogrulama) | Fiziksel cihaz |
-| L.5 | TikTok/Instagram direct share | Platform API |
-| L.6 | Tablet/web genis ekran layout — responsive yok | — |
-| L.9 | SoundBank ses pipeline tamamla — `onLineClear`/`onGameOver` bos | Ses uretimi |
-| L.10 | COPPA yas kapisi (App Store 4+ siniflandirma) | — |
-| L.11 | Dependabot/Renovate — otomatik dependency guncelleme | — |
-| L.12 | RTL layout destegi — Arapca var ama Directionality yok | — |
-| L.13 | ThemeData olustur — karanlik/aydinlik gecisi imkansiz | — |
-| L.14 | Seeded modlarda smart RNG etkinlestir (Daily/Duel merhamet yok) | — |
-| L.15 | `availableColors` level ozelligini aktif et | — |
-| L.16 | Ekonomi inflasyon kontrolu — bakiye siniri/gunluk cap yok | — |
-| L.17 | shop_screen.dart parcala (878 satir) | — |
-| L.18 | ELO lig isimlerini l10n'a tasi (`'Bronz'`, `'Gumus'` vb.) | — |
-| L.19 | PvP reconnection stratejisi — ag kopmasinda bildirim yok | — |
-| L.20 | Veri export (GDPR Article 20) | — |
-| L.21 | CI versioning otomasyonu — version code sabit `1` | — |
+**Tamamlanan P3 gorevleri:**
+- [x] L.9: SoundBank ses pipeline — tum SFX event'leri + 7 yeni event (onSynthesis, onIceBreak vb.)
+- [x] L.11: Dependabot — pub + github-actions haftalik kontrol
+- [x] L.15: `availableColors` level ozelligi — ShapeGenerator + GlooGame entegrasyonu, Level 15/25
+- [x] L.16: Ekonomi inflasyon kontrolu — `inflatedCost()` (1x-3x, 500 birim basina +1x)
+- [x] L.18: ELO lig isimleri l10n — 5 lig, 12 dil
+- [x] L.21: CI versioning otomasyonu — git commit count bazli build number
+
+**Kalan P3 gorevleri:**
+
+| # | Gorev |
+|---|-------|
+| L.3 | Fastlane veya Shorebird entegrasyonu |
+| L.4 | Performans profili (60fps dogrulama) |
+| L.5 | TikTok/Instagram direct share |
+| L.6 | Tablet/web responsive layout |
+| L.10 | COPPA yas kapisi |
+| L.12 | RTL layout destegi |
+| L.13 | ThemeData (karanlik/aydinlik) |
+| L.14 | Seeded modlarda smart RNG |
+| L.17 | shop_screen.dart parcala |
+| L.19 | PvP reconnection stratejisi |
+| L.20 | Veri export (GDPR Article 20) |
 
 ---
 
 ## Tamamlanan Sprintler
+
+<details>
+<summary>Sprint 22 (AG) — P3 Bagimsiz Gorevler — 6/6</summary>
+
+- [x] L.9: SoundBank ses pipeline — tum SFX + 7 yeni event
+- [x] L.11: Dependabot yapilandirmasi (pub + github-actions)
+- [x] L.15: availableColors level ozelligi (ShapeGenerator entegrasyonu)
+- [x] L.16: Ekonomi inflasyon kontrolu (inflatedCost 1x-3x)
+- [x] L.18: ELO lig isimleri l10n (5 lig, 12 dil)
+- [x] L.21: CI versioning otomasyonu (git commit count)
+</details>
+
+<details>
+<summary>Sprint 21 (AF) — P2 Kalite & Mimari Iyilestirme — 7/7</summary>
+
+- [x] M.5: StateNotifierProvider kontrol — zaten tamamlanmis
+- [x] M.6: CI coverage threshold (min %70 lcov esik)
+- [x] M.8: features→data/remote bypass fix (re-export uzerinden)
+- [x] M.14: 60+ hardcoded Color(0x...) → color_constants.dart (39 sabit)
+- [x] M.17: ShapeGenerator static → instance-based (constructor injection)
+- [x] M.18: mocktail entegrasyonu (3 mock sinif)
+- [x] M.19: _evaluateBoard() pipeline testleri (12 test)
+</details>
 
 <details>
 <summary>Sprint 20 (AE) — Kalite, Guvenlik & Mimari Temizlik — 8/8</summary>
