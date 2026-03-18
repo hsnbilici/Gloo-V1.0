@@ -64,6 +64,9 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+		<!-- Microphone — required by SDK dependency, app does not use microphone -->
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Gloo does not use the microphone. This permission is required by a third-party SDK.</string>
 		<!-- AdMob App ID (test) — üretime geçişte gerçek ID ile değiştirilmeli -->
 		<key>GADApplicationIdentifier</key>
 		<string>ca-app-pub-3940256099942544~3347511713</string>
