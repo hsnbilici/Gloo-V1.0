@@ -100,7 +100,6 @@ class AppSettingsNotifier extends Notifier<AppSettings> {
       state = state.copyWith(adsRemoved: removed);
 }
 
-final appSettingsProvider =
-    NotifierProvider<AppSettingsNotifier, AppSettings>(
+final appSettingsProvider = NotifierProvider<AppSettingsNotifier, AppSettings>(
   AppSettingsNotifier.new,
 );

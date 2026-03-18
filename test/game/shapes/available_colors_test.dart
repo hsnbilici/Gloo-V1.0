@@ -23,7 +23,8 @@ void main() {
       }
     });
 
-    test('generateSmartHand uses kPrimaryColors when availableColors is null', () {
+    test('generateSmartHand uses kPrimaryColors when availableColors is null',
+        () {
       final sg = ShapeGenerator(rng: Random(42));
       final gm = GridManager(rows: 8, cols: 8);
 

@@ -34,8 +34,8 @@ class ConsentService {
             : null,
       );
 
-      final info = await UserMessagingPlatform.instance
-          .requestConsentInfoUpdate(params);
+      final info =
+          await UserMessagingPlatform.instance.requestConsentInfoUpdate(params);
 
       _updateConsentStatus(info.consentStatus);
 
@@ -46,8 +46,7 @@ class ConsentService {
 
       _initialized = true;
       if (kDebugMode) {
-        debugPrint(
-            'ConsentService: initialized — canShowAds=$_canShowAds, '
+        debugPrint('ConsentService: initialized — canShowAds=$_canShowAds, '
             'status=${info.consentStatus}');
       }
     } catch (e) {
@@ -62,8 +61,7 @@ class ConsentService {
     if (kIsWeb) return;
 
     try {
-      final info =
-          await UserMessagingPlatform.instance.showConsentForm();
+      final info = await UserMessagingPlatform.instance.showConsentForm();
       _updateConsentStatus(info.consentStatus);
       if (kDebugMode) {
         debugPrint(
@@ -76,8 +74,8 @@ class ConsentService {
 
   /// Consent durumunu güncelle.
   void _updateConsentStatus(ConsentStatus status) {
-    _canShowAds = status == ConsentStatus.obtained ||
-        status == ConsentStatus.notRequired;
+    _canShowAds =
+        status == ConsentStatus.obtained || status == ConsentStatus.notRequired;
   }
 
   /// Consent bilgilerini sıfırla (debug/test amaçlı).

@@ -24,7 +24,8 @@ class RemoteRepository {
       SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
 
   /// Basit retry mekanizmasi — network hatasinda exponential backoff ile tekrar dener.
-  Future<T?> _retry<T>(Future<T> Function() action, {int maxAttempts = 3}) async {
+  Future<T?> _retry<T>(Future<T> Function() action,
+      {int maxAttempts = 3}) async {
     for (var i = 0; i < maxAttempts; i++) {
       try {
         return await action();

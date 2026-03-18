@@ -49,8 +49,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   Future<void> _fetchData() async {
     setState(() => _loading = true);
     final results = await Future.wait([
-      ref.read(remoteRepositoryProvider).getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
-      ref.read(remoteRepositoryProvider).getUserRank(mode: _currentMode, weekly: _weekly),
+      ref
+          .read(remoteRepositoryProvider)
+          .getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
+      ref
+          .read(remoteRepositoryProvider)
+          .getUserRank(mode: _currentMode, weekly: _weekly),
     ]);
     if (!mounted) return;
     setState(() {

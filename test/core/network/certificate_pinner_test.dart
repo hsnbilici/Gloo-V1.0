@@ -18,8 +18,7 @@ void main() {
     });
 
     test('returns correct pins for supabase', () {
-      final pins =
-          pinner.getPinsFor('kxrdblgdydixgeruejpc.supabase.co');
+      final pins = pinner.getPinsFor('kxrdblgdydixgeruejpc.supabase.co');
       expect(pins, isNotNull);
       expect(pins!.length, 2);
       expect(pins[0], 'GU2W4j1P24T3sqlI+o6YTnidzz0PI8fB/Gvd2ITfSZE=');

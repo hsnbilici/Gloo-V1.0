@@ -191,8 +191,7 @@ class ShapeGenerator {
 
   /// Izgaradaki renk dağılımına göre ağırlıklı renk seçimi.
   /// Az bulunan birincil renkler daha yüksek ağırlık alır → sentez fırsatı.
-  GelColor _weightedRandomColor(Grid grid,
-      [List<GelColor>? availableColors]) {
+  GelColor _weightedRandomColor(Grid grid, [List<GelColor>? availableColors]) {
     final colors = availableColors ?? kPrimaryColors;
     // Izgaradaki renk dağılımını analiz et
     final colorCounts = <GelColor, int>{};

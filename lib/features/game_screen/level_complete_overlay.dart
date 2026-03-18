@@ -99,7 +99,8 @@ class LevelCompleteOverlay extends StatelessWidget {
                 ),
                 child: Text(
                   nextLevelLabel,
-                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 16),
                 ),
               ),
             ),
@@ -118,7 +119,8 @@ class LevelCompleteOverlay extends StatelessWidget {
                 ),
                 child: Text(
                   levelListLabel,
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 14),
                 ),
               ),
             ),

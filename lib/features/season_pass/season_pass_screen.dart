@@ -48,7 +48,6 @@ class SeasonPassScreen extends ConsumerStatefulWidget {
 }
 
 class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
-
   late final SeasonPassState _passState;
   bool _loaded = false;
 

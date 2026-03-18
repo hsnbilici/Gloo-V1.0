@@ -138,8 +138,7 @@ class GameOverOverlay extends ConsumerWidget {
                       ).animate(delay: 360.ms).fadeIn(duration: 280.ms),
                       if (isNewHighScore) ...[
                         const SizedBox(height: 12),
-                        NewRecordBadge(
-                                label: l.gameOverNewRecord, color: color)
+                        NewRecordBadge(label: l.gameOverNewRecord, color: color)
                             .animate(delay: 420.ms)
                             .fadeIn(duration: 300.ms)
                             .scale(
@@ -178,7 +177,8 @@ class GameOverOverlay extends ConsumerWidget {
                           color: color,
                           onTap: onSecondChance!,
                           watchAdLabel: l.watchAdLabel,
-                          secondChanceLabel: secondChanceLabel ?? l.secondChanceMoves,
+                          secondChanceLabel:
+                              secondChanceLabel ?? l.secondChanceMoves,
                         )
                             .animate(delay: 500.ms)
                             .fadeIn(duration: 320.ms)

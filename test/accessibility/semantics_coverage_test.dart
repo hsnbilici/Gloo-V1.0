@@ -12,8 +12,7 @@ import 'package:gloo/providers/user_provider.dart';
 /// Finds a [Semantics] widget with the given [label].
 Finder findSemantics(String label) {
   return find.byWidgetPredicate(
-    (widget) =>
-        widget is Semantics && widget.properties.label == label,
+    (widget) => widget is Semantics && widget.properties.label == label,
   );
 }
 

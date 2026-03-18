@@ -558,8 +558,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       securePrefs = await SharedPreferences.getInstance();
       secureStorage = FakeSecureStorage();
-      secureRepo =
-          LocalRepository(securePrefs, secureStorage: secureStorage);
+      secureRepo = LocalRepository(securePrefs, secureStorage: secureStorage);
     });
 
     test('saveElo hassas veriyi SecureStorage\'a yazar', () async {
@@ -625,7 +624,8 @@ void main() {
       expect(await secureStorage.read(key: 'gel_ozu'), isNull);
     });
 
-    test('migration: getElo SharedPreferences\'tan okur, sonra SecureStorage\'a gecis',
+    test(
+        'migration: getElo SharedPreferences\'tan okur, sonra SecureStorage\'a gecis',
         () async {
       // Eski veri SharedPreferences'ta
       await securePrefs.setInt('elo', 1300);

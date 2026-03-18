@@ -29,48 +29,48 @@ class _MatchButtonState extends State<MatchButton> {
         onTapUp: (_) => setState(() => _pressed = false),
         onTapCancel: () => setState(() => _pressed = false),
         child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.96 : 1.0, _pressed ? 0.96 : 1.0, 1.0),
-        transformAlignment: Alignment.center,
-        width: 240,
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              kColorClassic.withValues(alpha: 0.20),
-              kColorClassic.withValues(alpha: 0.08),
+          duration: const Duration(milliseconds: 80),
+          transform: Matrix4.diagonal3Values(
+              _pressed ? 0.96 : 1.0, _pressed ? 0.96 : 1.0, 1.0),
+          transformAlignment: Alignment.center,
+          width: 240,
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                kColorClassic.withValues(alpha: 0.20),
+                kColorClassic.withValues(alpha: 0.08),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(UIConstants.radiusXl),
+            border: Border.all(
+                color: kColorClassic.withValues(alpha: 0.55), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: kColorClassic.withValues(alpha: 0.20),
+                blurRadius: 24,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(UIConstants.radiusXl),
-          border: Border.all(
-              color: kColorClassic.withValues(alpha: 0.55), width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: kColorClassic.withValues(alpha: 0.20),
-              blurRadius: 24,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.sports_mma_rounded, color: kColorClassic, size: 22),
-            SizedBox(width: 10),
-            Text(
-              'Eslestirme Ara',
-              style: TextStyle(
-                color: kColorClassic,
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.sports_mma_rounded, color: kColorClassic, size: 22),
+              SizedBox(width: 10),
+              Text(
+                'Eslestirme Ara',
+                style: TextStyle(
+                  color: kColorClassic,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

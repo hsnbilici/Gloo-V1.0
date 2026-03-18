@@ -58,117 +58,117 @@ class ProductTile extends StatelessWidget {
     return Semantics(
       label: label,
       child: Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            color.withValues(alpha: isFeatured ? 0.14 : 0.08),
-            color.withValues(alpha: 0.02),
-            Colors.transparent,
-          ],
-          stops: const [0.0, 0.35, 1.0],
-        ),
-        borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-        border: Border.all(
-          color: color.withValues(alpha: isFeatured ? 0.45 : 0.22),
-          width: isFeatured ? 1.5 : 1,
-        ),
-        boxShadow: isFeatured
-            ? [
-                BoxShadow(
-                    color: color.withValues(alpha: 0.12),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4))
-              ]
-            : null,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-              border: Border.all(color: color.withValues(alpha: 0.30)),
-            ),
-            child: Icon(icon, color: color, size: 20),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              color.withValues(alpha: isFeatured ? 0.14 : 0.08),
+              color.withValues(alpha: 0.02),
+              Colors.transparent,
+            ],
+            stops: const [0.0, 0.35, 1.0],
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: MediaQuery.textScalerOf(context).scale(14),
-                    fontWeight: FontWeight.w700,
-                    shadows: isFeatured
-                        ? [
-                            Shadow(
-                                color: color.withValues(alpha: 0.35),
-                                blurRadius: 8)
-                          ]
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  desc,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.45),
-                    fontSize: MediaQuery.textScalerOf(context).scale(11),
-                  ),
-                ),
-              ],
-            ),
+          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+          border: Border.all(
+            color: color.withValues(alpha: isFeatured ? 0.45 : 0.22),
+            width: isFeatured ? 1.5 : 1,
           ),
-          const SizedBox(width: 8),
-          purchased
-              ? Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                    border: Border.all(color: color.withValues(alpha: 0.35)),
+          boxShadow: isFeatured
+              ? [
+                  BoxShadow(
+                      color: color.withValues(alpha: 0.12),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4))
+                ]
+              : null,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                border: Border.all(color: color.withValues(alpha: 0.30)),
+              ),
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.textScalerOf(context).scale(14),
+                      fontWeight: FontWeight.w700,
+                      shadows: isFeatured
+                          ? [
+                              Shadow(
+                                  color: color.withValues(alpha: 0.35),
+                                  blurRadius: 8)
+                            ]
+                          : null,
+                    ),
                   ),
-                  child: Icon(Icons.check_rounded, color: color, size: 16),
-                )
-              : Semantics(
-                  label: '$label $price',
-                  button: true,
-                  child: GestureDetector(
-                    onTap: onBuy,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: color.withValues(alpha: 0.15),
-                        borderRadius:
-                            BorderRadius.circular(UIConstants.radiusSm),
-                        border: Border.all(
-                            color: color.withValues(alpha: 0.50)),
-                      ),
-                      child: Text(
-                        price,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
+                  const SizedBox(height: 2),
+                  Text(
+                    desc,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.45),
+                      fontSize: MediaQuery.textScalerOf(context).scale(11),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            purchased
+                ? Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                      border: Border.all(color: color.withValues(alpha: 0.35)),
+                    ),
+                    child: Icon(Icons.check_rounded, color: color, size: 16),
+                  )
+                : Semantics(
+                    label: '$label $price',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: onBuy,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius:
+                              BorderRadius.circular(UIConstants.radiusSm),
+                          border:
+                              Border.all(color: color.withValues(alpha: 0.50)),
+                        ),
+                        child: Text(
+                          price,
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
-    ),
     );
   }
 }
@@ -302,8 +302,7 @@ class GlooPlusCard extends StatelessWidget {
                       letterSpacing: 1.5,
                       shadows: [
                         Shadow(
-                            color: kGold.withValues(alpha: 0.40),
-                            blurRadius: 8)
+                            color: kGold.withValues(alpha: 0.40), blurRadius: 8)
                       ],
                     ),
                   ),
@@ -363,61 +362,61 @@ class GlooPlusCard extends StatelessWidget {
                       onTap: onYearly,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        color: kGold.withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(
-                            color: kGold.withValues(alpha: 0.50), width: 1.5),
-                        boxShadow: [
-                          BoxShadow(
-                              color: kGold.withValues(alpha: 0.14),
-                              blurRadius: 10),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: kGold.withValues(alpha: 0.20),
-                              borderRadius:
-                                  BorderRadius.circular(UIConstants.radiusXs),
-                            ),
-                            child: Text(
-                              badgeLabel,
-                              style: const TextStyle(
-                                color: kGold,
-                                fontSize: 8,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: 1.2,
+                        decoration: BoxDecoration(
+                          color: kGold.withValues(alpha: 0.12),
+                          borderRadius:
+                              BorderRadius.circular(UIConstants.radiusMd),
+                          border: Border.all(
+                              color: kGold.withValues(alpha: 0.50), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                                color: kGold.withValues(alpha: 0.14),
+                                blurRadius: 10),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: kGold.withValues(alpha: 0.20),
+                                borderRadius:
+                                    BorderRadius.circular(UIConstants.radiusXs),
+                              ),
+                              child: Text(
+                                badgeLabel,
+                                style: const TextStyle(
+                                  color: kGold,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.2,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            yearlyLabel,
-                            style: TextStyle(
-                              color: kGold.withValues(alpha: 0.80),
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+                            const SizedBox(height: 4),
+                            Text(
+                              yearlyLabel,
+                              style: TextStyle(
+                                color: kGold.withValues(alpha: 0.80),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            yearlyPrice,
-                            style: const TextStyle(
-                              color: kGold,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
+                            const SizedBox(height: 2),
+                            Text(
+                              yearlyPrice,
+                              style: const TextStyle(
+                                color: kGold,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                   ),
                 ),
               ],

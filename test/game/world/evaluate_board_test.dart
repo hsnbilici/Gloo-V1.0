@@ -28,7 +28,8 @@ void main() {
       game.placePiece([(5, 1)], GelColor.yellow);
 
       expect(capturedProgress, isNotNull,
-          reason: 'onChefProgress should fire when target color is synthesised');
+          reason:
+              'onChefProgress should fire when target color is synthesised');
       expect(capturedProgress, 1);
       expect(capturedRequired, 3); // level 0 requiredCount
     });

@@ -143,8 +143,7 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       final container = ProviderContainer(overrides: [
         localRepositoryProvider.overrideWith((_) async {
-          return LocalRepository(prefs,
-              secureStorage: FakeSecureStorage());
+          return LocalRepository(prefs, secureStorage: FakeSecureStorage());
         }),
       ]);
       addTearDown(container.dispose);
@@ -158,8 +157,7 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       final container = ProviderContainer(overrides: [
         localRepositoryProvider.overrideWith((_) async {
-          return LocalRepository(prefs,
-              secureStorage: FakeSecureStorage());
+          return LocalRepository(prefs, secureStorage: FakeSecureStorage());
         }),
       ]);
       addTearDown(container.dispose);

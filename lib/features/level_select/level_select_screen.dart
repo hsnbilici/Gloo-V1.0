@@ -292,58 +292,57 @@ class _LevelCellState extends State<_LevelCell> {
             : null,
         onTapDown: isUnlocked ? (_) => setState(() => _pressed = true) : null,
         onTapUp: isUnlocked ? (_) => setState(() => _pressed = false) : null,
-        onTapCancel:
-            isUnlocked ? () => setState(() => _pressed = false) : null,
+        onTapCancel: isUnlocked ? () => setState(() => _pressed = false) : null,
         child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.92 : 1.0, _pressed ? 0.92 : 1.0, 1.0),
-        transformAlignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-          border: Border.all(color: borderColor, width: isCompleted ? 1.5 : 1),
-          boxShadow: isCompleted
-              ? [
-                  BoxShadow(
-                    color:
-                        kGreen.withValues(alpha: 0.15),
-                    blurRadius: 8,
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (!isUnlocked)
-              Icon(Icons.lock_rounded,
-                  color: Colors.white.withValues(alpha: 0.20), size: 16)
-            else ...[
-              Text(
-                '${widget.levelId}',
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              if (isCompleted && widget.score != null) ...[
-                const SizedBox(height: 2),
+          duration: const Duration(milliseconds: 80),
+          transform: Matrix4.diagonal3Values(
+              _pressed ? 0.92 : 1.0, _pressed ? 0.92 : 1.0, 1.0),
+          transformAlignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border:
+                Border.all(color: borderColor, width: isCompleted ? 1.5 : 1),
+            boxShadow: isCompleted
+                ? [
+                    BoxShadow(
+                      color: kGreen.withValues(alpha: 0.15),
+                      blurRadius: 8,
+                    ),
+                  ]
+                : null,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (!isUnlocked)
+                Icon(Icons.lock_rounded,
+                    color: Colors.white.withValues(alpha: 0.20), size: 16)
+              else ...[
                 Text(
-                  _fmtScore(widget.score!),
+                  '${widget.levelId}',
                   style: TextStyle(
-                    color: textColor.withValues(alpha: 0.65),
-                    fontSize: 8,
-                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
+                if (isCompleted && widget.score != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    _fmtScore(widget.score!),
+                    style: TextStyle(
+                      color: textColor.withValues(alpha: 0.65),
+                      fontSize: 8,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ],
             ],
-          ],
+          ),
         ),
       ),
-    ),
     ).animate(delay: widget.delay).fadeIn(duration: 200.ms).scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1.0, 1.0),
@@ -371,14 +370,12 @@ class _LevelSelectBackground extends StatelessWidget {
         const Positioned(
           top: -100,
           right: -60,
-          child: GlowOrb(
-              size: 340, color: kOrange, opacity: 0.08),
+          child: GlowOrb(size: 340, color: kOrange, opacity: 0.08),
         ),
         const Positioned(
           bottom: -80,
           left: -40,
-          child: GlowOrb(
-              size: 260, color: kGreen, opacity: 0.06),
+          child: GlowOrb(size: 260, color: kGreen, opacity: 0.06),
         ),
       ],
     );

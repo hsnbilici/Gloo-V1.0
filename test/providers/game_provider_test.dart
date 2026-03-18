@@ -95,16 +95,12 @@ void main() {
     });
 
     test('updateScore changes score', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateScore(500);
+      container.read(gameProvider(GameMode.classic).notifier).updateScore(500);
       expect(container.read(gameProvider(GameMode.classic)).score, 500);
     });
 
     test('updateFill changes filledCells', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateFill(40);
+      container.read(gameProvider(GameMode.classic).notifier).updateFill(40);
       expect(container.read(gameProvider(GameMode.classic)).filledCells, 40);
     });
 
@@ -125,18 +121,14 @@ void main() {
     });
 
     test('updateChef changes progress and required', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateChef(3, 5);
+      container.read(gameProvider(GameMode.classic).notifier).updateChef(3, 5);
       final state = container.read(gameProvider(GameMode.classic));
       expect(state.chefProgress, 3);
       expect(state.chefRequired, 5);
     });
 
     test('updateGelOzu changes gelOzu', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateGelOzu(100);
+      container.read(gameProvider(GameMode.classic).notifier).updateGelOzu(100);
       expect(container.read(gameProvider(GameMode.classic)).gelOzu, 100);
     });
 
@@ -157,15 +149,12 @@ void main() {
     });
 
     test('updateElo changes elo', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateElo(1350);
+      container.read(gameProvider(GameMode.classic).notifier).updateElo(1350);
       expect(container.read(gameProvider(GameMode.classic)).elo, 1350);
     });
 
     test('reset returns to initial state', () {
-      final notifier =
-          container.read(gameProvider(GameMode.classic).notifier);
+      final notifier = container.read(gameProvider(GameMode.classic).notifier);
       notifier.updateScore(500);
       notifier.updateFill(40);
       notifier.updateStatus(GameStatus.playing);
@@ -184,11 +173,8 @@ void main() {
     });
 
     test('different modes start independently', () {
-      container
-          .read(gameProvider(GameMode.classic).notifier)
-          .updateScore(1000);
-      expect(
-          container.read(gameProvider(GameMode.timeTrial)).score, 0);
+      container.read(gameProvider(GameMode.classic).notifier).updateScore(1000);
+      expect(container.read(gameProvider(GameMode.timeTrial)).score, 0);
     });
   });
 }

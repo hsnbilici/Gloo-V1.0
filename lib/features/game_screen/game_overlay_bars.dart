@@ -6,7 +6,8 @@ import '../../core/constants/ui_constants.dart';
 // ─── Doluluk çubuğu (Classic / Daily) ────────────────────────────────────────
 
 class FillBar extends StatelessWidget {
-  const FillBar({super.key, required this.filledCells, required this.totalCells});
+  const FillBar(
+      {super.key, required this.filledCells, required this.totalCells});
 
   final int filledCells;
   final int totalCells;
@@ -157,8 +158,8 @@ class CountdownBar extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           style: TextStyle(
             color: barColor,
-            fontSize: MediaQuery.textScalerOf(context).scale(
-                isPulsing ? 13 : 10),
+            fontSize:
+                MediaQuery.textScalerOf(context).scale(isPulsing ? 13 : 10),
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,
           ),

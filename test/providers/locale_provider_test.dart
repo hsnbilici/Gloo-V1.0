@@ -64,23 +64,17 @@ void main() {
     tearDown(() => container.dispose());
 
     test('setLocale changes state', () {
-      container
-          .read(localeProvider.notifier)
-          .setLocale(const Locale('tr'));
+      container.read(localeProvider.notifier).setLocale(const Locale('tr'));
       expect(container.read(localeProvider).languageCode, 'tr');
     });
 
     test('setLocale to Japanese', () {
-      container
-          .read(localeProvider.notifier)
-          .setLocale(const Locale('ja'));
+      container.read(localeProvider.notifier).setLocale(const Locale('ja'));
       expect(container.read(localeProvider).languageCode, 'ja');
     });
 
     test('setLocale to Arabic', () {
-      container
-          .read(localeProvider.notifier)
-          .setLocale(const Locale('ar'));
+      container.read(localeProvider.notifier).setLocale(const Locale('ar'));
       expect(container.read(localeProvider).languageCode, 'ar');
     });
 

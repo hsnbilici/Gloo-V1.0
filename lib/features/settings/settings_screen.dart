@@ -161,7 +161,8 @@ class SettingsScreen extends ConsumerWidget {
               ),
               SectionHeader(title: l.settingsSectionAbout, color: kMuted),
               SettingsInfoTile(label: l.settingsVersion, value: '1.0.0'),
-              SettingsInfoTile(label: l.settingsDeveloper, value: 'Gloo Studio'),
+              SettingsInfoTile(
+                  label: l.settingsDeveloper, value: 'Gloo Studio'),
             ],
           ),
         ],

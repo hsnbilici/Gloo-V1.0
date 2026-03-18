@@ -180,146 +180,148 @@ class _PowerUpButton extends StatelessWidget {
       button: true,
       enabled: canUse,
       child: GestureDetector(
-      onTap: canUse ? () => onTap(type) : null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          gradient: canUse
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    primary.withValues(alpha: isActive ? 0.35 : 0.18),
-                    dark.withValues(alpha: isActive ? 0.25 : 0.10),
-                  ],
-                )
-              : null,
-          color: canUse ? null : Colors.white.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-          border: Border.all(
-            color: isActive
-                ? primary.withValues(alpha: 0.9)
-                : canUse
-                    ? primary.withValues(alpha: 0.35)
-                    : Colors.white.withValues(alpha: 0.06),
-            width: isActive ? 1.5 : 1,
-          ),
-          boxShadow: isActive
-              ? [
-                  BoxShadow(
-                    color: primary.withValues(alpha: 0.35),
-                    blurRadius: 14,
-                    spreadRadius: 1,
-                  ),
-                  BoxShadow(
-                    color: primary.withValues(alpha: 0.15),
-                    blurRadius: 4,
-                  ),
-                ]
-              : canUse
-                  ? [
-                      BoxShadow(
-                        color: primary.withValues(alpha: 0.10),
-                        blurRadius: 8,
-                      ),
-                    ]
-                  : null,
-        ),
-        child: Stack(
-          children: [
-            // Specular highlight — jel etkisi
-            if (canUse)
-              Positioned(
-                top: 3,
-                left: 5,
-                right: 12,
-                height: 8,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.white.withValues(alpha: 0.15),
-                        Colors.white.withValues(alpha: 0.0),
-                      ],
+        onTap: canUse ? () => onTap(type) : null,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            gradient: canUse
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      primary.withValues(alpha: isActive ? 0.35 : 0.18),
+                      dark.withValues(alpha: isActive ? 0.25 : 0.10),
+                    ],
+                  )
+                : null,
+            color: canUse ? null : Colors.white.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(
+              color: isActive
+                  ? primary.withValues(alpha: 0.9)
+                  : canUse
+                      ? primary.withValues(alpha: 0.35)
+                      : Colors.white.withValues(alpha: 0.06),
+              width: isActive ? 1.5 : 1,
+            ),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: primary.withValues(alpha: 0.35),
+                      blurRadius: 14,
+                      spreadRadius: 1,
                     ),
-                  ),
-                ),
-              ),
-            // Ana ikon
-            Center(
-              child: Icon(
-                icon,
-                size: 22,
-                color: canUse ? primary : Colors.white.withValues(alpha: 0.18),
-                shadows: canUse
+                    BoxShadow(
+                      color: primary.withValues(alpha: 0.15),
+                      blurRadius: 4,
+                    ),
+                  ]
+                : canUse
                     ? [
-                        Shadow(
-                          color: primary.withValues(alpha: 0.5),
+                        BoxShadow(
+                          color: primary.withValues(alpha: 0.10),
                           blurRadius: 8,
                         ),
                       ]
                     : null,
-              ),
-            ),
-            // Maliyet badge — jel kapsul
-            Positioned(
-              right: 2,
-              bottom: 2,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                decoration: BoxDecoration(
-                  color: canUse
-                      ? primary.withValues(alpha: 0.2)
-                      : Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: canUse
-                        ? primary.withValues(alpha: 0.25)
-                        : Colors.transparent,
-                    width: 0.5,
-                  ),
-                ),
-                child: Text(
-                  '${def.cost}',
-                  style: TextStyle(
-                    color: canUse ? primary : kMuted.withValues(alpha: 0.5),
-                    fontSize: 9,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ),
-            // Cooldown overlay
-            if (cooldown > 0)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                    border: Border.all(
-                      color: primary.withValues(alpha: 0.15),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$cooldown',
-                      style: TextStyle(
-                        color: primary.withValues(alpha: 0.7),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
+          ),
+          child: Stack(
+            children: [
+              // Specular highlight — jel etkisi
+              if (canUse)
+                Positioned(
+                  top: 3,
+                  left: 5,
+                  right: 12,
+                  height: 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withValues(alpha: 0.15),
+                          Colors.white.withValues(alpha: 0.0),
+                        ],
                       ),
                     ),
                   ),
                 ),
+              // Ana ikon
+              Center(
+                child: Icon(
+                  icon,
+                  size: 22,
+                  color:
+                      canUse ? primary : Colors.white.withValues(alpha: 0.18),
+                  shadows: canUse
+                      ? [
+                          Shadow(
+                            color: primary.withValues(alpha: 0.5),
+                            blurRadius: 8,
+                          ),
+                        ]
+                      : null,
+                ),
               ),
-          ],
+              // Maliyet badge — jel kapsul
+              Positioned(
+                right: 2,
+                bottom: 2,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: canUse
+                        ? primary.withValues(alpha: 0.2)
+                        : Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: canUse
+                          ? primary.withValues(alpha: 0.25)
+                          : Colors.transparent,
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Text(
+                    '${def.cost}',
+                    style: TextStyle(
+                      color: canUse ? primary : kMuted.withValues(alpha: 0.5),
+                      fontSize: 9,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+              // Cooldown overlay
+              if (cooldown > 0)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                      border: Border.all(
+                        color: primary.withValues(alpha: 0.15),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$cooldown',
+                        style: TextStyle(
+                          color: primary.withValues(alpha: 0.7),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

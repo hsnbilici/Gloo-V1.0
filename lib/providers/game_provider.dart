@@ -82,7 +82,8 @@ class GameNotifier extends FamilyNotifier<GameState, GameMode> {
   }
 
   void updateChef(int progress, int required) {
-    if (state.chefProgress == progress && state.chefRequired == required) return;
+    if (state.chefProgress == progress && state.chefRequired == required)
+      return;
     state = state.copyWith(chefProgress: progress, chefRequired: required);
   }
 
@@ -92,6 +93,7 @@ class GameNotifier extends FamilyNotifier<GameState, GameMode> {
     if (state.movesUsed == value) return;
     state = state.copyWith(movesUsed: value);
   }
+
   void updateLevel(int level, int targetScore) => state =
       state.copyWith(currentLevel: level, levelTargetScore: targetScore);
   void updateElo(int value) => state = state.copyWith(elo: value);
@@ -100,7 +102,6 @@ class GameNotifier extends FamilyNotifier<GameState, GameMode> {
       state = GameState(score: 0, status: GameStatus.idle, mode: arg);
 }
 
-final gameProvider =
-    NotifierProvider.family<GameNotifier, GameState, GameMode>(
+final gameProvider = NotifierProvider.family<GameNotifier, GameState, GameMode>(
   GameNotifier.new,
 );

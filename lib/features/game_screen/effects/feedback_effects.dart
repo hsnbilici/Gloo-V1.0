@@ -213,8 +213,7 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
     final isCritical = widget.event.isCritical;
-    final color =
-        isCritical ? kRed : kOrangeVivid;
+    final color = isCritical ? kRed : kOrangeVivid;
     final label = isCritical ? l.nearMissCritical : l.nearMissStandard;
 
     return IgnorePointer(

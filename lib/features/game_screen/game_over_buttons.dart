@@ -130,63 +130,63 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              kGold.withValues(alpha: _pressed ? 0.22 : 0.15),
-              widget.color.withValues(alpha: _pressed ? 0.18 : 0.10),
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                kGold.withValues(alpha: _pressed ? 0.22 : 0.15),
+                widget.color.withValues(alpha: _pressed ? 0.18 : 0.10),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(
+              color: kGold.withValues(alpha: _pressed ? 0.80 : 0.55),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: kGold.withValues(alpha: 0.20),
+                blurRadius: 24,
+                offset: const Offset(0, 4),
+              ),
             ],
           ),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: kGold.withValues(alpha: _pressed ? 0.80 : 0.55),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: kGold.withValues(alpha: 0.20),
-              blurRadius: 24,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.play_circle_outline_rounded,
-                color: kGold, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              widget.watchAdLabel,
-              style: const TextStyle(
-                color: kGold,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              ),
-            ),
-            const SizedBox(width: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: kGold.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: kGold.withValues(alpha: 0.40)),
-              ),
-              child: Text(
-                widget.secondChanceLabel,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.play_circle_outline_rounded,
+                  color: kGold, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                widget.watchAdLabel,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
+                  color: kGold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: kGold.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: kGold.withValues(alpha: 0.40)),
+                ),
+                child: Text(
+                  widget.secondChanceLabel,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

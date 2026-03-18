@@ -226,8 +226,7 @@ void main() {
     });
 
     test('onCombo(epic) plays comboEpic SFX and comboEpic haptic', () async {
-      const combo =
-          ComboEvent(size: 10, tier: ComboTier.epic, multiplier: 3.0);
+      const combo = ComboEvent(size: 10, tier: ComboTier.epic, multiplier: 3.0);
       await bank.onCombo(combo);
       verify(() => audio.playSfx(AudioPaths.comboEpic)).called(1);
       verify(() => haptic.trigger(HapticProfile.comboEpic)).called(1);
@@ -250,8 +249,7 @@ void main() {
       verify(() => haptic.trigger(HapticProfile.gelMergeLarge)).called(1);
     });
 
-    test(
-        'onLineClear(2) plays lineClearCrystal SFX and gelMergeLarge haptic',
+    test('onLineClear(2) plays lineClearCrystal SFX and gelMergeLarge haptic',
         () async {
       await bank.onLineClear(lines: 2);
       verify(() => audio.playSfx(AudioPaths.lineClearCrystal)).called(1);
@@ -284,7 +282,8 @@ void main() {
 
     // ── onPowerUpActivate ────────────────────────────────────────────────────
 
-    test('onPowerUpActivate plays powerupActivate SFX and powerupActivate haptic',
+    test(
+        'onPowerUpActivate plays powerupActivate SFX and powerupActivate haptic',
         () async {
       await bank.onPowerUpActivate();
       verify(() => audio.playSfx(AudioPaths.powerupActivate)).called(1);

@@ -5,7 +5,8 @@ import '../../core/constants/ui_constants.dart';
 // ─── Zen ambiyans göstergesi (skor yerine) ───────────────────────────────────
 
 class ZenScoreIndicator extends StatelessWidget {
-  const ZenScoreIndicator({super.key, required this.color, required this.score});
+  const ZenScoreIndicator(
+      {super.key, required this.color, required this.score});
 
   final Color color;
   final int score;

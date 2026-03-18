@@ -238,10 +238,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        PvpStatChip(
-            label: l.pvpWinLabel,
-            value: '$wins',
-            color: kGreen),
+        PvpStatChip(label: l.pvpWinLabel, value: '$wins', color: kGreen),
         const SizedBox(width: 12),
         PvpStatChip(
             label: l.pvpLossLabel, value: '$losses', color: kColorClassic),

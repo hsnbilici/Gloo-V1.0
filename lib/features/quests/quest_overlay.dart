@@ -9,7 +9,6 @@ import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 import 'quest_widgets.dart';
 
-
 class QuestOverlay extends ConsumerStatefulWidget {
   const QuestOverlay({super.key});
 

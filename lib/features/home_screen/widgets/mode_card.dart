@@ -117,8 +117,8 @@ class ModeCardState extends State<ModeCard> {
                           widget.label,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: MediaQuery.textScalerOf(context).scale(
-                                widget.isFeatured ? 17 : 16),
+                            fontSize: MediaQuery.textScalerOf(context)
+                                .scale(widget.isFeatured ? 17 : 16),
                             fontWeight: FontWeight.w700,
                             shadows: [
                               Shadow(
@@ -176,14 +176,12 @@ class ModeCardState extends State<ModeCard> {
                   decoration: BoxDecoration(
                     color: kGold.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                    border: Border.all(
-                        color: kGold.withValues(alpha: 0.40)),
+                    border: Border.all(color: kGold.withValues(alpha: 0.40)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.lock_rounded,
-                          color: kGold, size: 10),
+                      const Icon(Icons.lock_rounded, color: kGold, size: 10),
                       const SizedBox(width: 3),
                       Text(
                         widget.lockLabel!,

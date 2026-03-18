@@ -210,8 +210,7 @@ class TierCard extends StatelessWidget {
                         Text(
                           'PREMIUM',
                           style: TextStyle(
-                            color:
-                                kPink.withValues(alpha: 0.50),
+                            color: kPink.withValues(alpha: 0.50),
                             fontSize: 7,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1,

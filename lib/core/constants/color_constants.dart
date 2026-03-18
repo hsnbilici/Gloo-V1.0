@@ -46,7 +46,6 @@ enum GelColor {
         GelColor.brown => const Color(0xFF8B6914),
         GelColor.white => const Color(0xFFF0F0F0),
       };
-
 }
 
 /// Renk sentezi tablosu — iki jel birleştiğinde hangi rengi üretir

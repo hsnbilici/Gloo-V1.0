@@ -155,12 +155,14 @@ class PurchaseService {
     if (pending.isEmpty) return;
     _pendingVerification.addAll(pending);
     if (kDebugMode) {
-      debugPrint('PurchaseService: retrying ${pending.length} pending verifications');
+      debugPrint(
+          'PurchaseService: retrying ${pending.length} pending verifications');
     }
     final repo = RemoteRepository();
     for (final productId in List<String>.of(pending)) {
       final result = await repo.verifyPurchase(
-        platform: defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
+        platform:
+            defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
         receipt: '',
         productId: productId,
       );
@@ -195,9 +197,11 @@ class PurchaseService {
     final saved = await localRepo.getUnlockedProducts();
     if (saved.isEmpty) return;
     // Kayıtlı ama artık aktif olmayan abonelikleri kaldır
-    final expired = saved.where(
-      (id) => _kSubscriptionIds.contains(id) && !_purchasedIds.contains(id),
-    ).toList();
+    final expired = saved
+        .where(
+          (id) => _kSubscriptionIds.contains(id) && !_purchasedIds.contains(id),
+        )
+        .toList();
     if (expired.isNotEmpty) {
       final updated = saved.where((id) => !expired.contains(id)).toList();
       await localRepo.addUnlockedProducts(updated);
