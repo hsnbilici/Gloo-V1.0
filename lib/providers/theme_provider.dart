@@ -5,8 +5,11 @@ final themeModeProvider =
     NotifierProvider<ThemeModeNotifier, ThemeMode>(ThemeModeNotifier.new);
 
 class ThemeModeNotifier extends Notifier<ThemeMode> {
+  ThemeModeNotifier([this._initial]);
+  final ThemeMode? _initial;
+
   @override
-  ThemeMode build() => ThemeMode.system;
+  ThemeMode build() => _initial ?? ThemeMode.system;
 
   void setThemeMode(ThemeMode mode) {
     state = mode;

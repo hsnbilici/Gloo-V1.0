@@ -20,6 +20,7 @@ import 'core/network/pinned_http_overrides.dart';
 import 'data/local/local_repository.dart';
 import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
+import 'providers/theme_provider.dart';
 import 'services/ad_manager.dart';
 import 'services/consent_service.dart';
 import 'services/purchase_service.dart';
@@ -112,6 +113,15 @@ Future<void> main() async {
 
     FlutterNativeSplash.remove();
 
+    // Kalici tema modunu runApp oncesi yukle — sistem temasina geri donusu onler
+    ThemeMode savedThemeMode = ThemeMode.system;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      savedThemeMode = await LocalRepository(prefs).getThemeMode();
+    } catch (_) {
+      // Okuma basarisiz — varsayilan sistem temasina devam et
+    }
+
     // Widget build hatalarinda kullanici dostu hata ekrani
     ErrorWidget.builder = (FlutterErrorDetails details) {
       return Container(
@@ -155,8 +165,13 @@ Future<void> main() async {
     };
 
     runApp(
-      const ProviderScope(
-        child: GlooApp(),
+      ProviderScope(
+        overrides: [
+          themeModeProvider.overrideWith(
+            () => ThemeModeNotifier(savedThemeMode),
+          ),
+        ],
+        child: const GlooApp(),
       ),
     );
   }, (error, stack) {
