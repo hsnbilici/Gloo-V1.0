@@ -405,4 +405,9 @@ class StringsFr extends AppStrings {
   String get leagueDiamond => 'Diamant';
   @override
   String get leagueGlooMaster => 'Gloo Maître';
+
+  @override
+  String get streakRewardTitle => 'Récompense de série !';
+  @override
+  String get streakRewardClaim => 'Réclamer';
 }

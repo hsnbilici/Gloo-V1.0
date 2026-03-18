@@ -69,4 +69,12 @@ abstract final class GameConstants {
   // Sezon pası
   static const int seasonDurationWeeks = 8;
   static const int seasonTotalTiers = 50;
+
+  /// Streak milestone rewards: {day: jelOzuReward}
+  static const Map<int, int> streakRewards = {
+    3: 10,
+    7: 50,
+    14: 100,
+    30: 200,
+  };
 }

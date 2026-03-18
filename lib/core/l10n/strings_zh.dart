@@ -399,4 +399,9 @@ class StringsZh extends AppStrings {
   String get leagueDiamond => '钻石';
   @override
   String get leagueGlooMaster => 'Gloo 大师';
+
+  @override
+  String get streakRewardTitle => '连续奖励！';
+  @override
+  String get streakRewardClaim => '领取';
 }

@@ -402,4 +402,9 @@ class StringsJa extends AppStrings {
   String get leagueDiamond => 'ダイヤモンド';
   @override
   String get leagueGlooMaster => 'グルーマスター';
+
+  @override
+  String get streakRewardTitle => 'ストリーク報酬！';
+  @override
+  String get streakRewardClaim => '受け取る';
 }

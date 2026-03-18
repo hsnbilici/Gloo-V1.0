@@ -122,6 +122,8 @@ abstract class AppStrings {
 
   // Streak
   String get streakDays;
+  String get streakRewardTitle;
+  String get streakRewardClaim;
 
   // Günlük Bulmaca
   String get dailyTitle;

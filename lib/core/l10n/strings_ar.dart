@@ -406,4 +406,9 @@ class StringsAr extends AppStrings {
   String get leagueDiamond => 'ألماس';
   @override
   String get leagueGlooMaster => 'غلو ماستر';
+
+  @override
+  String get streakRewardTitle => 'مكافأة السلسلة!';
+  @override
+  String get streakRewardClaim => 'استلام';
 }

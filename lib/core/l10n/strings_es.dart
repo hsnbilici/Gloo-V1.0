@@ -409,4 +409,9 @@ class StringsEs extends AppStrings {
   String get leagueDiamond => 'Diamante';
   @override
   String get leagueGlooMaster => 'Gloo Maestro';
+
+  @override
+  String get streakRewardTitle => '¡Recompensa de racha!';
+  @override
+  String get streakRewardClaim => 'Reclamar';
 }

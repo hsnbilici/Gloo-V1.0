@@ -408,4 +408,9 @@ class StringsDe extends AppStrings {
   String get leagueDiamond => 'Diamant';
   @override
   String get leagueGlooMaster => 'Gloo Master';
+
+  @override
+  String get streakRewardTitle => 'Serien-Belohnung!';
+  @override
+  String get streakRewardClaim => 'Einlösen';
 }

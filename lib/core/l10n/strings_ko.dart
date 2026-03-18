@@ -403,4 +403,9 @@ class StringsKo extends AppStrings {
   String get leagueDiamond => '다이아몬드';
   @override
   String get leagueGlooMaster => '글루 마스터';
+
+  @override
+  String get streakRewardTitle => '연속 보상!';
+  @override
+  String get streakRewardClaim => '받기';
 }

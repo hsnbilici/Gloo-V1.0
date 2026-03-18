@@ -404,4 +404,9 @@ class StringsPt extends AppStrings {
   String get leagueDiamond => 'Diamante';
   @override
   String get leagueGlooMaster => 'Gloo Mestre';
+
+  @override
+  String get streakRewardTitle => 'Recompensa de sequência!';
+  @override
+  String get streakRewardClaim => 'Reivindicar';
 }

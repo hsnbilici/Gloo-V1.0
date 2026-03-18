@@ -403,4 +403,9 @@ class StringsTr extends AppStrings {
   String get leagueDiamond => 'Elmas';
   @override
   String get leagueGlooMaster => 'Gloo Master';
+
+  @override
+  String get streakRewardTitle => 'Seri Ödülü!';
+  @override
+  String get streakRewardClaim => 'Al';
 }

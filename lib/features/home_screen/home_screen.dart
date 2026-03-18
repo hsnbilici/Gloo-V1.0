@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/game_constants.dart';
 import '../../data/local/local_repository.dart';
 import '../../core/models/game_mode.dart';
 import '../../providers/audio_provider.dart';
@@ -20,6 +21,7 @@ import 'widgets/gel_logo.dart';
 import 'widgets/meta_game_bar.dart';
 import 'widgets/mode_card.dart';
 import 'widgets/streak_badge.dart';
+import 'widgets/streak_reward_dialog.dart';
 
 // ─── Ana ekran ────────────────────────────────────────────────────────────────
 
@@ -35,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     // İlk açılışta sıralı kontroller — SharedPreferences yüklendikten sonra
-    ref.read(localRepositoryProvider.future).then((repo) {
+    ref.read(localRepositoryProvider.future).then((repo) async {
       if (!mounted) return;
       // 0) Analytics tercihini provider'a ve servise yükle
       final analyticsEnabled = repo.getAnalyticsEnabled();
@@ -48,16 +50,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         context.go('/onboarding');
         return;
       }
-      // 2) GDPR consent henüz gösterilmemişse dialog aç
+      // 2) Streak seri ödülü kontrolü
+      final streak = await repo.checkAndUpdateStreak();
+      final lastRewardDay = repo.getLastStreakRewardDay();
+      final eligibleTier = GameConstants.streakRewards.keys
+          .where((day) => streak >= day && day > lastRewardDay)
+          .fold<int>(0, (best, day) => day > best ? day : best);
+      if (eligibleTier > 0 && mounted) {
+        final reward = GameConstants.streakRewards[eligibleTier]!;
+        await repo.setLastStreakRewardDay(eligibleTier);
+        final currentGelOzu = await repo.getGelOzu();
+        await repo.saveGelOzu(currentGelOzu + reward);
+        if (mounted) {
+          await _showStreakRewardDialog(streak: eligibleTier, reward: reward);
+        }
+      }
+      if (!mounted) return;
+      // 3) GDPR consent henüz gösterilmemişse dialog aç
       if (!repo.getConsentShown()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _showConsentDialog(repo);
         });
         return;
       }
-      // 3) iOS ATT izni iste (consent kabul edildiyse)
+      // 4) iOS ATT izni iste (consent kabul edildiyse)
       _requestATTIfNeeded();
-      // 4) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
+      // 5) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
       if (!repo.getColorblindPromptShown()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _showColorblindDialog(repo);
@@ -125,6 +143,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Navigator.of(ctx).pop();
         },
         onSkip: () => Navigator.of(ctx).pop(),
+      ),
+    );
+  }
+
+  Future<void> _showStreakRewardDialog({
+    required int streak,
+    required int reward,
+  }) async {
+    final l = ref.read(stringsProvider);
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.65),
+      builder: (ctx) => StreakRewardDialog(
+        streakDay: streak,
+        reward: reward,
+        title: l.streakRewardTitle,
+        claimLabel: l.streakRewardClaim,
+        onClaim: () => Navigator.of(ctx).pop(),
       ),
     );
   }

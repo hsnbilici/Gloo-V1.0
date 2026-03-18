@@ -404,4 +404,9 @@ class StringsHi extends AppStrings {
   String get leagueDiamond => 'हीरा';
   @override
   String get leagueGlooMaster => 'ग्लू मास्टर';
+
+  @override
+  String get streakRewardTitle => 'स्ट्रीक इनाम!';
+  @override
+  String get streakRewardClaim => 'प्राप्त करें';
 }

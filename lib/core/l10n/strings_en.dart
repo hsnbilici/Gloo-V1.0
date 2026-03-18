@@ -402,4 +402,9 @@ class StringsEn extends AppStrings {
   String get leagueDiamond => 'Diamond';
   @override
   String get leagueGlooMaster => 'Gloo Master';
+
+  @override
+  String get streakRewardTitle => 'Streak Reward!';
+  @override
+  String get streakRewardClaim => 'Claim';
 }

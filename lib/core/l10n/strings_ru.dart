@@ -409,4 +409,9 @@ class StringsRu extends AppStrings {
   String get leagueDiamond => 'Алмаз';
   @override
   String get leagueGlooMaster => 'Глу Мастер';
+
+  @override
+  String get streakRewardTitle => 'Награда за серию!';
+  @override
+  String get streakRewardClaim => 'Получить';
 }
