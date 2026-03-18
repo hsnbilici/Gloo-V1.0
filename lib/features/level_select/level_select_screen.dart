@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/levels/level_progression.dart';
 import '../../providers/user_provider.dart';
@@ -31,6 +32,7 @@ class LevelSelectScreen extends ConsumerWidget {
         repoAsync.valueOrNull?.getCompletedLevels() ?? <int>{};
     final maxCompleted = repoAsync.valueOrNull?.getMaxCompletedLevel() ?? 0;
     final totalLevels = LevelProgression.totalPredefinedLevels;
+    final dir = Directionality.of(context);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -63,7 +65,7 @@ class LevelSelectScreen extends ConsumerWidget {
                                 color: Colors.white.withValues(alpha: 0.10),
                               ),
                             ),
-                            child: const Icon(Icons.arrow_back_rounded,
+                            child: Icon(directionalBackIcon(dir),
                                 color: Colors.white70, size: 20),
                           ),
                         ),

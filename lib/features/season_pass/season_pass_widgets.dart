@@ -125,7 +125,7 @@ class TierCard extends StatelessWidget {
 
     return Container(
       width: 80,
-      margin: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsetsDirectional.only(end: 10),
       decoration: BoxDecoration(
         color: isCurrent
             ? kGold.withValues(alpha: 0.08)

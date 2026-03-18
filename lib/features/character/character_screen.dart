@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
@@ -73,6 +74,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
@@ -99,7 +101,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                               color: Colors.white.withValues(alpha: 0.10),
                             ),
                           ),
-                          child: const Icon(Icons.arrow_back_rounded,
+                          child: Icon(directionalBackIcon(dir),
                               color: Colors.white70, size: 20),
                         ),
                       ),

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
@@ -38,6 +40,9 @@ class CollectionScreen extends ConsumerWidget {
     final total = _kCollectibleColors.length;
     final found =
         _kCollectibleColors.where((c) => discovered.contains(c.name)).length;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+    final dir = Directionality.of(context);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -53,14 +58,14 @@ class CollectionScreen extends ConsumerWidget {
               child: Container(
                 width: 44,
                 height: 44,
-                margin: const EdgeInsets.only(left: 12),
+                margin: const EdgeInsetsDirectional.only(start: 12),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border:
                       Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(Icons.arrow_back_rounded,
+                child: Icon(directionalBackIcon(dir),
                     color: Colors.white, size: 18),
               ),
             ),
@@ -100,55 +105,64 @@ class CollectionScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          const _CollectionBackground(),
-          found == 0
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
-                    child: Text(
-                      l.collectionEmpty,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: kMuted, fontSize: 14, height: 1.5),
-                    ),
-                  ),
-                )
-              : GridView.builder(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.1,
-                  ),
-                  itemCount: _kCollectibleColors.length,
-                  itemBuilder: (context, index) {
-                    final gelColor = _kCollectibleColors[index];
-                    final isDiscovered = discovered.contains(gelColor.name);
-
-                    // Sentez girdisini bul
-                    final recipe = _findRecipe(gelColor);
-
-                    return _ColorCard(
-                      gelColor: gelColor,
-                      isDiscovered: isDiscovered,
-                      colorName: l.colorName(gelColor),
-                      discoveredLabel: l.collectionDiscovered,
-                      lockedLabel: l.collectionLocked,
-                      recipe: recipe,
+      body: Center(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+          child: Stack(
+            children: [
+              const _CollectionBackground(),
+              found == 0
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: hPadding),
+                        child: Text(
+                          l.collectionEmpty,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: kMuted, fontSize: 14, height: 1.5),
+                        ),
+                      ),
                     )
-                        .animate(delay: (60 * index).ms)
-                        .fadeIn(duration: 350.ms)
-                        .scale(
-                          begin: const Offset(0.92, 0.92),
-                          duration: 350.ms,
-                          curve: Curves.easeOutCubic,
-                        );
-                  },
-                ),
-        ],
+                  : GridView.builder(
+                      padding: EdgeInsets.fromLTRB(
+                          hPadding, 16, hPadding, 40),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: responsiveColumns(screenWidth,
+                            phone: 2, tablet: 3, desktop: 4),
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1.1,
+                      ),
+                      itemCount: _kCollectibleColors.length,
+                      itemBuilder: (context, index) {
+                        final gelColor = _kCollectibleColors[index];
+                        final isDiscovered =
+                            discovered.contains(gelColor.name);
+
+                        // Sentez girdisini bul
+                        final recipe = _findRecipe(gelColor);
+
+                        return _ColorCard(
+                          gelColor: gelColor,
+                          isDiscovered: isDiscovered,
+                          colorName: l.colorName(gelColor),
+                          discoveredLabel: l.collectionDiscovered,
+                          lockedLabel: l.collectionLocked,
+                          recipe: recipe,
+                        )
+                            .animate(delay: (60 * index).ms)
+                            .fadeIn(duration: 350.ms)
+                            .scale(
+                              begin: const Offset(0.92, 0.92),
+                              duration: 350.ms,
+                              curve: Curves.easeOutCubic,
+                            );
+                      },
+                    ),
+            ],
+          ),
+        ),
       ),
     );
   }

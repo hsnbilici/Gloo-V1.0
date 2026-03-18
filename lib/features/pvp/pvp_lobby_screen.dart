@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../providers/locale_provider.dart';
@@ -123,6 +124,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
@@ -154,7 +156,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                                 color: Colors.white.withValues(alpha: 0.10),
                               ),
                             ),
-                            child: const Icon(Icons.arrow_back_rounded,
+                            child: Icon(directionalBackIcon(dir),
                                 color: Colors.white70, size: 20),
                           ),
                         ),

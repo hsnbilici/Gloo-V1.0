@@ -220,7 +220,7 @@ class LevelDots extends StatelessWidget {
         return Container(
           width: 8,
           height: 8,
-          margin: const EdgeInsets.only(right: 3),
+          margin: const EdgeInsetsDirectional.only(end: 3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: filled ? color : color.withValues(alpha: 0.15),

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -67,6 +69,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+    final dir = Directionality.of(context);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -82,14 +87,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               child: Container(
                 width: 44,
                 height: 44,
-                margin: const EdgeInsets.only(left: 12),
+                margin: const EdgeInsetsDirectional.only(start: 12),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border:
                       Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(Icons.arrow_back_rounded,
+                child: Icon(directionalBackIcon(dir),
                     color: Colors.white, size: 18),
               ),
             ),
@@ -105,80 +110,87 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          const LeaderboardBackground(),
-          Column(
+      body: Center(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+          child: Stack(
             children: [
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: ModeTabs(
-                  controller: _tabController,
-                  classicLabel: l.leaderboardTabClassic,
-                  timeTrialLabel: l.leaderboardTabTimeTrial,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: FilterRow(
-                  weeklyLabel: l.leaderboardFilterWeekly,
-                  allTimeLabel: l.leaderboardFilterAllTime,
-                  isWeekly: _weekly,
-                  onChanged: (weekly) {
-                    setState(() => _weekly = weekly);
-                    _fetchData();
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-              if (_userRank != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: UserRankBanner(
-                      rank: _userRank!, label: l.leaderboardYourRank),
-                ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: _loading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                            color: kCyan, strokeWidth: 2),
-                      )
-                    : _scores.isEmpty
-                        ? Center(
-                            child: Text(
-                              l.leaderboardEmpty,
-                              style:
-                                  const TextStyle(color: kMuted, fontSize: 14),
-                            ),
+              const LeaderboardBackground(),
+              Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: hPadding),
+                    child: ModeTabs(
+                      controller: _tabController,
+                      classicLabel: l.leaderboardTabClassic,
+                      timeTrialLabel: l.leaderboardTabTimeTrial,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: hPadding),
+                    child: FilterRow(
+                      weeklyLabel: l.leaderboardFilterWeekly,
+                      allTimeLabel: l.leaderboardFilterAllTime,
+                      isWeekly: _weekly,
+                      onChanged: (weekly) {
+                        setState(() => _weekly = weekly);
+                        _fetchData();
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  if (_userRank != null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      child: UserRankBanner(
+                          rank: _userRank!, label: l.leaderboardYourRank),
+                    ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: _loading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                                color: kCyan, strokeWidth: 2),
                           )
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            itemCount: _scores.length,
-                            itemBuilder: (context, index) {
-                              final entry = _scores[index];
-                              final rank = index + 1;
-                              return ScoreRow(
-                                rank: rank,
-                                username: entry.username,
-                                score: entry.score,
+                        : _scores.isEmpty
+                            ? Center(
+                                child: Text(
+                                  l.leaderboardEmpty,
+                                  style: const TextStyle(
+                                      color: kMuted, fontSize: 14),
+                                ),
                               )
-                                  .animate(delay: (40 * index).ms)
-                                  .fadeIn(duration: 250.ms)
-                                  .slideX(
-                                    begin: 0.05,
-                                    end: 0,
-                                    duration: 250.ms,
-                                    curve: Curves.easeOutCubic,
-                                  );
-                            },
-                          ),
+                            : ListView.builder(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: hPadding),
+                                itemCount: _scores.length,
+                                itemBuilder: (context, index) {
+                                  final entry = _scores[index];
+                                  final rank = index + 1;
+                                  return ScoreRow(
+                                    rank: rank,
+                                    username: entry.username,
+                                    score: entry.score,
+                                  )
+                                      .animate(delay: (40 * index).ms)
+                                      .fadeIn(duration: 250.ms)
+                                      .slideX(
+                                        begin: 0.05,
+                                        end: 0,
+                                        duration: 250.ms,
+                                        curve: Curves.easeOutCubic,
+                                      );
+                                },
+                              ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

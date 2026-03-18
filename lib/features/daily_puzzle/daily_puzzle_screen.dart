@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../../data/local/local_repository.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
@@ -86,6 +87,7 @@ class _DailyContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
     final completed = repo.isDailyCompleted();
     final score = repo.getDailyScore();
 
@@ -96,7 +98,7 @@ class _DailyContent extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                icon: Icon(directionalBackIcon(dir),
                     color: Colors.white70, size: 20),
                 onPressed: () => context.pop(),
               ),

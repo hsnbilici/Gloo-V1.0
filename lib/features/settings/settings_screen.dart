@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/section_header.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -22,6 +30,9 @@ class SettingsScreen extends ConsumerWidget {
     final notifier = ref.read(appSettingsProvider.notifier);
     final l = ref.watch(stringsProvider);
     final currentLocale = ref.watch(localeProvider);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+    final dir = Directionality.of(context);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -37,15 +48,15 @@ class SettingsScreen extends ConsumerWidget {
               child: Container(
                 width: 44,
                 height: 44,
-                margin: const EdgeInsets.only(left: 12),
+                margin: const EdgeInsetsDirectional.only(start: 12),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border:
                       Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: const Icon(
-                  Icons.arrow_back_rounded,
+                child: Icon(
+                  directionalBackIcon(dir),
                   color: Colors.white,
                   size: 18,
                 ),
@@ -63,11 +74,14 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          const _SettingsBackground(),
-          ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+          child: Stack(
+            children: [
+              const _SettingsBackground(),
+              ListView(
+                padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 8),
             children: [
               SectionHeader(title: l.settingsSectionAudio, color: kCyan),
               SettingsToggleTile(
@@ -127,6 +141,40 @@ class SettingsScreen extends ConsumerWidget {
                   });
                 },
               ),
+              ExportDataTile(
+                label: l.settingsExportData,
+                onExport: () async {
+                  final repo = await ref.read(localRepositoryProvider.future);
+                  final data = await repo.exportAllData();
+                  final json =
+                      const JsonEncoder.withIndent('  ').convert(data);
+                  if (!context.mounted) return;
+                  if (kIsWeb) {
+                    // Web: panoya kopyala
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l.settingsExportSuccess),
+                        backgroundColor: kCyan,
+                      ),
+                    );
+                    return;
+                  }
+                  final dir = await getTemporaryDirectory();
+                  final file = File('${dir.path}/gloo_data_export.json');
+                  await file.writeAsString(json);
+                  await Share.shareXFiles(
+                    [XFile(file.path)],
+                    subject: 'Gloo Data Export',
+                  );
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l.settingsExportSuccess),
+                      backgroundColor: kCyan,
+                    ),
+                  );
+                },
+              ),
               DeleteDataTile(
                 label: l.settingsDeleteAccount,
                 confirmTitle: l.settingsDeleteConfirmTitle,
@@ -167,6 +215,8 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ],
+      ),
+        ),
       ),
     );
   }
