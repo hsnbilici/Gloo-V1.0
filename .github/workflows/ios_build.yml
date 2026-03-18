@@ -18,7 +18,7 @@ concurrency:
 jobs:
   build-simulator:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
 
     steps:
       - uses: actions/checkout@v4
