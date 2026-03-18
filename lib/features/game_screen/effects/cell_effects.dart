@@ -3,6 +3,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/color_constants.dart';
+
 /// Satir/sutun temizlendiginde her hucrenin uzerinde oynayan jel patlamasi.
 /// [delay] ile stagger uygulanir; efekt bitince [onDismiss] cagrilir.
 class CellBurstEffect extends StatefulWidget {
@@ -317,8 +319,8 @@ class _IceBreakPainter extends CustomPainter {
   final double cellSize;
 
   static const _kShardCount = 8;
-  static const _kIceColor = Color(0xFFB0E0FF);
-  static const _kIceHighlight = Color(0xFFE8F6FF);
+  static const _kIceColor = kIceColor;
+  static const _kIceHighlight = kIceHighlight;
 
   @override
   void paint(Canvas canvas, Size size) {

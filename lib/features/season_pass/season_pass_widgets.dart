@@ -170,7 +170,7 @@ class TierCard extends StatelessWidget {
                   Text(
                     'UCRETSIZ',
                     style: TextStyle(
-                      color: const Color(0xFF00E5FF).withValues(alpha: 0.50),
+                      color: kCyan.withValues(alpha: 0.50),
                       fontSize: 7,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1,
@@ -179,7 +179,7 @@ class TierCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Icon(
                     _rewardIcon(tier.freeReward.type),
-                    color: isUnlocked ? const Color(0xFF00E5FF) : kMuted,
+                    color: isUnlocked ? kCyan : kMuted,
                     size: 20,
                   ),
                   const SizedBox(height: 2),
@@ -211,7 +211,7 @@ class TierCard extends StatelessWidget {
                           'PREMIUM',
                           style: TextStyle(
                             color:
-                                const Color(0xFFFF69B4).withValues(alpha: 0.50),
+                                kPink.withValues(alpha: 0.50),
                             fontSize: 7,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 1,
@@ -221,7 +221,7 @@ class TierCard extends StatelessWidget {
                         Icon(
                           _rewardIcon(tier.premiumReward!.type),
                           color: isUnlocked
-                              ? const Color(0xFFFF69B4)
+                              ? kPink
                               : kMuted.withValues(alpha: 0.40),
                           size: 20,
                         ),

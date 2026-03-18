@@ -85,9 +85,12 @@ class BottomItem extends StatelessWidget {
       label: label,
       button: true,
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -103,6 +106,7 @@ class BottomItem extends StatelessWidget {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

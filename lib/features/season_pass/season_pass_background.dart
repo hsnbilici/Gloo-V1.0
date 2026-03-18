@@ -19,7 +19,7 @@ class SeasonBackground extends StatelessWidget {
         const Positioned(
           bottom: -80,
           right: -40,
-          child: GlowOrb(size: 260, color: Color(0xFFFF69B4), opacity: 0.05),
+          child: GlowOrb(size: 260, color: kPink, opacity: 0.05),
         ),
       ],
     );

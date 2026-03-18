@@ -68,7 +68,7 @@ class FillBar extends StatelessWidget {
           '$pct%',
           style: TextStyle(
             color: barColor,
-            fontSize: 10,
+            fontSize: MediaQuery.textScalerOf(context).scale(10),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.5,
           ),
@@ -157,7 +157,8 @@ class CountdownBar extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           style: TextStyle(
             color: barColor,
-            fontSize: isPulsing ? 13 : 10,
+            fontSize: MediaQuery.textScalerOf(context).scale(
+                isPulsing ? 13 : 10),
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,
           ),

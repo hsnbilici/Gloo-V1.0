@@ -6,10 +6,10 @@ import '../../game/systems/powerup_system.dart';
 
 /// Power-up tema renkleri
 const kPowerUpColors = <PowerUpType, (Color, Color)>{
-  PowerUpType.rotate: (Color(0xFF00E5FF), Color(0xFF006978)),
-  PowerUpType.bomb: (Color(0xFFFF6B35), Color(0xFF8B2500)),
-  PowerUpType.undo: (Color(0xFFFFD740), Color(0xFF8B6914)),
-  PowerUpType.freeze: (Color(0xFF80D8FF), Color(0xFF01579B)),
+  PowerUpType.rotate: (kCyan, kPowerUpRotateBg),
+  PowerUpType.bomb: (kPowerUpBombFg, kPowerUpBombBg),
+  PowerUpType.undo: (kAmber, kPowerUpUndoBg),
+  PowerUpType.freeze: (kPowerUpFreezeFg, kPowerUpFreezeBg),
 };
 
 class PowerUpToolbar extends StatelessWidget {
@@ -175,7 +175,11 @@ class _PowerUpButton extends StatelessWidget {
     final primary = colors.$1;
     final dark = colors.$2;
 
-    return GestureDetector(
+    return Semantics(
+      label: type.name,
+      button: true,
+      enabled: canUse,
+      child: GestureDetector(
       onTap: canUse ? () => onTap(type) : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
@@ -315,6 +319,7 @@ class _PowerUpButton extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }

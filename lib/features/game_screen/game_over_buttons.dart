@@ -30,54 +30,58 @@ class _ActionButtonState extends State<ActionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: widget.filled
-              ? widget.accentColor.withValues(alpha: _pressed ? 0.20 : 0.13)
-              : Colors.white.withValues(alpha: _pressed ? 0.07 : 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
+    return Semantics(
+      label: widget.label,
+      button: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 80),
+          transformAlignment: Alignment.center,
+          transform: Matrix4.diagonal3Values(
+              _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
             color: widget.filled
-                ? widget.accentColor.withValues(alpha: _pressed ? 0.70 : 0.50)
-                : Colors.white.withValues(alpha: _pressed ? 0.16 : 0.09),
-            width: widget.filled ? 1.5 : 1,
-          ),
-          boxShadow: widget.filled
-              ? [
-                  BoxShadow(
-                    color: widget.accentColor.withValues(alpha: 0.14),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(widget.icon, color: widget.accentColor, size: 18),
-            const SizedBox(width: 10),
-            Text(
-              widget.label,
-              style: TextStyle(
-                color: widget.accentColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              ),
+                ? widget.accentColor.withValues(alpha: _pressed ? 0.20 : 0.13)
+                : Colors.white.withValues(alpha: _pressed ? 0.07 : 0.03),
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(
+              color: widget.filled
+                  ? widget.accentColor.withValues(alpha: _pressed ? 0.70 : 0.50)
+                  : Colors.white.withValues(alpha: _pressed ? 0.16 : 0.09),
+              width: widget.filled ? 1.5 : 1,
             ),
-          ],
+            boxShadow: widget.filled
+                ? [
+                    BoxShadow(
+                      color: widget.accentColor.withValues(alpha: 0.14),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(widget.icon, color: widget.accentColor, size: 18),
+              const SizedBox(width: 10),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  color: widget.accentColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -109,20 +113,23 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
+    return Semantics(
+      label: widget.secondChanceLabel,
+      button: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 80),
+          transformAlignment: Alignment.center,
+          transform: Matrix4.diagonal3Values(
+              _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [
@@ -179,6 +186,7 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
           ],
         ),
       ),
+    ),
     );
   }
 }

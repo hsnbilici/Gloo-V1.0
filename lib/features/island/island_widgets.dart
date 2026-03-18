@@ -48,7 +48,7 @@ class _BuildingCardState extends State<BuildingCard> {
         BuildingType.asmrTower => kLavender,
         BuildingType.colorLab => kOrange,
         BuildingType.arena => kColorClassic,
-        BuildingType.harbor => const Color(0xFF00BFFF),
+        BuildingType.harbor => kDiamondBlue,
       };
 
   @override
@@ -251,7 +251,7 @@ class IslandBackground extends StatelessWidget {
         const Positioned(
           bottom: -80,
           right: -40,
-          child: GlowOrb(size: 260, color: Color(0xFF00BFFF), opacity: 0.06),
+          child: GlowOrb(size: 260, color: kDiamondBlue, opacity: 0.06),
         ),
       ],
     );

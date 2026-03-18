@@ -48,9 +48,9 @@ class SettingsToggleTile extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: MediaQuery.textScalerOf(context).scale(14),
                 fontWeight: FontWeight.w500,
               ),
             ),

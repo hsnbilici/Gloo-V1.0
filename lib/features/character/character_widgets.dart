@@ -17,7 +17,7 @@ class GlooMascot extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: const RadialGradient(
           center: Alignment(-0.2, -0.2),
-          colors: [Color(0xFF5CFFA8), Color(0xFF00CC66), Color(0xFF008844)],
+          colors: [kMascotGreenLight, kMascotGreenMid, kMascotGreenDark],
           stops: [0.0, 0.5, 1.0],
         ),
         boxShadow: [
@@ -46,7 +46,7 @@ class GlooMascot extends StatelessWidget {
                   width: 7,
                   height: 7,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF1A1A2E),
+                    color: kSurfaceDeepNavy,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -69,7 +69,7 @@ class GlooMascot extends StatelessWidget {
                   width: 7,
                   height: 7,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF1A1A2E),
+                    color: kSurfaceDeepNavy,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -83,7 +83,7 @@ class GlooMascot extends StatelessWidget {
               width: 28,
               height: 10,
               decoration: const BoxDecoration(
-                color: Color(0xFF006633),
+                color: kMascotMouth,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(14),
                   bottomRight: Radius.circular(14),

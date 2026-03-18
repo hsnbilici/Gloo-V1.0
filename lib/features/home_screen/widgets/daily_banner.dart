@@ -11,7 +11,7 @@ class DailyBanner extends ConsumerWidget {
 
   final String label;
 
-  static const _kAccent = Color(0xFF00E5FF); // kCyan
+  static const _kAccent = kCyan;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

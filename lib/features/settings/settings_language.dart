@@ -94,7 +94,7 @@ class LanguageSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF0F1420),
+        color: kSurfaceDark,
         borderRadius: const BorderRadius.vertical(
             top: Radius.circular(UIConstants.radiusXxl)),
         border: Border.all(color: Colors.white.withValues(alpha: 0.08)),

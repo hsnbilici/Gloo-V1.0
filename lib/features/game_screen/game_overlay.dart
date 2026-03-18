@@ -168,7 +168,7 @@ class _ScoreDisplay extends StatelessWidget {
             fontWeight: FontWeight.w800,
             height: 1,
             shadows: [
-              Shadow(color: Color(0x4400E5FF), blurRadius: 12),
+              Shadow(color: kCyanGlow, blurRadius: 12),
             ],
           ),
         ),

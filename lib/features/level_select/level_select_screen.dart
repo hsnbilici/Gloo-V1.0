@@ -14,7 +14,7 @@ import '../../providers/user_provider.dart';
 class LevelSelectScreen extends ConsumerWidget {
   const LevelSelectScreen({super.key});
 
-  static const _kLocked = Color(0xFF2A2A4E);
+  static const _kLocked = kSurfaceNavy;
 
   static const _kSectionNames = [
     'Jel Vadisi',
@@ -47,21 +47,25 @@ class LevelSelectScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => context.go('/'),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
-                            borderRadius:
-                                BorderRadius.circular(UIConstants.radiusMd),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.10),
+                      Semantics(
+                        label: 'Geri',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () => context.go('/'),
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.06),
+                              borderRadius:
+                                  BorderRadius.circular(UIConstants.radiusMd),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.10),
+                              ),
                             ),
+                            child: const Icon(Icons.arrow_back_rounded,
+                                color: Colors.white70, size: 20),
                           ),
-                          child: const Icon(Icons.arrow_back_rounded,
-                              color: Colors.white70, size: 20),
                         ),
                       ),
                       const SizedBox(width: 14),
@@ -277,13 +281,20 @@ class _LevelCellState extends State<_LevelCell> {
       textColor = Colors.white.withValues(alpha: 0.25);
     }
 
-    return GestureDetector(
-      onTap:
-          isUnlocked ? () => context.go('/game/level/${widget.levelId}') : null,
-      onTapDown: isUnlocked ? (_) => setState(() => _pressed = true) : null,
-      onTapUp: isUnlocked ? (_) => setState(() => _pressed = false) : null,
-      onTapCancel: isUnlocked ? () => setState(() => _pressed = false) : null,
-      child: AnimatedContainer(
+    return Semantics(
+      label: isUnlocked
+          ? 'Level ${widget.levelId}'
+          : 'Level ${widget.levelId}, locked',
+      button: isUnlocked,
+      child: GestureDetector(
+        onTap: isUnlocked
+            ? () => context.go('/game/level/${widget.levelId}')
+            : null,
+        onTapDown: isUnlocked ? (_) => setState(() => _pressed = true) : null,
+        onTapUp: isUnlocked ? (_) => setState(() => _pressed = false) : null,
+        onTapCancel:
+            isUnlocked ? () => setState(() => _pressed = false) : null,
+        child: AnimatedContainer(
         duration: const Duration(milliseconds: 80),
         transform: Matrix4.diagonal3Values(
             _pressed ? 0.92 : 1.0, _pressed ? 0.92 : 1.0, 1.0),
@@ -332,6 +343,7 @@ class _LevelCellState extends State<_LevelCell> {
           ],
         ),
       ),
+    ),
     ).animate(delay: widget.delay).fadeIn(duration: 200.ms).scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1.0, 1.0),

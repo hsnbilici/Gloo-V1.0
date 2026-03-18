@@ -117,7 +117,8 @@ class ModeCardState extends State<ModeCard> {
                           widget.label,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: widget.isFeatured ? 17 : 16,
+                            fontSize: MediaQuery.textScalerOf(context).scale(
+                                widget.isFeatured ? 17 : 16),
                             fontWeight: FontWeight.w700,
                             shadows: [
                               Shadow(
@@ -162,7 +163,7 @@ class ModeCardState extends State<ModeCard> {
                         color: widget.isFeatured
                             ? Colors.white.withValues(alpha: 0.55)
                             : kMuted,
-                        fontSize: 11,
+                        fontSize: MediaQuery.textScalerOf(context).scale(11),
                       ),
                     ),
                   ],

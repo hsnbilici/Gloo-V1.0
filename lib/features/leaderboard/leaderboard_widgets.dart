@@ -196,8 +196,8 @@ class ScoreRow extends StatelessWidget {
 
   Color get _rankColor {
     if (rank == 1) return kGold;
-    if (rank == 2) return const Color(0xFFC0C0C0);
-    if (rank == 3) return const Color(0xFFCD7F32);
+    if (rank == 2) return kSilver;
+    if (rank == 3) return kBronze;
     return kMuted;
   }
 

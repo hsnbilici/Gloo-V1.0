@@ -229,9 +229,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
         ),
         title: Text(
           l.shopTitle,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: MediaQuery.textScalerOf(context).scale(18),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.3,
           ),
@@ -305,17 +305,26 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
 
               // ── Geri Yükle
               Center(
-                child: GestureDetector(
-                  onTap: () =>
-                      ref.read(purchaseServiceProvider).restorePurchases(),
-                  child: Text(
-                    l.shopRestorePurchases,
-                    style: TextStyle(
-                      color: kMuted.withValues(alpha: 0.70),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                      decorationColor: kMuted.withValues(alpha: 0.40),
+                child: Semantics(
+                  label: l.shopRestorePurchases,
+                  button: true,
+                  child: GestureDetector(
+                    onTap: () =>
+                        ref.read(purchaseServiceProvider).restorePurchases(),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minHeight: 44),
+                      child: Center(
+                        child: Text(
+                          l.shopRestorePurchases,
+                          style: TextStyle(
+                            color: kMuted.withValues(alpha: 0.70),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            decorationColor: kMuted.withValues(alpha: 0.40),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -150,7 +150,7 @@ class _BombPainter extends CustomPainter {
       center,
       shockRadius,
       Paint()
-        ..color = const Color(0xFFFF8C00).withValues(alpha: shockOpacity)
+        ..color = kAmberDark.withValues(alpha: shockOpacity)
         ..style = PaintingStyle.stroke
         ..strokeWidth = (1.0 - shockEased) * 4 + 0.5,
     );
@@ -167,7 +167,7 @@ class _BombPainter extends CustomPainter {
           ..shader = RadialGradient(
             colors: [
               Colors.white.withValues(alpha: opacity),
-              const Color(0xFFFF8C00).withValues(alpha: opacity * 0.5),
+              kAmberDark.withValues(alpha: opacity * 0.5),
               Colors.transparent,
             ],
           ).createShader(Rect.fromCircle(center: center, radius: radius)),
@@ -276,8 +276,8 @@ class _UndoRewindPainter extends CustomPainter {
   final double cellSize;
   final double gridGap;
 
-  static const _kAmberColor = Color(0xFFFFD740);
-  static const _kAmberGlow = Color(0xFFFFA000);
+  static const _kAmberColor = kAmber;
+  static const _kAmberGlow = kAmberGlow;
 
   @override
   void paint(Canvas canvas, Size size) {

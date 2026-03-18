@@ -14,7 +14,7 @@ class GameBackground extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF020D1A), kBgDark],
+              colors: [kBgDeepDark, kBgDark],
             ),
           ),
         ),
@@ -28,7 +28,7 @@ class GameBackground extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFF00E5FF).withValues(alpha: 0.07),
+                  kCyan.withValues(alpha: 0.07),
                   Colors.transparent,
                 ],
               ),
@@ -45,7 +45,7 @@ class GameBackground extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFF9D5CFF).withValues(alpha: 0.06),
+                  kColorZen.withValues(alpha: 0.06),
                   Colors.transparent,
                 ],
               ),

@@ -13,11 +13,11 @@ class LeagueBadge extends StatelessWidget {
   final EloLeague league;
 
   Color get _leagueColor => switch (league) {
-        EloLeague.bronze => const Color(0xFFCD7F32),
-        EloLeague.silver => const Color(0xFFC0C0C0),
+        EloLeague.bronze => kBronze,
+        EloLeague.silver => kSilver,
         EloLeague.gold => kGold,
-        EloLeague.diamond => const Color(0xFF00BFFF),
-        EloLeague.glooMaster => const Color(0xFFFF3CFF),
+        EloLeague.diamond => kDiamondBlue,
+        EloLeague.glooMaster => kGlooMaster,
       };
 
   IconData get _leagueIcon => switch (league) {

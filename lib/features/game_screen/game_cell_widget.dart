@@ -54,10 +54,10 @@ class GameCellWidget extends StatelessWidget {
     if (gridCell.type == CellType.stone) {
       return Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF1A1A2E),
+          color: kSurfaceDeepNavy,
           borderRadius: BorderRadius.circular(UIConstants.radiusXs),
           border: Border.all(
-            color: const Color(0xFF2A2A4E),
+            color: kSurfaceNavy,
             width: 1,
           ),
         ),
@@ -69,12 +69,12 @@ class GameCellWidget extends StatelessWidget {
     if (gridCell.type == CellType.ice && gridCell.iceLayer > 0) {
       typeOverlay = Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF88CCFF).withValues(
+          color: kIceBlue.withValues(
             alpha: gridCell.iceLayer == 2 ? 0.45 : 0.25,
           ),
           borderRadius: BorderRadius.circular(UIConstants.radiusXs),
           border: Border.all(
-            color: const Color(0xFFAADDFF).withValues(alpha: 0.5),
+            color: kIceBlueBright.withValues(alpha: 0.5),
             width: gridCell.iceLayer == 2 ? 2 : 1,
           ),
         ),
@@ -111,15 +111,15 @@ class GameCellWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(UIConstants.radiusXs),
             border: Border.all(
-              color: const Color(0xFFFF69B4).withValues(alpha: 0.5),
+              color: kPink.withValues(alpha: 0.5),
               width: 1,
             ),
             gradient: const LinearGradient(
               colors: [
-                Color(0x22FF3B3B),
-                Color(0x22FFE03C),
-                Color(0x223CFF8B),
-                Color(0x223C8BFF),
+                kRainbowRed,
+                kRainbowYellow,
+                kRainbowGreen,
+                kRainbowBlue,
               ],
             ),
           ),
@@ -184,7 +184,7 @@ class GameCellWidget extends StatelessWidget {
       final base = previewSlotColor?.displayColor ?? Colors.white;
       final bg = previewValid
           ? base.withValues(alpha: 0.50)
-          : const Color(0xFFFF3B3B).withValues(alpha: 0.55);
+          : kRed.withValues(alpha: 0.55);
       cellContent = Container(
         decoration: BoxDecoration(
           color: bg,
@@ -203,8 +203,8 @@ class GameCellWidget extends StatelessWidget {
             center: Alignment(-0.3, -0.3),
             radius: 1.4,
             colors: [
-              Color(0x26FFFFFF), // alpha ~0.15
-              Color(0x14FFFFFF), // alpha ~0.08
+              kCellEmptyLight, // alpha ~0.15
+              kCellEmptyDark, // alpha ~0.08
             ],
           ),
           borderRadius: BorderRadius.circular(UIConstants.radiusXs),

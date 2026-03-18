@@ -74,8 +74,26 @@ const List<GelColor> kPrimaryColors = [
 /// Ana arka plan rengi — tüm scaffold ve container'lar için.
 const Color kBgDark = Color(0xFF010C14);
 
+/// Arka plan degrade başlangıcı — kBgDark'tan biraz daha koyu.
+const Color kBgDeepDark = Color(0xFF020D1A);
+
+/// Yüzey rengi — dialog ve bottom sheet arka planı.
+const Color kSurfaceDark = Color(0xFF0F1420);
+
+/// En koyu yüzey — MaterialTheme surface, derin siyah.
+const Color kSurfaceBlack = Color(0xFF0A0A0F);
+
+/// Koyu lacivert — stone hücre, göz içi nokta.
+const Color kSurfaceDeepNavy = Color(0xFF1A1A2E);
+
+/// Lacivert — kilitli seviye, taş hücre kenarı.
+const Color kSurfaceNavy = Color(0xFF2A2A4E);
+
 /// Birincil aksan (cyan) — her ekranda `const _kCyan` olarak tekrar tanımlanmaz.
 const Color kCyan = Color(0xFF00E5FF);
+
+/// Cyan gölge — skor metni text shadow.
+const Color kCyanGlow = Color(0x4400E5FF);
 
 /// Soluk metin / ikincil UI elemanları.
 /// #6B8FA8 → arka plan #010C14 üzerinde ~6:1 kontrast (WCAG AA ✓).
@@ -83,17 +101,139 @@ const Color kMuted = Color(0xFF6B8FA8);
 
 /// Altın vurgu — mağaza, ödül, premium UI elemanları.
 const Color kGold = Color(0xFFFFD700);
+
 /// Turuncu vurgu — streak badge, quest overlay, ada bina, seviye, karakter.
 const Color kOrange = Color(0xFFFF8C42);
 
+/// Canlı turuncu — combo large, near-miss, rescue badge (= GelColor.orange).
+const Color kOrangeVivid = Color(0xFFFF7B3C);
+
 /// Yeşil vurgu — başarı, tamamlanma, kazanma göstergeleri.
 const Color kGreen = Color(0xFF3CFF8B);
+
+/// Koyu yeşil başarı — snackbar arka planı.
+const Color kSuccessGreen = Color(0xFF2E7D32);
 
 /// Lavanta vurgu — karakter, zen modu, premium UI elemanları.
 const Color kLavender = Color(0xFFB080FF);
 
 /// Mercan vurgu — uyarı ve reklamsız aksanı.
 const Color kCoral = Color(0xFFFF6B6B);
+
+/// Kırmızı vurgu — hata, kayıp, combo epic (= GelColor.red).
+const Color kRed = Color(0xFFFF3B3B);
+
+/// Sarı vurgu — combo medium, beraberlik (= GelColor.yellow).
+const Color kYellow = Color(0xFFFFE03C);
+
+/// Pembe vurgu — season pass, rainbow hücre (= GelColor.pink).
+const Color kPink = Color(0xFFFF69B4);
+
+// ─── Liga renkleri ────────────────────────────────────────────────────────────
+
+/// Bronz — PvP bronze liga, liderlik tablosu 3. sıra.
+const Color kBronze = Color(0xFFCD7F32);
+
+/// Gümüş — PvP silver liga, liderlik tablosu 2. sıra.
+const Color kSilver = Color(0xFFC0C0C0);
+
+/// Elmas mavisi — PvP diamond liga, ada limanı.
+const Color kDiamondBlue = Color(0xFF00BFFF);
+
+/// Gloo Master eforu — PvP glooMaster liga.
+const Color kGlooMaster = Color(0xFFFF3CFF);
+
+// ─── MaterialTheme renkleri ───────────────────────────────────────────────────
+
+/// Uygulama birincil rengi — MaterialTheme primary.
+const Color kThemePrimary = Color(0xFFFF3CAC);
+
+/// Uygulama ikincil rengi — MaterialTheme secondary, neon yeşil.
+const Color kThemeSecondary = Color(0xFF39FF14);
+
+/// Uygulama üçüncül rengi — MaterialTheme tertiary, mor.
+const Color kThemeTertiary = Color(0xFF8B5CF6);
+
+// ─── Buz efekti renkleri ─────────────────────────────────────────────────────
+
+/// Buz mavi — ice hücre overlay.
+const Color kIceBlue = Color(0xFF88CCFF);
+
+/// Parlak buz mavi — ice hücre kenarı.
+const Color kIceBlueBright = Color(0xFFAADDFF);
+
+/// Buz rengi — IceBreakPainter kırık parça rengi.
+const Color kIceColor = Color(0xFFB0E0FF);
+
+/// Buz parlaması — IceBreakPainter highlight.
+const Color kIceHighlight = Color(0xFFE8F6FF);
+
+// ─── Amber / power-up renkleri ────────────────────────────────────────────────
+
+/// Amber — power-up undo, freeze efekti arka planı.
+const Color kAmber = Color(0xFFFFD740);
+
+/// Koyu amber — bomb shock dalgası.
+const Color kAmberDark = Color(0xFFFF8C00);
+
+/// Amber parıltısı — bomb efekti iç glow.
+const Color kAmberGlow = Color(0xFFFFA000);
+
+// ─── Power-up tema renk çiftleri (ön plan / arka plan) ───────────────────────
+
+/// Rotate power-up arka plan tonu.
+const Color kPowerUpRotateBg = Color(0xFF006978);
+
+/// Bomb power-up ön rengi.
+const Color kPowerUpBombFg = Color(0xFFFF6B35);
+
+/// Bomb power-up arka plan tonu.
+const Color kPowerUpBombBg = Color(0xFF8B2500);
+
+/// Undo power-up arka plan tonu.
+const Color kPowerUpUndoBg = Color(0xFF8B6914);
+
+/// Freeze power-up ön rengi.
+const Color kPowerUpFreezeFg = Color(0xFF80D8FF);
+
+/// Freeze power-up arka plan tonu.
+const Color kPowerUpFreezeBg = Color(0xFF01579B);
+
+// ─── Boş hücre derinlik gradyanı ─────────────────────────────────────────────
+
+/// Boş hücre radyal gradyan — açık ton (~%15 opaklık).
+const Color kCellEmptyLight = Color(0x26FFFFFF);
+
+/// Boş hücre radyal gradyan — koyu ton (~%8 opaklık).
+const Color kCellEmptyDark = Color(0x14FFFFFF);
+
+// ─── Rainbow hücre gradyan tonları (düşük alfa) ───────────────────────────────
+
+/// Rainbow hücre kırmızı tonu (~%13 opaklık).
+const Color kRainbowRed = Color(0x22FF3B3B);
+
+/// Rainbow hücre sarı tonu (~%13 opaklık).
+const Color kRainbowYellow = Color(0x22FFE03C);
+
+/// Rainbow hücre yeşil tonu (~%13 opaklık).
+const Color kRainbowGreen = Color(0x223CFF8B);
+
+/// Rainbow hücre mavi tonu (~%13 opaklık).
+const Color kRainbowBlue = Color(0x223C8BFF);
+
+// ─── Maskot renkleri (GlooMascot) ────────────────────────────────────────────
+
+/// Maskot gradyan — açık yeşil merkez.
+const Color kMascotGreenLight = Color(0xFF5CFFA8);
+
+/// Maskot gradyan — orta yeşil.
+const Color kMascotGreenMid = Color(0xFF00CC66);
+
+/// Maskot gradyan — koyu yeşil kenar.
+const Color kMascotGreenDark = Color(0xFF008844);
+
+/// Maskot ağız rengi — koyu yeşil.
+const Color kMascotMouth = Color(0xFF006633);
 
 // ─── Mod aksan renkleri — merkezi tanım ──────────────────────────────────────
 // game_over_overlay, game_overlay, game_effects, home_screen bu sabitleri
@@ -114,4 +254,3 @@ const Map<GameMode, Color> kModeColors = {
   GameMode.level: kColorChef,
   GameMode.duel: kColorClassic,
 };
-

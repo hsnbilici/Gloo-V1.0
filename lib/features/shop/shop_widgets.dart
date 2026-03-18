@@ -55,7 +55,9 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Semantics(
+      label: label,
+      child: Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
       decoration: BoxDecoration(
@@ -104,7 +106,7 @@ class ProductTile extends StatelessWidget {
                   label,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: MediaQuery.textScalerOf(context).scale(14),
                     fontWeight: FontWeight.w700,
                     shadows: isFeatured
                         ? [
@@ -120,7 +122,7 @@ class ProductTile extends StatelessWidget {
                   desc,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.45),
-                    fontSize: 11,
+                    fontSize: MediaQuery.textScalerOf(context).scale(11),
                   ),
                 ),
               ],
@@ -138,28 +140,35 @@ class ProductTile extends StatelessWidget {
                   ),
                   child: Icon(Icons.check_rounded, color: color, size: 16),
                 )
-              : GestureDetector(
-                  onTap: onBuy,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                      border: Border.all(color: color.withValues(alpha: 0.50)),
-                    ),
-                    child: Text(
-                      price,
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
+              : Semantics(
+                  label: '$label $price',
+                  button: true,
+                  child: GestureDetector(
+                    onTap: onBuy,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.15),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusSm),
+                        border: Border.all(
+                            color: color.withValues(alpha: 0.50)),
+                      ),
+                      child: Text(
+                        price,
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                 ),
         ],
       ),
+    ),
     );
   }
 }
@@ -305,48 +314,55 @@ class GlooPlusCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: onMonthly,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.04),
-                        borderRadius:
-                            BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.12)),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            monthlyLabel,
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.60),
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1,
+                  child: Semantics(
+                    label: '$monthlyLabel $monthlyPrice',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: onMonthly,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.04),
+                          borderRadius:
+                              BorderRadius.circular(UIConstants.radiusMd),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.12)),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              monthlyLabel,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.60),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            monthlyPrice,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
+                            const SizedBox(height: 4),
+                            Text(
+                              monthlyPrice,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: onYearly,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                  child: Semantics(
+                    label: '$yearlyLabel $yearlyPrice',
+                    button: true,
+                    child: GestureDetector(
+                      onTap: onYearly,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
                         color: kGold.withValues(alpha: 0.12),
                         borderRadius:
@@ -401,6 +417,7 @@ class GlooPlusCard extends StatelessWidget {
                         ],
                       ),
                     ),
+                  ),
                   ),
                 ),
               ],

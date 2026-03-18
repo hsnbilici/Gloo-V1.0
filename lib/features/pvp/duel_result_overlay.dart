@@ -25,8 +25,8 @@ class DuelResultOverlay extends StatelessWidget {
   final String playAgainLabel;
   final String mainMenuLabel;
 
-  static const _kLoss = Color(0xFFFF3B3B);
-  static const _kDraw = Color(0xFFFFE03C);
+  static const _kLoss = kRed;
+  static const _kDraw = kYellow;
 
   Color get _outcomeColor => switch (result.outcome) {
         DuelOutcome.win => kGreen,

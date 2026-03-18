@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/constants/color_constants.dart';
 import '../providers/locale_provider.dart';
 import 'router.dart';
 
@@ -40,10 +41,10 @@ class GlooApp extends ConsumerWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFFFF3CAC), // Canlı pembe
-          secondary: Color(0xFF39FF14), // Fosforlu yeşil
-          tertiary: Color(0xFF8B5CF6), // Mor
-          surface: Color(0xFF0A0A0F), // Derin siyah
+          primary: kThemePrimary,
+          secondary: kThemeSecondary,
+          tertiary: kThemeTertiary,
+          surface: kSurfaceBlack,
         ),
         fontFamily: 'Syne',
       ),

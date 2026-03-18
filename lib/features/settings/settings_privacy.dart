@@ -93,7 +93,7 @@ class _DeleteConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: const Color(0xFF0F1420),
+      backgroundColor: kSurfaceDark,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.radiusXl),
         side: BorderSide(color: kColorClassic.withValues(alpha: 0.35)),

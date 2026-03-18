@@ -55,9 +55,9 @@ class SettingsScreen extends ConsumerWidget {
         ),
         title: Text(
           l.settingsTitle,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
-            fontSize: 18,
+            fontSize: MediaQuery.textScalerOf(context).scale(18),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.3,
           ),
@@ -145,7 +145,7 @@ class SettingsScreen extends ConsumerWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(l.deleteDataSuccess),
-                        backgroundColor: const Color(0xFF2E7D32),
+                        backgroundColor: kSuccessGreen,
                       ),
                     );
                     context.go('/onboarding');

@@ -20,12 +20,15 @@ class _MatchButtonState extends State<MatchButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
+    return Semantics(
+      label: 'Eslestirme Ara',
+      button: true,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
         duration: const Duration(milliseconds: 80),
         transform: Matrix4.diagonal3Values(
             _pressed ? 0.96 : 1.0, _pressed ? 0.96 : 1.0, 1.0),
@@ -67,6 +70,7 @@ class _MatchButtonState extends State<MatchButton> {
           ],
         ),
       ),
+    ),
     );
   }
 }
@@ -150,16 +154,25 @@ class SearchingIndicator extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        GestureDetector(
-          onTap: onCancel,
-          child: Text(
-            cancelLabel,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.45),
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              decoration: TextDecoration.underline,
-              decorationColor: Colors.white.withValues(alpha: 0.25),
+        Semantics(
+          label: cancelLabel,
+          button: true,
+          child: GestureDetector(
+            onTap: onCancel,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+              child: Center(
+                child: Text(
+                  cancelLabel,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.45),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.white.withValues(alpha: 0.25),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

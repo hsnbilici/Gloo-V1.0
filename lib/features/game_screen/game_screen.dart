@@ -260,7 +260,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               child: RewardBadge(
                 label: ref.read(stringsProvider).toastRescueBadge,
                 icon: Icons.shield_rounded,
-                color: const Color(0xFFFF7B3C),
+                color: kOrangeVivid,
                 onTap: () {
                   ref.read(adManagerProvider).showNearMissRescue(
                     onRewarded: () {

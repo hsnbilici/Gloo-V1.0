@@ -104,9 +104,9 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
 
   Color _tierColor(ComboTier tier) => switch (tier) {
         ComboTier.small => kGreen,
-        ComboTier.medium => const Color(0xFFFFE03C),
-        ComboTier.large => const Color(0xFFFF7B3C),
-        ComboTier.epic => const Color(0xFFFF3B3B),
+        ComboTier.medium => kYellow,
+        ComboTier.large => kOrangeVivid,
+        ComboTier.epic => kRed,
         ComboTier.none => Colors.transparent,
       };
 }
@@ -214,7 +214,7 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
     final l = ref.watch(stringsProvider);
     final isCritical = widget.event.isCritical;
     final color =
-        isCritical ? const Color(0xFFFF3B3B) : const Color(0xFFFF7B3C);
+        isCritical ? kRed : kOrangeVivid;
     final label = isCritical ? l.nearMissCritical : l.nearMissStandard;
 
     return IgnorePointer(
