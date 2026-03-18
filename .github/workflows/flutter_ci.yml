@@ -56,3 +56,27 @@ jobs:
 
       - name: Check formatting
         run: dart format --set-exit-if-changed lib/ test/
+
+  version-bump:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: analyze-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version
+        run: ./scripts/version_bump.sh
+
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet pubspec.yaml && exit 0
+          git add pubspec.yaml
+          git commit -m "chore: bump build number [skip ci]"
+          git push
