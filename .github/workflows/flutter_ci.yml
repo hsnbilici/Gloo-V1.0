@@ -37,5 +37,22 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
+      - name: Check coverage threshold
+        run: |
+          # Parse lcov.info for line coverage
+          TOTAL_LINES=$(grep -c '^DA:' coverage/lcov.info || echo 0)
+          HIT_LINES=$(grep '^DA:' coverage/lcov.info | grep -cv ',0$' || echo 0)
+          if [ "$TOTAL_LINES" -eq 0 ]; then
+            echo "No coverage data found"
+            exit 1
+          fi
+          COVERAGE=$((HIT_LINES * 100 / TOTAL_LINES))
+          echo "Coverage: $COVERAGE% ($HIT_LINES/$TOTAL_LINES lines)"
+          if [ "$COVERAGE" -lt 70 ]; then
+            echo "::error::Coverage $COVERAGE% is below minimum threshold of 70%"
+            exit 1
+          fi
+          echo "Coverage $COVERAGE% meets minimum threshold of 70%"
+
       - name: Check formatting
         run: dart format --set-exit-if-changed lib/ test/
