@@ -10,15 +10,19 @@
 /// Ortalama kazanım: ~15 Jel Özü / oyun
 /// Net birikim: ~4-9 Jel Özü / oyun (1-2 power-up kullanımı sonrası)
 class CurrencyManager {
-  CurrencyManager({int initialBalance = 0}) : _balance = initialBalance;
+  CurrencyManager({int initialBalance = 0, int lifetimeEarnings = 0})
+      : _balance = initialBalance,
+        _lifetimeEarnings = lifetimeEarnings;
 
   int _balance;
   int _earnedThisGame = 0;
   int _spentThisGame = 0;
+  int _lifetimeEarnings;
 
   int get balance => _balance;
   int get earnedThisGame => _earnedThisGame;
   int get spentThisGame => _spentThisGame;
+  int get lifetimeEarnings => _lifetimeEarnings;
 
   void Function(int newBalance)? onBalanceChanged;
 
@@ -64,6 +68,7 @@ class CurrencyManager {
   void _earn(int amount) {
     _balance += amount;
     _earnedThisGame += amount;
+    _lifetimeEarnings += amount;
     onBalanceChanged?.call(_balance);
   }
 
@@ -92,6 +97,29 @@ class CurrencyManager {
   void setBalance(int value) {
     _balance = value;
     onBalanceChanged?.call(_balance);
+  }
+
+  // ─── Enflasyon Kontrolü ────────────────────────────────────────────────────
+
+  /// Enflasyonlu maliyeti hesapla.
+  ///
+  /// Formül: baseCost * (1 + lifetimeEarnings / 500).clamp(1.0, 3.0)
+  /// - lifetimeEarnings = 0 → 1.0x multiplier (orijinal maliyet)
+  /// - lifetimeEarnings = 500 → 2.0x multiplier
+  /// - lifetimeEarnings >= 1000 → 3.0x multiplier (max cap)
+  int inflatedCost(int baseCost) {
+    final multiplier = (1.0 + _lifetimeEarnings / 500).clamp(1.0, 3.0);
+    return (baseCost * multiplier).ceil();
+  }
+
+  /// Ömür boyu kazançları dışarıdan ayarla (SharedPreferences yükleme için).
+  void setLifetimeEarnings(int value) {
+    _lifetimeEarnings = value;
+  }
+
+  /// Test/migration için ömür boyu kazançları arttır.
+  void addLifetimeEarnings(int value) {
+    _lifetimeEarnings += value;
   }
 }
 
