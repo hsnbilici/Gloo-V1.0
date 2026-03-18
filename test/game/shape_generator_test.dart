@@ -195,6 +195,70 @@ void main() {
       expect(anyPlaceable, isTrue);
     });
 
+    test('generateSmartSeededHand is deterministic', () {
+      final hand1 =
+          ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
+      final hand2 =
+          ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
+
+      for (int i = 0; i < hand1.length; i++) {
+        expect(hand1[i].$1.name, hand2[i].$1.name);
+        expect(hand1[i].$2, hand2[i].$2);
+      }
+    });
+
+    test('generateSmartSeededHand favors small shapes at low handIndex', () {
+      int smallCount = 0;
+      int largeCount = 0;
+      // Dusuk handIndex (0-2) → kucuk sekiller agirlikli
+      for (int seed = 0; seed < 100; seed++) {
+        final hand =
+            ShapeGenerator.generateSmartSeededHand(seed, handIndex: 0);
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      // Dusuk zorlukta kucuk sekiller buyuklerden fazla olmali
+      expect(smallCount, greaterThan(largeCount));
+    });
+
+    test('generateSmartSeededHand favors large shapes at high handIndex', () {
+      int smallCount = 0;
+      int largeCount = 0;
+      // Yuksek handIndex (15+) → buyuk sekiller agirlikli
+      for (int seed = 0; seed < 100; seed++) {
+        final hand =
+            ShapeGenerator.generateSmartSeededHand(seed, handIndex: 15);
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      // Yuksek zorlukta buyuk sekiller kucuklerden fazla olmali
+      expect(largeCount, greaterThan(smallCount));
+    });
+
+    test('generateNextSeededHand uses smart seeded generation', () {
+      // generateNextSeededHand artik generateSmartSeededHand kullanir
+      final hand = ShapeGenerator.generateNextSeededHand(
+        baseSeed: 42,
+        handIndex: 0,
+        moveCount: 0,
+      );
+      expect(hand.length, 3);
+      // Ayni parametreler → deterministik
+      final hand2 = ShapeGenerator.generateNextSeededHand(
+        baseSeed: 42,
+        handIndex: 0,
+        moveCount: 0,
+      );
+      for (int i = 0; i < hand.length; i++) {
+        expect(hand[i].$1.name, hand2[i].$1.name);
+        expect(hand[i].$2, hand2[i].$2);
+      }
+    });
+
     test('todaySeed returns yyyymmdd format', () {
       final seed = ShapeGenerator.todaySeed();
       final now = DateTime.now();

@@ -300,6 +300,48 @@ class ShapeGenerator {
     );
   }
 
+  /// Akıllı seeded el — zorluk ağırlıklı şekil seçimi, deterministik.
+  ///
+  /// [handIndex] zorluk proxy'si olarak kullanılır:
+  ///   0-3 → düşük zorluk (küçük şekiller ağırlıklı)
+  ///   4-8 → orta zorluk
+  ///   9+  → yüksek zorluk (büyük şekiller ağırlıklı)
+  static List<(GelShape, GelColor)> generateSmartSeededHand(
+    int seed, {
+    required int handIndex,
+    List<GelColor>? availableColors,
+  }) {
+    final rng = Random(seed);
+    final colors = availableColors ?? kPrimaryColors;
+    final difficulty = (handIndex / 12).clamp(0.0, 0.85);
+
+    return List.generate(GameConstants.shapesInHand, (_) {
+      final shape = _seededWeightedShape(rng, difficulty);
+      final color = colors[rng.nextInt(colors.length)];
+      return (shape, color);
+    });
+  }
+
+  /// Deterministik ağırlıklı şekil seçimi (seeded modlar için).
+  static GelShape _seededWeightedShape(Random rng, double difficulty) {
+    final roll = rng.nextDouble();
+    final (smallW, mediumW) = switch (difficulty) {
+      < 0.3 => (0.60, 0.30),
+      < 0.7 => (0.30, 0.40),
+      _ => (0.10, 0.30),
+    };
+
+    late final List<GelShape> pool;
+    if (roll < smallW) {
+      pool = kSmallShapes;
+    } else if (roll < smallW + mediumW) {
+      pool = kMediumShapes;
+    } else {
+      pool = kLargeShapes;
+    }
+    return pool[rng.nextInt(pool.length)];
+  }
+
   /// Sonraki seeded el — Daily Puzzle'da hamle bazlı deterministik RNG.
   static List<(GelShape, GelColor)> generateNextSeededHand({
     required int baseSeed,
@@ -308,7 +350,11 @@ class ShapeGenerator {
     List<GelColor>? availableColors,
   }) {
     final seed = baseSeed * 31 + handIndex * 7 + moveCount;
-    return generateSeededHand(seed, availableColors: availableColors);
+    return generateSmartSeededHand(
+      seed,
+      handIndex: handIndex,
+      availableColors: availableColors,
+    );
   }
 
   /// Bugünün tarihinden seed üretir: yyyymmdd formatında tamsayı.

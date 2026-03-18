@@ -221,9 +221,11 @@ class GlooGame {
     }
 
     if (mode == GameMode.duel) {
-      // Düello: deterministik (seed bazlı)
-      return ShapeGenerator.generateSeededHand(
-          _handIndex * 31 + _movesUsed * 7);
+      // Düello: deterministik + akıllı zorluk eğrisi
+      return ShapeGenerator.generateSmartSeededHand(
+        _handIndex * 31 + _movesUsed * 7,
+        handIndex: _handIndex,
+      );
     }
 
     // Smart RNG
