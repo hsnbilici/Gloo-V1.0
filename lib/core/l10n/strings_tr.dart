@@ -408,4 +408,13 @@ class StringsTr extends AppStrings {
   String get streakRewardTitle => 'Seri Ödülü!';
   @override
   String get streakRewardClaim => 'Al';
+
+  @override
+  String get sharePromptTitle => 'Epik an!';
+  @override
+  String get sharePromptMessage => 'Skorunu paylaş?';
+  @override
+  String get sharePromptShare => 'Paylaş';
+  @override
+  String get sharePromptSkip => 'Geç';
 }

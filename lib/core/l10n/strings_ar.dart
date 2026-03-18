@@ -411,4 +411,13 @@ class StringsAr extends AppStrings {
   String get streakRewardTitle => 'مكافأة السلسلة!';
   @override
   String get streakRewardClaim => 'استلام';
+
+  @override
+  String get sharePromptTitle => 'لحظة ملحمية!';
+  @override
+  String get sharePromptMessage => 'شارك نتيجتك؟';
+  @override
+  String get sharePromptShare => 'مشاركة';
+  @override
+  String get sharePromptSkip => 'تخطي';
 }

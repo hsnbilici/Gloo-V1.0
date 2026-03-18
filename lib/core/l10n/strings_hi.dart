@@ -409,4 +409,13 @@ class StringsHi extends AppStrings {
   String get streakRewardTitle => 'स्ट्रीक इनाम!';
   @override
   String get streakRewardClaim => 'प्राप्त करें';
+
+  @override
+  String get sharePromptTitle => 'महाकाव्य क्षण!';
+  @override
+  String get sharePromptMessage => 'अपना स्कोर शेयर करें?';
+  @override
+  String get sharePromptShare => 'शेयर';
+  @override
+  String get sharePromptSkip => 'छोड़ें';
 }

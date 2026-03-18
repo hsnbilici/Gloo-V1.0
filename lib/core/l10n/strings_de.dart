@@ -413,4 +413,13 @@ class StringsDe extends AppStrings {
   String get streakRewardTitle => 'Serien-Belohnung!';
   @override
   String get streakRewardClaim => 'Einlösen';
+
+  @override
+  String get sharePromptTitle => 'Epischer Moment!';
+  @override
+  String get sharePromptMessage => 'Teile deinen Punktestand?';
+  @override
+  String get sharePromptShare => 'Teilen';
+  @override
+  String get sharePromptSkip => 'Überspringen';
 }

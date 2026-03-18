@@ -404,4 +404,13 @@ class StringsZh extends AppStrings {
   String get streakRewardTitle => '连续奖励！';
   @override
   String get streakRewardClaim => '领取';
+
+  @override
+  String get sharePromptTitle => '史诗时刻！';
+  @override
+  String get sharePromptMessage => '分享你的分数？';
+  @override
+  String get sharePromptShare => '分享';
+  @override
+  String get sharePromptSkip => '跳过';
 }

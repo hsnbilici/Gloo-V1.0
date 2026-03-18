@@ -414,4 +414,13 @@ class StringsEs extends AppStrings {
   String get streakRewardTitle => '¡Recompensa de racha!';
   @override
   String get streakRewardClaim => 'Reclamar';
+
+  @override
+  String get sharePromptTitle => '¡Momento épico!';
+  @override
+  String get sharePromptMessage => '¿Compartir tu puntuación?';
+  @override
+  String get sharePromptShare => 'Compartir';
+  @override
+  String get sharePromptSkip => 'Omitir';
 }

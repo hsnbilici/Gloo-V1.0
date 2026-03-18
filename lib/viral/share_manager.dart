@@ -42,20 +42,32 @@ class ShareManager {
     await Share.share(text);
   }
 
-  String _buildCaption({required int score, required String mode}) {
-    final modeLabel = switch (mode) {
-      'classic' => 'Klasik',
-      'colorChef' => 'Renk Şefi',
-      'timeTrial' => 'Zaman Koşusu',
-      'zen' => 'Zen',
-      'daily' => 'Günlük Bulmaca',
-      _ => mode,
-    };
+  Future<void> shareComboResult({
+    required int score,
+    required String mode,
+    required String comboLabel,
+  }) async {
+    final label = _modeLabel(mode);
+    final text = '$comboLabel! $label modunda ${_formatScore(score)} puan! '
+        '$_appUrl\n\n$_hashtags';
+    AnalyticsService().logShare(mode: 'combo');
+    await Share.share(text);
+  }
 
-    return '$modeLabel modunda ${_formatScore(score)} puan yaptım! '
+  String _buildCaption({required int score, required String mode}) {
+    return '${_modeLabel(mode)} modunda ${_formatScore(score)} puan yaptım! '
         'Senin en yüksek puanın nedir? '
         '$_appUrl\n\n$_hashtags';
   }
+
+  String _modeLabel(String mode) => switch (mode) {
+        'classic' => 'Klasik',
+        'colorChef' => 'Renk Şefi',
+        'timeTrial' => 'Zaman Koşusu',
+        'zen' => 'Zen',
+        'daily' => 'Günlük Bulmaca',
+        _ => mode,
+      };
 
   String _formatScore(int score) {
     if (score >= 1000000) return '${(score / 1000000).toStringAsFixed(1)}M';

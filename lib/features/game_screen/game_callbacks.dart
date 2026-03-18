@@ -43,6 +43,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   set synthesisKeyBase(int value);
   GameDuelController? get duelController;
   set duelController(GameDuelController? value);
+  int get epicComboCount;
+  set epicComboCount(int value);
   void refillHand();
   void handleGameOverDialog();
 
@@ -127,6 +129,38 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
         if (widget.mode == GameMode.duel) {
           duelController?.sendObstacles(0, combo.tier.name);
+        }
+
+        // Show share prompt on first epic combo per game session
+        if (combo.tier == ComboTier.epic && epicComboCount == 0) {
+          epicComboCount++;
+          // Delay to let the combo effect play first (1500ms combo + 100ms buffer)
+          Future.delayed(const Duration(milliseconds: 1600), () {
+            if (!mounted) return;
+            final l = ref.read(stringsProvider);
+            showGeneralDialog(
+              context: context,
+              barrierDismissible: true,
+              barrierColor: Colors.black.withValues(alpha: 0.5),
+              transitionBuilder: fadeScaleTransition,
+              transitionDuration: const Duration(milliseconds: 300),
+              pageBuilder: (_, __, ___) => SharePromptDialog(
+                title: l.sharePromptTitle,
+                message: l.sharePromptMessage,
+                shareLabel: l.sharePromptShare,
+                skipLabel: l.sharePromptSkip,
+                onShare: () {
+                  Navigator.pop(context);
+                  ShareManager().shareComboResult(
+                    score: game.score,
+                    mode: widget.mode.name,
+                    comboLabel: 'EPIC COMBO',
+                  );
+                },
+                onSkip: () => Navigator.pop(context),
+              ),
+            );
+          });
         }
       }
     };

@@ -414,4 +414,13 @@ class StringsRu extends AppStrings {
   String get streakRewardTitle => 'Награда за серию!';
   @override
   String get streakRewardClaim => 'Получить';
+
+  @override
+  String get sharePromptTitle => 'Эпический момент!';
+  @override
+  String get sharePromptMessage => 'Поделиться результатом?';
+  @override
+  String get sharePromptShare => 'Поделиться';
+  @override
+  String get sharePromptSkip => 'Пропустить';
 }

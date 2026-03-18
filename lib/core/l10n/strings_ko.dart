@@ -408,4 +408,13 @@ class StringsKo extends AppStrings {
   String get streakRewardTitle => '연속 보상!';
   @override
   String get streakRewardClaim => '받기';
+
+  @override
+  String get sharePromptTitle => '에픽 순간!';
+  @override
+  String get sharePromptMessage => '점수를 공유할까요?';
+  @override
+  String get sharePromptShare => '공유';
+  @override
+  String get sharePromptSkip => '건너뛰기';
 }

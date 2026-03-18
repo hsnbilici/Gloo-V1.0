@@ -410,4 +410,13 @@ class StringsFr extends AppStrings {
   String get streakRewardTitle => 'Récompense de série !';
   @override
   String get streakRewardClaim => 'Réclamer';
+
+  @override
+  String get sharePromptTitle => 'Moment épique !';
+  @override
+  String get sharePromptMessage => 'Partager ton score ?';
+  @override
+  String get sharePromptShare => 'Partager';
+  @override
+  String get sharePromptSkip => 'Ignorer';
 }

@@ -407,4 +407,13 @@ class StringsJa extends AppStrings {
   String get streakRewardTitle => 'ストリーク報酬！';
   @override
   String get streakRewardClaim => '受け取る';
+
+  @override
+  String get sharePromptTitle => '壮大な瞬間！';
+  @override
+  String get sharePromptMessage => 'スコアをシェアしますか？';
+  @override
+  String get sharePromptShare => 'シェア';
+  @override
+  String get sharePromptSkip => 'スキップ';
 }

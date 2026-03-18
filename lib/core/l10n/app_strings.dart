@@ -260,6 +260,12 @@ abstract class AppStrings {
   String get leagueDiamond;
   String get leagueGlooMaster;
 
+  // Paylaşım koçanı (viral)
+  String get sharePromptTitle;
+  String get sharePromptMessage;
+  String get sharePromptShare;
+  String get sharePromptSkip;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

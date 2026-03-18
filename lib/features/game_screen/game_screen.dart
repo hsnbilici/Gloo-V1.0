@@ -18,8 +18,11 @@ import '../../providers/game_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import '../../core/constants/ui_constants.dart';
 import '../../viral/clip_recorder.dart';
+import '../../viral/share_manager.dart';
 import 'game_background.dart';
+import 'share_prompt_dialog.dart';
 import 'game_cell_widget.dart';
 import 'game_dialogs.dart';
 import 'game_duel_controller.dart';
@@ -155,6 +158,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   int confettiKey = 0;
   bool _secondChanceUsed = false;
+
+  // ─── Epic combo tracking (share prompt) ───────────────────────────
+  int _epicComboCount = 0;
+  @override
+  int get epicComboCount => _epicComboCount;
+  @override
+  set epicComboCount(int value) => _epicComboCount = value;
 
   // ─── PvP Duel controller ──────────────────────────────────────────
   @override
@@ -371,6 +381,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
             previewValid = false;
             activePowerUpMode = null;
             _secondChanceUsed = false;
+            _epicComboCount = 0;
             showNearMissRescueBadge = false;
             showHighScoreBadge = false;
           });

@@ -407,4 +407,13 @@ class StringsEn extends AppStrings {
   String get streakRewardTitle => 'Streak Reward!';
   @override
   String get streakRewardClaim => 'Claim';
+
+  @override
+  String get sharePromptTitle => 'Epic moment!';
+  @override
+  String get sharePromptMessage => 'Share your score?';
+  @override
+  String get sharePromptShare => 'Share';
+  @override
+  String get sharePromptSkip => 'Skip';
 }

@@ -409,4 +409,13 @@ class StringsPt extends AppStrings {
   String get streakRewardTitle => 'Recompensa de sequência!';
   @override
   String get streakRewardClaim => 'Reivindicar';
+
+  @override
+  String get sharePromptTitle => 'Momento épico!';
+  @override
+  String get sharePromptMessage => 'Compartilhar sua pontuação?';
+  @override
+  String get sharePromptShare => 'Compartilhar';
+  @override
+  String get sharePromptSkip => 'Pular';
 }
