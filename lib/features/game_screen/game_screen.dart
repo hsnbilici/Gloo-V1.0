@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../data/local/local_repository.dart';
 import '../../core/utils/near_miss_detector.dart';
 import '../../game/levels/level_data.dart';
@@ -234,6 +235,19 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final bp = Breakpoint.fromWidth(screenWidth);
+
+    final gameContent = SafeArea(
+      child: Column(
+        children: [
+          GameOverlay(game: game, mode: widget.mode),
+          const SizedBox(height: 8),
+          Expanded(child: buildGrid()),
+        ],
+      ),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: kBgDark,
@@ -245,15 +259,14 @@ class _GameScreenState extends ConsumerState<GameScreen>
             baseColor: _modeColor,
             speedFactor: widget.mode == GameMode.zen ? 0.5 : 1.0,
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                GameOverlay(game: game, mode: widget.mode),
-                const SizedBox(height: 8),
-                Expanded(child: buildGrid()),
-              ],
-            ),
-          ),
+          bp == Breakpoint.phone
+              ? gameContent
+              : Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 600),
+                    child: gameContent,
+                  ),
+                ),
           if (activeNearMiss != null)
             Positioned.fill(
               child: NearMissEffect(
