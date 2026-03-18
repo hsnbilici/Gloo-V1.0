@@ -16,6 +16,7 @@ import '../shared/section_header.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
+import '../../providers/theme_provider.dart';
 import '../../providers/user_provider.dart';
 import 'settings_language.dart';
 import 'settings_privacy.dart';
@@ -126,6 +127,16 @@ class SettingsScreen extends ConsumerWidget {
                 onTap: () => _showLanguageSheet(context, ref, currentLocale),
               ),
               SectionHeader(
+                  title: l.settingsSectionTheme, color: kThemeTertiary),
+              ThemeSelectorTile(
+                currentMode: ref.watch(themeModeProvider),
+                systemLabel: l.settingsThemeSystem,
+                lightLabel: l.settingsThemeLight,
+                darkLabel: l.settingsThemeDark,
+                accentColor: kThemeTertiary,
+                onTap: () => _showThemeSheet(context, ref),
+              ),
+              SectionHeader(
                   title: l.settingsSectionPrivacy, color: kColorClassic),
               SettingsToggleTile(
                 label: l.settingsAnalytics,
@@ -234,6 +245,27 @@ class SettingsScreen extends ConsumerWidget {
         currentLocale: currentLocale,
         onSelect: (locale) {
           ref.read(localeProvider.notifier).setLocale(locale);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  void _showThemeSheet(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => ThemeSheet(
+        currentMode: ref.read(themeModeProvider),
+        systemLabel: ref.read(stringsProvider).settingsThemeSystem,
+        lightLabel: ref.read(stringsProvider).settingsThemeLight,
+        darkLabel: ref.read(stringsProvider).settingsThemeDark,
+        onSelect: (mode) {
+          ref.read(themeModeProvider.notifier).setThemeMode(mode);
+          ref.read(localRepositoryProvider.future).then((repo) {
+            repo.setThemeMode(mode);
+          });
           Navigator.pop(context);
         },
       ),
