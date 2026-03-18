@@ -170,7 +170,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       final saved = await repo.getHighScore(widget.mode.name);
       game.setInitialHighScore(saved);
       game.setGamesPlayed(repo.getTotalGamesPlayed());
-      game.setCurrencyBalance(repo.getGelOzu());
+      game.setCurrencyBalance(await repo.getGelOzu());
     });
 
     game.startGame();
@@ -277,7 +277,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
               child: RewardBadge(
                 label: ref.read(stringsProvider).toastHighScoreBadge,
                 icon: Icons.star_rounded,
-                color: const Color(0xFFFFD700),
+                color: kGold,
                 onTap: () {
                   ref.read(adManagerProvider).showHighScoreContinue(
                     onRewarded: () {

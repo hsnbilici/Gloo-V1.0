@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/near_miss_detector.dart';
 import '../../../game/systems/combo_detector.dart';
+import '../../../core/constants/color_constants.dart';
 import '../../../providers/locale_provider.dart';
 
 /// Combo kazanildiginda ortada beliren animasyonlu banner.
@@ -102,7 +103,7 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
   }
 
   Color _tierColor(ComboTier tier) => switch (tier) {
-        ComboTier.small => const Color(0xFF3CFF8B),
+        ComboTier.small => kGreen,
         ComboTier.medium => const Color(0xFFFFE03C),
         ComboTier.large => const Color(0xFFFF7B3C),
         ComboTier.epic => const Color(0xFFFF3B3B),

@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import '../../core/models/match_models.dart';
+export '../../core/models/match_models.dart';
+
 /// ELO ligleri.
 enum EloLeague {
   bronze, // 0-999
@@ -34,41 +37,6 @@ extension EloLeagueInfo on EloLeague {
     if (elo >= 1000) return EloLeague.silver;
     return EloLeague.bronze;
   }
-}
-
-/// Eşleştirme isteği.
-class MatchRequest {
-  const MatchRequest({
-    required this.userId,
-    required this.elo,
-    required this.region,
-    required this.timestamp,
-  });
-
-  final String userId;
-  final int elo;
-  final String region;
-  final DateTime timestamp;
-
-  /// Bekleme süresi (saniye).
-  int get waitSeconds => DateTime.now().difference(timestamp).inSeconds;
-}
-
-/// Eşleştirme sonucu.
-class MatchResult {
-  const MatchResult({
-    required this.matchId,
-    required this.player1Id,
-    required this.player2Id,
-    required this.seed,
-    required this.isBot,
-  });
-
-  final String matchId;
-  final String player1Id;
-  final String player2Id;
-  final int seed;
-  final bool isBot;
 }
 
 /// Düello maç sonucu.
@@ -164,8 +132,8 @@ class ObstacleGenerator {
         packets.add(const ObstaclePacket(type: ObstacleType.ice, count: 2));
         packets.add(const ObstaclePacket(type: ObstacleType.stone, count: 1));
       case 'large':
-        packets.add(const ObstaclePacket(type: ObstacleType.ice, count: 2));
-        packets.add(const ObstaclePacket(type: ObstacleType.stone, count: 1));
+        packets.add(const ObstaclePacket(type: ObstacleType.ice, count: 3));
+        packets.add(const ObstaclePacket(type: ObstacleType.stone, count: 2));
       case 'epic':
         packets.add(const ObstaclePacket(
             type: ObstacleType.ice, count: 9, areaSize: 3));

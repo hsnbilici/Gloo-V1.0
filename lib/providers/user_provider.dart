@@ -26,5 +26,5 @@ final streakProvider = FutureProvider<int>((ref) async {
 
 final eloProvider = FutureProvider<int>((ref) async {
   final repo = await ref.watch(localRepositoryProvider.future);
-  return repo.getElo();
+  return await repo.getElo();
 });

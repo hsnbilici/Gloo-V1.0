@@ -197,15 +197,23 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       final levelId = widget.levelData?.id ?? 0;
       final score = game.score;
       _cachedRepo?.setLevelCompleted(levelId, score);
-      showLevelComplete(context: context, score: score, levelId: levelId);
+      final l = ref.read(stringsProvider);
+      showLevelComplete(
+        context: context,
+        score: score,
+        levelId: levelId,
+        nextLevelLabel: l.nextLevelLabel,
+        levelListLabel: l.levelListLabel,
+        mainMenuLabel: l.mainMenuLabel,
+      );
     };
 
     // Jel Enerjisi kazanimi (meta-game kaynak)
-    game.onJelEnergyEarned = (amount) {
+    game.onJelEnergyEarned = (amount) async {
       if (!mounted) return;
       final repo = _cachedRepo;
       if (repo == null) return;
-      final current = repo.getGelEnergy();
+      final current = await repo.getGelEnergy();
       final updated = current + amount;
       repo.saveGelEnergy(updated);
       final totalEarned = repo.getTotalEarnedEnergy() + amount;

@@ -23,11 +23,7 @@ void main() {
 
     if (glooPlus) {
       overrides.add(
-        appSettingsProvider.overrideWith((ref) {
-          final n = AppSettingsNotifier();
-          n.setGlooPlus(enabled: true);
-          return n;
-        }),
+        appSettingsProvider.overrideWith(() => _GlooPlusNotifier()),
       );
     }
 
@@ -120,4 +116,13 @@ void main() {
       expect(find.text('Daily Puzzle'), findsOneWidget);
     });
   });
+}
+
+/// Test helper: AppSettingsNotifier with glooPlus=true initial state.
+class _GlooPlusNotifier extends AppSettingsNotifier {
+  @override
+  AppSettings build() {
+    super.build();
+    return const AppSettings(glooPlus: true);
+  }
 }

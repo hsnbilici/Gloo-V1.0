@@ -12,10 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/app.dart';
 import 'core/constants/color_constants.dart';
+import 'core/l10n/app_strings.dart';
 import 'data/local/local_repository.dart';
 import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
 import 'services/ad_manager.dart';
+import 'services/consent_service.dart';
 import 'services/purchase_service.dart';
 
 Future<void> main() async {
@@ -50,6 +52,15 @@ Future<void> main() async {
       }
     } catch (_) {
       // Firebase henuz yapilandirilmamis — uygulama calismaya devam eder
+    }
+
+    // UMP consent — AdMob'dan önce çalışmalı (EEA/UK GDPR zorunluluğu)
+    if (!kIsWeb) {
+      try {
+        await ConsentService().initialize();
+      } catch (_) {
+        // UMP hatası — uygulama çalışmaya devam eder
+      }
     }
 
     // Supabase, AdMob, IAP birbirinden bagimsiz — paralel baslatma
@@ -101,8 +112,9 @@ Future<void> main() async {
             const Icon(Icons.warning_amber_rounded,
                 color: Colors.white, size: 48),
             const SizedBox(height: 16),
-            const Text(
-              'Bir hata oluştu',
+            Text(
+              AppStrings.forLocale(PlatformDispatcher.instance.locale)
+                  .errorOccurred,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,

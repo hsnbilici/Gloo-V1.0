@@ -312,6 +312,9 @@ class StringsDe extends AppStrings {
   String get redeemCodeAlreadyUsed => 'Dieser Code wurde bereits verwendet';
 
   @override
+  String get errorOccurred => 'Ein Fehler ist aufgetreten';
+
+  @override
   String get deleteDataSuccess => 'Ihre Daten wurden erfolgreich gelöscht';
   @override
   String get deleteDataError =>
@@ -358,4 +361,35 @@ class StringsDe extends AppStrings {
   String get colorBrown => 'Braun';
   @override
   String get colorWhite => 'Weiß';
+
+  @override
+  String get levelLabel => 'Level';
+  @override
+  String get duelLabel => 'Duell';
+  @override
+  String get pvpWinLabel => 'Siege';
+  @override
+  String get pvpLossLabel => 'Niederlagen';
+  @override
+  String get pvpRatioLabel => 'Verhältnis';
+  @override
+  String get cancelLabel => 'Abbrechen';
+  @override
+  String get playAgainLabel => 'Nochmal spielen';
+  @override
+  String get mainMenuLabel => 'Hauptmenü';
+  @override
+  String get nextLevelLabel => 'Nächstes Level';
+  @override
+  String get levelListLabel => 'Level-Liste';
+  @override
+  String get watchAdLabel => 'Werbung ansehen';
+  @override
+  String get newBadge => 'NEU';
+  @override
+  String get islandLabel => 'Insel';
+  @override
+  String get characterLabel => 'Charakter';
+  @override
+  String get seasonLabel => 'Saison';
 }

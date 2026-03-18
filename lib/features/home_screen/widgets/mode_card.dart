@@ -173,21 +173,21 @@ class ModeCardState extends State<ModeCard> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFD700).withValues(alpha: 0.12),
+                    color: kGold.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                     border: Border.all(
-                        color: const Color(0xFFFFD700).withValues(alpha: 0.40)),
+                        color: kGold.withValues(alpha: 0.40)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.lock_rounded,
-                          color: Color(0xFFFFD700), size: 10),
+                          color: kGold, size: 10),
                       const SizedBox(width: 3),
                       Text(
                         widget.lockLabel!,
                         style: const TextStyle(
-                          color: Color(0xFFFFD700),
+                          color: kGold,
                           fontSize: 8,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.5,

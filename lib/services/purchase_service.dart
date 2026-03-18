@@ -151,7 +151,7 @@ class PurchaseService {
   /// Önceki oturumdan kalan doğrulanamamış ürünleri yükler ve yeniden doğrular.
   Future<void> loadPendingVerifications(LocalRepository localRepo) async {
     _localRepo = localRepo;
-    final pending = localRepo.getPendingVerification();
+    final pending = await localRepo.getPendingVerification();
     if (pending.isEmpty) return;
     _pendingVerification.addAll(pending);
     if (kDebugMode) {
@@ -192,7 +192,7 @@ class PurchaseService {
   /// Yerel depodan yüklenen ürünleri mevcut durum ile senkronize eder.
   /// Süresi dolmuş abonelikler (restore edilmemiş) yerel depodan kaldırılır.
   Future<void> syncLocalProducts(LocalRepository localRepo) async {
-    final saved = localRepo.getUnlockedProducts();
+    final saved = await localRepo.getUnlockedProducts();
     if (saved.isEmpty) return;
     // Kayıtlı ama artık aktif olmayan abonelikleri kaldır
     final expired = saved.where(

@@ -22,10 +22,9 @@ const _kSupportedLangs = [
 
 /// Cihaz sistem dilini okur; desteklenmiyorsa İngilizce'ye düşer.
 /// Kullanıcı ayarlardan dil seçerse [setLocale] ile güncellenir.
-class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(_detect());
-
-  static Locale _detect() {
+class LocaleNotifier extends Notifier<Locale> {
+  @override
+  Locale build() {
     final sys = PlatformDispatcher.instance.locale.languageCode;
     return Locale(_kSupportedLangs.contains(sys) ? sys : 'en');
   }
@@ -49,8 +48,8 @@ const kLanguageOptions = [
   (code: 'fr', nativeName: 'Français'),
 ];
 
-final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>(
-  (ref) => LocaleNotifier(),
+final localeProvider = NotifierProvider<LocaleNotifier, Locale>(
+  LocaleNotifier.new,
 );
 
 /// Aktif locale'e karşılık gelen AppStrings implementasyonunu döner.

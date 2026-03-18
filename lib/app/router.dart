@@ -6,7 +6,7 @@ import '../features/game_screen/game_screen.dart';
 import '../features/home_screen/home_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../game/levels/level_progression.dart';
-import '../game/world/game_world.dart';
+import '../core/models/game_mode.dart';
 import '../features/character/character_screen.dart';
 import '../features/collection/collection_screen.dart';
 import '../features/island/island_screen.dart';

@@ -1,6 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 // Basit veri modelleri — Isar yerine SharedPreferences kullanılıyor (demo)
 
 class Score {
@@ -26,8 +23,3 @@ class UserProfile {
   int currentStreak = 0;
   DateTime? lastPlayedDate;
 }
-
-// SharedPreferences provider
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
-  return SharedPreferences.getInstance();
-});

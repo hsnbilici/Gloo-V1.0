@@ -308,6 +308,9 @@ class StringsHi extends AppStrings {
   String get redeemCodeAlreadyUsed => 'यह कोड पहले ही उपयोग किया जा चुका है';
 
   @override
+  String get errorOccurred => 'एक त्रुटि हुई';
+
+  @override
   String get deleteDataSuccess => 'आपका डेटा सफलतापूर्वक हटा दिया गया';
   @override
   String get deleteDataError =>
@@ -354,4 +357,35 @@ class StringsHi extends AppStrings {
   String get colorBrown => 'भूरा';
   @override
   String get colorWhite => 'सफ़ेद';
+
+  @override
+  String get levelLabel => 'स्तर';
+  @override
+  String get duelLabel => 'द्वंद्व';
+  @override
+  String get pvpWinLabel => 'जीत';
+  @override
+  String get pvpLossLabel => 'हार';
+  @override
+  String get pvpRatioLabel => 'अनुपात';
+  @override
+  String get cancelLabel => 'रद्द करें';
+  @override
+  String get playAgainLabel => 'फिर से खेलें';
+  @override
+  String get mainMenuLabel => 'मुख्य मेनू';
+  @override
+  String get nextLevelLabel => 'अगला स्तर';
+  @override
+  String get levelListLabel => 'स्तर सूची';
+  @override
+  String get watchAdLabel => 'विज्ञापन देखें';
+  @override
+  String get newBadge => 'नया';
+  @override
+  String get islandLabel => 'द्वीप';
+  @override
+  String get characterLabel => 'चरित्र';
+  @override
+  String get seasonLabel => 'मौसम';
 }

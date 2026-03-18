@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gloo/core/constants/game_constants.dart';
@@ -78,66 +79,93 @@ void main() {
   // ─── GameNotifier ───────────────────────────────────────────────────────
 
   group('GameNotifier', () {
-    late GameNotifier notifier;
+    late ProviderContainer container;
 
     setUp(() {
-      notifier = GameNotifier(GameMode.classic);
+      container = ProviderContainer();
     });
 
+    tearDown(() => container.dispose());
+
     test('initial state', () {
-      expect(notifier.state.score, 0);
-      expect(notifier.state.status, GameStatus.idle);
-      expect(notifier.state.mode, GameMode.classic);
+      final state = container.read(gameProvider(GameMode.classic));
+      expect(state.score, 0);
+      expect(state.status, GameStatus.idle);
+      expect(state.mode, GameMode.classic);
     });
 
     test('updateScore changes score', () {
-      notifier.updateScore(500);
-      expect(notifier.state.score, 500);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateScore(500);
+      expect(container.read(gameProvider(GameMode.classic)).score, 500);
     });
 
     test('updateFill changes filledCells', () {
-      notifier.updateFill(40);
-      expect(notifier.state.filledCells, 40);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateFill(40);
+      expect(container.read(gameProvider(GameMode.classic)).filledCells, 40);
     });
 
     test('updateStatus changes status', () {
-      notifier.updateStatus(GameStatus.playing);
-      expect(notifier.state.status, GameStatus.playing);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateStatus(GameStatus.playing);
+      expect(container.read(gameProvider(GameMode.classic)).status,
+          GameStatus.playing);
     });
 
     test('updateRemainingSeconds changes seconds', () {
-      notifier.updateRemainingSeconds(60);
-      expect(notifier.state.remainingSeconds, 60);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateRemainingSeconds(60);
+      expect(
+          container.read(gameProvider(GameMode.classic)).remainingSeconds, 60);
     });
 
     test('updateChef changes progress and required', () {
-      notifier.updateChef(3, 5);
-      expect(notifier.state.chefProgress, 3);
-      expect(notifier.state.chefRequired, 5);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateChef(3, 5);
+      final state = container.read(gameProvider(GameMode.classic));
+      expect(state.chefProgress, 3);
+      expect(state.chefRequired, 5);
     });
 
     test('updateGelOzu changes gelOzu', () {
-      notifier.updateGelOzu(100);
-      expect(notifier.state.gelOzu, 100);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateGelOzu(100);
+      expect(container.read(gameProvider(GameMode.classic)).gelOzu, 100);
     });
 
     test('updateMovesUsed changes movesUsed', () {
-      notifier.updateMovesUsed(8);
-      expect(notifier.state.movesUsed, 8);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateMovesUsed(8);
+      expect(container.read(gameProvider(GameMode.classic)).movesUsed, 8);
     });
 
     test('updateLevel changes level and target', () {
-      notifier.updateLevel(10, 2000);
-      expect(notifier.state.currentLevel, 10);
-      expect(notifier.state.levelTargetScore, 2000);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateLevel(10, 2000);
+      final state = container.read(gameProvider(GameMode.classic));
+      expect(state.currentLevel, 10);
+      expect(state.levelTargetScore, 2000);
     });
 
     test('updateElo changes elo', () {
-      notifier.updateElo(1350);
-      expect(notifier.state.elo, 1350);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateElo(1350);
+      expect(container.read(gameProvider(GameMode.classic)).elo, 1350);
     });
 
     test('reset returns to initial state', () {
+      final notifier =
+          container.read(gameProvider(GameMode.classic).notifier);
       notifier.updateScore(500);
       notifier.updateFill(40);
       notifier.updateStatus(GameStatus.playing);
@@ -145,20 +173,22 @@ void main() {
       notifier.updateMovesUsed(5);
 
       notifier.reset();
-      expect(notifier.state.score, 0);
-      expect(notifier.state.status, GameStatus.idle);
-      expect(notifier.state.filledCells, 0);
-      expect(notifier.state.gelOzu, 0);
-      expect(notifier.state.movesUsed, 0);
+      final state = container.read(gameProvider(GameMode.classic));
+      expect(state.score, 0);
+      expect(state.status, GameStatus.idle);
+      expect(state.filledCells, 0);
+      expect(state.gelOzu, 0);
+      expect(state.movesUsed, 0);
       // mode is preserved after reset
-      expect(notifier.state.mode, GameMode.classic);
+      expect(state.mode, GameMode.classic);
     });
 
     test('different modes start independently', () {
-      final classicNotifier = GameNotifier(GameMode.classic);
-      final timeTrialNotifier = GameNotifier(GameMode.timeTrial);
-      classicNotifier.updateScore(1000);
-      expect(timeTrialNotifier.state.score, 0);
+      container
+          .read(gameProvider(GameMode.classic).notifier)
+          .updateScore(1000);
+      expect(
+          container.read(gameProvider(GameMode.timeTrial)).score, 0);
     });
   });
 }

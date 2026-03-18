@@ -100,7 +100,7 @@ class GameCellWidget extends StatelessWidget {
           height: 2,
           margin: const EdgeInsets.only(bottom: 1, left: 2, right: 2),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFD700).withValues(alpha: 0.6),
+            color: kGold.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(1),
           ),
         ),
@@ -216,19 +216,35 @@ class GameCellWidget extends StatelessWidget {
       );
     }
 
-    return MouseRegion(
-      onEnter: (_) => onHover(),
-      cursor: selectedSlot != null || activePowerUpMode == PowerUpType.bomb
-          ? SystemMouseCursors.click
-          : MouseCursor.defer,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            cellContent,
-            if (typeOverlay != null) Positioned.fill(child: typeOverlay),
-          ],
+    // Semantics label: hücre durumunu ekran okuyuculara bildirir
+    final String semanticLabel;
+    if (cellColor != null) {
+      semanticLabel = '${cellColor!.shortLabel} ${row + 1}, ${col + 1}';
+    } else if (isPreview) {
+      semanticLabel = 'Preview ${row + 1}, ${col + 1}';
+    } else if (gridCell.type == CellType.stone) {
+      semanticLabel = 'Stone ${row + 1}, ${col + 1}';
+    } else {
+      semanticLabel = 'Empty ${row + 1}, ${col + 1}';
+    }
+
+    return Semantics(
+      label: semanticLabel,
+      button: selectedSlot != null || activePowerUpMode == PowerUpType.bomb,
+      child: MouseRegion(
+        onEnter: (_) => onHover(),
+        cursor: selectedSlot != null || activePowerUpMode == PowerUpType.bomb
+            ? SystemMouseCursors.click
+            : MouseCursor.defer,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              cellContent,
+              if (typeOverlay != null) Positioned.fill(child: typeOverlay),
+            ],
+          ),
         ),
       ),
     );

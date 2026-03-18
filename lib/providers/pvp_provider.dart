@@ -35,8 +35,9 @@ class DuelState {
   }
 }
 
-class DuelNotifier extends StateNotifier<DuelState> {
-  DuelNotifier() : super(const DuelState());
+class DuelNotifier extends Notifier<DuelState> {
+  @override
+  DuelState build() => const DuelState();
 
   void setMatch({
     required String matchId,
@@ -57,8 +58,8 @@ class DuelNotifier extends StateNotifier<DuelState> {
   void reset() => state = const DuelState();
 }
 
-final duelProvider = StateNotifierProvider<DuelNotifier, DuelState>(
-  (ref) => DuelNotifier(),
+final duelProvider = NotifierProvider<DuelNotifier, DuelState>(
+  DuelNotifier.new,
 );
 
 final pvpRealtimeServiceProvider = Provider<PvpRealtimeService>((ref) {

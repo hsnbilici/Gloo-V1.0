@@ -113,9 +113,9 @@ void main() {
 
       FlutterError.onError = oldHandler;
 
-      expect(find.text('Galibiyet'), findsOneWidget);
-      expect(find.text('Maglubiyet'), findsOneWidget);
-      expect(find.text('Oran'), findsOneWidget);
+      expect(find.text('Wins'), findsOneWidget);
+      expect(find.text('Losses'), findsOneWidget);
+      expect(find.text('Ratio'), findsOneWidget);
     });
   });
 }

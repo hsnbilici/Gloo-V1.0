@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
 
 class MetaGameBar extends StatelessWidget {
-  const MetaGameBar({super.key});
+  const MetaGameBar({
+    super.key,
+    required this.islandLabel,
+    required this.characterLabel,
+    required this.seasonLabel,
+  });
+
+  final String islandLabel;
+  final String characterLabel;
+  final String seasonLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +30,8 @@ class MetaGameBar extends StatelessWidget {
         children: [
           MetaItem(
             icon: Icons.terrain_rounded,
-            label: 'Ada',
-            color: const Color(0xFF3CFF8B),
+            label: islandLabel,
+            color: kGreen,
             onTap: () => context.push('/island'),
           ),
           Container(
@@ -30,8 +40,8 @@ class MetaGameBar extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.06)),
           MetaItem(
             icon: Icons.person_rounded,
-            label: 'Karakter',
-            color: const Color(0xFFB080FF),
+            label: characterLabel,
+            color: kLavender,
             onTap: () => context.push('/character'),
           ),
           Container(
@@ -40,8 +50,8 @@ class MetaGameBar extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.06)),
           MetaItem(
             icon: Icons.military_tech_rounded,
-            label: 'Sezon',
-            color: const Color(0xFFFFD700),
+            label: seasonLabel,
+            color: kGold,
             onTap: () => context.push('/season-pass'),
           ),
         ],

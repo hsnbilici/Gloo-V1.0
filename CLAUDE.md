@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (1204 test)
+flutter test                                   # tum testler (1218 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
 flutter build web --release                    # web build
@@ -54,9 +54,8 @@ app/ → features/ → providers/ → game/ → core/
 - `providers/` — Riverpod: game, audio, user, locale, pvp, service providers.
 
 **Bilinen katman ihlalleri** (todo'da duzeltme planli):
-- `core/constants/color_constants.dart` → `game/world/game_world.dart` import ediyor (ters bagimlilik)
-- `audio/sound_bank.dart` → `game/systems/combo_detector.dart` import ediyor
-- 3 feature dosyasi `data/remote/` siniflarini provider atlayarak dogrudan kullaniyor
+- ~~`audio/sound_bank.dart` → `game/systems/combo_detector.dart`~~ — DUZELTILDI (Sprint 20, M.12)
+- 3 feature dosyasi `data/remote/` siniflarini provider atlayarak dogrudan kullaniyor (M.8)
 
 ### Oyun Motoru
 
@@ -67,16 +66,14 @@ GameScreen._onCellTap()
   → GlooGame.placePiece(cells, color)
       → GridManager.place()
       → _evaluateBoard():
-          → ColorSynthesisSystem.findSyntheses()
-          → GridManager.setCell() (sentez sonucu)
-          → Color Chef: hedef renk sayimi
-          → GridManager.detectAndClear() (tam satir/sutun + buz kirma)
-          → GridManager.applyGravity()
-          → ComboDetector.registerClear() (1500ms pencere)
-          → ScoreSystem.addLineClear()
-          → CurrencyManager.earnFromLineClear()
-          → PowerUpSystem.onMoveCompleted()
-          → NearMissDetector.evaluate()
+          → _applySyntheses()
+          → _updateColorChefProgress()
+          → _clearAndScore()
+          → _applyGravityAndCascade()
+          → _checkTimeTrialBonus()
+          → _checkLevelCompletion()
+          → _evaluateNearMiss()
+          → _powerUpSystem.onMoveCompleted()
       → Level modu: hedef skor / hamle siniri → onLevelComplete
   → GlooGame.checkGameOver(handShapes)
 ```
@@ -101,6 +98,8 @@ GameScreen._onCellTap()
 
 ### GameMode Enum (7 mod)
 
+`core/models/game_mode.dart`'ta tanimli (saf Dart, Flutter bagimliligi yok). `game_world.dart` re-export eder.
+
 `classic`, `colorChef`, `timeTrial`, `zen` (Gloo+ gerekli), `daily` (seeded), `level` (50+prosedurel), `duel` (120sn, ELO, seeded)
 
 ### Hucre ve Izgara
@@ -117,7 +116,9 @@ Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10
 
 `GelColor.shortLabel`: Renk koru modu icin dil bagimsiz kisaltma — degistirilmemeli.
 
-UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kModeColors`. Ekranlarda yerel renk sabiti tanimlanmamali.
+Renk adlari l10n uzerinden: `AppStrings.colorName(GelColor)`. `GelColor` uzerinde `displayName` getter'i yoktur.
+
+UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kModeColors` map'i. Ekranlarda yerel renk sabiti tanimlanmamali.
 
 ### Routing
 
@@ -142,8 +143,8 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 - Web uyumsuz paketler: `ffmpeg_kit_flutter` (discontinued), `google_mobile_ads`, `screen_recorder`. `just_audio` web-uyumlu.
 
 ### Veri Katmani
-- `LocalRepository`: SharedPreferences, 40+ key. Tum anahtarlar `local_repository.dart`'ta tanimli. Encryption yok — hassas veriler (ELO, unlocked_products) duz metin.
-- `RemoteRepository`: Supabase. Tum metodlarda `isConfigured` guard ve try-catch zorunlu. `kDebugMode` guard'li debugPrint.
+- `LocalRepository`: SharedPreferences + `flutter_secure_storage`. Hassas veriler (elo, gel_ozu, gel_energy, pvp_wins/losses, unlocked_products, pending_verification, redeemed_codes) SecureStorage'da sifreleniyor. Migration fallback: SecureStorage'da yoksa SharedPreferences'tan okur. Constructor opsiyonel `SecureStorageInterface` alir — testlerde `FakeSecureStorage` kullanilir.
+- `RemoteRepository`: Supabase. Tum metodlarda `isConfigured` guard ve try-catch zorunlu. `kDebugMode` guard'li debugPrint. `submitScore`/`submitPvpResult` icin `_retry()` ile exponential backoff (3 deneme).
 - `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast). Duplicate match onlemi: leksikografik ID karsilastirmasi.
 - `AnalyticsService`: Lazy/null-safe Firebase wrapper — yoksa sessizce no-op.
 - `firebase_options.dart` ve `supabase_client.dart`: Gercek key'ler kaynak kodda (bilinen sorun, C.4 ile `--dart-define`'a tasinacak).
@@ -163,9 +164,7 @@ final l = ref.watch(stringsProvider);
 Text(l.scoreLabel)
 ```
 
-Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula.
-
-**Bilinen sorun:** `GelColor.displayName` ve `game_screen.dart`'taki 5 string Turkce hardcoded — l10n'a tasinmali (M.4).
+Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula. Renk adlari icin `AppStrings.colorName(GelColor)` helper metodu mevcut.
 
 ## Linting
 
@@ -177,30 +176,31 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 - **Zen modu**: Gloo+ abonelik ile kilitli
 - **AdManager**: Interstitial (4 oyunda 1), rewarded (ikinci sans), banner. Anti-frustration: 5dk'da 2 kayip → reklam yok. Test ID'ler aktif.
-- **PurchaseService**: 7 IAP urunu. Sunucu tarafinda receipt dogrulama (Supabase Edge Function). `_pendingVerification` bellekte — persist edilmeli (H.8).
+- **PurchaseService**: 7 IAP urunu. Sunucu tarafinda receipt dogrulama (Supabase Edge Function). `_pendingVerification` SharedPreferences'a persist ediliyor; app restart'ta otomatik retry. Abonelik expiry kontrolu `restorePurchases()` + `syncLocalProducts()` ile yapilir.
 - **Redeem Code**: `ShopScreen` → `RemoteRepository.redeemCode()` → Supabase Edge Function → `PurchaseService.unlockProducts()`
 
-## Proje Durumu (2026-03-17)
+## Proje Durumu (2026-03-18)
 
-**Scorecard:** 77/100 (7 ajan denetimi)
+**Scorecard:** 76/100 (Sprint 20 sonrasi)
 
 | Alan | Puan | En Kritik Sorun |
 |------|:----:|-----------------|
-| Mimari | 79 | core→game ters bagimlilik |
-| Gameplay | 83 | `_evaluateBoard()` 130+ satir |
-| UI/UX | 79 | Erisilebilirlik 55/100 |
-| QA | 81 | Integration test sifir |
-| DevOps | 71 | iOS signing + release hazirlik eksik |
-| Backend | 79 | Retry mekanizmasi yok |
-| Guvenlik | 64 | API key'ler kaynak kodda |
+| Mimari | 78 | State management (65), features→data bypass |
+| Gameplay | 78 | ShapeGenerator static state, seeded RNG |
+| UI/UX | 72 | Erisilebilirlik 38/100, Responsive 45/100 |
+| QA | 79 | Integration test sifir, mock/fake yok |
+| DevOps | 73 | Release hazirligi (45), iOS signing eksik |
+| Backend | 77 | GDPR uyumlulugu (68), UMP SDK eksik |
+| Guvenlik | 68 | Hardcoded secrets (35), certificate pinning yok |
 
-Detayli gorev listesi ve alt alan puanlari: `tasks/todo.md`
+Detayli gorev listesi ve alt alan puanlari: `_dev/tasks/todo.md`
 
 ## Detayli Dokumantasyon
 
 | Dokuman | Amac |
 |---|---|
-| `GDD.md` | Game Design Document — mekanikler, monetizasyon, ASO |
-| `TECHNICAL_ARCHITECTURE.md` | Sistem diyagrami, algoritma ornekleri |
-| `tasks/todo.md` | Yol haritasi, scorecard, 30+ gorev (P0-P3 oncelikli) |
-| `tasks/lessons.md` | Sprint bazli dersler ve kurallar |
+| `_dev/docs/GDD.md` | Game Design Document — mekanikler, monetizasyon, ASO |
+| `_dev/docs/TECHNICAL_ARCHITECTURE.md` | Sistem diyagrami, algoritma ornekleri |
+| `_dev/docs/P0-STORE-HAZIRLIGI.md` | Store oncesi harici adimlar kilavuzu |
+| `_dev/tasks/todo.md` | Yol haritasi, scorecard, kalan gorevler (P0-P3 oncelikli) |
+| `_dev/tasks/lessons.md` | Sprint bazli dersler ve kurallar |

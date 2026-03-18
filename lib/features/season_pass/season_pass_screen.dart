@@ -5,10 +5,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../shared/glow_orb.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import 'season_pass_background.dart';
+import 'season_pass_widgets.dart';
 
 // ─── Sezon Pasi Tier Verileri (50 tier, statik) ─────────────────────────────
 
@@ -47,7 +48,6 @@ class SeasonPassScreen extends ConsumerStatefulWidget {
 }
 
 class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
-  static const _kAccent = Color(0xFFFFD700);
 
   late final SeasonPassState _passState;
   bool _loaded = false;
@@ -86,12 +86,11 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
       backgroundColor: kBgDark,
       body: Stack(
         children: [
-          _SeasonBackground(),
+          const SeasonBackground(),
           SafeArea(
             child: Column(
               children: [
                 const SizedBox(height: 12),
-                // Ust bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -117,35 +116,34 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                       Text(
                         'SEZON PASI',
                         style: TextStyle(
-                          color: _kAccent,
+                          color: kGold,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 4,
                           shadows: [
                             Shadow(
-                              color: _kAccent.withValues(alpha: 0.5),
+                              color: kGold.withValues(alpha: 0.5),
                               blurRadius: 12,
                             ),
                           ],
                         ),
                       ),
                       const Spacer(),
-                      // Mevcut tier
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: _kAccent.withValues(alpha: 0.10),
+                          color: kGold.withValues(alpha: 0.10),
                           borderRadius:
                               BorderRadius.circular(UIConstants.radiusMd),
                           border: Border.all(
-                            color: _kAccent.withValues(alpha: 0.30),
+                            color: kGold.withValues(alpha: 0.30),
                           ),
                         ),
                         child: Text(
                           'Tier $currentTier/50',
                           style: const TextStyle(
-                            color: _kAccent,
+                            color: kGold,
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                           ),
@@ -155,17 +153,15 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                   ),
                 ).animate().fadeIn(duration: 300.ms),
                 const SizedBox(height: 16),
-                // XP ilerleme cubugu
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: _XpProgressBar(
+                  child: XpProgressBar(
                     currentXp: _passState.currentXp,
                     currentTier: currentTier,
                     tiers: _kSeasonTiers,
                   ),
                 ).animate(delay: 100.ms).fadeIn(duration: 350.ms),
                 const SizedBox(height: 16),
-                // Yatay tier listesi
                 Expanded(
                   child: _loaded
                       ? ListView.builder(
@@ -178,7 +174,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                             final isUnlocked = tier.tier <= currentTier;
                             final isCurrent = tier.tier == currentTier + 1;
 
-                            return _TierCard(
+                            return TierCard(
                               tier: tier,
                               isUnlocked: isUnlocked,
                               isCurrent: isCurrent,
@@ -191,7 +187,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                           },
                         )
                       : const Center(
-                          child: CircularProgressIndicator(color: _kAccent),
+                          child: CircularProgressIndicator(color: kGold),
                         ),
                 ),
                 const SizedBox(height: 20),
@@ -200,281 +196,6 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ─── XP Ilerleme Cubugu ──────────────────────────────────────────────────────
-
-class _XpProgressBar extends StatelessWidget {
-  const _XpProgressBar({
-    required this.currentXp,
-    required this.currentTier,
-    required this.tiers,
-  });
-
-  final int currentXp;
-  final int currentTier;
-  final List<SeasonTier> tiers;
-
-  @override
-  Widget build(BuildContext context) {
-    int accumulated = 0;
-    int nextXp = 0;
-    int prevAccumulated = 0;
-    for (final tier in tiers) {
-      accumulated += tier.xpRequired;
-      if (tier.tier == currentTier + 1) {
-        nextXp = accumulated;
-        prevAccumulated = accumulated - tier.xpRequired;
-        break;
-      }
-    }
-    if (nextXp == 0) nextXp = accumulated;
-
-    final progress = nextXp > prevAccumulated
-        ? ((currentXp - prevAccumulated) / (nextXp - prevAccumulated))
-            .clamp(0.0, 1.0)
-        : 1.0;
-
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '$currentXp XP',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.60),
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Text(
-              'Sonraki: $nextXp XP',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.35),
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: SizedBox(
-            height: 8,
-            child: Stack(
-              children: [
-                Container(
-                  color: Colors.white.withValues(alpha: 0.06),
-                ),
-                FractionallySizedBox(
-                  widthFactor: progress,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFFD700), Color(0xFFFF8C42)],
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ─── Tier Karti ─────────────────────────────────────────────────────────────
-
-class _TierCard extends StatelessWidget {
-  const _TierCard({
-    required this.tier,
-    required this.isUnlocked,
-    required this.isCurrent,
-    required this.claimedFree,
-    required this.claimedPremium,
-    required this.delay,
-  });
-
-  final SeasonTier tier;
-  final bool isUnlocked;
-  final bool isCurrent;
-  final bool claimedFree;
-  final bool claimedPremium;
-
-  final Duration delay;
-
-  IconData _rewardIcon(SeasonRewardType type) => switch (type) {
-        SeasonRewardType.gelOzu => Icons.water_drop_rounded,
-        SeasonRewardType.costume => Icons.checkroom_rounded,
-        SeasonRewardType.decoration => Icons.auto_awesome_rounded,
-        SeasonRewardType.energy => Icons.bolt_rounded,
-      };
-
-  @override
-  Widget build(BuildContext context) {
-    final borderColor = isCurrent
-        ? const Color(0xFFFFD700)
-        : isUnlocked
-            ? const Color(0xFF3CFF8B).withValues(alpha: 0.40)
-            : Colors.white.withValues(alpha: 0.08);
-
-    return Container(
-      width: 80,
-      margin: const EdgeInsets.only(right: 10),
-      decoration: BoxDecoration(
-        color: isCurrent
-            ? const Color(0xFFFFD700).withValues(alpha: 0.08)
-            : Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-        border: Border.all(color: borderColor, width: isCurrent ? 2 : 1),
-      ),
-      child: Column(
-        children: [
-          // Tier numarasi
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            decoration: BoxDecoration(
-              color: isCurrent
-                  ? const Color(0xFFFFD700).withValues(alpha: 0.12)
-                  : Colors.white.withValues(alpha: 0.04),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(11),
-                topRight: Radius.circular(11),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                '${tier.tier}',
-                style: TextStyle(
-                  color: isCurrent
-                      ? const Color(0xFFFFD700)
-                      : isUnlocked
-                          ? Colors.white
-                          : kMuted,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-          ),
-          // Ucretsiz odul (ust)
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'UCRETSIZ',
-                    style: TextStyle(
-                      color: const Color(0xFF00E5FF).withValues(alpha: 0.50),
-                      fontSize: 7,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Icon(
-                    _rewardIcon(tier.freeReward.type),
-                    color: isUnlocked ? const Color(0xFF00E5FF) : kMuted,
-                    size: 20,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${tier.freeReward.amount}',
-                    style: TextStyle(
-                      color: isUnlocked
-                          ? Colors.white.withValues(alpha: 0.80)
-                          : kMuted,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // Ayrac
-          Container(
-            height: 1,
-            color: Colors.white.withValues(alpha: 0.06),
-          ),
-          // Premium odul (alt)
-          Expanded(
-            child: Center(
-              child: tier.premiumReward != null
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'PREMIUM',
-                          style: TextStyle(
-                            color:
-                                const Color(0xFFFF69B4).withValues(alpha: 0.50),
-                            fontSize: 7,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Icon(
-                          _rewardIcon(tier.premiumReward!.type),
-                          color: isUnlocked
-                              ? const Color(0xFFFF69B4)
-                              : kMuted.withValues(alpha: 0.40),
-                          size: 20,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${tier.premiumReward!.amount}',
-                          style: TextStyle(
-                            color: isUnlocked
-                                ? Colors.white.withValues(alpha: 0.60)
-                                : kMuted.withValues(alpha: 0.30),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-            ),
-          ),
-        ],
-      ),
-    )
-        .animate(delay: delay)
-        .fadeIn(duration: 200.ms)
-        .slideX(begin: 0.1, end: 0, duration: 200.ms);
-  }
-}
-
-// ─── Arkaplan ───────────────────────────────────────────────────────────────
-
-class _SeasonBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(color: kBgDark),
-        const Positioned(
-          top: -100,
-          left: -50,
-          child: GlowOrb(size: 320, color: Color(0xFFFFD700), opacity: 0.06),
-        ),
-        const Positioned(
-          bottom: -80,
-          right: -40,
-          child: GlowOrb(size: 260, color: Color(0xFFFF69B4), opacity: 0.05),
-        ),
-      ],
     );
   }
 }

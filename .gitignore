@@ -1,3 +1,7 @@
+# Debug/Log
+firebase-debug.log
+*.log
+
 # Flutter/Dart
 .dart_tool/
 .flutter-plugins

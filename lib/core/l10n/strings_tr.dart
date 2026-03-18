@@ -307,6 +307,9 @@ class StringsTr extends AppStrings {
   String get redeemCodeAlreadyUsed => 'Bu kod zaten kullanılmış';
 
   @override
+  String get errorOccurred => 'Bir hata oluştu';
+
+  @override
   String get deleteDataSuccess => 'Verileriniz başarıyla silindi';
   @override
   String get deleteDataError =>
@@ -353,4 +356,35 @@ class StringsTr extends AppStrings {
   String get colorBrown => 'Kahverengi';
   @override
   String get colorWhite => 'Beyaz';
+
+  @override
+  String get levelLabel => 'Seviye';
+  @override
+  String get duelLabel => 'Duello';
+  @override
+  String get pvpWinLabel => 'Galibiyet';
+  @override
+  String get pvpLossLabel => 'Mağlubiyet';
+  @override
+  String get pvpRatioLabel => 'Oran';
+  @override
+  String get cancelLabel => 'İptal';
+  @override
+  String get playAgainLabel => 'Tekrar Oyna';
+  @override
+  String get mainMenuLabel => 'Ana Menü';
+  @override
+  String get nextLevelLabel => 'Sonraki Seviye';
+  @override
+  String get levelListLabel => 'Seviye Listesi';
+  @override
+  String get watchAdLabel => 'Reklam İzle';
+  @override
+  String get newBadge => 'YENİ';
+  @override
+  String get islandLabel => 'Ada';
+  @override
+  String get characterLabel => 'Karakter';
+  @override
+  String get seasonLabel => 'Sezon';
 }

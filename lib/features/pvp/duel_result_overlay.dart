@@ -14,19 +14,22 @@ class DuelResultOverlay extends StatelessWidget {
     required this.playerElo,
     required this.onHome,
     required this.onRematch,
+    required this.playAgainLabel,
+    required this.mainMenuLabel,
   });
 
   final DuelResult result;
   final int playerElo;
   final VoidCallback onHome;
   final VoidCallback onRematch;
+  final String playAgainLabel;
+  final String mainMenuLabel;
 
-  static const _kWin = Color(0xFF3CFF8B);
   static const _kLoss = Color(0xFFFF3B3B);
   static const _kDraw = Color(0xFFFFE03C);
 
   Color get _outcomeColor => switch (result.outcome) {
-        DuelOutcome.win => _kWin,
+        DuelOutcome.win => kGreen,
         DuelOutcome.loss => _kLoss,
         DuelOutcome.draw => _kDraw,
       };
@@ -170,7 +173,7 @@ class DuelResultOverlay extends StatelessWidget {
             Text(
               '+${result.gelReward} Jel Ozu',
               style: TextStyle(
-                color: const Color(0xFFFFD700).withValues(alpha: 0.80),
+                color: kGold.withValues(alpha: 0.80),
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
@@ -195,9 +198,9 @@ class DuelResultOverlay extends StatelessWidget {
                               BorderRadius.circular(UIConstants.radiusTile),
                         ),
                       ),
-                      child: const Text(
-                        'Tekrar Oyna',
-                        style: TextStyle(
+                      child: Text(
+                        playAgainLabel,
+                        style: const TextStyle(
                             fontWeight: FontWeight.w700, fontSize: 15),
                       ),
                     ),
@@ -205,9 +208,9 @@ class DuelResultOverlay extends StatelessWidget {
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: onHome,
-                    child: const Text(
-                      'Ana Menu',
-                      style: TextStyle(
+                    child: Text(
+                      mainMenuLabel,
+                      style: const TextStyle(
                         color: kMuted,
                         fontWeight: FontWeight.w600,
                       ),

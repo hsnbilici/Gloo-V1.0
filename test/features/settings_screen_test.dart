@@ -19,12 +19,8 @@ void main() {
     final overrides = <Override>[];
     if (initialSettings != null) {
       overrides.add(
-        appSettingsProvider.overrideWith((ref) {
-          final n = AppSettingsNotifier();
-          if (!initialSettings.sfxEnabled) n.toggleSfx();
-          if (initialSettings.colorBlindMode) n.toggleColorBlindMode();
-          if (!initialSettings.analyticsEnabled) n.toggleAnalytics();
-          return n;
+        appSettingsProvider.overrideWith(() {
+          return AppSettingsNotifier();
         }),
       );
     }

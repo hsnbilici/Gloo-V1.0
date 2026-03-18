@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gloo/data/local/data_models.dart';
 import 'package:gloo/data/local/local_repository.dart';
 
+import 'local/fake_secure_storage.dart';
+
 void main() {
   late LocalRepository repo;
 
@@ -13,7 +15,7 @@ void main() {
 
   Future<LocalRepository> createRepo() async {
     final prefs = await SharedPreferences.getInstance();
-    return LocalRepository(prefs);
+    return LocalRepository(prefs, secureStorage: FakeSecureStorage());
   }
 
   // ─── High Score ─────────────────────────────────────────────────────────
@@ -137,7 +139,7 @@ void main() {
       await repo.clearAllData();
       expect(await repo.getHighScore('classic'), 0);
       expect(repo.getOnboardingDone(), isFalse);
-      expect(repo.getGelOzu(), 0);
+      expect(await repo.getGelOzu(), 0);
     });
   });
 
@@ -233,13 +235,13 @@ void main() {
   group('Gel Ozu', () {
     test('defaults to 0', () async {
       repo = await createRepo();
-      expect(repo.getGelOzu(), 0);
+      expect(await repo.getGelOzu(), 0);
     });
 
     test('saveGelOzu persists', () async {
       repo = await createRepo();
       await repo.saveGelOzu(100);
-      expect(repo.getGelOzu(), 100);
+      expect(await repo.getGelOzu(), 100);
     });
   });
 
@@ -248,13 +250,13 @@ void main() {
   group('Gel Energy', () {
     test('defaults to 0', () async {
       repo = await createRepo();
-      expect(repo.getGelEnergy(), 0);
+      expect(await repo.getGelEnergy(), 0);
     });
 
     test('saveGelEnergy persists', () async {
       repo = await createRepo();
       await repo.saveGelEnergy(50);
-      expect(repo.getGelEnergy(), 50);
+      expect(await repo.getGelEnergy(), 50);
     });
 
     test('total earned energy defaults to 0', () async {
@@ -376,37 +378,37 @@ void main() {
   group('PvP / ELO', () {
     test('getElo defaults to 1000', () async {
       repo = await createRepo();
-      expect(repo.getElo(), 1000);
+      expect(await repo.getElo(), 1000);
     });
 
     test('saveElo persists', () async {
       repo = await createRepo();
       await repo.saveElo(1250);
-      expect(repo.getElo(), 1250);
+      expect(await repo.getElo(), 1250);
     });
 
     test('getPvpWins defaults to 0', () async {
       repo = await createRepo();
-      expect(repo.getPvpWins(), 0);
+      expect(await repo.getPvpWins(), 0);
     });
 
     test('getPvpLosses defaults to 0', () async {
       repo = await createRepo();
-      expect(repo.getPvpLosses(), 0);
+      expect(await repo.getPvpLosses(), 0);
     });
 
     test('recordPvpResult win increments wins', () async {
       repo = await createRepo();
       await repo.recordPvpResult(isWin: true);
-      expect(repo.getPvpWins(), 1);
-      expect(repo.getPvpLosses(), 0);
+      expect(await repo.getPvpWins(), 1);
+      expect(await repo.getPvpLosses(), 0);
     });
 
     test('recordPvpResult loss increments losses', () async {
       repo = await createRepo();
       await repo.recordPvpResult(isWin: false);
-      expect(repo.getPvpWins(), 0);
-      expect(repo.getPvpLosses(), 1);
+      expect(await repo.getPvpWins(), 0);
+      expect(await repo.getPvpLosses(), 1);
     });
 
     test('multiple PvP results accumulate', () async {
@@ -414,8 +416,8 @@ void main() {
       await repo.recordPvpResult(isWin: true);
       await repo.recordPvpResult(isWin: true);
       await repo.recordPvpResult(isWin: false);
-      expect(repo.getPvpWins(), 2);
-      expect(repo.getPvpLosses(), 1);
+      expect(await repo.getPvpWins(), 2);
+      expect(await repo.getPvpLosses(), 1);
     });
   });
 
@@ -503,20 +505,20 @@ void main() {
   group('Redeem Codes', () {
     test('getRedeemedCodes defaults to empty', () async {
       repo = await createRepo();
-      expect(repo.getRedeemedCodes(), isEmpty);
+      expect(await repo.getRedeemedCodes(), isEmpty);
     });
 
     test('addRedeemedCode adds code', () async {
       repo = await createRepo();
       await repo.addRedeemedCode('ABC123');
-      expect(repo.getRedeemedCodes(), ['ABC123']);
+      expect(await repo.getRedeemedCodes(), ['ABC123']);
     });
 
     test('addRedeemedCode no duplicates', () async {
       repo = await createRepo();
       await repo.addRedeemedCode('ABC123');
       await repo.addRedeemedCode('ABC123');
-      expect(repo.getRedeemedCodes().length, 1);
+      expect((await repo.getRedeemedCodes()).length, 1);
     });
   });
 
@@ -525,13 +527,13 @@ void main() {
   group('Unlocked Products', () {
     test('getUnlockedProducts defaults to empty', () async {
       repo = await createRepo();
-      expect(repo.getUnlockedProducts(), isEmpty);
+      expect(await repo.getUnlockedProducts(), isEmpty);
     });
 
     test('addUnlockedProducts adds products', () async {
       repo = await createRepo();
       await repo.addUnlockedProducts(['product1', 'product2']);
-      final products = repo.getUnlockedProducts();
+      final products = await repo.getUnlockedProducts();
       expect(products, contains('product1'));
       expect(products, contains('product2'));
     });
@@ -540,8 +542,102 @@ void main() {
       repo = await createRepo();
       await repo.addUnlockedProducts(['product1']);
       await repo.addUnlockedProducts(['product1', 'product2']);
-      final products = repo.getUnlockedProducts();
+      final products = await repo.getUnlockedProducts();
       expect(products.where((p) => p == 'product1').length, 1);
+    });
+  });
+
+  // ─── SecureStorage — hassas veriler ───────────────────────────────────
+
+  group('SecureStorage — hassas veriler', () {
+    late LocalRepository secureRepo;
+    late SharedPreferences securePrefs;
+    late FakeSecureStorage secureStorage;
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      securePrefs = await SharedPreferences.getInstance();
+      secureStorage = FakeSecureStorage();
+      secureRepo =
+          LocalRepository(securePrefs, secureStorage: secureStorage);
+    });
+
+    test('saveElo hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.saveElo(1500);
+      expect(await secureStorage.read(key: 'elo'), '1500');
+    });
+
+    test('getElo SecureStorage\'dan okur, fallback SharedPreferences',
+        () async {
+      await securePrefs.setInt('elo', 1200);
+      final elo = await secureRepo.getElo();
+      expect(elo, 1200);
+    });
+
+    test('saveGelOzu hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.saveGelOzu(500);
+      expect(await secureStorage.read(key: 'gel_ozu'), '500');
+    });
+
+    test('getGelOzu SecureStorage\'dan okur, fallback SharedPreferences',
+        () async {
+      await securePrefs.setInt('gel_ozu', 250);
+      final gelOzu = await secureRepo.getGelOzu();
+      expect(gelOzu, 250);
+    });
+
+    test('saveGelEnergy hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.saveGelEnergy(75);
+      expect(await secureStorage.read(key: 'gel_energy'), '75');
+    });
+
+    test('recordPvpResult hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.recordPvpResult(isWin: true);
+      expect(await secureStorage.read(key: 'pvp_wins'), '1');
+      await secureRepo.recordPvpResult(isWin: false);
+      expect(await secureStorage.read(key: 'pvp_losses'), '1');
+    });
+
+    test('savePendingVerification hassas veriyi SecureStorage\'a yazar',
+        () async {
+      await secureRepo.savePendingVerification(['prod1', 'prod2']);
+      expect(
+          await secureStorage.read(key: 'pending_verification'), 'prod1,prod2');
+    });
+
+    test('addRedeemedCode hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.addRedeemedCode('CODE1');
+      expect(await secureStorage.read(key: 'redeemed_codes'), 'CODE1');
+    });
+
+    test('addUnlockedProducts hassas veriyi SecureStorage\'a yazar', () async {
+      await secureRepo.addUnlockedProducts(['unlock1', 'unlock2']);
+      final stored = await secureStorage.read(key: 'unlocked_products');
+      expect(stored, contains('unlock1'));
+      expect(stored, contains('unlock2'));
+    });
+
+    test('clearAllData SecureStorage\'ı da temizler', () async {
+      await secureRepo.saveElo(1500);
+      await secureRepo.saveGelOzu(300);
+      await secureRepo.clearAllData();
+      expect(await secureStorage.read(key: 'elo'), isNull);
+      expect(await secureStorage.read(key: 'gel_ozu'), isNull);
+    });
+
+    test('migration: getElo SharedPreferences\'tan okur, sonra SecureStorage\'a gecis',
+        () async {
+      // Eski veri SharedPreferences'ta
+      await securePrefs.setInt('elo', 1300);
+      expect(await secureRepo.getElo(), 1300);
+
+      // Yeni kayit SecureStorage'a yazilir ve SharedPreferences temizlenir
+      await secureRepo.saveElo(1400);
+      expect(await secureStorage.read(key: 'elo'), '1400');
+      expect(securePrefs.getInt('elo'), isNull);
+
+      // Artik SecureStorage'dan okunur
+      expect(await secureRepo.getElo(), 1400);
     });
   });
 }

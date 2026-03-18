@@ -308,6 +308,9 @@ class StringsKo extends AppStrings {
   String get redeemCodeAlreadyUsed => '이 코드는 이미 사용되었습니다';
 
   @override
+  String get errorOccurred => '오류가 발생했습니다';
+
+  @override
   String get deleteDataSuccess => '데이터가 성공적으로 삭제되었습니다';
   @override
   String get deleteDataError => '데이터를 삭제할 수 없습니다. 다시 시도해 주세요.';
@@ -353,4 +356,35 @@ class StringsKo extends AppStrings {
   String get colorBrown => '갈색';
   @override
   String get colorWhite => '흰색';
+
+  @override
+  String get levelLabel => '레벨';
+  @override
+  String get duelLabel => '결투';
+  @override
+  String get pvpWinLabel => '승리';
+  @override
+  String get pvpLossLabel => '패배';
+  @override
+  String get pvpRatioLabel => '비율';
+  @override
+  String get cancelLabel => '취소';
+  @override
+  String get playAgainLabel => '다시 플레이';
+  @override
+  String get mainMenuLabel => '메인 메뉴';
+  @override
+  String get nextLevelLabel => '다음 레벨';
+  @override
+  String get levelListLabel => '레벨 목록';
+  @override
+  String get watchAdLabel => '광고 보기';
+  @override
+  String get newBadge => 'NEW';
+  @override
+  String get islandLabel => '섬';
+  @override
+  String get characterLabel => '캐릭터';
+  @override
+  String get seasonLabel => '시즌';
 }

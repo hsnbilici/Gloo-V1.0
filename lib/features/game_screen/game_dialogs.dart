@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
-import '../../game/world/game_world.dart';
+import '../../core/models/game_mode.dart';
 import 'chef_level_overlay.dart';
 import 'game_over_overlay.dart';
 import 'level_complete_overlay.dart';
@@ -105,6 +105,9 @@ void showLevelComplete({
   required BuildContext context,
   required int score,
   required int levelId,
+  required String nextLevelLabel,
+  required String levelListLabel,
+  required String mainMenuLabel,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -126,6 +129,9 @@ void showLevelComplete({
       pageBuilder: (ctx, _, __) => LevelCompleteOverlay(
         score: score,
         levelId: levelId,
+        nextLevelLabel: nextLevelLabel,
+        levelListLabel: levelListLabel,
+        mainMenuLabel: mainMenuLabel,
         onNextLevel: () {
           Navigator.of(ctx).pop();
           final nextId = levelId + 1;

@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'consent_service.dart';
+
 /// AdMob reklam yöneticisi — singleton.
 ///
 /// Web platformunda no-op: [kIsWeb] true iken tüm metodlar sessizce döner.
@@ -151,6 +153,7 @@ class AdManager {
 
   void showInterstitial() {
     if (kIsWeb || _adsRemoved) return;
+    if (!ConsentService().canShowAds) return;
     _checkDailyReset();
     if (_dailyInterstitialCount >= _maxDailyInterstitial) return;
 
@@ -195,6 +198,7 @@ class AdManager {
   /// Rewarded video gösterir. [onRewarded] video izlendikten sonra çağrılır.
   void showRewarded({required VoidCallback onRewarded}) {
     if (kIsWeb || _adsRemoved) return;
+    if (!ConsentService().canShowAds) return;
     final ad = _rewardedAd;
     if (ad == null) {
       _loadRewarded();
@@ -221,6 +225,7 @@ class AdManager {
   /// Rewarded teklif edilebilir mi? (Günlük limit + cooldown kontrolü)
   bool canOfferRewarded() {
     if (kIsWeb || _adsRemoved) return false;
+    if (!ConsentService().canShowAds) return false;
     _checkDailyReset();
     if (_dailyRewardedOfferCount >= _maxDailyRewardedOffer) return false;
     // Son 1 saatte reklam izlenmemişse
@@ -296,6 +301,7 @@ class AdManager {
 
   void loadBanner({required AdSize size}) {
     if (kIsWeb || _adsRemoved) return;
+    if (!ConsentService().canShowAds) return;
     _bannerAd?.dispose();
     _bannerAd = BannerAd(
       adUnitId: _kBanner,

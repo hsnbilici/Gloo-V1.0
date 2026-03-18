@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../data/local/local_repository.dart';
-import '../../game/world/game_world.dart';
+import '../../core/models/game_mode.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -264,7 +264,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             subtitle: l.modeLevelDesc,
                             color: const Color(0xFFFF8C42),
                             icon: Icons.map_rounded,
-                            badgeLabel: 'YENİ',
+                            badgeLabel: l.newBadge,
                             onTap: () => context.go('/levels'),
                           )
                               .animate(delay: 400.ms)
@@ -280,9 +280,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ModeCard(
                             label: l.modeDuelName,
                             subtitle: l.modeDuelDesc,
-                            color: const Color(0xFFFF4D6D),
+                            color: kColorClassic,
                             icon: Icons.sports_mma_rounded,
-                            badgeLabel: 'YENİ',
+                            badgeLabel: l.newBadge,
                             onTap: () => context.go('/pvp-lobby'),
                           )
                               .animate(delay: 480.ms)
@@ -299,7 +299,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   // Faz 4: Meta-game hizli erisim cubugu
-                  const MetaGameBar()
+                  MetaGameBar(
+                    islandLabel: l.islandLabel,
+                    characterLabel: l.characterLabel,
+                    seasonLabel: l.seasonLabel,
+                  )
                       .animate(delay: 540.ms)
                       .fadeIn(duration: 350.ms)
                       .slideY(begin: 0.12, end: 0, duration: 350.ms),

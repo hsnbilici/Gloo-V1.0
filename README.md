@@ -8,8 +8,8 @@
 
 | Belge | Aciklama |
 |---|---|
-| [GDD.md](./GDD.md) | Oyun Tasarim Belgesi — tum mekanikler, ASO stratejisi, monetizasyon |
-| [TECHNICAL_ARCHITECTURE.md](./TECHNICAL_ARCHITECTURE.md) | Teknik mimari, kod yapisi, kritik algoritma ornekleri |
+| [GDD.md](./_dev/docs/GDD.md) | Oyun Tasarim Belgesi — tum mekanikler, ASO stratejisi, monetizasyon |
+| [TECHNICAL_ARCHITECTURE.md](./_dev/docs/TECHNICAL_ARCHITECTURE.md) | Teknik mimari, kod yapisi, kritik algoritma ornekleri |
 | [CLAUDE.md](./CLAUDE.md) | Gelistirme rehberi — build komutlari, mimari, API notlari |
 
 ---

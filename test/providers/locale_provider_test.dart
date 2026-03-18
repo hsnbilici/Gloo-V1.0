@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gloo/providers/locale_provider.dart';
@@ -54,27 +55,38 @@ void main() {
   // ─── LocaleNotifier ────────────────────────────────────────────────────
 
   group('LocaleNotifier', () {
+    late ProviderContainer container;
+
+    setUp(() {
+      container = ProviderContainer();
+    });
+
+    tearDown(() => container.dispose());
+
     test('setLocale changes state', () {
-      final notifier = LocaleNotifier();
-      notifier.setLocale(const Locale('tr'));
-      expect(notifier.state.languageCode, 'tr');
+      container
+          .read(localeProvider.notifier)
+          .setLocale(const Locale('tr'));
+      expect(container.read(localeProvider).languageCode, 'tr');
     });
 
     test('setLocale to Japanese', () {
-      final notifier = LocaleNotifier();
-      notifier.setLocale(const Locale('ja'));
-      expect(notifier.state.languageCode, 'ja');
+      container
+          .read(localeProvider.notifier)
+          .setLocale(const Locale('ja'));
+      expect(container.read(localeProvider).languageCode, 'ja');
     });
 
     test('setLocale to Arabic', () {
-      final notifier = LocaleNotifier();
-      notifier.setLocale(const Locale('ar'));
-      expect(notifier.state.languageCode, 'ar');
+      container
+          .read(localeProvider.notifier)
+          .setLocale(const Locale('ar'));
+      expect(container.read(localeProvider).languageCode, 'ar');
     });
 
     test('initial state is a valid locale', () {
-      final notifier = LocaleNotifier();
-      expect(notifier.state.languageCode.isNotEmpty, isTrue);
+      final locale = container.read(localeProvider);
+      expect(locale.languageCode.isNotEmpty, isTrue);
     });
   });
 }

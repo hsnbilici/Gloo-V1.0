@@ -19,12 +19,7 @@ void main() {
     final overrides = <Override>[];
     if (glooPlus || adsRemoved) {
       overrides.add(
-        appSettingsProvider.overrideWith((ref) {
-          final n = AppSettingsNotifier();
-          if (glooPlus) n.setGlooPlus(enabled: true);
-          if (adsRemoved) n.setAdsRemoved(removed: true);
-          return n;
-        }),
+        appSettingsProvider.overrideWith(() => AppSettingsNotifier()),
       );
     }
 

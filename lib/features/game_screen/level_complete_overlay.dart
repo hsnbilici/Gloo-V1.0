@@ -12,6 +12,9 @@ class LevelCompleteOverlay extends StatelessWidget {
     required this.onNextLevel,
     required this.onLevelList,
     required this.onHome,
+    required this.nextLevelLabel,
+    required this.levelListLabel,
+    required this.mainMenuLabel,
   });
 
   final int score;
@@ -19,6 +22,9 @@ class LevelCompleteOverlay extends StatelessWidget {
   final VoidCallback onNextLevel;
   final VoidCallback onLevelList;
   final VoidCallback onHome;
+  final String nextLevelLabel;
+  final String levelListLabel;
+  final String mainMenuLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +93,9 @@ class LevelCompleteOverlay extends StatelessWidget {
                     borderRadius: BorderRadius.circular(UIConstants.radiusMd),
                   ),
                 ),
-                child: const Text(
-                  'Sonraki Seviye',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                child: Text(
+                  nextLevelLabel,
+                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                 ),
               ),
             ),
@@ -106,18 +112,18 @@ class LevelCompleteOverlay extends StatelessWidget {
                     borderRadius: BorderRadius.circular(UIConstants.radiusMd),
                   ),
                 ),
-                child: const Text(
-                  'Seviye Listesi',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                child: Text(
+                  levelListLabel,
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                 ),
               ),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: onHome,
-              child: const Text(
-                'Ana Menu',
-                style: TextStyle(
+              child: Text(
+                mainMenuLabel,
+                style: const TextStyle(
                   color: kMuted,
                   fontWeight: FontWeight.w600,
                 ),

@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../core/constants/color_constants.dart';
+
 /// Power-up kullanildiginda gosterilen parilti efekti.
 class PowerUpActivateEffect extends StatefulWidget {
   const PowerUpActivateEffect({
@@ -189,7 +191,7 @@ class _BombPainter extends CustomPainter {
         canvas.drawCircle(
           center.translate(sparkX, sparkY),
           sparkSize,
-          Paint()..color = const Color(0xFFFFD700).withValues(alpha: opacity),
+          Paint()..color = kGold.withValues(alpha: opacity),
         );
       }
     }

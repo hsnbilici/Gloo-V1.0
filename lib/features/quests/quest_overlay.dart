@@ -3,13 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
-import '../../core/constants/ui_constants.dart';
 import '../shared/section_header.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import 'quest_widgets.dart';
 
-// ─── Gorev Paneli ────────────────────────────────────────────────────────────
+const Color _kWeekly = Color(0xFFFF8C42);
 
 class QuestOverlay extends ConsumerStatefulWidget {
   const QuestOverlay({super.key});
@@ -19,10 +19,6 @@ class QuestOverlay extends ConsumerStatefulWidget {
 }
 
 class _QuestOverlayState extends ConsumerState<QuestOverlay> {
-  static const _kDaily = Color(0xFF00E5FF);
-  static const _kWeekly = Color(0xFFFF8C42);
-  static const _kXp = Color(0xFFFFD700);
-
   bool _loaded = false;
   Map<String, int> _dailyProgress = {};
   List<Quest> _activeDailies = [];
@@ -121,7 +117,6 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
           ),
           child: Column(
             children: [
-              // Tutma cubugu
               const SizedBox(height: 12),
               Container(
                 width: 36,
@@ -132,7 +127,6 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Baslik
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -140,25 +134,24 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                     Text(
                       'GOREVLER',
                       style: TextStyle(
-                        color: _kXp,
+                        color: kGold,
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 3,
                         shadows: [
                           Shadow(
-                            color: _kXp.withValues(alpha: 0.4),
+                            color: kGold.withValues(alpha: 0.4),
                             blurRadius: 10,
                           ),
                         ],
                       ),
                     ),
                     const Spacer(),
-                    const _XpBadge(label: 'XP Kazan'),
+                    const XpBadge(label: 'XP Kazan'),
                   ],
                 ),
               ).animate().fadeIn(duration: 300.ms),
               const SizedBox(height: 16),
-              // Gorev listesi
               Expanded(
                 child: _loaded
                     ? ListView(
@@ -166,10 +159,9 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                         physics: const BouncingScrollPhysics(),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         children: [
-                          // Gunluk gorevler
                           const SectionHeader(
                             title: 'GUNLUK',
-                            color: _kDaily,
+                            color: kCyan,
                             icon: Icons.today_rounded,
                             showDivider: true,
                           ).animate(delay: 50.ms).fadeIn(duration: 250.ms),
@@ -177,15 +169,14 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                           ..._activeDailies.asMap().entries.map((e) {
                             final quest = e.value;
                             final progress = _getProgress(quest);
-                            return _QuestCard(
+                            return QuestCard(
                               quest: quest,
                               progress: progress,
-                              accentColor: _kDaily,
+                              accentColor: kCyan,
                               delay: Duration(milliseconds: 80 + 60 * e.key),
                             );
                           }),
                           const SizedBox(height: 20),
-                          // Haftalik gorevler
                           const SectionHeader(
                             title: 'HAFTALIK',
                             color: _kWeekly,
@@ -196,7 +187,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                           ..._activeWeeklies.asMap().entries.map((e) {
                             final quest = e.value;
                             final progress = _getProgress(quest);
-                            return _QuestCard(
+                            return QuestCard(
                               quest: quest,
                               progress: progress,
                               accentColor: _kWeekly,
@@ -207,251 +198,13 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                         ],
                       )
                     : const Center(
-                        child: CircularProgressIndicator(color: _kXp),
+                        child: CircularProgressIndicator(color: kGold),
                       ),
               ),
             ],
           ),
         );
       },
-    );
-  }
-}
-
-// ─── Gorev Karti ─────────────────────────────────────────────────────────────
-
-class _QuestCard extends StatelessWidget {
-  const _QuestCard({
-    required this.quest,
-    required this.progress,
-    required this.accentColor,
-    required this.delay,
-  });
-
-  final Quest quest;
-  final int progress;
-  final Color accentColor;
-  final Duration delay;
-
-  IconData get _questIcon => switch (quest.type) {
-        QuestType.clearLines => Icons.horizontal_rule_rounded,
-        QuestType.makeSyntheses => Icons.merge_type_rounded,
-        QuestType.reachCombo => Icons.flash_on_rounded,
-        QuestType.completeDailyPuzzle => Icons.calendar_today_rounded,
-        QuestType.playGames => Icons.sports_esports_rounded,
-        QuestType.useColorSynthesis => Icons.palette_rounded,
-        QuestType.reachScore => Icons.emoji_events_rounded,
-      };
-
-  @override
-  Widget build(BuildContext context) {
-    final isComplete = progress >= quest.targetCount;
-    final ratio = quest.targetCount > 0
-        ? (progress / quest.targetCount).clamp(0.0, 1.0)
-        : 0.0;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isComplete
-              ? accentColor.withValues(alpha: 0.08)
-              : Colors.white.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-          border: Border.all(
-            color: isComplete
-                ? accentColor.withValues(alpha: 0.30)
-                : Colors.white.withValues(alpha: 0.08),
-          ),
-        ),
-        child: Row(
-          children: [
-            // Ikon
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: isComplete ? 0.15 : 0.08),
-                borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                border: Border.all(
-                  color:
-                      accentColor.withValues(alpha: isComplete ? 0.35 : 0.15),
-                ),
-              ),
-              child: Icon(
-                isComplete ? Icons.check_rounded : _questIcon,
-                color: isComplete
-                    ? accentColor
-                    : accentColor.withValues(alpha: 0.60),
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 10),
-            // Aciklama ve ilerleme cubugu
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    quest.description,
-                    style: TextStyle(
-                      color: isComplete
-                          ? Colors.white.withValues(alpha: 0.50)
-                          : Colors.white.withValues(alpha: 0.80),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      decoration:
-                          isComplete ? TextDecoration.lineThrough : null,
-                      decorationColor: Colors.white.withValues(alpha: 0.30),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  // Ilerleme cubugu
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(3),
-                    child: SizedBox(
-                      height: 5,
-                      child: Stack(
-                        children: [
-                          Container(
-                            color: Colors.white.withValues(alpha: 0.06),
-                          ),
-                          FractionallySizedBox(
-                            widthFactor: ratio,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    accentColor,
-                                    accentColor.withValues(alpha: 0.70),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  // Ilerleme sayisi
-                  Text(
-                    '$progress / ${quest.targetCount}',
-                    style: TextStyle(
-                      color: isComplete
-                          ? accentColor.withValues(alpha: 0.60)
-                          : Colors.white.withValues(alpha: 0.35),
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            // Odul
-            Column(
-              children: [
-                _RewardChip(
-                  icon: Icons.star_rounded,
-                  label: '${quest.xpReward}',
-                  color: const Color(0xFFFFD700),
-                ),
-                const SizedBox(height: 3),
-                _RewardChip(
-                  icon: Icons.water_drop_rounded,
-                  label: '${quest.gelReward}',
-                  color: const Color(0xFF3CFF8B),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    )
-        .animate(delay: delay)
-        .fadeIn(duration: 200.ms)
-        .slideX(begin: 0.06, end: 0, duration: 200.ms);
-  }
-}
-
-// ─── Odul Chip ───────────────────────────────────────────────────────────────
-
-class _RewardChip extends StatelessWidget {
-  const _RewardChip({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 10),
-          const SizedBox(width: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── XP Badge ────────────────────────────────────────────────────────────────
-
-class _XpBadge extends StatelessWidget {
-  const _XpBadge({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFD700).withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-        border: Border.all(
-          color: const Color(0xFFFFD700).withValues(alpha: 0.30),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.star_rounded, color: Color(0xFFFFD700), size: 12),
-          const SizedBox(width: 3),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Color(0xFFFFD700),
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

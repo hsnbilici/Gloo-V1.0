@@ -306,6 +306,9 @@ class StringsEn extends AppStrings {
   String get redeemCodeAlreadyUsed => 'This code has already been used';
 
   @override
+  String get errorOccurred => 'An error occurred';
+
+  @override
   String get deleteDataSuccess => 'Your data has been successfully deleted';
   @override
   String get deleteDataError =>
@@ -352,4 +355,35 @@ class StringsEn extends AppStrings {
   String get colorBrown => 'Brown';
   @override
   String get colorWhite => 'White';
+
+  @override
+  String get levelLabel => 'Level';
+  @override
+  String get duelLabel => 'Duel';
+  @override
+  String get pvpWinLabel => 'Wins';
+  @override
+  String get pvpLossLabel => 'Losses';
+  @override
+  String get pvpRatioLabel => 'Ratio';
+  @override
+  String get cancelLabel => 'Cancel';
+  @override
+  String get playAgainLabel => 'Play Again';
+  @override
+  String get mainMenuLabel => 'Main Menu';
+  @override
+  String get nextLevelLabel => 'Next Level';
+  @override
+  String get levelListLabel => 'Level List';
+  @override
+  String get watchAdLabel => 'Watch Ad';
+  @override
+  String get newBadge => 'NEW';
+  @override
+  String get islandLabel => 'Island';
+  @override
+  String get characterLabel => 'Character';
+  @override
+  String get seasonLabel => 'Season';
 }

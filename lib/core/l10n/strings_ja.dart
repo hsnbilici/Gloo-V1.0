@@ -307,6 +307,9 @@ class StringsJa extends AppStrings {
   String get redeemCodeAlreadyUsed => 'このコードは既に使用されています';
 
   @override
+  String get errorOccurred => 'エラーが発生しました';
+
+  @override
   String get deleteDataSuccess => 'データが正常に削除されました';
   @override
   String get deleteDataError => 'データを削除できませんでした。もう一度お試しください。';
@@ -352,4 +355,35 @@ class StringsJa extends AppStrings {
   String get colorBrown => '茶';
   @override
   String get colorWhite => '白';
+
+  @override
+  String get levelLabel => 'レベル';
+  @override
+  String get duelLabel => 'デュエル';
+  @override
+  String get pvpWinLabel => '勝利';
+  @override
+  String get pvpLossLabel => '敗北';
+  @override
+  String get pvpRatioLabel => '勝率';
+  @override
+  String get cancelLabel => 'キャンセル';
+  @override
+  String get playAgainLabel => 'もう一度';
+  @override
+  String get mainMenuLabel => 'メインメニュー';
+  @override
+  String get nextLevelLabel => '次のレベル';
+  @override
+  String get levelListLabel => 'レベル一覧';
+  @override
+  String get watchAdLabel => '広告を見る';
+  @override
+  String get newBadge => 'NEW';
+  @override
+  String get islandLabel => '島';
+  @override
+  String get characterLabel => 'キャラクター';
+  @override
+  String get seasonLabel => 'シーズン';
 }

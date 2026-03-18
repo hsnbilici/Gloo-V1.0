@@ -29,10 +29,10 @@ dependencies:
   # Yerel depolama
   shared_preferences: ^2.3.2
   path_provider: ^2.1.2
+  flutter_secure_storage: ^9.2.4
 
   # Paylaşım & Viral Pipeline
   share_plus: ^10.0.2
-  screen_recorder: ^0.3.0                # Frame capture (iOS/Android — web uyumsuz)
   # ffmpeg_kit_flutter_full_gpl: ^6.0.3    # FFmpeg video isleme — DISABLED: paket discontinued, GitHub release 404
 
   # Ses
@@ -53,6 +53,7 @@ dependencies:
 
   # GDPR / ATT
   app_tracking_transparency: ^2.0.6
+  user_messaging_platform: ^1.3.0          # UMP — AdMob GDPR consent (EEA/UK)
 
   # Native Splash Screen
   flutter_native_splash: ^2.4.0
@@ -69,8 +70,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/gel_textures/
-    - assets/images/ui/
     # Ses dosyaları — OGG/MP3 dosyaları bu dizinlere eklenmeli
     - assets/audio/sfx/
     - assets/audio/music/

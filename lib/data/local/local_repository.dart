@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data_models.dart';
+import 'secure_storage_interface.dart';
 
 class LocalRepository {
-  const LocalRepository(this._prefs);
+  LocalRepository(this._prefs, {SecureStorageInterface? secureStorage})
+      : _secure = secureStorage ?? const SecureStorageImpl();
 
   final SharedPreferences _prefs;
+  final SecureStorageInterface _secure;
 
   Future<void> saveScore({required String mode, required int value}) async {
     final key = 'highscore_$mode';
@@ -70,6 +73,7 @@ class LocalRepository {
   /// GDPR: tüm yerel kullanıcı verilerini siler.
   Future<void> clearAllData() async {
     await _prefs.clear();
+    await _secure.deleteAll();
   }
 
   // ─── Streak ───────────────────────────────────────────────────────────────
@@ -137,18 +141,28 @@ class LocalRepository {
 
   // ─── Faz 4: Jel Özü (Soft Currency) ──────────────────────────────────────
 
-  int getGelOzu() => _prefs.getInt('gel_ozu') ?? 0;
+  Future<int> getGelOzu() async {
+    final secure = await _secure.read(key: 'gel_ozu');
+    if (secure != null) return int.tryParse(secure) ?? 0;
+    return _prefs.getInt('gel_ozu') ?? 0;
+  }
 
   Future<void> saveGelOzu(int value) async {
-    await _prefs.setInt('gel_ozu', value);
+    await _secure.write(key: 'gel_ozu', value: value.toString());
+    await _prefs.remove('gel_ozu');
   }
 
   // ─── Faz 4: Jel Enerjisi (Meta-game Resource) ────────────────────────────
 
-  int getGelEnergy() => _prefs.getInt('gel_energy') ?? 0;
+  Future<int> getGelEnergy() async {
+    final secure = await _secure.read(key: 'gel_energy');
+    if (secure != null) return int.tryParse(secure) ?? 0;
+    return _prefs.getInt('gel_energy') ?? 0;
+  }
 
   Future<void> saveGelEnergy(int value) async {
-    await _prefs.setInt('gel_energy', value);
+    await _secure.write(key: 'gel_energy', value: value.toString());
+    await _prefs.remove('gel_energy');
   }
 
   int getTotalEarnedEnergy() => _prefs.getInt('total_earned_energy') ?? 0;
@@ -242,20 +256,38 @@ class LocalRepository {
 
   // ─── Faz 4: PvP / ELO ────────────────────────────────────────────────────
 
-  int getElo() => _prefs.getInt('elo') ?? 1000;
-
-  Future<void> saveElo(int value) async {
-    await _prefs.setInt('elo', value);
+  Future<int> getElo() async {
+    final secure = await _secure.read(key: 'elo');
+    if (secure != null) return int.tryParse(secure) ?? 1000;
+    return _prefs.getInt('elo') ?? 1000;
   }
 
-  int getPvpWins() => _prefs.getInt('pvp_wins') ?? 0;
-  int getPvpLosses() => _prefs.getInt('pvp_losses') ?? 0;
+  Future<void> saveElo(int value) async {
+    await _secure.write(key: 'elo', value: value.toString());
+    await _prefs.remove('elo');
+  }
+
+  Future<int> getPvpWins() async {
+    final secure = await _secure.read(key: 'pvp_wins');
+    if (secure != null) return int.tryParse(secure) ?? 0;
+    return _prefs.getInt('pvp_wins') ?? 0;
+  }
+
+  Future<int> getPvpLosses() async {
+    final secure = await _secure.read(key: 'pvp_losses');
+    if (secure != null) return int.tryParse(secure) ?? 0;
+    return _prefs.getInt('pvp_losses') ?? 0;
+  }
 
   Future<void> recordPvpResult({required bool isWin}) async {
     if (isWin) {
-      await _prefs.setInt('pvp_wins', getPvpWins() + 1);
+      final wins = await getPvpWins();
+      await _secure.write(key: 'pvp_wins', value: (wins + 1).toString());
+      await _prefs.remove('pvp_wins');
     } else {
-      await _prefs.setInt('pvp_losses', getPvpLosses() + 1);
+      final losses = await getPvpLosses();
+      await _secure.write(key: 'pvp_losses', value: (losses + 1).toString());
+      await _prefs.remove('pvp_losses');
     }
   }
 
@@ -334,35 +366,51 @@ class LocalRepository {
 
   // ─── IAP Pending Verification ───────────────────────────────────────────
 
-  List<String> getPendingVerification() {
+  Future<List<String>> getPendingVerification() async {
+    final secure = await _secure.read(key: 'pending_verification');
+    if (secure != null && secure.isNotEmpty) {
+      return secure.split(',');
+    }
     return _prefs.getStringList('pending_verification') ?? [];
   }
 
   Future<void> savePendingVerification(List<String> productIds) async {
-    await _prefs.setStringList('pending_verification', productIds);
+    await _secure.write(
+        key: 'pending_verification', value: productIds.join(','));
+    await _prefs.remove('pending_verification');
   }
 
   // ─── Redeem Code ────────────────────────────────────────────────────────
 
-  List<String> getRedeemedCodes() {
+  Future<List<String>> getRedeemedCodes() async {
+    final secure = await _secure.read(key: 'redeemed_codes');
+    if (secure != null && secure.isNotEmpty) {
+      return secure.split(',');
+    }
     return _prefs.getStringList('redeemed_codes') ?? [];
   }
 
   Future<void> addRedeemedCode(String code) async {
-    final current = getRedeemedCodes();
+    final current = await getRedeemedCodes();
     if (!current.contains(code)) {
       current.add(code);
-      await _prefs.setStringList('redeemed_codes', current);
+      await _secure.write(key: 'redeemed_codes', value: current.join(','));
+      await _prefs.remove('redeemed_codes');
     }
   }
 
-  List<String> getUnlockedProducts() {
+  Future<List<String>> getUnlockedProducts() async {
+    final secure = await _secure.read(key: 'unlocked_products');
+    if (secure != null && secure.isNotEmpty) {
+      return secure.split(',');
+    }
     return _prefs.getStringList('unlocked_products') ?? [];
   }
 
   Future<void> addUnlockedProducts(List<String> productIds) async {
-    final current = getUnlockedProducts();
+    final current = await getUnlockedProducts();
     final updated = {...current, ...productIds}.toList();
-    await _prefs.setStringList('unlocked_products', updated);
+    await _secure.write(key: 'unlocked_products', value: updated.join(','));
+    await _prefs.remove('unlocked_products');
   }
 }

@@ -66,9 +66,10 @@ class GameState {
   }
 }
 
-class GameNotifier extends StateNotifier<GameState> {
-  GameNotifier(GameMode mode)
-      : super(GameState(score: 0, status: GameStatus.idle, mode: mode));
+class GameNotifier extends FamilyNotifier<GameState, GameMode> {
+  @override
+  GameState build(GameMode arg) =>
+      GameState(score: 0, status: GameStatus.idle, mode: arg);
 
   void updateScore(int newScore) => state = state.copyWith(score: newScore);
   void updateFill(int filledCells) =>
@@ -96,10 +97,10 @@ class GameNotifier extends StateNotifier<GameState> {
   void updateElo(int value) => state = state.copyWith(elo: value);
 
   void reset() =>
-      state = GameState(score: 0, status: GameStatus.idle, mode: state.mode);
+      state = GameState(score: 0, status: GameStatus.idle, mode: arg);
 }
 
 final gameProvider =
-    StateNotifierProvider.family<GameNotifier, GameState, GameMode>(
-  (ref, mode) => GameNotifier(mode),
+    NotifierProvider.family<GameNotifier, GameState, GameMode>(
+  GameNotifier.new,
 );

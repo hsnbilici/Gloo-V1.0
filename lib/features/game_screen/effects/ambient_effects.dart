@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/color_constants.dart';
+
 /// Kombo veya guclu olaylarda kisa sureli ekran sarsintisi uygular.
 /// [child] widget'ini saran Transform.translate ile calisir.
 class ScreenShake extends StatefulWidget {
@@ -64,7 +66,7 @@ class AmbientGelDroplets extends StatefulWidget {
   const AmbientGelDroplets({
     super.key,
     this.count = 10,
-    this.baseColor = const Color(0xFF3CFF8B),
+    this.baseColor = kGreen,
     this.speedFactor = 1.0,
   });
 

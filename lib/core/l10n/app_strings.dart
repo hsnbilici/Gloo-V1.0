@@ -199,6 +199,9 @@ abstract class AppStrings {
   String get redeemCodeInvalid;
   String get redeemCodeAlreadyUsed;
 
+  // Genel hata
+  String get errorOccurred;
+
   // GDPR Silme Sonucu
   String get deleteDataSuccess;
   String get deleteDataError;
@@ -226,6 +229,23 @@ abstract class AppStrings {
   String get colorMaroon;
   String get colorBrown;
   String get colorWhite;
+
+  // H.13: Hardcoded string'ler → l10n
+  String get levelLabel;
+  String get duelLabel;
+  String get pvpWinLabel;
+  String get pvpLossLabel;
+  String get pvpRatioLabel;
+  String get cancelLabel;
+  String get playAgainLabel;
+  String get mainMenuLabel;
+  String get nextLevelLabel;
+  String get levelListLabel;
+  String get watchAdLabel;
+  String get newBadge;
+  String get islandLabel;
+  String get characterLabel;
+  String get seasonLabel;
 
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {

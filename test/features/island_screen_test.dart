@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:gloo/data/local/local_repository.dart';
 import 'package:gloo/features/island/island_screen.dart';
+import 'package:gloo/providers/user_provider.dart';
+
+import '../data/local/fake_secure_storage.dart';
 
 void main() {
   setUp(() {
@@ -17,8 +21,14 @@ void main() {
   });
 
   Widget buildIsland() {
-    return const ProviderScope(
-      child: MaterialApp(home: IslandScreen()),
+    return ProviderScope(
+      overrides: [
+        localRepositoryProvider.overrideWith((_) async {
+          final prefs = await SharedPreferences.getInstance();
+          return LocalRepository(prefs, secureStorage: FakeSecureStorage());
+        }),
+      ],
+      child: const MaterialApp(home: IslandScreen()),
     );
   }
 

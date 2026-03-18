@@ -1,22 +1,6 @@
-enum ComboTier { none, small, medium, large, epic }
+import '../../core/models/combo_types.dart';
 
-class ComboEvent {
-  const ComboEvent({
-    required this.size,
-    required this.tier,
-    required this.multiplier,
-  });
-
-  final int size;
-  final ComboTier tier;
-  final double multiplier;
-
-  static const ComboEvent none = ComboEvent(
-    size: 0,
-    tier: ComboTier.none,
-    multiplier: 1.0,
-  );
-}
+export '../../core/models/combo_types.dart';
 
 class ComboDetector {
   int _currentChain = 0;

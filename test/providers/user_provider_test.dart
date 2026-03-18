@@ -6,6 +6,8 @@ import 'package:gloo/data/local/data_models.dart';
 import 'package:gloo/data/local/local_repository.dart';
 import 'package:gloo/providers/user_provider.dart';
 
+import '../data/local/fake_secure_storage.dart';
+
 void main() {
   // ─── localRepositoryProvider ──────────────────────────────────────────────
 
@@ -138,16 +140,28 @@ void main() {
   group('eloProvider', () {
     test('returns default 1000 when no elo saved', () async {
       SharedPreferences.setMockInitialValues({});
-      final container = ProviderContainer();
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(overrides: [
+        localRepositoryProvider.overrideWith((_) async {
+          return LocalRepository(prefs,
+              secureStorage: FakeSecureStorage());
+        }),
+      ]);
       addTearDown(container.dispose);
 
       final elo = await container.read(eloProvider.future);
       expect(elo, 1000);
     });
 
-    test('returns saved elo', () async {
+    test('returns saved elo from SharedPreferences fallback', () async {
       SharedPreferences.setMockInitialValues({'elo': 1450});
-      final container = ProviderContainer();
+      final prefs = await SharedPreferences.getInstance();
+      final container = ProviderContainer(overrides: [
+        localRepositoryProvider.overrideWith((_) async {
+          return LocalRepository(prefs,
+              secureStorage: FakeSecureStorage());
+        }),
+      ]);
       addTearDown(container.dispose);
 
       final elo = await container.read(eloProvider.future);

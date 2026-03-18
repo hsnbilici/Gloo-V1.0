@@ -311,6 +311,9 @@ class StringsAr extends AppStrings {
   String get redeemCodeAlreadyUsed => 'تم استخدام هذا الرمز بالفعل';
 
   @override
+  String get errorOccurred => 'حدث خطأ';
+
+  @override
   String get deleteDataSuccess => 'تم حذف بياناتك بنجاح';
   @override
   String get deleteDataError => 'تعذّر حذف بياناتك. يرجى المحاولة مرة أخرى.';
@@ -356,4 +359,35 @@ class StringsAr extends AppStrings {
   String get colorBrown => 'بني';
   @override
   String get colorWhite => 'أبيض';
+
+  @override
+  String get levelLabel => 'المستوى';
+  @override
+  String get duelLabel => 'المبارزة';
+  @override
+  String get pvpWinLabel => 'انتصارات';
+  @override
+  String get pvpLossLabel => 'هزائم';
+  @override
+  String get pvpRatioLabel => 'النسبة';
+  @override
+  String get cancelLabel => 'إلغاء';
+  @override
+  String get playAgainLabel => 'العب مرة أخرى';
+  @override
+  String get mainMenuLabel => 'القائمة الرئيسية';
+  @override
+  String get nextLevelLabel => 'المستوى التالي';
+  @override
+  String get levelListLabel => 'قائمة المستويات';
+  @override
+  String get watchAdLabel => 'مشاهدة إعلان';
+  @override
+  String get newBadge => 'جديد';
+  @override
+  String get islandLabel => 'جزيرة';
+  @override
+  String get characterLabel => 'شخصية';
+  @override
+  String get seasonLabel => 'موسم';
 }

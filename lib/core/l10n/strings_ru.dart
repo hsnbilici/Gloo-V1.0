@@ -313,6 +313,9 @@ class StringsRu extends AppStrings {
   String get redeemCodeAlreadyUsed => 'Этот код уже был использован';
 
   @override
+  String get errorOccurred => 'Произошла ошибка';
+
+  @override
   String get deleteDataSuccess => 'Ваши данные успешно удалены';
   @override
   String get deleteDataError =>
@@ -359,4 +362,35 @@ class StringsRu extends AppStrings {
   String get colorBrown => 'Коричневый';
   @override
   String get colorWhite => 'Белый';
+
+  @override
+  String get levelLabel => 'Уровень';
+  @override
+  String get duelLabel => 'Дуэль';
+  @override
+  String get pvpWinLabel => 'Победы';
+  @override
+  String get pvpLossLabel => 'Поражения';
+  @override
+  String get pvpRatioLabel => 'Соотношение';
+  @override
+  String get cancelLabel => 'Отмена';
+  @override
+  String get playAgainLabel => 'Играть снова';
+  @override
+  String get mainMenuLabel => 'Главное меню';
+  @override
+  String get nextLevelLabel => 'Следующий уровень';
+  @override
+  String get levelListLabel => 'Список уровней';
+  @override
+  String get watchAdLabel => 'Смотреть рекламу';
+  @override
+  String get newBadge => 'НОВОЕ';
+  @override
+  String get islandLabel => 'Остров';
+  @override
+  String get characterLabel => 'Персонаж';
+  @override
+  String get seasonLabel => 'Сезон';
 }

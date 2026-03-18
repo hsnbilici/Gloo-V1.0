@@ -125,14 +125,14 @@ void main() {
         ),
       );
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Reklam Izle'), findsOneWidget);
+      expect(find.text('Watch Ad'), findsOneWidget);
       expect(find.text('+3 Hamle'), findsOneWidget);
     });
 
     testWidgets('hides second chance button when disabled', (tester) async {
       await tester.pumpWidget(buildGameOver(showSecondChance: false));
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Reklam Izle'), findsNothing);
+      expect(find.text('Watch Ad'), findsNothing);
     });
 
     testWidgets('modeColor returns correct color per mode', (tester) async {
@@ -226,6 +226,9 @@ void main() {
           onNextLevel: () {},
           onLevelList: () {},
           onHome: () {},
+          nextLevelLabel: 'Next Level',
+          levelListLabel: 'Level List',
+          mainMenuLabel: 'Main Menu',
         ),
       );
     }
@@ -245,19 +248,19 @@ void main() {
     testWidgets('shows Sonraki Seviye button', (tester) async {
       await tester.pumpWidget(buildLevelComplete());
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Sonraki Seviye'), findsOneWidget);
+      expect(find.text('Next Level'), findsOneWidget);
     });
 
     testWidgets('shows Seviye Listesi button', (tester) async {
       await tester.pumpWidget(buildLevelComplete());
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Seviye Listesi'), findsOneWidget);
+      expect(find.text('Level List'), findsOneWidget);
     });
 
     testWidgets('shows Ana Menu button', (tester) async {
       await tester.pumpWidget(buildLevelComplete());
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Ana Menu'), findsOneWidget);
+      expect(find.text('Main Menu'), findsOneWidget);
     });
   });
 
@@ -382,6 +385,9 @@ void main() {
         context: capturedContext,
         score: 900,
         levelId: 5,
+        nextLevelLabel: 'Next Level',
+        levelListLabel: 'Level List',
+        mainMenuLabel: 'Main Menu',
       );
 
       await tester.pump();

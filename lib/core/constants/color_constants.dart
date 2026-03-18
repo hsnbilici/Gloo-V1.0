@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/game_mode.dart';
+
 enum GelColor {
   red,
   yellow,
@@ -79,6 +81,18 @@ const Color kCyan = Color(0xFF00E5FF);
 /// #6B8FA8 → arka plan #010C14 üzerinde ~6:1 kontrast (WCAG AA ✓).
 const Color kMuted = Color(0xFF6B8FA8);
 
+/// Altın vurgu — mağaza, ödül, premium UI elemanları.
+const Color kGold = Color(0xFFFFD700);
+
+/// Yeşil vurgu — başarı, tamamlanma, kazanma göstergeleri.
+const Color kGreen = Color(0xFF3CFF8B);
+
+/// Lavanta vurgu — karakter, zen modu, premium UI elemanları.
+const Color kLavender = Color(0xFFB080FF);
+
+/// Mercan vurgu — uyarı ve reklamsız aksanı.
+const Color kCoral = Color(0xFFFF6B6B);
+
 // ─── Mod aksan renkleri — merkezi tanım ──────────────────────────────────────
 // game_over_overlay, game_overlay, game_effects, home_screen bu sabitleri
 // import eder; her dosyada ayrıca tanımlamaz.
@@ -87,4 +101,15 @@ const Color kColorClassic = Color(0xFFFF4D6D);
 const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
 const Color kColorZen = Color(0xFF9D5CFF);
+
+// ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
+const Map<GameMode, Color> kModeColors = {
+  GameMode.classic: kColorClassic,
+  GameMode.colorChef: kColorChef,
+  GameMode.timeTrial: kColorTimeTrial,
+  GameMode.zen: kColorZen,
+  GameMode.daily: kCyan,
+  GameMode.level: kColorChef,
+  GameMode.duel: kColorClassic,
+};
 

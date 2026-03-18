@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/remote/pvp_realtime_service.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../game/world/game_world.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/pvp_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
@@ -158,7 +159,7 @@ class GameDuelController {
     final opponentScore = duelState.opponentScore;
 
     final repo = await ref.read(localRepositoryProvider.future);
-    final playerElo = repo.getElo();
+    final playerElo = await repo.getElo();
 
     final opponentElo = isBot
         ? (playerElo * MatchmakingManager.botDifficulty(playerElo) * 1.2)
@@ -187,7 +188,7 @@ class GameDuelController {
     if (outcome != DuelOutcome.draw) {
       repo.recordPvpResult(isWin: outcome == DuelOutcome.win);
     }
-    repo.saveGelOzu(repo.getGelOzu() + gelReward);
+    repo.saveGelOzu(await repo.getGelOzu() + gelReward);
 
     // Backend sync
     final remote = ref.read(remoteRepositoryProvider);
@@ -240,9 +241,12 @@ class GameDuelController {
           );
         },
         pageBuilder: (ctx, _, __) {
+          final l = ref.read(stringsProvider);
           return DuelResultOverlay(
             result: result,
             playerElo: newElo,
+            playAgainLabel: l.playAgainLabel,
+            mainMenuLabel: l.mainMenuLabel,
             onHome: () {
               Navigator.of(ctx).pop();
               context.go('/');

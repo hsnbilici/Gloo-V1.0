@@ -304,6 +304,9 @@ class StringsZh extends AppStrings {
   String get redeemCodeAlreadyUsed => '此兑换码已被使用';
 
   @override
+  String get errorOccurred => '发生错误';
+
+  @override
   String get deleteDataSuccess => '您的数据已成功删除';
   @override
   String get deleteDataError => '无法删除您的数据，请重试。';
@@ -349,4 +352,35 @@ class StringsZh extends AppStrings {
   String get colorBrown => '棕色';
   @override
   String get colorWhite => '白色';
+
+  @override
+  String get levelLabel => '关卡';
+  @override
+  String get duelLabel => '决斗';
+  @override
+  String get pvpWinLabel => '胜利';
+  @override
+  String get pvpLossLabel => '失败';
+  @override
+  String get pvpRatioLabel => '比率';
+  @override
+  String get cancelLabel => '取消';
+  @override
+  String get playAgainLabel => '再来一局';
+  @override
+  String get mainMenuLabel => '主菜单';
+  @override
+  String get nextLevelLabel => '下一关';
+  @override
+  String get levelListLabel => '关卡列表';
+  @override
+  String get watchAdLabel => '观看广告';
+  @override
+  String get newBadge => '新';
+  @override
+  String get islandLabel => '岛屿';
+  @override
+  String get characterLabel => '角色';
+  @override
+  String get seasonLabel => '赛季';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:gloo/audio/audio_manager.dart';
 import 'package:gloo/audio/haptic_manager.dart';
 import 'package:gloo/audio/sound_bank.dart';
 import 'package:gloo/core/constants/audio_constants.dart';
@@ -9,16 +10,17 @@ import 'package:gloo/game/systems/combo_detector.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // SoundBank orchestrates HapticManager calls based on game events.
-  // We test it with a real HapticManager (singleton) + mocked platform channel.
+  // SoundBank orchestrates HapticManager + AudioManager calls based on game events.
+  // AudioManager SFX is disabled in tests to avoid MissingPluginException
+  // from just_audio's per-player platform channels.
 
   group('SoundBank construction', () {
-    test('creates with default HapticManager', () {
+    test('creates with default managers', () {
       final bank = SoundBank();
       expect(bank, isNotNull);
     });
 
-    test('accepts injected HapticManager', () {
+    test('accepts injected managers', () {
       final bank = SoundBank(haptic: HapticManager());
       expect(bank, isNotNull);
     });
@@ -30,7 +32,8 @@ void main() {
 
     setUp(() {
       HapticManager().setEnabled(true);
-      bank = SoundBank(haptic: HapticManager());
+      AudioManager().setSfxEnabled(false);
+      bank = SoundBank();
       hapticCalls.clear();
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

@@ -3,10 +3,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
-import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../game/world/game_world.dart';
+import '../../core/models/game_mode.dart';
 import '../../providers/locale_provider.dart';
+import 'game_over_buttons.dart';
+import 'game_over_widgets.dart';
 
 // ─── Tam ekran Game Over overlay ─────────────────────────────────────────────
 
@@ -47,8 +48,8 @@ class GameOverOverlay extends ConsumerWidget {
       GameMode.timeTrial => l.gameOverModeTimeTrial,
       GameMode.zen => l.gameOverModeZen,
       GameMode.daily => l.gameOverModeDaily,
-      GameMode.level => 'Seviye',
-      GameMode.duel => 'Düello',
+      GameMode.level => l.levelLabel,
+      GameMode.duel => l.duelLabel,
     };
 
     final fillPct =
@@ -80,7 +81,7 @@ class GameOverOverlay extends ConsumerWidget {
                 // ── Üst boşluk
                 const SizedBox(height: 8),
                 // ── Mod rozeti
-                _ModeBadge(label: modeLabel, color: color)
+                GameOverModeBadge(label: modeLabel, color: color)
                     .animate(delay: 80.ms)
                     .fadeIn(duration: 280.ms)
                     .scale(
@@ -116,7 +117,7 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 14),
                       // Parıldayan ayraç
-                      _GlowDivider(color: color).animate(delay: 240.ms).scaleX(
+                      GlowDivider(color: color).animate(delay: 240.ms).scaleX(
                             begin: 0,
                             end: 1,
                             duration: 380.ms,
@@ -124,7 +125,7 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 48),
                       // Skor sayacı
-                      _ScoreCountUp(score: score, color: color),
+                      ScoreCountUp(score: score, color: color),
                       const SizedBox(height: 6),
                       Text(
                         l.gameOverScoreLabel,
@@ -137,7 +138,7 @@ class GameOverOverlay extends ConsumerWidget {
                       ).animate(delay: 360.ms).fadeIn(duration: 280.ms),
                       if (isNewHighScore) ...[
                         const SizedBox(height: 12),
-                        _NewRecordBadge(
+                        NewRecordBadge(
                                 label: l.gameOverNewRecord, color: color)
                             .animate(delay: 420.ms)
                             .fadeIn(duration: 300.ms)
@@ -149,7 +150,7 @@ class GameOverOverlay extends ConsumerWidget {
                       ],
                       const SizedBox(height: 40),
                       // İstatistik
-                      _StatRow(
+                      GameOverStatRow(
                         label: l.gameOverGridFill,
                         value: '%$fillPct',
                         color: color,
@@ -173,9 +174,10 @@ class GameOverOverlay extends ConsumerWidget {
                     children: [
                       // Ikinci Sans butonu — Rewarded Ad
                       if (showSecondChance && onSecondChance != null)
-                        _SecondChanceButton(
+                        SecondChanceButton(
                           color: color,
                           onTap: onSecondChance!,
+                          watchAdLabel: l.watchAdLabel,
                         )
                             .animate(delay: 500.ms)
                             .fadeIn(duration: 320.ms)
@@ -187,7 +189,7 @@ class GameOverOverlay extends ConsumerWidget {
                             ),
                       if (showSecondChance && onSecondChance != null)
                         const SizedBox(height: 12),
-                      _ActionButton(
+                      ActionButton(
                         label: l.gameOverReplay,
                         icon: Icons.replay_rounded,
                         accentColor: color,
@@ -200,7 +202,7 @@ class GameOverOverlay extends ConsumerWidget {
                             curve: Curves.easeOutCubic,
                           ),
                       const SizedBox(height: 12),
-                      _ActionButton(
+                      ActionButton(
                         label: l.gameOverHome,
                         icon: Icons.home_rounded,
                         accentColor: kMuted,
@@ -219,376 +221,6 @@ class GameOverOverlay extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ─── Yeni rekor rozeti ───────────────────────────────────────────────────────
-
-class _NewRecordBadge extends StatelessWidget {
-  const _NewRecordBadge({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-        border: Border.all(color: color.withValues(alpha: 0.55), width: 1.5),
-        boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.25), blurRadius: 12),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.star_rounded, color: color, size: 13),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 2.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Score count-up ───────────────────────────────────────────────────────────
-
-class _ScoreCountUp extends StatelessWidget {
-  const _ScoreCountUp({required this.score, required this.color});
-
-  final int score;
-  final Color color;
-
-  static String _fmt(int val) {
-    if (val >= 10000) return '${(val / 1000).toStringAsFixed(1)}K';
-    if (val >= 1000) {
-      final k = val / 1000;
-      final s = k.toStringAsFixed(1);
-      return '${s.endsWith('.0') ? k.toInt() : s}K';
-    }
-    return '$val';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<int>(
-      tween: IntTween(begin: 0, end: score),
-      duration: const Duration(milliseconds: 1500),
-      curve: Curves.easeOutCubic,
-      builder: (_, val, __) => Text(
-        _fmt(val),
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 82,
-          fontWeight: FontWeight.w900,
-          letterSpacing: -3,
-          height: 1,
-          shadows: [
-            Shadow(
-              color: color.withValues(alpha: 0.65),
-              blurRadius: 36,
-            ),
-            Shadow(
-              color: color.withValues(alpha: 0.25),
-              blurRadius: 80,
-            ),
-          ],
-        ),
-      ),
-    ).animate(delay: 300.ms).fadeIn(duration: 360.ms);
-  }
-}
-
-// ─── Mod rozeti ───────────────────────────────────────────────────────────────
-
-class _ModeBadge extends StatelessWidget {
-  const _ModeBadge({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.10),
-        borderRadius: BorderRadius.circular(UIConstants.radiusXl),
-        border: Border.all(color: color.withValues(alpha: 0.38), width: 1),
-        boxShadow: [
-          BoxShadow(color: color.withValues(alpha: 0.12), blurRadius: 12),
-        ],
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
-          letterSpacing: 3.5,
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Parıldayan ayraç ────────────────────────────────────────────────────────
-
-class _GlowDivider extends StatelessWidget {
-  const _GlowDivider({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 56,
-      height: 2,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.transparent, color, Colors.transparent],
-        ),
-        borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.7),
-            blurRadius: 8,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── İstatistik satırı ───────────────────────────────────────────────────────
-
-class _StatRow extends StatelessWidget {
-  const _StatRow({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  final String label;
-  final String value;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 260,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: kMuted,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              color: color,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Aksiyon butonu ──────────────────────────────────────────────────────────
-
-class _ActionButton extends StatefulWidget {
-  const _ActionButton({
-    required this.label,
-    required this.icon,
-    required this.accentColor,
-    required this.filled,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final Color accentColor;
-  final bool filled;
-  final VoidCallback onTap;
-
-  @override
-  State<_ActionButton> createState() => _ActionButtonState();
-}
-
-// ─── Ikinci Sans butonu — Rewarded Ad ile 3 ekstra hamle ─────────────────
-
-class _SecondChanceButton extends StatefulWidget {
-  const _SecondChanceButton({required this.color, required this.onTap});
-
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  State<_SecondChanceButton> createState() => _SecondChanceButtonState();
-}
-
-class _SecondChanceButtonState extends State<_SecondChanceButton> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    const accent = Color(0xFFFFD700);
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              accent.withValues(alpha: _pressed ? 0.22 : 0.15),
-              widget.color.withValues(alpha: _pressed ? 0.18 : 0.10),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: accent.withValues(alpha: _pressed ? 0.80 : 0.55),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: accent.withValues(alpha: 0.20),
-              blurRadius: 24,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.play_circle_outline_rounded,
-                color: accent, size: 20),
-            const SizedBox(width: 8),
-            const Text(
-              'Reklam Izle',
-              style: TextStyle(
-                color: accent,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              ),
-            ),
-            const SizedBox(width: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: accent.withValues(alpha: 0.40)),
-              ),
-              child: const Text(
-                '+3 Hamle',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ActionButtonState extends State<_ActionButton> {
-  bool _pressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: widget.filled
-              ? widget.accentColor.withValues(alpha: _pressed ? 0.20 : 0.13)
-              : Colors.white.withValues(alpha: _pressed ? 0.07 : 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: widget.filled
-                ? widget.accentColor.withValues(alpha: _pressed ? 0.70 : 0.50)
-                : Colors.white.withValues(alpha: _pressed ? 0.16 : 0.09),
-            width: widget.filled ? 1.5 : 1,
-          ),
-          boxShadow: widget.filled
-              ? [
-                  BoxShadow(
-                    color: widget.accentColor.withValues(alpha: 0.14),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(widget.icon, color: widget.accentColor, size: 18),
-            const SizedBox(width: 10),
-            Text(
-              widget.label,
-              style: TextStyle(
-                color: widget.accentColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

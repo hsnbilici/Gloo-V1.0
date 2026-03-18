@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
+import '../../core/models/game_mode.dart';
+export '../../core/models/game_mode.dart';
 import '../../core/utils/near_miss_detector.dart';
 import '../economy/currency_manager.dart';
 import '../levels/level_data.dart';
@@ -14,34 +14,6 @@ import '../systems/combo_detector.dart';
 import '../systems/powerup_system.dart';
 import '../systems/score_system.dart';
 import 'grid_manager.dart';
-
-enum GameMode {
-  classic,
-  colorChef,
-  timeTrial,
-  zen,
-  daily,
-  level, // Faz 4: Seviye modu
-  duel; // Faz 4: PvP düello modu
-
-  static GameMode fromString(String value) {
-    return GameMode.values.firstWhere(
-      (m) => m.name == value,
-      orElse: () => GameMode.classic,
-    );
-  }
-}
-
-// ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
-const Map<GameMode, Color> kModeColors = {
-  GameMode.classic: kColorClassic,
-  GameMode.colorChef: kColorChef,
-  GameMode.timeTrial: kColorTimeTrial,
-  GameMode.zen: kColorZen,
-  GameMode.daily: kCyan,
-  GameMode.level: kColorChef,
-  GameMode.duel: kColorClassic,
-};
 
 enum GameStatus { idle, playing, paused, gameOver, frozen }
 
@@ -265,9 +237,29 @@ class GlooGame {
   }
 
   void _evaluateBoard() {
+    final (appliedSynthesisCount, chefTargetCount) = _applySyntheses();
+
+    if (_updateColorChefProgress(chefTargetCount)) return;
+
+    final clearResult = _gridManager.detectAndClear();
+
+    if (clearResult.totalLines > 0) {
+      _clearAndScore(clearResult, appliedSynthesisCount);
+      _applyGravityAndCascade();
+      _checkTimeTrialBonus(clearResult);
+      if (_checkLevelCompletion()) return;
+    } else {
+      // Satır temizlenmedi → Merhamet RNG güncelleme
+      ShapeGenerator.recordMoveWithoutClear();
+    }
+
+    _evaluateNearMiss();
+  }
+
+  /// Sentezleri bul ve ızgaraya uygula — çakışan hücreleri atla.
+  (int appliedSynthesisCount, int chefTargetCount) _applySyntheses() {
     final syntheses = _synthesisSystem.findSyntheses(_gridManager.grid);
 
-    // Sentezleri ızgaraya uygula — çakışan hücreleri atla
     int appliedSynthesisCount = 0;
     int chefTargetCount = 0;
     final chefLevel = currentChefLevel;
@@ -295,7 +287,13 @@ class GlooGame {
       currencyManager.earnFromSynthesis(appliedSynthesisCount);
     }
 
-    // Color Chef ilerleme ve seviye tamamlanma kontrolü
+    return (appliedSynthesisCount, chefTargetCount);
+  }
+
+  /// Color Chef ilerleme ve seviye tamamlanma kontrolü.
+  /// Chef seviyesi tamamlandıysa true döner (erken çıkış sinyali).
+  bool _updateColorChefProgress(int chefTargetCount) {
+    final chefLevel = currentChefLevel;
     if (chefLevel != null && chefTargetCount > 0) {
       _chefProgress += chefTargetCount;
       onChefProgress?.call(_chefProgress, chefLevel.requiredCount);
@@ -310,78 +308,85 @@ class GlooGame {
           chefLevel.targetColor,
           _chefLevelIndex >= kColorChefLevels.length,
         );
-        return;
+        return true;
       }
     }
+    return false;
+  }
 
-    final clearResult = _gridManager.detectAndClear();
+  /// Satır temizleme, puan hesaplama, kombo ve ekonomi güncellemesi.
+  void _clearAndScore(LineClearResult clearResult, int appliedSynthesisCount) {
+    onLineClear?.call(clearResult);
+    final combo = _comboDetector.registerClear(clearResult.totalLines);
+    final points = _scoreSystem.addLineClear(
+      linesCleared: clearResult.totalLines,
+      combo: combo,
+      colorSynthesisCount: appliedSynthesisCount,
+    );
+    onScoreGained?.call(points);
+    if (combo.tier != ComboTier.none) onCombo?.call(combo);
 
-    if (clearResult.totalLines > 0) {
-      onLineClear?.call(clearResult);
-      final combo = _comboDetector.registerClear(clearResult.totalLines);
-      final points = _scoreSystem.addLineClear(
-        linesCleared: clearResult.totalLines,
-        combo: combo,
-        colorSynthesisCount: appliedSynthesisCount,
-      );
-      onScoreGained?.call(points);
-      if (combo.tier != ComboTier.none) onCombo?.call(combo);
+    // Faz 4: Satır temizleme → Jel Özü + Merhamet RNG güncelleme
+    currencyManager.earnFromLineClear(clearResult.totalLines);
+    ShapeGenerator.recordClear();
 
-      // Faz 4: Satır temizleme → Jel Özü + Merhamet RNG güncelleme
-      currencyManager.earnFromLineClear(clearResult.totalLines);
-      ShapeGenerator.recordClear();
+    // Faz 4: Jel Enerjisi kazanımı (meta-game kaynak)
+    onJelEnergyEarned?.call(clearResult.totalLines);
 
-      // Faz 4: Jel Enerjisi kazanımı (meta-game kaynak)
-      onJelEnergyEarned?.call(clearResult.totalLines);
-
-      // Faz 4: Kombo bonus
-      if (combo.tier != ComboTier.none) {
-        currencyManager.earnFromCombo(combo.tier.name);
-      }
-
-      // Faz 4: Buz kırılma callback'i
-      if (clearResult.crackedIceCells.isNotEmpty) {
-        onIceCracked?.call(clearResult.crackedIceCells);
-      }
-
-      // Faz 4: Yerçekimi uygula
-      final gravityMoves = _gridManager.applyGravity();
-      if (gravityMoves.isNotEmpty) {
-        onGravityApplied?.call(gravityMoves);
-        // Yerçekimi sonrası tekrar temizleme kontrolü
-        final secondClear = _gridManager.detectAndClear();
-        if (secondClear.totalLines > 0) {
-          onLineClear?.call(secondClear);
-          final combo2 = _comboDetector.registerClear(secondClear.totalLines);
-          final points2 = _scoreSystem.addLineClear(
-            linesCleared: secondClear.totalLines,
-            combo: combo2,
-          );
-          onScoreGained?.call(points2);
-          if (combo2.tier != ComboTier.none) onCombo?.call(combo2);
-          currencyManager.earnFromLineClear(secondClear.totalLines);
-        }
-      }
-
-      // Time Trial: her temizlenen satır +2 saniye bonus
-      if (mode == GameMode.timeTrial) {
-        _remainingSeconds +=
-            clearResult.totalLines * GameConstants.timeTrialLineClearBonus;
-        onTimerTick?.call(_remainingSeconds);
-      }
-
-      // Seviye modu: hedef skor kontrolü
-      if (mode == GameMode.level && levelData != null) {
-        if (_scoreSystem.score >= levelData!.targetScore) {
-          onLevelComplete?.call();
-          return;
-        }
-      }
-    } else {
-      // Satır temizlenmedi → Merhamet RNG güncelleme
-      ShapeGenerator.recordMoveWithoutClear();
+    // Faz 4: Kombo bonus
+    if (combo.tier != ComboTier.none) {
+      currencyManager.earnFromCombo(combo.tier.name);
     }
 
+    // Faz 4: Buz kırılma callback'i
+    if (clearResult.crackedIceCells.isNotEmpty) {
+      onIceCracked?.call(clearResult.crackedIceCells);
+    }
+  }
+
+  /// Yerçekimi uygula ve zincirleme temizleme kontrolü.
+  void _applyGravityAndCascade() {
+    final gravityMoves = _gridManager.applyGravity();
+    if (gravityMoves.isNotEmpty) {
+      onGravityApplied?.call(gravityMoves);
+      // Yerçekimi sonrası tekrar temizleme kontrolü
+      final secondClear = _gridManager.detectAndClear();
+      if (secondClear.totalLines > 0) {
+        onLineClear?.call(secondClear);
+        final combo2 = _comboDetector.registerClear(secondClear.totalLines);
+        final points2 = _scoreSystem.addLineClear(
+          linesCleared: secondClear.totalLines,
+          combo: combo2,
+        );
+        onScoreGained?.call(points2);
+        if (combo2.tier != ComboTier.none) onCombo?.call(combo2);
+        currencyManager.earnFromLineClear(secondClear.totalLines);
+      }
+    }
+  }
+
+  /// Time Trial: her temizlenen satır +2 saniye bonus.
+  void _checkTimeTrialBonus(LineClearResult clearResult) {
+    if (mode == GameMode.timeTrial) {
+      _remainingSeconds +=
+          clearResult.totalLines * GameConstants.timeTrialLineClearBonus;
+      onTimerTick?.call(_remainingSeconds);
+    }
+  }
+
+  /// Seviye modu: hedef skor kontrolü. Tamamlandıysa true döner.
+  bool _checkLevelCompletion() {
+    if (mode == GameMode.level && levelData != null) {
+      if (_scoreSystem.score >= levelData!.targetScore) {
+        onLevelComplete?.call();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Near-miss değerlendirmesi (Time Trial ve Duel modlarında atlanır).
+  void _evaluateNearMiss() {
     // Time Trial: near-miss gürültü yapar, atla
     if (mode == GameMode.timeTrial) return;
     if (mode == GameMode.duel) return;

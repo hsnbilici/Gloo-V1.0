@@ -52,32 +52,32 @@ class AppSettings {
   }
 }
 
-class AppSettingsNotifier extends StateNotifier<AppSettings> {
-  AppSettingsNotifier({
-    AudioManager? audioManager,
-    HapticManager? hapticManager,
-  })  : _audioManager = audioManager,
-        _hapticManager = hapticManager,
-        super(const AppSettings());
+class AppSettingsNotifier extends Notifier<AppSettings> {
+  late final AudioManager _audioManager;
+  late final HapticManager _hapticManager;
 
-  final AudioManager? _audioManager;
-  final HapticManager? _hapticManager;
+  @override
+  AppSettings build() {
+    _audioManager = ref.watch(audioManagerProvider);
+    _hapticManager = ref.watch(hapticManagerProvider);
+    return const AppSettings();
+  }
 
   void toggleSfx() {
     final next = !state.sfxEnabled;
-    (_audioManager ?? AudioManager()).setSfxEnabled(next);
+    _audioManager.setSfxEnabled(next);
     state = state.copyWith(sfxEnabled: next);
   }
 
   void toggleMusic() {
     final next = !state.musicEnabled;
-    (_audioManager ?? AudioManager()).setMusicEnabled(next);
+    _audioManager.setMusicEnabled(next);
     state = state.copyWith(musicEnabled: next);
   }
 
   void toggleHaptics() {
     final next = !state.hapticsEnabled;
-    (_hapticManager ?? HapticManager()).setEnabled(next);
+    _hapticManager.setEnabled(next);
     state = state.copyWith(hapticsEnabled: next);
   }
 
@@ -101,9 +101,6 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 }
 
 final appSettingsProvider =
-    StateNotifierProvider<AppSettingsNotifier, AppSettings>(
-  (ref) => AppSettingsNotifier(
-    audioManager: ref.watch(audioManagerProvider),
-    hapticManager: ref.watch(hapticManagerProvider),
-  ),
+    NotifierProvider<AppSettingsNotifier, AppSettings>(
+  AppSettingsNotifier.new,
 );

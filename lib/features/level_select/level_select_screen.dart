@@ -15,7 +15,6 @@ class LevelSelectScreen extends ConsumerWidget {
   const LevelSelectScreen({super.key});
 
   static const _kAccent = Color(0xFFFF8C42);
-  static const _kCompleted = Color(0xFF3CFF8B);
   static const _kLocked = Color(0xFF2A2A4E);
 
   static const _kSectionNames = [
@@ -266,9 +265,9 @@ class _LevelCellState extends State<_LevelCell> {
     Color textColor;
 
     if (isCompleted) {
-      bgColor = LevelSelectScreen._kCompleted.withValues(alpha: 0.15);
-      borderColor = LevelSelectScreen._kCompleted.withValues(alpha: 0.55);
-      textColor = LevelSelectScreen._kCompleted;
+      bgColor = kGreen.withValues(alpha: 0.15);
+      borderColor = kGreen.withValues(alpha: 0.55);
+      textColor = kGreen;
     } else if (isUnlocked) {
       bgColor = LevelSelectScreen._kAccent.withValues(alpha: 0.12);
       borderColor = LevelSelectScreen._kAccent.withValues(alpha: 0.50);
@@ -298,7 +297,7 @@ class _LevelCellState extends State<_LevelCell> {
               ? [
                   BoxShadow(
                     color:
-                        LevelSelectScreen._kCompleted.withValues(alpha: 0.15),
+                        kGreen.withValues(alpha: 0.15),
                     blurRadius: 8,
                   ),
                 ]
@@ -368,7 +367,7 @@ class _LevelSelectBackground extends StatelessWidget {
           bottom: -80,
           left: -40,
           child: GlowOrb(
-              size: 260, color: LevelSelectScreen._kCompleted, opacity: 0.06),
+              size: 260, color: kGreen, opacity: 0.06),
         ),
       ],
     );

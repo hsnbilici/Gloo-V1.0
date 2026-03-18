@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gloo/providers/pvp_provider.dart';
@@ -50,54 +51,70 @@ void main() {
   // ─── DuelNotifier ─────────────────────────────────────────────────────
 
   group('DuelNotifier', () {
-    late DuelNotifier notifier;
+    late ProviderContainer container;
 
     setUp(() {
-      notifier = DuelNotifier();
+      container = ProviderContainer();
     });
 
+    tearDown(() => container.dispose());
+
     test('initial state is empty DuelState', () {
-      expect(notifier.state.matchId, isNull);
-      expect(notifier.state.seed, isNull);
-      expect(notifier.state.isBot, isFalse);
-      expect(notifier.state.opponentScore, 0);
+      final state = container.read(duelProvider);
+      expect(state.matchId, isNull);
+      expect(state.seed, isNull);
+      expect(state.isBot, isFalse);
+      expect(state.opponentScore, 0);
     });
 
     test('setMatch sets matchId, seed, and isBot', () {
-      notifier.setMatch(matchId: 'abc', seed: 42, isBot: false);
-      expect(notifier.state.matchId, 'abc');
-      expect(notifier.state.seed, 42);
-      expect(notifier.state.isBot, isFalse);
+      container
+          .read(duelProvider.notifier)
+          .setMatch(matchId: 'abc', seed: 42, isBot: false);
+      final state = container.read(duelProvider);
+      expect(state.matchId, 'abc');
+      expect(state.seed, 42);
+      expect(state.isBot, isFalse);
     });
 
     test('setMatch with bot', () {
-      notifier.setMatch(matchId: 'bot-match', seed: 7, isBot: true);
-      expect(notifier.state.isBot, isTrue);
+      container
+          .read(duelProvider.notifier)
+          .setMatch(matchId: 'bot-match', seed: 7, isBot: true);
+      expect(container.read(duelProvider).isBot, isTrue);
     });
 
     test('updateOpponentScore changes score', () {
-      notifier.setMatch(matchId: 'abc', seed: 42, isBot: false);
-      notifier.updateOpponentScore(250);
-      expect(notifier.state.opponentScore, 250);
-      expect(notifier.state.matchId, 'abc'); // preserved
+      container
+          .read(duelProvider.notifier)
+          .setMatch(matchId: 'abc', seed: 42, isBot: false);
+      container.read(duelProvider.notifier).updateOpponentScore(250);
+      final state = container.read(duelProvider);
+      expect(state.opponentScore, 250);
+      expect(state.matchId, 'abc'); // preserved
     });
 
     test('setOpponentDone sets score and done flag', () {
-      notifier.setMatch(matchId: 'abc', seed: 42, isBot: false);
-      notifier.setOpponentDone(1000);
-      expect(notifier.state.opponentScore, 1000);
-      expect(notifier.state.isOpponentDone, isTrue);
+      container
+          .read(duelProvider.notifier)
+          .setMatch(matchId: 'abc', seed: 42, isBot: false);
+      container.read(duelProvider.notifier).setOpponentDone(1000);
+      final state = container.read(duelProvider);
+      expect(state.opponentScore, 1000);
+      expect(state.isOpponentDone, isTrue);
     });
 
     test('reset returns to empty state', () {
+      final notifier = container.read(duelProvider.notifier);
       notifier.setMatch(matchId: 'abc', seed: 42, isBot: true);
       notifier.updateOpponentScore(500);
       notifier.reset();
-      expect(notifier.state.matchId, isNull);
-      expect(notifier.state.seed, isNull);
-      expect(notifier.state.isBot, isFalse);
-      expect(notifier.state.opponentScore, 0);
-      expect(notifier.state.isOpponentDone, isFalse);
+      final state = container.read(duelProvider);
+      expect(state.matchId, isNull);
+      expect(state.seed, isNull);
+      expect(state.isBot, isFalse);
+      expect(state.opponentScore, 0);
+      expect(state.isOpponentDone, isFalse);
     });
   });
 }
