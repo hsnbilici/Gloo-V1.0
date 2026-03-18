@@ -253,3 +253,12 @@ const Map<GameMode, Color> kModeColors = {
   GameMode.level: kColorChef,
   GameMode.duel: kColorClassic,
 };
+
+/// Returns the appropriate color based on brightness.
+Color resolveColor(
+  Brightness brightness, {
+  required Color dark,
+  required Color light,
+}) {
+  return brightness == Brightness.dark ? dark : light;
+}
