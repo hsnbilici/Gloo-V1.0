@@ -200,6 +200,10 @@ class StringsTr extends AppStrings {
   String get settingsDeleteConfirmAction => 'Sil';
   @override
   String get settingsDeleteCancel => 'İptal';
+  @override
+  String get settingsExportData => 'Verilerimi Dışa Aktar';
+  @override
+  String get settingsExportSuccess => 'Veriler başarıyla dışa aktarıldı';
 
   @override
   String get consentTitle => 'Analitik ve Hata Raporları';
@@ -210,6 +214,16 @@ class StringsTr extends AppStrings {
   String get consentAccept => 'İzin Ver';
   @override
   String get consentDecline => 'Hayır';
+
+  @override
+  String get ageGateTitle => 'Yaş Doğrulama';
+  @override
+  String get ageGateMessage =>
+      'Devam etmek için yaşınızı doğrulayın. 13 yaş altı oyuncular sınırlı deneyime sahip olacaktır.';
+  @override
+  String get ageGateConfirm => '13 yaş veya üzeriyim';
+  @override
+  String get ageGateUnder13 => '13 yaşından küçüğüm';
 
   @override
   String get leaderboardTitle => 'Sıralama';
@@ -427,4 +441,13 @@ class StringsTr extends AppStrings {
       'Yerleştirmek için tekrar dokunun! Dolu satırlar otomatik temizlenir.';
   @override
   String get tutorialGotIt => 'Anladım!';
+
+  @override
+  String get settingsSectionTheme => 'Tema';
+  @override
+  String get settingsThemeSystem => 'Sistem';
+  @override
+  String get settingsThemeLight => 'Aydınlık';
+  @override
+  String get settingsThemeDark => 'Karanlık';
 }

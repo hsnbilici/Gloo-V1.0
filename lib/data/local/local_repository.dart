@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data_models.dart';
@@ -62,6 +63,17 @@ class LocalRepository {
     await _prefs.setBool('colorblind_prompt_shown', true);
   }
 
+  // ─── COPPA yaş kapısı ──────────────────────────────────────────────────────
+
+  bool getAgeVerified() => _prefs.getBool('age_verified') ?? false;
+
+  bool getIsChild() => _prefs.getBool('is_child') ?? false;
+
+  Future<void> setAgeVerified({required bool isChild}) async {
+    await _prefs.setBool('age_verified', true);
+    await _prefs.setBool('is_child', isChild);
+  }
+
   // ─── Gizlilik & Analitik ─────────────────────────────────────────────────
 
   bool getAnalyticsEnabled() => _prefs.getBool('analytics_enabled') ?? false;
@@ -80,6 +92,63 @@ class LocalRepository {
   Future<void> clearAllData() async {
     await _prefs.clear();
     await _secure.deleteAll();
+  }
+
+  /// GDPR Article 20: tüm yerel kullanıcı verilerini JSON Map olarak döner.
+  Future<Map<String, dynamic>> exportAllData() async {
+    return {
+      'profile': {
+        'username': _prefs.getString('username'),
+      },
+      'settings': {
+        'sfx': _prefs.getBool('sfx') ?? true,
+        'music': _prefs.getBool('music') ?? true,
+        'haptics': _prefs.getBool('haptics') ?? true,
+        'analytics_enabled': getAnalyticsEnabled(),
+      },
+      'scores': {
+        'classic': await getHighScore('classic'),
+        'colorChef': await getHighScore('colorChef'),
+        'timeTrial': await getHighScore('timeTrial'),
+        'zen': await getHighScore('zen'),
+        'daily': await getHighScore('daily'),
+        'level': await getHighScore('level'),
+        'duel': await getHighScore('duel'),
+      },
+      'stats': {
+        'total_games_played': getTotalGamesPlayed(),
+        'average_score': getAverageScore(),
+        'consecutive_losses': getConsecutiveLosses(),
+      },
+      'currency': {
+        'gel_ozu': await getGelOzu(),
+        'gel_energy': await getGelEnergy(),
+        'total_earned_energy': getTotalEarnedEnergy(),
+      },
+      'progress': {
+        'current_level': getCurrentLevel(),
+        'max_completed_level': getMaxCompletedLevel(),
+        'completed_levels': getCompletedLevels().toList(),
+      },
+      'pvp': {
+        'elo': await getElo(),
+        'wins': await getPvpWins(),
+        'losses': await getPvpLosses(),
+      },
+      'streak': {
+        'count': getStreak(),
+        'last_date': _prefs.getString('streak_last_date'),
+        'last_reward_day': getLastStreakRewardDay(),
+      },
+      'collections': {
+        'discovered_colors': getDiscoveredColors().toList(),
+      },
+      'daily_puzzle': {
+        'completed_today': isDailyCompleted(),
+        'today_score': getDailyScore(),
+      },
+      'exported_at': DateTime.now().toIso8601String(),
+    };
   }
 
   // ─── Streak ───────────────────────────────────────────────────────────────
@@ -424,5 +493,20 @@ class LocalRepository {
     final updated = {...current, ...productIds}.toList();
     await _secure.write(key: 'unlocked_products', value: updated.join(','));
     await _prefs.remove('unlocked_products');
+  }
+
+  // ─── Tema Modu ────────────────────────────────────────────────────────────
+
+  Future<ThemeMode> getThemeMode() async {
+    final value = _prefs.getString('theme_mode');
+    return switch (value) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    await _prefs.setString('theme_mode', mode.name);
   }
 }

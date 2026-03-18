@@ -195,6 +195,10 @@ class StringsZh extends AppStrings {
   String get settingsDeleteConfirmAction => '删除';
   @override
   String get settingsDeleteCancel => '取消';
+  @override
+  String get settingsExportData => '导出我的数据';
+  @override
+  String get settingsExportSuccess => '数据导出成功';
 
   @override
   String get consentTitle => '分析与崩溃报告';
@@ -204,6 +208,15 @@ class StringsZh extends AppStrings {
   String get consentAccept => '允许';
   @override
   String get consentDecline => '不了';
+
+  @override
+  String get ageGateTitle => '年龄验证';
+  @override
+  String get ageGateMessage => '请确认您的年龄以继续。13岁以下的玩家将获得有限体验。';
+  @override
+  String get ageGateConfirm => '我已满13岁';
+  @override
+  String get ageGateUnder13 => '我未满13岁';
 
   @override
   String get leaderboardTitle => '排行榜';
@@ -422,4 +435,13 @@ class StringsZh extends AppStrings {
   String get tutorialStep3 => '再次点击放置！填满的行会自动消除。';
   @override
   String get tutorialGotIt => '知道了！';
+
+  @override
+  String get settingsSectionTheme => '主题';
+  @override
+  String get settingsThemeSystem => '系统';
+  @override
+  String get settingsThemeLight => '浅色';
+  @override
+  String get settingsThemeDark => '深色';
 }

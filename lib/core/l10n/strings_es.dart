@@ -200,6 +200,10 @@ class StringsEs extends AppStrings {
   String get settingsDeleteConfirmAction => 'Eliminar';
   @override
   String get settingsDeleteCancel => 'Cancelar';
+  @override
+  String get settingsExportData => 'Exportar mis datos';
+  @override
+  String get settingsExportSuccess => 'Datos exportados con éxito';
 
   @override
   String get consentTitle => 'Análisis e informes de errores';
@@ -210,6 +214,16 @@ class StringsEs extends AppStrings {
   String get consentAccept => 'Permitir';
   @override
   String get consentDecline => 'No gracias';
+
+  @override
+  String get ageGateTitle => 'Verificación de edad';
+  @override
+  String get ageGateMessage =>
+      'Confirma tu edad para continuar. Los jugadores menores de 13 años tendrán una experiencia limitada.';
+  @override
+  String get ageGateConfirm => 'Tengo 13 años o más';
+  @override
+  String get ageGateUnder13 => 'Tengo menos de 13';
 
   @override
   String get leaderboardTitle => 'Clasificación';
@@ -433,4 +447,13 @@ class StringsEs extends AppStrings {
       '¡Toca de nuevo para colocar! Las líneas llenas se eliminan.';
   @override
   String get tutorialGotIt => '¡Entendido!';
+
+  @override
+  String get settingsSectionTheme => 'Tema';
+  @override
+  String get settingsThemeSystem => 'Sistema';
+  @override
+  String get settingsThemeLight => 'Claro';
+  @override
+  String get settingsThemeDark => 'Oscuro';
 }

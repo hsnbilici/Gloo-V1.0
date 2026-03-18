@@ -96,6 +96,12 @@ abstract class AppStrings {
   String get settingsVersion;
   String get settingsDeveloper;
 
+  // Tema
+  String get settingsSectionTheme;
+  String get settingsThemeSystem;
+  String get settingsThemeLight;
+  String get settingsThemeDark;
+
   // Color Chef
   String get chefTargetLabel;
   String get chefLevelLabel;
@@ -140,12 +146,20 @@ abstract class AppStrings {
   String get settingsDeleteConfirmMessage;
   String get settingsDeleteConfirmAction;
   String get settingsDeleteCancel;
+  String get settingsExportData;
+  String get settingsExportSuccess;
 
   // GDPR Consent Dialog
   String get consentTitle;
   String get consentMessage;
   String get consentAccept;
   String get consentDecline;
+
+  // Yaş kapısı (COPPA)
+  String get ageGateTitle;
+  String get ageGateMessage;
+  String get ageGateConfirm;
+  String get ageGateUnder13;
 
   // Sıralama
   String get leaderboardTitle;

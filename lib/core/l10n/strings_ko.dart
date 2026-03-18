@@ -198,6 +198,10 @@ class StringsKo extends AppStrings {
   String get settingsDeleteConfirmAction => '삭제';
   @override
   String get settingsDeleteCancel => '취소';
+  @override
+  String get settingsExportData => '내 데이터 내보내기';
+  @override
+  String get settingsExportSuccess => '데이터를 성공적으로 내보냈습니다';
 
   @override
   String get consentTitle => '분석 및 충돌 보고서';
@@ -208,6 +212,15 @@ class StringsKo extends AppStrings {
   String get consentAccept => '허용';
   @override
   String get consentDecline => '아니요';
+
+  @override
+  String get ageGateTitle => '나이 확인';
+  @override
+  String get ageGateMessage => '계속하려면 나이를 확인해 주세요. 13세 미만 플레이어는 제한된 경험을 하게 됩니다.';
+  @override
+  String get ageGateConfirm => '13세 이상입니다';
+  @override
+  String get ageGateUnder13 => '13세 미만입니다';
 
   @override
   String get leaderboardTitle => '순위';
@@ -426,4 +439,13 @@ class StringsKo extends AppStrings {
   String get tutorialStep3 => '다시 탭하여 배치! 가득 찬 줄은 자동으로 지워집니다.';
   @override
   String get tutorialGotIt => '알겠어요!';
+
+  @override
+  String get settingsSectionTheme => '테마';
+  @override
+  String get settingsThemeSystem => '시스템';
+  @override
+  String get settingsThemeLight => '라이트';
+  @override
+  String get settingsThemeDark => '다크';
 }

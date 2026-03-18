@@ -200,6 +200,10 @@ class StringsRu extends AppStrings {
   String get settingsDeleteConfirmAction => 'Удалить';
   @override
   String get settingsDeleteCancel => 'Отмена';
+  @override
+  String get settingsExportData => 'Экспорт данных';
+  @override
+  String get settingsExportSuccess => 'Данные успешно экспортированы';
 
   @override
   String get consentTitle => 'Аналитика и отчёты о сбоях';
@@ -210,6 +214,16 @@ class StringsRu extends AppStrings {
   String get consentAccept => 'Разрешить';
   @override
   String get consentDecline => 'Нет';
+
+  @override
+  String get ageGateTitle => 'Подтверждение возраста';
+  @override
+  String get ageGateMessage =>
+      'Подтвердите свой возраст для продолжения. Игроки младше 13 лет получат ограниченный доступ.';
+  @override
+  String get ageGateConfirm => 'Мне 13 или больше';
+  @override
+  String get ageGateUnder13 => 'Мне меньше 13';
 
   @override
   String get leaderboardTitle => 'Рейтинг';
@@ -433,4 +447,13 @@ class StringsRu extends AppStrings {
       'Нажмите ещё раз, чтобы поставить! Полные линии очищаются.';
   @override
   String get tutorialGotIt => 'Понятно!';
+
+  @override
+  String get settingsSectionTheme => 'Тема';
+  @override
+  String get settingsThemeSystem => 'Системная';
+  @override
+  String get settingsThemeLight => 'Светлая';
+  @override
+  String get settingsThemeDark => 'Тёмная';
 }

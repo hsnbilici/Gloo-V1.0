@@ -197,6 +197,10 @@ class StringsJa extends AppStrings {
   String get settingsDeleteConfirmAction => '削除';
   @override
   String get settingsDeleteCancel => 'キャンセル';
+  @override
+  String get settingsExportData => 'データをエクスポート';
+  @override
+  String get settingsExportSuccess => 'データのエクスポートに成功しました';
 
   @override
   String get consentTitle => '分析とクラッシュレポート';
@@ -207,6 +211,15 @@ class StringsJa extends AppStrings {
   String get consentAccept => '許可する';
   @override
   String get consentDecline => 'いいえ';
+
+  @override
+  String get ageGateTitle => '年齢確認';
+  @override
+  String get ageGateMessage => '続行するには年齢を確認してください。13歳未満のプレイヤーは制限された体験になります。';
+  @override
+  String get ageGateConfirm => '13歳以上です';
+  @override
+  String get ageGateUnder13 => '13歳未満です';
 
   @override
   String get leaderboardTitle => 'ランキング';
@@ -425,4 +438,13 @@ class StringsJa extends AppStrings {
   String get tutorialStep3 => 'もう一度タップで配置！列が揃うと消えます。';
   @override
   String get tutorialGotIt => 'わかった！';
+
+  @override
+  String get settingsSectionTheme => 'テーマ';
+  @override
+  String get settingsThemeSystem => 'システム';
+  @override
+  String get settingsThemeLight => 'ライト';
+  @override
+  String get settingsThemeDark => 'ダーク';
 }

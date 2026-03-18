@@ -200,6 +200,10 @@ class StringsEn extends AppStrings {
   String get settingsDeleteConfirmAction => 'Delete';
   @override
   String get settingsDeleteCancel => 'Cancel';
+  @override
+  String get settingsExportData => 'Export My Data';
+  @override
+  String get settingsExportSuccess => 'Data exported successfully';
 
   @override
   String get consentTitle => 'Analytics & Crash Reports';
@@ -210,6 +214,16 @@ class StringsEn extends AppStrings {
   String get consentAccept => 'Allow';
   @override
   String get consentDecline => 'No Thanks';
+
+  @override
+  String get ageGateTitle => 'Age Verification';
+  @override
+  String get ageGateMessage =>
+      'Please confirm your age to continue. Players under 13 will have a limited experience.';
+  @override
+  String get ageGateConfirm => 'I am 13 or older';
+  @override
+  String get ageGateUnder13 => 'I am under 13';
 
   @override
   String get leaderboardTitle => 'Leaderboard';
@@ -425,4 +439,13 @@ class StringsEn extends AppStrings {
   String get tutorialStep3 => 'Tap again to place! Lines clear when full.';
   @override
   String get tutorialGotIt => 'Got it!';
+
+  @override
+  String get settingsSectionTheme => 'Theme';
+  @override
+  String get settingsThemeSystem => 'System';
+  @override
+  String get settingsThemeLight => 'Light';
+  @override
+  String get settingsThemeDark => 'Dark';
 }

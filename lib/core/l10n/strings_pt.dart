@@ -200,6 +200,10 @@ class StringsPt extends AppStrings {
   String get settingsDeleteConfirmAction => 'Excluir';
   @override
   String get settingsDeleteCancel => 'Cancelar';
+  @override
+  String get settingsExportData => 'Exportar meus dados';
+  @override
+  String get settingsExportSuccess => 'Dados exportados com sucesso';
 
   @override
   String get consentTitle => 'Análises e relatórios de falhas';
@@ -210,6 +214,16 @@ class StringsPt extends AppStrings {
   String get consentAccept => 'Permitir';
   @override
   String get consentDecline => 'Não obrigado';
+
+  @override
+  String get ageGateTitle => 'Verificação de idade';
+  @override
+  String get ageGateMessage =>
+      'Confirme sua idade para continuar. Jogadores menores de 13 anos terão uma experiência limitada.';
+  @override
+  String get ageGateConfirm => 'Tenho 13 anos ou mais';
+  @override
+  String get ageGateUnder13 => 'Tenho menos de 13 anos';
 
   @override
   String get leaderboardTitle => 'Ranking';
@@ -428,4 +442,13 @@ class StringsPt extends AppStrings {
       'Toque novamente para colocar! Linhas cheias são eliminadas.';
   @override
   String get tutorialGotIt => 'Entendi!';
+
+  @override
+  String get settingsSectionTheme => 'Tema';
+  @override
+  String get settingsThemeSystem => 'Sistema';
+  @override
+  String get settingsThemeLight => 'Claro';
+  @override
+  String get settingsThemeDark => 'Escuro';
 }

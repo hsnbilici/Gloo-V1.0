@@ -200,6 +200,10 @@ class StringsHi extends AppStrings {
   String get settingsDeleteConfirmAction => 'हटाएं';
   @override
   String get settingsDeleteCancel => 'रद्द करें';
+  @override
+  String get settingsExportData => 'मेरा डेटा निर्यात करें';
+  @override
+  String get settingsExportSuccess => 'डेटा सफलतापूर्वक निर्यात किया गया';
 
   @override
   String get consentTitle => 'एनालिटिक्स और क्रैश रिपोर्ट';
@@ -210,6 +214,16 @@ class StringsHi extends AppStrings {
   String get consentAccept => 'अनुमति दें';
   @override
   String get consentDecline => 'नहीं';
+
+  @override
+  String get ageGateTitle => 'उम्र सत्यापन';
+  @override
+  String get ageGateMessage =>
+      'जारी रखने के लिए अपनी उम्र की पुष्टि करें। 13 वर्ष से कम उम्र के खिलाड़ियों को सीमित अनुभव मिलेगा।';
+  @override
+  String get ageGateConfirm => 'मैं 13 वर्ष या उससे अधिक हूँ';
+  @override
+  String get ageGateUnder13 => 'मैं 13 वर्ष से कम हूँ';
 
   @override
   String get leaderboardTitle => 'लीडरबोर्ड';
@@ -428,4 +442,13 @@ class StringsHi extends AppStrings {
       'रखने के लिए फिर से टैप करें! भरी हुई पंक्तियाँ अपने-आप हट जाती हैं।';
   @override
   String get tutorialGotIt => 'समझ गया!';
+
+  @override
+  String get settingsSectionTheme => 'थीम';
+  @override
+  String get settingsThemeSystem => 'सिस्टम';
+  @override
+  String get settingsThemeLight => 'लाइट';
+  @override
+  String get settingsThemeDark => 'डार्क';
 }

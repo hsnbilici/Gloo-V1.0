@@ -200,6 +200,10 @@ class StringsAr extends AppStrings {
   String get settingsDeleteConfirmAction => 'حذف';
   @override
   String get settingsDeleteCancel => 'إلغاء';
+  @override
+  String get settingsExportData => 'تصدير بياناتي';
+  @override
+  String get settingsExportSuccess => 'تم تصدير البيانات بنجاح';
 
   @override
   String get consentTitle => 'التحليلات وتقارير الأعطال';
@@ -210,6 +214,16 @@ class StringsAr extends AppStrings {
   String get consentAccept => 'السماح';
   @override
   String get consentDecline => 'لا شكراً';
+
+  @override
+  String get ageGateTitle => 'التحقق من العمر';
+  @override
+  String get ageGateMessage =>
+      'يرجى تأكيد عمرك للمتابعة. اللاعبون الذين تقل أعمارهم عن 13 عامًا سيحصلون على تجربة محدودة.';
+  @override
+  String get ageGateConfirm => 'عمري 13 سنة أو أكثر';
+  @override
+  String get ageGateUnder13 => 'عمري أقل من 13 سنة';
 
   @override
   String get leaderboardTitle => 'الترتيب';
@@ -430,4 +444,13 @@ class StringsAr extends AppStrings {
       'انقر مرة أخرى للوضع! الصفوف الممتلئة تُمسح تلقائيًا.';
   @override
   String get tutorialGotIt => 'فهمت!';
+
+  @override
+  String get settingsSectionTheme => 'المظهر';
+  @override
+  String get settingsThemeSystem => 'النظام';
+  @override
+  String get settingsThemeLight => 'فاتح';
+  @override
+  String get settingsThemeDark => 'داكن';
 }
