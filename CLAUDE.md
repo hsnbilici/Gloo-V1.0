@@ -9,13 +9,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (1220 test)
+flutter test                                   # tum testler (1289 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
-flutter build web --release                    # web build
-flutter build apk --debug                      # android debug
-flutter run -d chrome                          # web'de calistir
-flutter run -d "iPhone 16 Pro"                 # iOS simulator'de calistir
+flutter build web --release --dart-define-from-file=.env  # web build
+flutter build apk --debug --dart-define-from-file=.env   # android debug
+flutter build ios --simulator --dart-define-from-file=.env # iOS simulator
+flutter run -d chrome                          # web'de calistir (secret'siz)
 ./scripts/run_local.sh -d chrome               # .env ile web'de calistir
 ./scripts/run_local.sh -d "iPhone 17 Pro"      # .env ile iOS'ta calistir
 ```
@@ -36,6 +36,7 @@ adb install -r build/app/outputs/flutter-apk/app-debug.apk
 - **Flutter SDK** 3.19+ (mevcut: 3.41.2). Dart SDK: `>=3.3.0 <4.0.0`
 - **Android**: `ANDROID_HOME` tanimli, AVD `Gloo_Pixel8` (1080x2400)
 - **iOS**: macOS + Xcode. Flutter 3.41+ iOS'ta Swift Package Manager kullanir (CocoaPods gereksiz)
+- **Secrets**: `.env` dosyasi (gitignore'd) `--dart-define-from-file=.env` ile inject edilir. CI'da GitHub Secrets kullanilir.
 
 ## Mimari
 
@@ -55,10 +56,7 @@ app/ → features/ → providers/ → game/ → core/
 - `services/` — AnalyticsService (Firebase), AdManager, PurchaseService.
 - `providers/` — Riverpod: game, audio, user, locale, pvp, service providers.
 
-**Bilinen katman ihlalleri** (todo'da duzeltme planli):
-- ~~`audio/sound_bank.dart` → `game/systems/combo_detector.dart`~~ — DUZELTILDI (Sprint 20)
-- ~~`pvp_lobby_screen.dart` → `supabase_client.dart`~~ — DUZELTILDI (`currentUserIdProvider` uzerinden)
-- `data/remote/pvp_realtime_service.dart` tip import'u `pvp_lobby_screen.dart`'ta — provider API'sinin parcasi, kabul edilmis risk
+Bilinen katman ihlalleri tamamiyla duzeltildi (Sprint 20-21).
 
 ### Oyun Motoru
 
@@ -120,7 +118,7 @@ Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10
 
 Renk adlari l10n uzerinden: `AppStrings.colorName(GelColor)`. `GelColor` uzerinde `displayName` getter'i yoktur.
 
-UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors` map'i. Ekranlarda yerel renk sabiti tanimlanmamali.
+UI palet sabitleri `color_constants.dart`'ta (75+ sabit): `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors`, `kSurfaceDark`, `kIceBlue`, `kAmber`, `kPowerUp*` vb. Ekranlarda `Color(0x...)` literal kullanma — `color_constants.dart`'a sabit ekle ve import et.
 
 ### Routing
 
@@ -135,6 +133,12 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 
 `fadeScaleTransition` (`ui_constants.dart`): Tum `showGeneralDialog` transition builder'lari icin paylasilmis FadeTransition + ScaleTransition helper. Yeni dialog eklerken bunu kullan, inline transition builder yazma.
 
+### ShapeGenerator
+
+`ShapeGenerator` instance-based (M.17). `GlooGame` constructor'inda opsiyonel: `GlooGame({..., ShapeGenerator? shapeGenerator})`. Stateful metodlar (generateSmartHand, recordLoss/Win/Clear) instance uzerinden. Stateless metodlar (getDifficulty, generateSeededHand, todaySeed) static kalir. Testlerde izole state icin `ShapeGenerator(rng: Random(42))` kullanilabilir.
+
+`availableColors` (L.15): `generateSmartHand`, `generateSeededHand` ve tum ic renk secim metodlari opsiyonel `List<GelColor>? availableColors` parametresi alir. `null` → `kPrimaryColors` (4 birincil renk). `GlooGame.generateNextHand()` bu degeri `levelData?.availableColors`'dan alir. Level modunda per-level renk kisitlamasi mumkun.
+
 ### DuelState.copyWith Sentinel Deseni
 
 `DuelState.copyWith` nullable alanlari (`matchId`, `seed`, `opponentElo`) icin `_Absent` sentinel sinifi kullanir. Bu, `copyWith(matchId: null)` ile "alanı null yap" ve `copyWith()` ile "alani degistirme" arasindaki farki korur.
@@ -147,8 +151,19 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 - `color.value` → `color.toARGB32()` kullan
 - Platform kontrolu: `Platform.isIOS` → `defaultTargetPlatform == TargetPlatform.iOS` kullan (`dart:io` import'u gerektirmez)
 
+### Certificate Pinning
+- Android: `android/app/src/main/res/xml/network_security_config.xml` — Supabase + Google/Firebase domain'leri icin SHA-256 SPKI pin'leri. `AndroidManifest.xml`'de `networkSecurityConfig` referansi.
+- Dart katmani: `core/network/certificate_pinner.dart` + `pinned_http_overrides.dart`. `main.dart`'ta `HttpOverrides.global` ile aktif (`kIsWeb` guard'li). `badCertificateCallback` pinned domain'lerde kotu sertifikalari reddeder.
+- iOS: ATS (App Transport Security) varsayilan — native pinning eklenmedi (bilinen sinirlilik).
+- Pin sabitleri `kCertificatePins` — Supabase leaf+CA, Google leaf+CA. Sertifika yenilendiginde guncellenmelidir.
+
+### Erisilebilirlik (a11y)
+- `core/ui/accessible_tap_target.dart`: WCAG 2.1 uyumlu 44x44dp minimum tap target + Semantics wrapper. Yeni interaktif eleman eklerken bunu kullan.
+- 8 ekranda Semantics widget'lari mevcut. Yeni ekran eklerken her interaktif elemana `Semantics(label:, button: true)` ekle.
+- `MediaQuery.textScalerOf(context).scale(fontSize)` ile dinamik font boyutlama — 5 ekranda aktif. Oyun grid cell'leri muaf.
+
 ### Platform Guard'lar
-- `main.dart`: Firebase init try-catch sarili. Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard. iOS `edgeToEdge`, diger `immersiveSticky`.
+- `main.dart`: Certificate pinning (`HttpOverrides.global`), Firebase init try-catch sarili. Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard. iOS `edgeToEdge`, diger `immersiveSticky`.
 - `AndroidManifest.xml`: AdMob App ID zorunlu — olmadan FATAL EXCEPTION. Simdi test ID aktif.
 - Web uyumsuz paketler: `google_mobile_ads`. `just_audio` web-uyumlu. `ffmpeg_kit_flutter` ve `screen_recorder` kaldirildi.
 
@@ -157,13 +172,26 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 - `RemoteRepository`: Supabase. Tum metodlarda `isConfigured` guard ve try-catch zorunlu. `kDebugMode` guard'li debugPrint. `submitScore`/`submitPvpResult` icin `_retry()` ile exponential backoff (3 deneme).
 - `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast). Duplicate match onlemi: leksikografik ID karsilastirmasi.
 - `AnalyticsService`: Lazy/null-safe Firebase wrapper — yoksa sessizce no-op.
-- `firebase_options.dart` ve `supabase_client.dart`: Gercek key'ler kaynak kodda (bilinen sorun, C.4 ile `--dart-define`'a tasinacak).
+- `firebase_options.dart` ve `supabase_client.dart`: `String.fromEnvironment` ile `--dart-define` uzerinden inject edilir. `defaultValue: ''` — key yoksa `isConfigured` guard init'i atlar. Firebase projesi: `gloo-d3dd8`.
+- `ad_manager.dart`: Ad unit ID'leri `--dart-define` ile inject edilir. Bos ise Google test ID'lere fallback yapar.
+
+### Android Signing
+- Debug: debug.keystore (otomatik)
+- Release: `android/gloo-release.jks` (alias: `gloo`). `android/app/key.properties` ile yapilandirilmis.
+- `key.properties` ve `*.jks` gitignore'da — CI'da GitHub Secrets uzerinden inject edilir.
+
+### iOS Signing
+- Debug: Automatic signing (Xcode manages)
+- Release/Profile: Manual signing — `CODE_SIGN_IDENTITY = "Apple Distribution"`, `PROVISIONING_PROFILE_SPECIFIER = "Gloo AppStore Distribution"`, Team ID: `6XM2F48V3V`
+- `ExportOptions.plist`: `ios/ExportOptions.plist` — app-store-connect method, manual signing
+- CI: Certificate (.p12) ve provisioning profile base64 encoded GitHub Secrets'ta. Keychain'e import edilir, profile UUID ile kopyalanir.
+- FlutterFire Crashlytics symbol upload build phase: `flutterfire` yoksa sessizce atlar (CI uyumlu)
 
 ### Ses ve Haptik
 - `AudioManager`: `assets/audio/sfx/` ve `assets/audio/music/`. Dosya bulunamazsa sessizce atlar.
 - `HapticManager`: 14 haptic profil, tam implementasyon.
 - `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format kullanilmali.
-- `SoundBank`: `onLineClear` ve `onGameOver` implementasyonu tamamlandi (AudioManager SFX + HapticManager). `onGameOver` yalnizca SFX calar (haptic yok — game over'da haptic kafa karistirici).
+- `SoundBank`: Tam pipeline (L.9). Mevcut event'ler: `onGelPlaced` (SFX+haptic), `onGelMerge` (SFX tier-based+haptic), `onLineClear` (SFX+haptic), `onCombo` (SFX tier-based, epic haptic), `onGameOver` (SFX only), `onLevelComplete` (SFX+haptic). Yeni event'ler: `onSynthesis`, `onIceBreak`, `onPowerUpActivate`, `onGravityDrop`, `onButtonTap`, `onGelOzuEarn`, `onNearMiss(survived:)`.
 
 ## l10n
 
@@ -174,7 +202,7 @@ final l = ref.watch(stringsProvider);
 Text(l.scoreLabel)
 ```
 
-Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula. Renk adlari icin `AppStrings.colorName(GelColor)` helper metodu mevcut.
+Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula. Renk adlari icin `AppStrings.colorName(GelColor)` helper metodu mevcut. ELO lig isimleri icin `EloLeague.leagueName(AppStrings l)` metodu kullanilir (L.18) — `displayName` getter'i kaldirildi.
 
 ## Linting
 
@@ -188,20 +216,30 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 - **AdManager**: Interstitial (4 oyunda 1), rewarded (ikinci sans), banner. Anti-frustration: 5dk'da 2 kayip → reklam yok. Test ID'ler aktif.
 - **PurchaseService**: 7 IAP urunu. Sunucu tarafinda receipt dogrulama (Supabase Edge Function). `_pendingVerification` SharedPreferences'a persist ediliyor; app restart'ta otomatik retry. Abonelik expiry kontrolu `restorePurchases()` + `syncLocalProducts()` ile yapilir.
 - **Redeem Code**: `ShopScreen` → `RemoteRepository.redeemCode()` → Supabase Edge Function → `PurchaseService.unlockProducts()`
+- **Ekonomi inflasyonu** (L.16): `CurrencyManager.inflatedCost(baseCost)` — birikimli kazanima dayali 1x→3x maliyet olcekleme (500 birim basina +1x). `lifetimeEarnings` persist ve UI wiring henuz yapilmadi.
+
+### Test Uyarilari
+- `flutter_animate` kullanan widget'lar `pumpAndSettle()` timeout'a neden olur — `pump(Duration)` kullan. Scroll'da yeni inflate olan widget'lar icin birden fazla `pump(Duration(milliseconds: 500))` gerekebilir.
+- Secure-storage metodlarina dokunan testler `localRepositoryProvider`'i `FakeSecureStorage` ile override etmeli.
+- Integration testler `integration_test/` altinda — cihaz/emulator gerektirir, `flutter test` ile calismaz.
+- `mocktail` mock framework: `test/helpers/mocks.dart`'ta `MockRemoteRepository`, `MockAnalyticsService`, `MockAdManager` hazir. Yeni mock icin buraya ekle.
+- CI'da coverage threshold: %70 minimum zorunlu (`flutter_ci.yml`). `flutter test --coverage` ile yerel kontrol.
+- CI versioning (L.21): `main`'e push'ta `scripts/version_bump.sh` build number'i git commit count'a esitler. `[skip ci]` ile sonsuz dongu onlenir.
+- Dependabot (L.11): `.github/dependabot.yml` — haftalik pub + GitHub Actions taramasi.
 
 ## Proje Durumu (2026-03-18)
 
-**Scorecard:** 76/100 (Sprint 20 sonrasi)
+**Scorecard:** 87/100 (P0 + P2 + P3 bagimsiz gorevler tamamlandi)
 
 | Alan | Puan | En Kritik Sorun |
 |------|:----:|-----------------|
-| Mimari | 78 | State management (65), features→data bypass |
-| Gameplay | 78 | ShapeGenerator static state, seeded RNG |
-| UI/UX | 72 | Erisilebilirlik 38/100, Responsive 45/100 |
-| QA | 79 | Integration test sifir, mock/fake yok |
-| DevOps | 73 | Release hazirligi (45), iOS signing eksik |
-| Backend | 77 | GDPR uyumlulugu (68), UMP SDK eksik |
-| Guvenlik | 68 | Hardcoded secrets (35), certificate pinning yok |
+| Mimari | 85 | Katman ihlalleri duzeltildi |
+| Gameplay | 82 | availableColors + inflasyon eklendi |
+| UI/UX | 76 | Erisilebilirlik (55), Responsive 45/100 |
+| QA | 89 | 1289 test, coverage threshold %70, pipeline testleri |
+| DevOps | 78 | CI versioning + Dependabot eklendi |
+| Backend | 77 | GDPR uyumlulugu (68) |
+| Guvenlik | 80 | iOS native pinning eksik |
 
 Detayli gorev listesi ve alt alan puanlari: `_dev/tasks/todo.md`
 
@@ -211,6 +249,5 @@ Detayli gorev listesi ve alt alan puanlari: `_dev/tasks/todo.md`
 |---|---|
 | `_dev/docs/GDD.md` | Game Design Document — mekanikler, monetizasyon, ASO |
 | `_dev/docs/TECHNICAL_ARCHITECTURE.md` | Sistem diyagrami, algoritma ornekleri |
-| `_dev/docs/P0-STORE-HAZIRLIGI.md` | Store oncesi harici adimlar kilavuzu |
 | `_dev/tasks/todo.md` | Yol haritasi, scorecard, kalan gorevler (P0-P3 oncelikli) |
 | `_dev/tasks/lessons.md` | Sprint bazli dersler ve kurallar |
