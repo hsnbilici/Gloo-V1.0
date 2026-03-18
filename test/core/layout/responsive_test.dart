@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/core/layout/responsive.dart';
 
@@ -59,6 +60,50 @@ void main() {
 
     test('desktop returns 960', () {
       expect(responsiveMaxWidth(1200), 960.0);
+    });
+  });
+
+  group('ResponsiveScaffold', () {
+    testWidgets('constrains content on wide screens', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(size: Size(1200, 800)),
+            child: ResponsiveScaffold(
+              body: Placeholder(),
+            ),
+          ),
+        ),
+      );
+
+      // Placeholder should be inside a ConstrainedBox with maxWidth 960
+      final constrainedFinder = find.ancestor(
+        of: find.byType(Placeholder),
+        matching: find.byType(ConstrainedBox),
+      );
+      expect(constrainedFinder, findsOneWidget);
+      final constrained = tester.widget<ConstrainedBox>(constrainedFinder);
+      expect(constrained.constraints.maxWidth, 960.0);
+    });
+
+    testWidgets('full width on phone — no ConstrainedBox ancestor', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(size: Size(375, 812)),
+            child: ResponsiveScaffold(
+              body: Placeholder(),
+            ),
+          ),
+        ),
+      );
+
+      // No ConstrainedBox wrapping the Placeholder on phone
+      final constrainedFinder = find.ancestor(
+        of: find.byType(Placeholder),
+        matching: find.byType(ConstrainedBox),
+      );
+      expect(constrainedFinder, findsNothing);
     });
   });
 }
