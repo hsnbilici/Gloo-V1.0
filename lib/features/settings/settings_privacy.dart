@@ -1,9 +1,55 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 
 // ─── Veri silme satırı ───────────────────────────────────────────────────────
+
+class ExportDataTile extends StatelessWidget {
+  const ExportDataTile({
+    super.key,
+    required this.label,
+    required this.onExport,
+  });
+
+  final String label;
+  final Future<void> Function() onExport;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
+        onTap: onExport,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: kCyan.withValues(alpha: 0.07),
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(color: kCyan.withValues(alpha: 0.28)),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.download_rounded, color: kCyan, size: 18),
+              const SizedBox(width: 12),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: kCyan,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class DeleteDataTile extends StatelessWidget {
   const DeleteDataTile({
@@ -92,8 +138,27 @@ class _DeleteConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final dialogBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final messageColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.65),
+      light: kTextSecondaryLight,
+    );
+    final cancelBg = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.07),
+      light: kCardBgLight,
+    );
+    final cancelBorder = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.12),
+      light: kCardBorderLight,
+    );
+    final cancelText = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Dialog(
-      backgroundColor: kSurfaceDark,
+      backgroundColor: dialogBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(UIConstants.radiusXl),
         side: BorderSide(color: kColorClassic.withValues(alpha: 0.35)),
@@ -110,8 +175,8 @@ class _DeleteConfirmDialog extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: titleColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
@@ -121,7 +186,7 @@ class _DeleteConfirmDialog extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.65),
+                color: messageColor,
                 fontSize: 13,
                 height: 1.5,
               ),
@@ -135,17 +200,16 @@ class _DeleteConfirmDialog extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.07),
+                        color: cancelBg,
                         borderRadius:
                             BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.12)),
+                        border: Border.all(color: cancelBorder),
                       ),
                       child: Text(
                         cancelLabel,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: cancelText,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),

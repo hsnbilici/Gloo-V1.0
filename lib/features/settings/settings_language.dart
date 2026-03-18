@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../providers/locale_provider.dart';
 
@@ -29,6 +30,8 @@ class LanguageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: label,
       button: true,
@@ -49,8 +52,8 @@ class LanguageTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: textColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -92,12 +95,24 @@ class LanguageSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final sheetBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final handleColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.18),
+      light: kCardBorderLight,
+    );
+    final borderColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.08),
+      light: kCardBorderLight,
+    );
     return Container(
       decoration: BoxDecoration(
-        color: kSurfaceDark,
+        color: sheetBg,
         borderRadius: const BorderRadius.vertical(
             top: Radius.circular(UIConstants.radiusXxl)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(color: borderColor),
       ),
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
       child: Column(
@@ -109,7 +124,7 @@ class LanguageSheet extends StatelessWidget {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.18),
+                color: handleColor,
                 borderRadius: BorderRadius.circular(UIConstants.radiusXxs),
               ),
             ),
@@ -159,6 +174,18 @@ class _LangChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final unselectedBg = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.04),
+      light: kCardBgLight,
+    );
+    final unselectedBorder = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.09),
+      light: kCardBorderLight,
+    );
+    final unselectedText = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: nativeName,
       button: true,
@@ -169,12 +196,12 @@ class _LangChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? kColorChef.withValues(alpha: 0.14)
-                : Colors.white.withValues(alpha: 0.04),
+                : unselectedBg,
             borderRadius: BorderRadius.circular(UIConstants.radiusMd),
             border: Border.all(
               color: isSelected
                   ? kColorChef.withValues(alpha: 0.55)
-                  : Colors.white.withValues(alpha: 0.09),
+                  : unselectedBorder,
               width: isSelected ? 1.5 : 1,
             ),
             boxShadow: isSelected
@@ -192,7 +219,7 @@ class _LangChip extends StatelessWidget {
               Text(
                 nativeName,
                 style: TextStyle(
-                  color: isSelected ? kColorChef : Colors.white,
+                  color: isSelected ? kColorChef : unselectedText,
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
