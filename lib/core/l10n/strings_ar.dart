@@ -395,4 +395,15 @@ class StringsAr extends AppStrings {
   String get completedLabel => 'مكتمل!';
   @override
   String get secondChanceMoves => '+3 حركات';
+
+  @override
+  String get leagueBronze => 'برونز';
+  @override
+  String get leagueSilver => 'فضة';
+  @override
+  String get leagueGold => 'ذهب';
+  @override
+  String get leagueDiamond => 'ألماس';
+  @override
+  String get leagueGlooMaster => 'غلو ماستر';
 }

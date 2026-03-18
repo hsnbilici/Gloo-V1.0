@@ -394,4 +394,15 @@ class StringsFr extends AppStrings {
   String get completedLabel => 'TERMINÉ !';
   @override
   String get secondChanceMoves => '+3 coups';
+
+  @override
+  String get leagueBronze => 'Bronze';
+  @override
+  String get leagueSilver => 'Argent';
+  @override
+  String get leagueGold => 'Or';
+  @override
+  String get leagueDiamond => 'Diamant';
+  @override
+  String get leagueGlooMaster => 'Gloo Maître';
 }

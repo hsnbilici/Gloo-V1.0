@@ -391,4 +391,15 @@ class StringsEn extends AppStrings {
   String get completedLabel => 'COMPLETED!';
   @override
   String get secondChanceMoves => '+3 Moves';
+
+  @override
+  String get leagueBronze => 'Bronze';
+  @override
+  String get leagueSilver => 'Silver';
+  @override
+  String get leagueGold => 'Gold';
+  @override
+  String get leagueDiamond => 'Diamond';
+  @override
+  String get leagueGlooMaster => 'Gloo Master';
 }

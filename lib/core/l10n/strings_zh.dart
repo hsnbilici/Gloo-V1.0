@@ -388,4 +388,15 @@ class StringsZh extends AppStrings {
   String get completedLabel => '完成！';
   @override
   String get secondChanceMoves => '+3 步';
+
+  @override
+  String get leagueBronze => '青铜';
+  @override
+  String get leagueSilver => '白银';
+  @override
+  String get leagueGold => '黄金';
+  @override
+  String get leagueDiamond => '钻石';
+  @override
+  String get leagueGlooMaster => 'Gloo 大师';
 }

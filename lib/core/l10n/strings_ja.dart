@@ -391,4 +391,15 @@ class StringsJa extends AppStrings {
   String get completedLabel => 'クリア！';
   @override
   String get secondChanceMoves => '+3 手';
+
+  @override
+  String get leagueBronze => 'ブロンズ';
+  @override
+  String get leagueSilver => 'シルバー';
+  @override
+  String get leagueGold => 'ゴールド';
+  @override
+  String get leagueDiamond => 'ダイヤモンド';
+  @override
+  String get leagueGlooMaster => 'グルーマスター';
 }

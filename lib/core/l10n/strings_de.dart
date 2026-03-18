@@ -397,4 +397,15 @@ class StringsDe extends AppStrings {
   String get completedLabel => 'ABGESCHLOSSEN!';
   @override
   String get secondChanceMoves => '+3 Züge';
+
+  @override
+  String get leagueBronze => 'Bronze';
+  @override
+  String get leagueSilver => 'Silber';
+  @override
+  String get leagueGold => 'Gold';
+  @override
+  String get leagueDiamond => 'Diamant';
+  @override
+  String get leagueGlooMaster => 'Gloo Master';
 }

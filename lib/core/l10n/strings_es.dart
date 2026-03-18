@@ -398,4 +398,15 @@ class StringsEs extends AppStrings {
   String get completedLabel => '¡COMPLETADO!';
   @override
   String get secondChanceMoves => '+3 Movimientos';
+
+  @override
+  String get leagueBronze => 'Bronce';
+  @override
+  String get leagueSilver => 'Plata';
+  @override
+  String get leagueGold => 'Oro';
+  @override
+  String get leagueDiamond => 'Diamante';
+  @override
+  String get leagueGlooMaster => 'Gloo Maestro';
 }

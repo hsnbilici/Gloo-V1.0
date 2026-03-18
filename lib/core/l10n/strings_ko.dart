@@ -392,4 +392,15 @@ class StringsKo extends AppStrings {
   String get completedLabel => '완료!';
   @override
   String get secondChanceMoves => '+3 수';
+
+  @override
+  String get leagueBronze => '브론즈';
+  @override
+  String get leagueSilver => '실버';
+  @override
+  String get leagueGold => '골드';
+  @override
+  String get leagueDiamond => '다이아몬드';
+  @override
+  String get leagueGlooMaster => '글루 마스터';
 }

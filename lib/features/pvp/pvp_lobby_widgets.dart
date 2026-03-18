@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../game/pvp/matchmaking.dart';
+import '../../providers/locale_provider.dart';
 
 // ─── Lig Rozeti ──────────────────────────────────────────────────────────────
 
-class LeagueBadge extends StatelessWidget {
+class LeagueBadge extends ConsumerWidget {
   const LeagueBadge({super.key, required this.elo, required this.league});
 
   final int elo;
@@ -29,7 +31,8 @@ class LeagueBadge extends StatelessWidget {
       };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = ref.watch(stringsProvider);
     final color = _leagueColor;
     return Column(
       children: [
@@ -52,7 +55,7 @@ class LeagueBadge extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          league.displayName,
+          league.leagueName(l),
           style: TextStyle(
             color: color,
             fontSize: 18,

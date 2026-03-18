@@ -398,4 +398,15 @@ class StringsRu extends AppStrings {
   String get completedLabel => 'ЗАВЕРШЕНО!';
   @override
   String get secondChanceMoves => '+3 хода';
+
+  @override
+  String get leagueBronze => 'Бронза';
+  @override
+  String get leagueSilver => 'Серебро';
+  @override
+  String get leagueGold => 'Золото';
+  @override
+  String get leagueDiamond => 'Алмаз';
+  @override
+  String get leagueGlooMaster => 'Глу Мастер';
 }

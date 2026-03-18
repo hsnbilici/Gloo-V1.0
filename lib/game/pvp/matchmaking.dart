@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../../core/l10n/app_strings.dart';
 import '../../core/models/match_models.dart';
 export '../../core/models/match_models.dart';
 
@@ -14,12 +15,12 @@ enum EloLeague {
 
 /// ELO lig bilgisi.
 extension EloLeagueInfo on EloLeague {
-  String get displayName => switch (this) {
-        EloLeague.bronze => 'Bronz',
-        EloLeague.silver => 'Gümüş',
-        EloLeague.gold => 'Altın',
-        EloLeague.diamond => 'Elmas',
-        EloLeague.glooMaster => 'Gloo Master',
+  String leagueName(AppStrings l) => switch (this) {
+        EloLeague.bronze => l.leagueBronze,
+        EloLeague.silver => l.leagueSilver,
+        EloLeague.gold => l.leagueGold,
+        EloLeague.diamond => l.leagueDiamond,
+        EloLeague.glooMaster => l.leagueGlooMaster,
       };
 
   int get minElo => switch (this) {

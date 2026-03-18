@@ -251,6 +251,13 @@ abstract class AppStrings {
   String get completedLabel;
   String get secondChanceMoves;
 
+  // ELO lig adları
+  String get leagueBronze;
+  String get leagueSilver;
+  String get leagueGold;
+  String get leagueDiamond;
+  String get leagueGlooMaster;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

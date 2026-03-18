@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/game/pvp/matchmaking.dart';
 
 void main() {
@@ -34,12 +35,13 @@ void main() {
       expect(EloLeagueInfo.fromElo(3000), EloLeague.glooMaster);
     });
 
-    test('displayName returns correct string', () {
-      expect(EloLeague.bronze.displayName, 'Bronz');
-      expect(EloLeague.silver.displayName, 'Gümüş');
-      expect(EloLeague.gold.displayName, 'Altın');
-      expect(EloLeague.diamond.displayName, 'Elmas');
-      expect(EloLeague.glooMaster.displayName, 'Gloo Master');
+    test('leagueName returns correct string', () {
+      final l = StringsEn();
+      expect(EloLeague.bronze.leagueName(l), 'Bronze');
+      expect(EloLeague.silver.leagueName(l), 'Silver');
+      expect(EloLeague.gold.leagueName(l), 'Gold');
+      expect(EloLeague.diamond.leagueName(l), 'Diamond');
+      expect(EloLeague.glooMaster.leagueName(l), 'Gloo Master');
     });
 
     test('minElo returns correct thresholds', () {

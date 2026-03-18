@@ -393,4 +393,15 @@ class StringsHi extends AppStrings {
   String get completedLabel => 'पूरा हुआ!';
   @override
   String get secondChanceMoves => '+3 चालें';
+
+  @override
+  String get leagueBronze => 'कांस्य';
+  @override
+  String get leagueSilver => 'रजत';
+  @override
+  String get leagueGold => 'स्वर्ण';
+  @override
+  String get leagueDiamond => 'हीरा';
+  @override
+  String get leagueGlooMaster => 'ग्लू मास्टर';
 }

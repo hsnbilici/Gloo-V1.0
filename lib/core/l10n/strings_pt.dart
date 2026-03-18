@@ -393,4 +393,15 @@ class StringsPt extends AppStrings {
   String get completedLabel => 'CONCLUÍDO!';
   @override
   String get secondChanceMoves => '+3 Jogadas';
+
+  @override
+  String get leagueBronze => 'Bronze';
+  @override
+  String get leagueSilver => 'Prata';
+  @override
+  String get leagueGold => 'Ouro';
+  @override
+  String get leagueDiamond => 'Diamante';
+  @override
+  String get leagueGlooMaster => 'Gloo Mestre';
 }

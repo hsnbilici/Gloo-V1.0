@@ -392,4 +392,15 @@ class StringsTr extends AppStrings {
   String get completedLabel => 'TAMAMLANDI!';
   @override
   String get secondChanceMoves => '+3 Hamle';
+
+  @override
+  String get leagueBronze => 'Bronz';
+  @override
+  String get leagueSilver => 'Gümüş';
+  @override
+  String get leagueGold => 'Altın';
+  @override
+  String get leagueDiamond => 'Elmas';
+  @override
+  String get leagueGlooMaster => 'Gloo Master';
 }
