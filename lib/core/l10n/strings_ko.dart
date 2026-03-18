@@ -417,4 +417,13 @@ class StringsKo extends AppStrings {
   String get sharePromptShare => '공유';
   @override
   String get sharePromptSkip => '건너뛰기';
+
+  @override
+  String get tutorialStep1 => '모양을 탭하여 선택하세요';
+  @override
+  String get tutorialStep2 => '그리드를 탭하여 배치를 미리보기';
+  @override
+  String get tutorialStep3 => '다시 탭하여 배치! 가득 찬 줄은 자동으로 지워집니다.';
+  @override
+  String get tutorialGotIt => '알겠어요!';
 }

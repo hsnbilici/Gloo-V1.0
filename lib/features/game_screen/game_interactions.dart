@@ -39,6 +39,10 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   set undoEffect(({List<(int, int)> cells, int key})? value);
   int get undoFxKey;
   set undoFxKey(int value);
+  bool get tutorialActive;
+  set tutorialActive(bool value);
+  int get tutorialStep;
+  set tutorialStep(int value);
   void refillHand();
   void showToast(String msg);
 
@@ -60,6 +64,11 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       previewValid = false;
       previewAnchor = null;
     });
+
+    // Advance tutorial from step 0 (select shape) to step 1 (tap grid)
+    if (tutorialActive && tutorialStep == 0 && selectedSlot != null) {
+      setState(() => tutorialStep = 1);
+    }
   }
 
   void onCellHover(int row, int col) {
@@ -112,6 +121,10 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
         previewCells = cells.toSet();
         previewValid = canPlace;
         previewAnchor = (ar, ac);
+        // Advance tutorial from step 1 (tap grid) to step 2 (tap again to place)
+        if (tutorialActive && tutorialStep == 1) {
+          tutorialStep = 2;
+        }
       });
       return;
     }
@@ -125,6 +138,15 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     ref
         .read(gameProvider(widget.mode).notifier)
         .updateFill(game.gridManager.filledCells);
+
+    // Complete tutorial after placing piece on step 2
+    if (tutorialActive && tutorialStep == 2) {
+      tutorialActive = false;
+      tutorialStep = -1;
+      ref
+          .read(localRepositoryProvider.future)
+          .then((repo) => repo.setTutorialDone());
+    }
 
     final feedbackCx = ac + (shape.colCount - 1) / 2.0;
     final feedbackCy = ar + (shape.rowCount - 1) / 2.0;

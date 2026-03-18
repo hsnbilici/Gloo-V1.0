@@ -422,4 +422,13 @@ class StringsDe extends AppStrings {
   String get sharePromptShare => 'Teilen';
   @override
   String get sharePromptSkip => 'Überspringen';
+
+  @override
+  String get tutorialStep1 => 'Tippe auf eine Form, um sie auszuwählen';
+  @override
+  String get tutorialStep2 => 'Tippe auf das Raster für eine Vorschau';
+  @override
+  String get tutorialStep3 => 'Nochmal tippen zum Platzieren! Volle Reihen werden gelöscht.';
+  @override
+  String get tutorialGotIt => 'Verstanden!';
 }

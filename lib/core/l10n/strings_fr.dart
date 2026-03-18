@@ -419,4 +419,13 @@ class StringsFr extends AppStrings {
   String get sharePromptShare => 'Partager';
   @override
   String get sharePromptSkip => 'Ignorer';
+
+  @override
+  String get tutorialStep1 => 'Appuyez sur une forme pour la sélectionner';
+  @override
+  String get tutorialStep2 => 'Appuyez sur la grille pour prévisualiser';
+  @override
+  String get tutorialStep3 => 'Appuyez à nouveau pour placer ! Les lignes pleines sont supprimées.';
+  @override
+  String get tutorialGotIt => 'Compris !';
 }

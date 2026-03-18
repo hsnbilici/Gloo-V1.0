@@ -416,4 +416,13 @@ class StringsJa extends AppStrings {
   String get sharePromptShare => 'シェア';
   @override
   String get sharePromptSkip => 'スキップ';
+
+  @override
+  String get tutorialStep1 => 'シェイプをタップして選択';
+  @override
+  String get tutorialStep2 => 'グリッドをタップして配置をプレビュー';
+  @override
+  String get tutorialStep3 => 'もう一度タップで配置！列が揃うと消えます。';
+  @override
+  String get tutorialGotIt => 'わかった！';
 }

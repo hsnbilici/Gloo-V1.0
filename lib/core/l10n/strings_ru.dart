@@ -423,4 +423,13 @@ class StringsRu extends AppStrings {
   String get sharePromptShare => 'Поделиться';
   @override
   String get sharePromptSkip => 'Пропустить';
+
+  @override
+  String get tutorialStep1 => 'Нажмите на фигуру, чтобы выбрать';
+  @override
+  String get tutorialStep2 => 'Нажмите на сетку для предпросмотра';
+  @override
+  String get tutorialStep3 => 'Нажмите ещё раз, чтобы поставить! Полные линии очищаются.';
+  @override
+  String get tutorialGotIt => 'Понятно!';
 }

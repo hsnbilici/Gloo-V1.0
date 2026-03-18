@@ -416,4 +416,13 @@ class StringsEn extends AppStrings {
   String get sharePromptShare => 'Share';
   @override
   String get sharePromptSkip => 'Skip';
+
+  @override
+  String get tutorialStep1 => 'Tap a shape to select it';
+  @override
+  String get tutorialStep2 => 'Tap the grid to preview placement';
+  @override
+  String get tutorialStep3 => 'Tap again to place! Lines clear when full.';
+  @override
+  String get tutorialGotIt => 'Got it!';
 }

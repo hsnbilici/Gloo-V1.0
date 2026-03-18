@@ -49,6 +49,12 @@ class LocalRepository {
     await _prefs.setBool('onboarding_done', true);
   }
 
+  bool getTutorialDone() => _prefs.getBool('tutorial_done') ?? false;
+
+  Future<void> setTutorialDone() async {
+    await _prefs.setBool('tutorial_done', true);
+  }
+
   bool getColorblindPromptShown() =>
       _prefs.getBool('colorblind_prompt_shown') ?? false;
 

@@ -23,6 +23,7 @@ import '../../viral/clip_recorder.dart';
 import '../../viral/share_manager.dart';
 import 'game_background.dart';
 import 'share_prompt_dialog.dart';
+import 'tutorial_overlay.dart';
 import 'game_cell_widget.dart';
 import 'game_dialogs.dart';
 import 'game_duel_controller.dart';
@@ -166,6 +167,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   set epicComboCount(int value) => _epicComboCount = value;
 
+  // ─── Tutorial state ──────────────────────────────────────────────
+  @override
+  bool tutorialActive = false;
+  @override
+  int tutorialStep = -1; // -1 = no tutorial, 0/1/2 = active steps
+
   // ─── PvP Duel controller ──────────────────────────────────────────
   @override
   GameDuelController? duelController;
@@ -196,6 +203,18 @@ class _GameScreenState extends ConsumerState<GameScreen>
     ref.read(analyticsServiceProvider).logGameStart(mode: widget.mode.name);
 
     setupCallbacks();
+
+    // Check if tutorial should be shown (first game only, classic mode)
+    if (widget.mode == GameMode.classic) {
+      ref.read(localRepositoryProvider.future).then((repo) {
+        if (!repo.getTutorialDone() && mounted) {
+          setState(() {
+            tutorialStep = 0;
+            tutorialActive = true;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -259,6 +278,39 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 onDismiss: () => setState(() => activePowerUpEffect = null),
               ),
             ),
+          if (tutorialActive && tutorialStep >= 0) ...[
+            // Semi-transparent overlay
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.3),
+                ),
+              ),
+            ),
+            Builder(builder: (context) {
+              final l = ref.read(stringsProvider);
+              final messages = [
+                l.tutorialStep1,
+                l.tutorialStep2,
+                l.tutorialStep3,
+              ];
+              return TutorialOverlay(
+                step: tutorialStep,
+                message: messages[tutorialStep],
+                pointDown: tutorialStep == 0,
+                dismissLabel: tutorialStep == 2 ? l.tutorialGotIt : null,
+                onDismiss: () {
+                  setState(() {
+                    tutorialActive = false;
+                    tutorialStep = -1;
+                  });
+                  ref
+                      .read(localRepositoryProvider.future)
+                      .then((repo) => repo.setTutorialDone());
+                },
+              );
+            }),
+          ],
           if (_toastMsg != null)
             Positioned(
               bottom: 156,

@@ -423,4 +423,13 @@ class StringsEs extends AppStrings {
   String get sharePromptShare => 'Compartir';
   @override
   String get sharePromptSkip => 'Omitir';
+
+  @override
+  String get tutorialStep1 => 'Toca una forma para seleccionarla';
+  @override
+  String get tutorialStep2 => 'Toca la cuadrícula para previsualizar';
+  @override
+  String get tutorialStep3 => '¡Toca de nuevo para colocar! Las líneas llenas se eliminan.';
+  @override
+  String get tutorialGotIt => '¡Entendido!';
 }

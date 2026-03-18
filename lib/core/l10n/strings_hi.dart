@@ -418,4 +418,13 @@ class StringsHi extends AppStrings {
   String get sharePromptShare => 'शेयर';
   @override
   String get sharePromptSkip => 'छोड़ें';
+
+  @override
+  String get tutorialStep1 => 'चुनने के लिए किसी आकृति पर टैप करें';
+  @override
+  String get tutorialStep2 => 'पूर्वावलोकन के लिए ग्रिड पर टैप करें';
+  @override
+  String get tutorialStep3 => 'रखने के लिए फिर से टैप करें! भरी हुई पंक्तियाँ अपने-आप हट जाती हैं।';
+  @override
+  String get tutorialGotIt => 'समझ गया!';
 }

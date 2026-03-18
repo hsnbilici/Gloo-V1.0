@@ -420,4 +420,13 @@ class StringsAr extends AppStrings {
   String get sharePromptShare => 'مشاركة';
   @override
   String get sharePromptSkip => 'تخطي';
+
+  @override
+  String get tutorialStep1 => 'انقر على شكل لاختياره';
+  @override
+  String get tutorialStep2 => 'انقر على الشبكة لمعاينة الموضع';
+  @override
+  String get tutorialStep3 => 'انقر مرة أخرى للوضع! الصفوف الممتلئة تُمسح تلقائيًا.';
+  @override
+  String get tutorialGotIt => 'فهمت!';
 }

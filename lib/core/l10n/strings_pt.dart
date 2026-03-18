@@ -418,4 +418,13 @@ class StringsPt extends AppStrings {
   String get sharePromptShare => 'Compartilhar';
   @override
   String get sharePromptSkip => 'Pular';
+
+  @override
+  String get tutorialStep1 => 'Toque numa forma para selecionar';
+  @override
+  String get tutorialStep2 => 'Toque na grelha para pré-visualizar';
+  @override
+  String get tutorialStep3 => 'Toque novamente para colocar! Linhas cheias são eliminadas.';
+  @override
+  String get tutorialGotIt => 'Entendi!';
 }

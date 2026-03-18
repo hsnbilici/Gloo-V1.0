@@ -413,4 +413,13 @@ class StringsZh extends AppStrings {
   String get sharePromptShare => '分享';
   @override
   String get sharePromptSkip => '跳过';
+
+  @override
+  String get tutorialStep1 => '点击选择一个形状';
+  @override
+  String get tutorialStep2 => '点击网格预览放置位置';
+  @override
+  String get tutorialStep3 => '再次点击放置！填满的行会自动消除。';
+  @override
+  String get tutorialGotIt => '知道了！';
 }

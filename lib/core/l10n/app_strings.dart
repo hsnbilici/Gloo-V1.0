@@ -266,6 +266,12 @@ abstract class AppStrings {
   String get sharePromptShare;
   String get sharePromptSkip;
 
+  // İlk oyun öğreticisi
+  String get tutorialStep1;
+  String get tutorialStep2;
+  String get tutorialStep3;
+  String get tutorialGotIt;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

@@ -417,4 +417,13 @@ class StringsTr extends AppStrings {
   String get sharePromptShare => 'Paylaş';
   @override
   String get sharePromptSkip => 'Geç';
+
+  @override
+  String get tutorialStep1 => 'Bir şekle dokunarak seçin';
+  @override
+  String get tutorialStep2 => 'Izgaraya dokunarak önizleme yapın';
+  @override
+  String get tutorialStep3 => 'Yerleştirmek için tekrar dokunun! Dolu satırlar otomatik temizlenir.';
+  @override
+  String get tutorialGotIt => 'Anladım!';
 }
