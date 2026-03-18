@@ -40,6 +40,12 @@ class AdManager {
   RewardedAd? _rewardedAd;
   BannerAd? _bannerAd;
 
+  // ── AdMob etkinlik bayrağı ───────────────────────────────────────────────
+  // --dart-define=AD_ENABLED=true ile aktif edilir. Varsayılan: devre dışı.
+  // Gerçek AdMob ID'ler alındığında CI/local build'da bu flag açılır.
+  static const _adEnabled =
+      bool.fromEnvironment('AD_ENABLED', defaultValue: false);
+
   // ── Reklam ID'leri ───────────────────────────────────────────────────────
   // --dart-define ile inject edilir. Boş ise test ID kullanılır.
   static const _bannerIdIos = String.fromEnvironment('AD_BANNER_IOS');
@@ -88,7 +94,7 @@ class AdManager {
 
   // ── Init ──────────────────────────────────────────────────────────────────
   Future<void> initialize() async {
-    if (kIsWeb || _initialized) return;
+    if (kIsWeb || _initialized || !_adEnabled) return;
     await MobileAds.instance.initialize();
     _initialized = true;
     _loadInterstitial();
