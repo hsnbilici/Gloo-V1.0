@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/pvp/matchmaking.dart';
@@ -125,6 +126,8 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
   @override
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
@@ -132,12 +135,15 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
           // Arkaplan
           const _PvpBackground(),
           SafeArea(
-            child: Column(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: Column(
               children: [
                 const SizedBox(height: 12),
                 // Ust bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: Row(
                     children: [
                       Semantics(
@@ -225,6 +231,8 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                   ),
                 ),
               ],
+                ),
+              ),
             ),
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/levels/level_progression.dart';
@@ -33,6 +34,8 @@ class LevelSelectScreen extends ConsumerWidget {
     final maxCompleted = repoAsync.valueOrNull?.getMaxCompletedLevel() ?? 0;
     final totalLevels = LevelProgression.totalPredefinedLevels;
     final dir = Directionality.of(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -41,12 +44,15 @@ class LevelSelectScreen extends ConsumerWidget {
           // Arkaplan
           const _LevelSelectBackground(),
           SafeArea(
-            child: Column(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: Column(
               children: [
                 const SizedBox(height: 12),
                 // Ust bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: Row(
                     children: [
                       Semantics(
@@ -120,7 +126,7 @@ class LevelSelectScreen extends ConsumerWidget {
                 Expanded(
                   child: ListView.builder(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: hPadding),
                     itemCount: (totalLevels / 10).ceil(),
                     itemBuilder: (context, sectionIndex) {
                       final startLevel = sectionIndex * 10 + 1;
@@ -142,6 +148,8 @@ class LevelSelectScreen extends ConsumerWidget {
                   ),
                 ),
               ],
+                ),
+              ),
             ),
           ),
         ],
@@ -173,6 +181,8 @@ class _LevelSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final columns = responsiveColumns(screenWidth, phone: 5, tablet: 7, desktop: 10);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -209,8 +219,8 @@ class _LevelSection extends StatelessWidget {
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: columns,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),

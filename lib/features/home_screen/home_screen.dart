@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../data/local/local_repository.dart';
 import '../../core/models/game_mode.dart';
 import '../../providers/audio_provider.dart';
@@ -50,37 +51,91 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         context.go('/onboarding');
         return;
       }
-      // 2) Streak seri ödülü kontrolü
-      final streak = await repo.checkAndUpdateStreak();
-      final lastRewardDay = repo.getLastStreakRewardDay();
-      final eligibleTier = GameConstants.streakRewards.keys
-          .where((day) => streak >= day && day > lastRewardDay)
-          .fold<int>(0, (best, day) => day > best ? day : best);
-      if (eligibleTier > 0 && mounted) {
-        final reward = GameConstants.streakRewards[eligibleTier]!;
-        await _showStreakRewardDialog(streak: eligibleTier, reward: reward);
-        // Persist after dialog so user sees the reward before it's credited
-        await repo.setLastStreakRewardDay(eligibleTier);
-        final currentGelOzu = await repo.getGelOzu();
-        await repo.saveGelOzu(currentGelOzu + reward);
-      }
-      if (!mounted) return;
-      // 3) GDPR consent henüz gösterilmemişse dialog aç
-      if (!repo.getConsentShown()) {
+      // 1.5) COPPA yaş kapısı — henüz doğrulanmamışsa dialog göster
+      if (!repo.getAgeVerified()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showConsentDialog(repo);
+          if (mounted) _showAgeGateDialog(repo);
         });
         return;
       }
-      // 4) iOS ATT izni iste (consent kabul edildiyse)
-      _requestATTIfNeeded();
-      // 5) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
-      if (!repo.getColorblindPromptShown()) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showColorblindDialog(repo);
-        });
+      // Çocuk kullanıcı kısıtlamaları (daha önce doğrulanmış)
+      if (repo.getIsChild()) {
+        _applyChildRestrictions();
       }
+      await _continueStartupFlow(repo);
     });
+  }
+
+  Future<void> _continueStartupFlow(LocalRepository repo) async {
+    if (!mounted) return;
+    // 2) Streak seri ödülü kontrolü
+    final streak = await repo.checkAndUpdateStreak();
+    final lastRewardDay = repo.getLastStreakRewardDay();
+    final eligibleTier = GameConstants.streakRewards.keys
+        .where((day) => streak >= day && day > lastRewardDay)
+        .fold<int>(0, (best, day) => day > best ? day : best);
+    if (eligibleTier > 0 && mounted) {
+      final reward = GameConstants.streakRewards[eligibleTier]!;
+      await _showStreakRewardDialog(streak: eligibleTier, reward: reward);
+      await repo.setLastStreakRewardDay(eligibleTier);
+      final currentGelOzu = await repo.getGelOzu();
+      await repo.saveGelOzu(currentGelOzu + reward);
+    }
+    if (!mounted) return;
+    // 3) GDPR consent henüz gösterilmemişse dialog aç
+    if (!repo.getConsentShown()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _showConsentDialog(repo);
+      });
+      return;
+    }
+    // 4) iOS ATT izni iste (consent kabul edildiyse)
+    _requestATTIfNeeded();
+    // 5) Renk körü prompt henüz gösterilmemişse tek seferlik dialog
+    if (!repo.getColorblindPromptShown()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _showColorblindDialog(repo);
+      });
+    }
+  }
+
+  Future<void> _showAgeGateDialog(LocalRepository repo) async {
+    final l = ref.read(stringsProvider);
+    if (!mounted) return;
+    final isChild = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withValues(alpha: 0.65),
+      builder: (ctx) => AgeGateDialog(
+        title: l.ageGateTitle,
+        message: l.ageGateMessage,
+        confirmLabel: l.ageGateConfirm,
+        under13Label: l.ageGateUnder13,
+      ),
+    );
+    final child = isChild == true;
+    await repo.setAgeVerified(isChild: child);
+    if (child) _applyChildRestrictions();
+    // Devam: streak + consent + diğer kontroller
+    if (mounted) {
+      // initState akışını yeniden başlat (age gate sonrası)
+      ref.read(localRepositoryProvider.future).then((r) async {
+        if (!mounted) return;
+        await _continueStartupFlow(r);
+      });
+    }
+  }
+
+  void _applyChildRestrictions() {
+    // COPPA: 13 yaş altı → reklam yok, analytics yok
+    ref.read(adManagerProvider).setAdsRemoved(true);
+    ref.read(analyticsServiceProvider).setEnabled(false);
+    ref
+        .read(appSettingsProvider.notifier)
+        .setAdsRemoved(removed: true);
+    ref
+        .read(appSettingsProvider.notifier)
+        .setAnalyticsEnabled(enabled: false);
   }
 
   Future<void> _showConsentDialog(LocalRepository repo) async {
@@ -170,16 +225,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final l = ref.watch(stringsProvider);
     final streak = ref.watch(streakProvider).valueOrNull ?? 0;
 
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
         children: [
           const DeepBackground(),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: Column(
+                    children: [
                   const SizedBox(height: 52),
                   GelLogo(subtitle: l.homeSubtitle)
                       .animate()
@@ -354,7 +415,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       .fadeIn(duration: 400.ms)
                       .slideY(begin: 0.2, end: 0, duration: 400.ms),
                   const SizedBox(height: 28),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

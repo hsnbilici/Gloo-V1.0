@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
@@ -75,17 +76,22 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
   @override
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
         children: [
           const CharBackground(),
           SafeArea(
-            child: Column(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: Column(
               children: [
                 const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -167,7 +173,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                   child: _loaded
                       ? ListView(
                           physics: const BouncingScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: hPadding),
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(bottom: 12),
@@ -205,6 +211,8 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                         ),
                 ),
               ],
+                ),
+              ),
             ),
           ),
         ],

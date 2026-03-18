@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../data/local/local_repository.dart';
 import '../shared/glow_orb.dart';
@@ -30,6 +31,8 @@ class DailyPuzzleScreen extends ConsumerWidget {
     final l = ref.watch(stringsProvider);
     final repoAsync = ref.watch(localRepositoryProvider);
 
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       backgroundColor: kBgDark,
       body: Stack(
@@ -45,13 +48,17 @@ class DailyPuzzleScreen extends ConsumerWidget {
             child: GlowOrb(size: 260, color: kColorZen, opacity: 0.06),
           ),
           SafeArea(
-            child: repoAsync.when(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: repoAsync.when(
               data: (repo) => _DailyContent(
                 l: l,
                 repo: repo,
                 accent: kCyan,
                 dateLabel: _dateLabel(DateTime.now()),
                 puzzleNumber: _puzzleNumber(DateTime.now()),
+                hPadding: responsiveHPadding(screenWidth),
               ),
               loading: () => const Center(
                 child: CircularProgressIndicator(color: kCyan),
@@ -60,6 +67,8 @@ class DailyPuzzleScreen extends ConsumerWidget {
                 child: Text(
                   '...',
                   style: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
+                ),
+              ),
                 ),
               ),
             ),
@@ -77,6 +86,7 @@ class _DailyContent extends StatelessWidget {
     required this.accent,
     required this.dateLabel,
     required this.puzzleNumber,
+    required this.hPadding,
   });
 
   final dynamic l;
@@ -84,6 +94,7 @@ class _DailyContent extends StatelessWidget {
   final Color accent;
   final String dateLabel;
   final int puzzleNumber;
+  final double hPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +118,7 @@ class _DailyContent extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
+            padding: EdgeInsets.symmetric(horizontal: hPadding),
             child: Column(
               children: [
                 const SizedBox(height: 24),

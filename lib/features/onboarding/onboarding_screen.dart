@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/responsive.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
@@ -74,6 +75,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     final isLast = _page == _kTotalPages - 1;
     final stepColor = steps[_page].color;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
 
     return Scaffold(
       backgroundColor: kBgDark,
@@ -101,12 +104,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             child: GlowOrb(size: 220, color: kCyan, opacity: 0.06),
           ),
           SafeArea(
-            child: Column(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                child: Column(
               children: [
                 // Üst bar: Gloo logosu + Geç butonu
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -159,8 +164,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
                 // Alt: nokta göstergesi + buton
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: hPadding,
                     vertical: 32,
                   ),
                   child: Column(
@@ -247,6 +252,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                 ),
               ],
+                ),
+              ),
             ),
           ),
         ],
@@ -280,8 +287,9 @@ class _StepPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36),
+      padding: EdgeInsets.symmetric(horizontal: hPadding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

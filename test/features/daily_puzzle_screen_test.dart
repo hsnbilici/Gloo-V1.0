@@ -40,7 +40,7 @@ void main() {
       await tester.pumpWidget(buildDailyPuzzle());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.arrow_back_ios_new_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
     });
 
     testWidgets('shows play button when not completed', (tester) async {
