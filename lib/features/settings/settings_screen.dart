@@ -92,16 +92,17 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorZen,
                 onChanged: (_) => notifier.toggleHaptics(),
               ),
-              SectionHeader(
-                  title: l.settingsSectionAccessibility,
-                  color: kColorTimeTrial),
-              SettingsToggleTile(
-                label: l.settingsColorBlind,
-                icon: Icons.palette_outlined,
-                value: audio.colorBlindMode,
-                accentColor: kColorTimeTrial,
-                onChanged: (_) => notifier.toggleColorBlindMode(),
-              ),
+              // Renk körü modu devre dışı — kod korunuyor, UI'dan gizlendi.
+              // SectionHeader(
+              //     title: l.settingsSectionAccessibility,
+              //     color: kColorTimeTrial),
+              // SettingsToggleTile(
+              //   label: l.settingsColorBlind,
+              //   icon: Icons.palette_outlined,
+              //   value: audio.colorBlindMode,
+              //   accentColor: kColorTimeTrial,
+              //   onChanged: (_) => notifier.toggleColorBlindMode(),
+              // ),
               SectionHeader(
                   title: l.settingsSectionLanguage, color: kColorChef),
               LanguageTile(

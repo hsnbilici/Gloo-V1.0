@@ -205,6 +205,87 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     }
   }
 
+  // ─── Drag-and-drop handler'ları ────────────────────────────────────────
+
+  void onDragStarted(int index) {
+    setState(() {
+      if (activePowerUpMode != null) activePowerUpMode = null;
+      selectedSlot = index;
+      previewCells = {};
+      previewValid = false;
+      previewAnchor = null;
+    });
+  }
+
+  void onDragOver(int row, int col) {
+    onCellHover(row, col);
+  }
+
+  void onDragDrop(int row, int col) {
+    if (selectedSlot == null) return;
+    final slot = hand[selectedSlot!];
+    if (slot == null) return;
+
+    final (shape, color) = slot;
+    final (ar, ac) = clampAnchor(shape, row, col);
+    final cells = shape.at(ar, ac);
+    final canPlace = game.gridManager.canPlace(cells, color);
+
+    if (!canPlace) {
+      setState(() {
+        previewCells = {};
+        previewValid = false;
+        previewAnchor = null;
+        selectedSlot = null;
+      });
+      return;
+    }
+
+    game.placePiece(cells, color);
+    ref
+        .read(gameProvider(widget.mode).notifier)
+        .updateFill(game.gridManager.filledCells);
+
+    final feedbackCx = ac + (shape.colCount - 1) / 2.0;
+    final feedbackCy = ar + (shape.rowCount - 1) / 2.0;
+
+    setState(() {
+      hand[selectedSlot!] = null;
+      selectedSlot = null;
+      previewCells = {};
+      previewValid = false;
+      previewAnchor = null;
+      placeFeedback = (
+        cx: feedbackCx,
+        cy: feedbackCy,
+        count: cells.length,
+        color: color.displayColor,
+        key: ++feedbackKeyIndex,
+      );
+      recentlyPlacedCells = cells.toSet();
+      waveKey++;
+      if (hand.every((h) => h == null)) refillHand();
+    });
+
+    waveClearTimer?.cancel();
+    waveClearTimer = Timer(const Duration(milliseconds: 480), () {
+      if (mounted) setState(() => recentlyPlacedCells = {});
+    });
+
+    game.checkGameOver(
+      hand.where((s) => s != null).map((s) => s!.$1).toList(),
+    );
+  }
+
+  void onDragCancelled(int index) {
+    setState(() {
+      selectedSlot = null;
+      previewCells = {};
+      previewValid = false;
+      previewAnchor = null;
+    });
+  }
+
   (int, int) clampAnchor(GelShape shape, int row, int col) {
     final maxRow = game.gridManager.rows - shape.rowCount;
     final maxCol = game.gridManager.cols - shape.colCount;

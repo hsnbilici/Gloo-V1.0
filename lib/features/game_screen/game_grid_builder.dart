@@ -36,6 +36,12 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
   void onCellHover(int row, int col);
   void onPowerUpTap(PowerUpType type);
   void onSlotTap(int index);
+  void onDragStarted(int index);
+  void onDragOver(int row, int col);
+  void onDragDrop(int row, int col);
+  void onDragCancelled(int index);
+
+  final GlobalKey _gridKey = GlobalKey();
 
   Widget buildGrid() {
     final colorBlindMode = ref.watch(appSettingsProvider).colorBlindMode;
@@ -74,7 +80,38 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                 clipBehavior: Clip.none,
                 children: [
                   RepaintBoundary(
-                      child: SizedBox(
+                      child: DragTarget<int>(
+                    onWillAcceptWithDetails: (_) => selectedSlot != null,
+                    onMove: (details) {
+                      final box = _gridKey.currentContext?.findRenderObject()
+                          as RenderBox?;
+                      if (box == null) return;
+                      final local = box.globalToLocal(details.offset);
+                      final c =
+                          (local.dx / (cell + gap)).floor().clamp(0, cols - 1);
+                      final r =
+                          (local.dy / (cell + gap)).floor().clamp(0, rows - 1);
+                      onDragOver(r, c);
+                    },
+                    onAcceptWithDetails: (details) {
+                      final box = _gridKey.currentContext?.findRenderObject()
+                          as RenderBox?;
+                      if (box == null) return;
+                      final local = box.globalToLocal(details.offset);
+                      final c =
+                          (local.dx / (cell + gap)).floor().clamp(0, cols - 1);
+                      final r =
+                          (local.dy / (cell + gap)).floor().clamp(0, rows - 1);
+                      onDragDrop(r, c);
+                    },
+                    onLeave: (_) => setState(() {
+                      previewCells = {};
+                      previewValid = false;
+                      previewAnchor = null;
+                    }),
+                    builder: (context, candidateData, rejectedData) {
+                      return SizedBox(
+                    key: _gridKey,
                     width: gridW,
                     height: gridH,
                     child: MouseRegion(
@@ -121,6 +158,8 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                         },
                       ),
                     ),
+                  );
+                    },
                   )),
                   // Hucre patlamasi overlay'leri
                   ...burstCells.map((burst) {
@@ -220,6 +259,10 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               hand: hand,
               selectedSlot: selectedSlot,
               onSlotTap: onSlotTap,
+              onDragStarted: onDragStarted,
+              onDragEnd: (index, wasAccepted) {
+                if (!wasAccepted) onDragCancelled(index);
+              },
             ),
             const SizedBox(height: 16),
           ],

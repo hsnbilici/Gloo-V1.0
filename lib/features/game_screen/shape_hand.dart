@@ -12,11 +12,15 @@ class ShapeHand extends StatelessWidget {
     required this.hand,
     required this.selectedSlot,
     required this.onSlotTap,
+    this.onDragStarted,
+    this.onDragEnd,
   });
 
   final List<(GelShape, GelColor)?> hand;
   final int? selectedSlot;
   final void Function(int) onSlotTap;
+  final void Function(int index)? onDragStarted;
+  final void Function(int index, bool wasAccepted)? onDragEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -51,36 +55,66 @@ class ShapeHand extends StatelessWidget {
           }
 
           final (shape, color) = slot;
+          final slotWidget = AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? color.displayColor.withValues(alpha: 0.18)
+                  : Colors.white.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+              border: Border.all(
+                color: isSelected
+                    ? color.displayColor.withValues(alpha: 0.85)
+                    : Colors.white.withValues(alpha: 0.12),
+                width: isSelected ? 2 : 1,
+              ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: color.displayColor.withValues(alpha: 0.35),
+                        blurRadius: 14,
+                        spreadRadius: 2,
+                      )
+                    ]
+                  : null,
+            ),
+            child: Center(
+              child: ShapePreview(shape: shape, color: color),
+            ),
+          );
+
           return GestureDetector(
             onTap: () => onSlotTap(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? color.displayColor.withValues(alpha: 0.18)
-                    : Colors.white.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                border: Border.all(
-                  color: isSelected
-                      ? color.displayColor.withValues(alpha: 0.85)
-                      : Colors.white.withValues(alpha: 0.12),
-                  width: isSelected ? 2 : 1,
+            child: Draggable<int>(
+              data: i,
+              onDragStarted: () => onDragStarted?.call(i),
+              onDragEnd: (details) =>
+                  onDragEnd?.call(i, details.wasAccepted),
+              feedback: Material(
+                color: Colors.transparent,
+                child: Opacity(
+                  opacity: 0.75,
+                  child: Transform.scale(
+                    scale: 1.8,
+                    child: ShapePreview(shape: shape, color: color),
+                  ),
                 ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: color.displayColor.withValues(alpha: 0.35),
-                          blurRadius: 14,
-                          spreadRadius: 2,
-                        )
-                      ]
-                    : null,
               ),
-              child: Center(
-                child: ShapePreview(shape: shape, color: color),
+              childWhenDragging: Container(
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: color.displayColor.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  border: Border.all(
+                    color: color.displayColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
+                ),
               ),
+              child: slotWidget,
             ),
           );
         }),
