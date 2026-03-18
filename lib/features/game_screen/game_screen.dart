@@ -148,6 +148,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
   bool showNearMissRescueBadge = false;
   @override
   bool showHighScoreBadge = false;
+
+  // ─── Konfeti efekti ────────────────────────────────────────────────
+  @override
+  bool showConfetti = false;
+  @override
+  int confettiKey = 0;
   bool _secondChanceUsed = false;
 
   // ─── PvP Duel controller ──────────────────────────────────────────
@@ -289,6 +295,13 @@ class _GameScreenState extends ConsumerState<GameScreen>
                     },
                   );
                 },
+              ),
+            ),
+          if (showConfetti)
+            Positioned.fill(
+              child: ConfettiEffect(
+                key: ValueKey(confettiKey),
+                onDismiss: () => setState(() => showConfetti = false),
               ),
             ),
         ],

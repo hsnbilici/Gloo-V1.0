@@ -26,6 +26,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   set showNearMissRescueBadge(bool value);
   bool get showHighScoreBadge;
   set showHighScoreBadge(bool value);
+  bool get showConfetti;
+  set showConfetti(bool value);
+  int get confettiKey;
+  set confettiKey(int value);
   int? get selectedSlot;
   set selectedSlot(int? value);
   Set<(int, int)> get previewCells;
@@ -62,6 +66,12 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
               )) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) setState(() => showHighScoreBadge = true);
+        });
+      }
+      if (game.isNewHighScore && !showConfetti) {
+        setState(() {
+          showConfetti = true;
+          confettiKey++;
         });
       }
     };
