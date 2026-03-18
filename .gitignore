@@ -18,8 +18,10 @@ build/
 .vscode/
 *.iml
 
-# Claude Code
+# Claude Code & Dev Docs
 .claude/
+CLAUDE.md
+_dev/
 
 # macOS
 .DS_Store
