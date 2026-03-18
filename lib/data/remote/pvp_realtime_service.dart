@@ -30,6 +30,13 @@ class PvpRealtimeService {
   Timer? _matchmakingTimeout;
   Timer? _evaluateDebounce;
 
+  // ── Reconnection ─────────────────────────────────────────────────────
+  String? _activeDuelMatchId;
+  Timer? _reconnectTimer;
+  int _reconnectAttempts = 0;
+  static const _maxReconnectAttempts = 5;
+  static const _baseReconnectDelay = Duration(seconds: 1);
+
   // Duello stream controller'lari — dispose'da kapatilir
   final List<StreamController<dynamic>> _duelControllers = [];
 
@@ -173,15 +180,54 @@ class PvpRealtimeService {
 
   // ── Duello Odasi (Broadcast) ──────────────────────────────────────────
 
-  /// Duello odasina baglan.
+  /// Duello odasina baglan. Baglanti koparsa otomatik yeniden baglanir.
   Future<void> joinDuelRoom(String matchId) async {
     if (!SupabaseConfig.isConfigured) return;
+    _activeDuelMatchId = matchId;
+    _reconnectAttempts = 0;
+    _subscribeDuelChannel(matchId);
+  }
+
+  void _subscribeDuelChannel(String matchId) {
     _duelChannel = _client.channel(
       'duel:$matchId',
       opts: const RealtimeChannelConfig(self: false),
     );
 
-    _duelChannel!.subscribe();
+    _duelChannel!.subscribe((status, [error]) {
+      if (status == RealtimeSubscribeStatus.channelError ||
+          status == RealtimeSubscribeStatus.timedOut) {
+        if (kDebugMode) {
+          debugPrint(
+              'PvpRealtimeService: duel channel $status, attempting reconnect');
+        }
+        _scheduleReconnect(matchId);
+      }
+      if (status == RealtimeSubscribeStatus.subscribed) {
+        _reconnectAttempts = 0; // basarili baglanti → sifirla
+      }
+    });
+  }
+
+  void _scheduleReconnect(String matchId) {
+    if (_activeDuelMatchId != matchId) return; // artik aktif degil
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
+      if (kDebugMode) {
+        debugPrint(
+            'PvpRealtimeService: max reconnect attempts reached, giving up');
+      }
+      return;
+    }
+
+    _reconnectTimer?.cancel();
+    final delay = _baseReconnectDelay * pow(2, _reconnectAttempts);
+    _reconnectAttempts++;
+
+    _reconnectTimer = Timer(delay, () async {
+      if (_activeDuelMatchId != matchId) return;
+      await _duelChannel?.unsubscribe();
+      _subscribeDuelChannel(matchId);
+    });
   }
 
   /// Skor guncelleme broadcast'i.
@@ -313,6 +359,10 @@ class PvpRealtimeService {
 
   /// Duello odasindan ayril ve temizle.
   Future<void> leaveDuelRoom(String matchId) async {
+    _activeDuelMatchId = null;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _reconnectAttempts = 0;
     _closeDuelControllers();
     await _duelChannel?.unsubscribe();
     _duelChannel = null;
@@ -330,6 +380,9 @@ class PvpRealtimeService {
   Future<void> dispose() async {
     _evaluateDebounce?.cancel();
     _evaluateDebounce = null;
+    _reconnectTimer?.cancel();
+    _reconnectTimer = null;
+    _activeDuelMatchId = null;
     await cancelMatchmaking();
     _closeDuelControllers();
     if (_duelChannel != null) {
