@@ -107,7 +107,9 @@ jobs:
           echo "$IOS_PROFILE_BASE64" | base64 --decode -o "$PP_PATH"
 
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp "$PP_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/
+          # Xcode looks up profiles by UUID filename
+          PP_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin <<< "$(/usr/bin/security cms -D -i "$PP_PATH")")
+          cp "$PP_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/${PP_UUID}.mobileprovision"
 
       - name: Build iOS release
         env:
