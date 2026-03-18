@@ -96,9 +96,12 @@ class _BombExplosionEffectState extends State<BombExplosionEffect>
     _ctrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 650),
-    )..forward();
+    );
     _ctrl.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) widget.onDismiss();
+    });
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (mounted) _ctrl.forward();
     });
   }
 
