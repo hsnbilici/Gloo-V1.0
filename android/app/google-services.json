@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "473072331709",
-    "project_id": "gloo-f7905",
-    "storage_bucket": "gloo-f7905.firebasestorage.app"
+    "project_number": "627599067905",
+    "project_id": "gloo-d3dd8",
+    "storage_bucket": "gloo-d3dd8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:473072331709:android:bac6c3d395677a9eaa80d4",
+        "mobilesdk_app_id": "1:627599067905:android:03d2a2448204960e0d6900",
         "android_client_info": {
           "package_name": "com.gloogame.app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC-8m-bPO7vv-7M_EHY1AitfMpPNa0HbDo"
+          "current_key": "AIzaSyBciIERz4RlH_TE7slB0Bww7ltN5TJZSbM"
         }
       ],
       "services": {

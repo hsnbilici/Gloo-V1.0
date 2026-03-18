@@ -59,11 +59,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           final matchId = state.uri.queryParameters['matchId'];
           final seed = int.tryParse(state.uri.queryParameters['seed'] ?? '');
           final isBot = state.uri.queryParameters['isBot'] == 'true';
+          final opponentElo = int.tryParse(
+              state.uri.queryParameters['opponentElo'] ?? '');
           return GameScreen(
             mode: GameMode.duel,
             duelMatchId: matchId,
             duelSeed: seed,
             duelIsBot: isBot,
+            duelOpponentElo: opponentElo,
           );
         },
       ),

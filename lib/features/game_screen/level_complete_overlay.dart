@@ -15,6 +15,8 @@ class LevelCompleteOverlay extends StatelessWidget {
     required this.nextLevelLabel,
     required this.levelListLabel,
     required this.mainMenuLabel,
+    required this.levelLabel,
+    required this.completedLabel,
   });
 
   final int score;
@@ -25,6 +27,8 @@ class LevelCompleteOverlay extends StatelessWidget {
   final String nextLevelLabel;
   final String levelListLabel;
   final String mainMenuLabel;
+  final String levelLabel;
+  final String completedLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class LevelCompleteOverlay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Seviye $levelId',
+              '$levelLabel $levelId',
               style: const TextStyle(
                 color: kMuted,
                 fontSize: 16,
@@ -43,9 +47,9 @@ class LevelCompleteOverlay extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'TAMAMLANDI!',
-              style: TextStyle(
+            Text(
+              completedLabel,
+              style: const TextStyle(
                 color: kColorChef,
                 fontSize: 32,
                 fontWeight: FontWeight.w900,

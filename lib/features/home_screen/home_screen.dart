@@ -262,7 +262,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ModeCard(
                             label: l.modeLevelName,
                             subtitle: l.modeLevelDesc,
-                            color: const Color(0xFFFF8C42),
+                            color: kOrange,
                             icon: Icons.map_rounded,
                             badgeLabel: l.newBadge,
                             onTap: () => context.go('/levels'),

@@ -1,3 +1,23 @@
+import 'package:flutter/material.dart';
+
+/// Ortak FadeTransition + ScaleTransition builder — dialog geçişlerinde kullanılır.
+Widget fadeScaleTransition(
+  BuildContext context,
+  Animation<double> anim,
+  Animation<double> _,
+  Widget? child,
+) {
+  return FadeTransition(
+    opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
+    child: ScaleTransition(
+      scale: Tween<double>(begin: 0.96, end: 1.0).animate(
+        CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
+      ),
+      child: child,
+    ),
+  );
+}
+
 abstract final class UIConstants {
   // ─── Border radius skalası ────────────────────────────────────────────────
   /// Dekoratif mini elementler: bölüm aksan çubuğu, bottom sheet tutamağı.

@@ -23,6 +23,7 @@ class GameOverOverlay extends ConsumerWidget {
     required this.onHome,
     this.showSecondChance = false,
     this.onSecondChance,
+    this.secondChanceLabel,
   });
 
   final int score;
@@ -34,13 +35,12 @@ class GameOverOverlay extends ConsumerWidget {
   final VoidCallback onHome;
   final bool showSecondChance;
   final VoidCallback? onSecondChance;
-
-  static Color modeColor(GameMode mode) => kModeColors[mode]!;
+  final String? secondChanceLabel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = ref.watch(stringsProvider);
-    final color = modeColor(mode);
+    final color = kModeColors[mode]!;
 
     final modeLabel = switch (mode) {
       GameMode.classic => l.gameOverModeClassic,
@@ -178,6 +178,7 @@ class GameOverOverlay extends ConsumerWidget {
                           color: color,
                           onTap: onSecondChance!,
                           watchAdLabel: l.watchAdLabel,
+                          secondChanceLabel: secondChanceLabel ?? l.secondChanceMoves,
                         )
                             .animate(delay: 500.ms)
                             .fadeIn(duration: 320.ms)

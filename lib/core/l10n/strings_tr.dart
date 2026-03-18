@@ -387,4 +387,9 @@ class StringsTr extends AppStrings {
   String get characterLabel => 'Karakter';
   @override
   String get seasonLabel => 'Sezon';
+
+  @override
+  String get completedLabel => 'TAMAMLANDI!';
+  @override
+  String get secondChanceMoves => '+3 Hamle';
 }

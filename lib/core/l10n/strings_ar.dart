@@ -390,4 +390,9 @@ class StringsAr extends AppStrings {
   String get characterLabel => 'شخصية';
   @override
   String get seasonLabel => 'موسم';
+
+  @override
+  String get completedLabel => 'مكتمل!';
+  @override
+  String get secondChanceMoves => '+3 حركات';
 }

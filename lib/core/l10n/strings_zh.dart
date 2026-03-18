@@ -383,4 +383,9 @@ class StringsZh extends AppStrings {
   String get characterLabel => '角色';
   @override
   String get seasonLabel => '赛季';
+
+  @override
+  String get completedLabel => '完成！';
+  @override
+  String get secondChanceMoves => '+3 步';
 }

@@ -389,4 +389,9 @@ class StringsFr extends AppStrings {
   String get characterLabel => 'Personnage';
   @override
   String get seasonLabel => 'Saison';
+
+  @override
+  String get completedLabel => 'TERMINÉ !';
+  @override
+  String get secondChanceMoves => '+3 coups';
 }

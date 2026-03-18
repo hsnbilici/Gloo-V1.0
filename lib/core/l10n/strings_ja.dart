@@ -386,4 +386,9 @@ class StringsJa extends AppStrings {
   String get characterLabel => 'キャラクター';
   @override
   String get seasonLabel => 'シーズン';
+
+  @override
+  String get completedLabel => 'クリア！';
+  @override
+  String get secondChanceMoves => '+3 手';
 }

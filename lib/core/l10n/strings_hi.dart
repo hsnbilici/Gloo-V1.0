@@ -388,4 +388,9 @@ class StringsHi extends AppStrings {
   String get characterLabel => 'चरित्र';
   @override
   String get seasonLabel => 'मौसम';
+
+  @override
+  String get completedLabel => 'पूरा हुआ!';
+  @override
+  String get secondChanceMoves => '+3 चालें';
 }

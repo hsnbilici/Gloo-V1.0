@@ -14,7 +14,6 @@ import '../../providers/user_provider.dart';
 class LevelSelectScreen extends ConsumerWidget {
   const LevelSelectScreen({super.key});
 
-  static const _kAccent = Color(0xFFFF8C42);
   static const _kLocked = Color(0xFF2A2A4E);
 
   static const _kSectionNames = [
@@ -70,13 +69,13 @@ class LevelSelectScreen extends ConsumerWidget {
                         child: Text(
                           'SEVIYELER',
                           style: TextStyle(
-                            color: _kAccent,
+                            color: kOrange,
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 4,
                             shadows: [
                               Shadow(
-                                color: _kAccent.withValues(alpha: 0.5),
+                                color: kOrange.withValues(alpha: 0.5),
                                 blurRadius: 12,
                               ),
                             ],
@@ -88,17 +87,17 @@ class LevelSelectScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: _kAccent.withValues(alpha: 0.10),
+                          color: kOrange.withValues(alpha: 0.10),
                           borderRadius:
                               BorderRadius.circular(UIConstants.radiusMd),
                           border: Border.all(
-                            color: _kAccent.withValues(alpha: 0.30),
+                            color: kOrange.withValues(alpha: 0.30),
                           ),
                         ),
                         child: Text(
                           '${completedLevels.length}/$totalLevels',
                           style: const TextStyle(
-                            color: _kAccent,
+                            color: kOrange,
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                           ),
@@ -180,7 +179,7 @@ class _LevelSection extends StatelessWidget {
                 width: 3,
                 height: 16,
                 decoration: BoxDecoration(
-                  color: LevelSelectScreen._kAccent,
+                  color: kOrange,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -269,8 +268,8 @@ class _LevelCellState extends State<_LevelCell> {
       borderColor = kGreen.withValues(alpha: 0.55);
       textColor = kGreen;
     } else if (isUnlocked) {
-      bgColor = LevelSelectScreen._kAccent.withValues(alpha: 0.12);
-      borderColor = LevelSelectScreen._kAccent.withValues(alpha: 0.50);
+      bgColor = kOrange.withValues(alpha: 0.12);
+      borderColor = kOrange.withValues(alpha: 0.50);
       textColor = Colors.white;
     } else {
       bgColor = LevelSelectScreen._kLocked.withValues(alpha: 0.30);
@@ -361,7 +360,7 @@ class _LevelSelectBackground extends StatelessWidget {
           top: -100,
           right: -60,
           child: GlowOrb(
-              size: 340, color: LevelSelectScreen._kAccent, opacity: 0.08),
+              size: 340, color: kOrange, opacity: 0.08),
         ),
         const Positioned(
           bottom: -80,

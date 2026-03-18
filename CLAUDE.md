@@ -2,14 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**GitHub:** `https://github.com/hsnbilici/Gloo.git` (branch: `main`)
+**GitHub:** `https://github.com/hsnbilici/Gloo-V1.0.git` (branch: `main`)
 
 ## Komutlar
 
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (1218 test)
+flutter test                                   # tum testler (1220 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
 flutter build web --release                    # web build
@@ -54,8 +54,9 @@ app/ → features/ → providers/ → game/ → core/
 - `providers/` — Riverpod: game, audio, user, locale, pvp, service providers.
 
 **Bilinen katman ihlalleri** (todo'da duzeltme planli):
-- ~~`audio/sound_bank.dart` → `game/systems/combo_detector.dart`~~ — DUZELTILDI (Sprint 20, M.12)
-- 3 feature dosyasi `data/remote/` siniflarini provider atlayarak dogrudan kullaniyor (M.8)
+- ~~`audio/sound_bank.dart` → `game/systems/combo_detector.dart`~~ — DUZELTILDI (Sprint 20)
+- ~~`pvp_lobby_screen.dart` → `supabase_client.dart`~~ — DUZELTILDI (`currentUserIdProvider` uzerinden)
+- `data/remote/pvp_realtime_service.dart` tip import'u `pvp_lobby_screen.dart`'ta — provider API'sinin parcasi, kabul edilmis risk
 
 ### Oyun Motoru
 
@@ -92,9 +93,8 @@ GameScreen._onCellTap()
 | `stringsProvider` | Aktif dildeki l10n string'leri |
 | `streakProvider` | Gunluk giris serisi |
 | `eloProvider` | PvP ELO puani |
-| `duelProvider` | DuelState (matchId, seed, opponentScore, isBot) |
-
-**Not:** `StateNotifierProvider` kullaniliyor; Riverpod 2.x'te deprecated. `NotifierProvider`'a gecis planli (M.5).
+| `duelProvider` | DuelState (matchId, seed, opponentElo, opponentScore, isBot) |
+| `currentUserIdProvider` | `SupabaseConfig.currentUserId` — feature katmaninda dogrudan Supabase erisimini onler |
 
 ### GameMode Enum (7 mod)
 
@@ -118,7 +118,7 @@ Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10
 
 Renk adlari l10n uzerinden: `AppStrings.colorName(GelColor)`. `GelColor` uzerinde `displayName` getter'i yoktur.
 
-UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kModeColors` map'i. Ekranlarda yerel renk sabiti tanimlanmamali.
+UI palet sabitleri `color_constants.dart`'ta: `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors` map'i. Ekranlarda yerel renk sabiti tanimlanmamali.
 
 ### Routing
 
@@ -128,6 +128,14 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 3. `/game/:mode` (generic)
 
 `GameMode.fromString()` gecersiz degerleri `classic`'e dusurur.
+
+### Dialog Gecisleri
+
+`fadeScaleTransition` (`ui_constants.dart`): Tum `showGeneralDialog` transition builder'lari icin paylasilmis FadeTransition + ScaleTransition helper. Yeni dialog eklerken bunu kullan, inline transition builder yazma.
+
+### DuelState.copyWith Sentinel Deseni
+
+`DuelState.copyWith` nullable alanlari (`matchId`, `seed`, `opponentElo`) icin `_Absent` sentinel sinifi kullanir. Bu, `copyWith(matchId: null)` ile "alanı null yap" ve `copyWith()` ile "alani degistirme" arasindaki farki korur.
 
 ## Onemli Kisitlamalar
 
@@ -140,10 +148,10 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 ### Platform Guard'lar
 - `main.dart`: Firebase init try-catch sarili. Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard. iOS `edgeToEdge`, diger `immersiveSticky`.
 - `AndroidManifest.xml`: AdMob App ID zorunlu — olmadan FATAL EXCEPTION. Simdi test ID aktif.
-- Web uyumsuz paketler: `ffmpeg_kit_flutter` (discontinued), `google_mobile_ads`, `screen_recorder`. `just_audio` web-uyumlu.
+- Web uyumsuz paketler: `google_mobile_ads`. `just_audio` web-uyumlu. `ffmpeg_kit_flutter` ve `screen_recorder` kaldirildi.
 
 ### Veri Katmani
-- `LocalRepository`: SharedPreferences + `flutter_secure_storage`. Hassas veriler (elo, gel_ozu, gel_energy, pvp_wins/losses, unlocked_products, pending_verification, redeemed_codes) SecureStorage'da sifreleniyor. Migration fallback: SecureStorage'da yoksa SharedPreferences'tan okur. Constructor opsiyonel `SecureStorageInterface` alir — testlerde `FakeSecureStorage` kullanilir.
+- `LocalRepository`: SharedPreferences + `flutter_secure_storage`. Hassas veriler (elo, gel_ozu, gel_energy, pvp_wins/losses, unlocked_products, pending_verification, redeemed_codes) SecureStorage'da sifreleniyor. Migration fallback: SecureStorage'da yoksa SharedPreferences'tan okur. Constructor opsiyonel `SecureStorageInterface` alir — testlerde `FakeSecureStorage` kullanilir. `SecureStorageImpl.write(null)` anahtari siler (`delete`), bos string yazmaz. **Test notu:** Secure-storage metodlarina (getElo vb.) dokunan testler `localRepositoryProvider`'i `FakeSecureStorage` ile override etmeli — aksi halde `MissingPluginException`.
 - `RemoteRepository`: Supabase. Tum metodlarda `isConfigured` guard ve try-catch zorunlu. `kDebugMode` guard'li debugPrint. `submitScore`/`submitPvpResult` icin `_retry()` ile exponential backoff (3 deneme).
 - `PvpRealtimeService`: Supabase Realtime (Presence + Broadcast). Duplicate match onlemi: leksikografik ID karsilastirmasi.
 - `AnalyticsService`: Lazy/null-safe Firebase wrapper — yoksa sessizce no-op.
@@ -153,7 +161,7 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 - `AudioManager`: `assets/audio/sfx/` ve `assets/audio/music/`. Dosya bulunamazsa sessizce atlar.
 - `HapticManager`: 14 haptic profil, tam implementasyon.
 - `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format kullanilmali.
-- `SoundBank.onLineClear` ve `onGameOver` bos — ses pipeline henuz tamamlanmamis.
+- `SoundBank`: `onLineClear` ve `onGameOver` implementasyonu tamamlandi (AudioManager SFX + HapticManager). `onGameOver` yalnizca SFX calar (haptic yok — game over'da haptic kafa karistirici).
 
 ## l10n
 
@@ -170,7 +178,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 `flutter_lints` temel. Ek kurallar: `prefer_single_quotes`, `prefer_const_constructors`, `prefer_const_declarations`, `prefer_final_fields`, `sort_child_properties_last`, `use_super_parameters`, `avoid_print`, `always_declare_return_types`.
 
-13 info-seviyesi sorun mevcut (tumu `curly_braces_in_flow_control_structures`). 0 error, 0 warning.
+14 info-seviyesi sorun mevcut (13x `curly_braces_in_flow_control_structures` + 1x `prefer_const_constructors`). 0 error, 0 warning.
 
 ## Monetizasyon
 

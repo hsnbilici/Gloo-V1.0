@@ -247,6 +247,10 @@ abstract class AppStrings {
   String get characterLabel;
   String get seasonLabel;
 
+  // Level complete & second chance
+  String get completedLabel;
+  String get secondChanceMoves;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

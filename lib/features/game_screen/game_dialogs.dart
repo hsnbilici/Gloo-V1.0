@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/ui_constants.dart';
 import '../../core/models/game_mode.dart';
 import 'chef_level_overlay.dart';
 import 'game_over_overlay.dart';
@@ -23,15 +24,7 @@ void showChefLevelComplete({
       barrierColor: Colors.transparent,
       barrierLabel: '',
       transitionDuration: const Duration(milliseconds: 360),
-      transitionBuilder: (ctx, anim, _, child) => FadeTransition(
-        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.95, end: 1.0).animate(
-            CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-          ),
-          child: child,
-        ),
-      ),
+      transitionBuilder: fadeScaleTransition,
       pageBuilder: (ctx, _, __) => ChefLevelOverlay(
         completedLevelIndex: completedIndex,
         targetColor: targetColor,
@@ -61,6 +54,7 @@ void showGameOver({
   required VoidCallback? onSecondChance,
   required VoidCallback onReplay,
   required VoidCallback onHome,
+  String? secondChanceLabel,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -70,15 +64,7 @@ void showGameOver({
       barrierColor: Colors.transparent,
       barrierLabel: '',
       transitionDuration: const Duration(milliseconds: 380),
-      transitionBuilder: (ctx, anim, _, child) => FadeTransition(
-        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.96, end: 1.0).animate(
-            CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-          ),
-          child: child,
-        ),
-      ),
+      transitionBuilder: fadeScaleTransition,
       pageBuilder: (ctx, _, __) => GameOverOverlay(
         score: score,
         mode: mode,
@@ -87,6 +73,7 @@ void showGameOver({
         isNewHighScore: isNewHighScore,
         showSecondChance: showSecondChance,
         onSecondChance: onSecondChance,
+        secondChanceLabel: secondChanceLabel,
         onReplay: () {
           Navigator.of(ctx).pop();
           onReplay();
@@ -108,6 +95,8 @@ void showLevelComplete({
   required String nextLevelLabel,
   required String levelListLabel,
   required String mainMenuLabel,
+  required String levelLabel,
+  required String completedLabel,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -117,21 +106,15 @@ void showLevelComplete({
       barrierColor: Colors.transparent,
       barrierLabel: '',
       transitionDuration: const Duration(milliseconds: 380),
-      transitionBuilder: (ctx, anim, _, child) => FadeTransition(
-        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.96, end: 1.0).animate(
-            CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-          ),
-          child: child,
-        ),
-      ),
+      transitionBuilder: fadeScaleTransition,
       pageBuilder: (ctx, _, __) => LevelCompleteOverlay(
         score: score,
         levelId: levelId,
         nextLevelLabel: nextLevelLabel,
         levelListLabel: levelListLabel,
         mainMenuLabel: mainMenuLabel,
+        levelLabel: levelLabel,
+        completedLabel: completedLabel,
         onNextLevel: () {
           Navigator.of(ctx).pop();
           final nextId = levelId + 1;

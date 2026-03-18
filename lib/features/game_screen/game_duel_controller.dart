@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/ui_constants.dart';
 import '../../data/remote/pvp_realtime_service.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../game/world/game_world.dart';
@@ -25,6 +26,7 @@ class GameDuelController {
     required this.isBot,
     required this.seed,
     required this.onStateChanged,
+    this.opponentElo,
   });
 
   final WidgetRef ref;
@@ -33,6 +35,7 @@ class GameDuelController {
   final bool isBot;
   final int seed;
   final VoidCallback onStateChanged;
+  final int? opponentElo;
 
   PvpRealtimeService? _pvpService;
   StreamSubscription<int>? _opponentScoreSub;
@@ -48,6 +51,7 @@ class GameDuelController {
           matchId: matchId ?? 'local',
           seed: seed,
           isBot: isBot,
+          opponentElo: opponentElo,
         );
 
     if (isBot) {
@@ -164,7 +168,7 @@ class GameDuelController {
     final opponentElo = isBot
         ? (playerElo * MatchmakingManager.botDifficulty(playerElo) * 1.2)
             .round()
-        : playerElo;
+        : (duelState.opponentElo ?? playerElo);
 
     final DuelOutcome outcome;
     if (playerScore > opponentScore) {
@@ -229,17 +233,7 @@ class GameDuelController {
         barrierColor: Colors.transparent,
         barrierLabel: '',
         transitionDuration: const Duration(milliseconds: 380),
-        transitionBuilder: (ctx, anim, _, child) {
-          return FadeTransition(
-            opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
-            child: ScaleTransition(
-              scale: Tween<double>(begin: 0.96, end: 1.0).animate(
-                CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-              ),
-              child: child,
-            ),
-          );
-        },
+        transitionBuilder: fadeScaleTransition,
         pageBuilder: (ctx, _, __) {
           final l = ref.read(stringsProvider);
           return DuelResultOverlay(

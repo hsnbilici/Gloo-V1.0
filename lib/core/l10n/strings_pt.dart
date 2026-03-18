@@ -388,4 +388,9 @@ class StringsPt extends AppStrings {
   String get characterLabel => 'Personagem';
   @override
   String get seasonLabel => 'Temporada';
+
+  @override
+  String get completedLabel => 'CONCLUÍDO!';
+  @override
+  String get secondChanceMoves => '+3 Jogadas';
 }

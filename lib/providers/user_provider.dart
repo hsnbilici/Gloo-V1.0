@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../data/local/data_models.dart';
 import '../data/local/local_repository.dart';
 
+// Note: Tests that call secure-storage methods (getElo, etc.) MUST override
+// this provider with a FakeSecureStorage to avoid MissingPluginException.
 final localRepositoryProvider = FutureProvider<LocalRepository>((ref) async {
   final prefs = await SharedPreferences.getInstance();
   return LocalRepository(prefs);

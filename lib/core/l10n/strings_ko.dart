@@ -387,4 +387,9 @@ class StringsKo extends AppStrings {
   String get characterLabel => '캐릭터';
   @override
   String get seasonLabel => '시즌';
+
+  @override
+  String get completedLabel => '완료!';
+  @override
+  String get secondChanceMoves => '+3 수';
 }

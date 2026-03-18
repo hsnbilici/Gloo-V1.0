@@ -42,6 +42,7 @@ class GameScreen extends ConsumerStatefulWidget {
     this.duelMatchId,
     this.duelSeed,
     this.duelIsBot = false,
+    this.duelOpponentElo,
   });
 
   final GameMode mode;
@@ -51,6 +52,7 @@ class GameScreen extends ConsumerStatefulWidget {
   final String? duelMatchId;
   final int? duelSeed;
   final bool duelIsBot;
+  final int? duelOpponentElo;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -320,6 +322,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
           );
 
       if (!mounted) return;
+      final l = ref.read(stringsProvider);
       showGameOver(
         context: context,
         score: game.score,
@@ -328,6 +331,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
         totalCells: game.gridManager.totalCells,
         isNewHighScore: game.isNewHighScore,
         showSecondChance: canSecondChance,
+        secondChanceLabel: l.secondChanceMoves,
         onSecondChance: canSecondChance
             ? () {
                 adManager.showSecondChance(

@@ -9,7 +9,6 @@ import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
 import '../../data/remote/pvp_realtime_service.dart';
-import '../../data/remote/supabase_client.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/pvp_provider.dart';
@@ -65,7 +64,6 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
   @override
   void dispose() {
     _searchTimer?.cancel();
-    _realtimeService.dispose();
     _pulseCtrl.dispose();
     super.dispose();
   }
@@ -87,7 +85,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     });
 
     // Supabase Realtime eslestirme kuyruguna katil
-    final userId = SupabaseConfig.currentUserId ?? 'local_player';
+    final userId = ref.read(currentUserIdProvider) ?? 'local_player';
     final request = MatchRequest(
       userId: userId,
       elo: _playerElo,
@@ -119,7 +117,8 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     context.go(
       '/game/duel?matchId=${result.matchId}'
       '&seed=${result.seed}'
-      '&isBot=${result.isBot}',
+      '&isBot=${result.isBot}'
+      '&opponentElo=${result.opponentElo ?? ''}',
     );
   }
 

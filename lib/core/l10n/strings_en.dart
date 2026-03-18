@@ -386,4 +386,9 @@ class StringsEn extends AppStrings {
   String get characterLabel => 'Character';
   @override
   String get seasonLabel => 'Season';
+
+  @override
+  String get completedLabel => 'COMPLETED!';
+  @override
+  String get secondChanceMoves => '+3 Moves';
 }

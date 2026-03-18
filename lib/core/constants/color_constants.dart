@@ -83,6 +83,8 @@ const Color kMuted = Color(0xFF6B8FA8);
 
 /// Altın vurgu — mağaza, ödül, premium UI elemanları.
 const Color kGold = Color(0xFFFFD700);
+/// Turuncu vurgu — streak badge, quest overlay, ada bina, seviye, karakter.
+const Color kOrange = Color(0xFFFF8C42);
 
 /// Yeşil vurgu — başarı, tamamlanma, kazanma göstergeleri.
 const Color kGreen = Color(0xFF3CFF8B);

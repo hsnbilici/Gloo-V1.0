@@ -24,6 +24,7 @@ class MatchResult {
     required this.player2Id,
     required this.seed,
     required this.isBot,
+    this.opponentElo,
   });
 
   final String matchId;
@@ -31,4 +32,5 @@ class MatchResult {
   final String player2Id;
   final int seed;
   final bool isBot;
+  final int? opponentElo;
 }

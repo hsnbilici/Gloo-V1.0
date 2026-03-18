@@ -392,4 +392,9 @@ class StringsDe extends AppStrings {
   String get characterLabel => 'Charakter';
   @override
   String get seasonLabel => 'Saison';
+
+  @override
+  String get completedLabel => 'ABGESCHLOSSEN!';
+  @override
+  String get secondChanceMoves => '+3 Züge';
 }

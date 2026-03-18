@@ -131,7 +131,7 @@ class TalentCard extends StatelessWidget {
 
   Color get _talentColor => switch (def.type) {
         TalentType.betterHand => kGreen,
-        TalentType.colorMaster => const Color(0xFFFF8C42),
+        TalentType.colorMaster => kOrange,
         TalentType.fastHands => kColorClassic,
         TalentType.zenGuru => kLavender,
       };

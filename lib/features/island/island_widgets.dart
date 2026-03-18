@@ -46,7 +46,7 @@ class _BuildingCardState extends State<BuildingCard> {
   Color get _buildingColor => switch (widget.type) {
         BuildingType.gelFactory => kGreen,
         BuildingType.asmrTower => kLavender,
-        BuildingType.colorLab => const Color(0xFFFF8C42),
+        BuildingType.colorLab => kOrange,
         BuildingType.arena => kColorClassic,
         BuildingType.harbor => const Color(0xFF00BFFF),
       };

@@ -92,11 +92,13 @@ class SecondChanceButton extends StatefulWidget {
     required this.color,
     required this.onTap,
     required this.watchAdLabel,
+    required this.secondChanceLabel,
   });
 
   final Color color;
   final VoidCallback onTap;
   final String watchAdLabel;
+  final String secondChanceLabel;
 
   @override
   State<SecondChanceButton> createState() => _SecondChanceButtonState();
@@ -164,9 +166,9 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: kGold.withValues(alpha: 0.40)),
               ),
-              child: const Text(
-                '+3 Hamle',
-                style: TextStyle(
+              child: Text(
+                widget.secondChanceLabel,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.w800,

@@ -11,9 +11,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseConfig {
   SupabaseConfig._();
 
-  static const supabaseUrl = 'https://lcumiadyvwharxhrbtkm.supabase.co';
-  static const supabaseAnonKey =
-      'sb_publishable_p1_zSGuHlfDtwZQWp0tMSg_SidU7y9K';
+  static const supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: 'https://kxrdblgdydixgeruejpc.supabase.co',
+  );
+  static const supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY',
+    defaultValue: 'sb_publishable_GFHzI1sXorZwe7qNH5I--A_lbKUysaW',
+  );
 
   /// Placeholder degerler doldurulan gercek projeden mi yoksa sahte mi?
   static bool get isConfigured =>

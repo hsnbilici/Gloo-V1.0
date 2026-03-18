@@ -37,7 +37,6 @@ class SoundBank {
 
   Future<void> onGameOver() async {
     await _audio.playSfx(AudioPaths.gameOver);
-    await _haptic.trigger(HapticProfile.comboEpic);
   }
 
   Future<void> onLevelComplete() async {

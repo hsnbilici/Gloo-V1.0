@@ -393,4 +393,9 @@ class StringsEs extends AppStrings {
   String get characterLabel => 'Personaje';
   @override
   String get seasonLabel => 'Temporada';
+
+  @override
+  String get completedLabel => '¡COMPLETADO!';
+  @override
+  String get secondChanceMoves => '+3 Movimientos';
 }

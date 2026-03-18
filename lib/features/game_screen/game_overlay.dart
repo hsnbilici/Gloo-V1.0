@@ -119,15 +119,7 @@ class GameOverlay extends ConsumerWidget {
       barrierColor: Colors.black.withValues(alpha: 0.72),
       barrierLabel: '',
       transitionDuration: const Duration(milliseconds: 260),
-      transitionBuilder: (ctx, anim, _, child) => FadeTransition(
-        opacity: CurvedAnimation(parent: anim, curve: Curves.easeOut),
-        child: ScaleTransition(
-          scale: Tween<double>(begin: 0.92, end: 1.0).animate(
-            CurvedAnimation(parent: anim, curve: Curves.easeOutCubic),
-          ),
-          child: child,
-        ),
-      ),
+      transitionBuilder: fadeScaleTransition,
       pageBuilder: (ctx, _, __) => PauseDialog(
         title: title,
         resumeLabel: resumeLabel,

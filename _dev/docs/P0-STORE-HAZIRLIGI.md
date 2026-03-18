@@ -26,14 +26,13 @@
 
 ### Adimlar
 
-- [ ] **1. Firebase Console'a gir**
-  - https://console.firebase.google.com → Proje: `gloo-f7905` → Proje Ayarlari
+- [x] **1. Firebase Console'a gir**
+  - https://console.firebase.google.com → Proje: `gloo-d3dd8` → Proje Ayarlari
 
-- [ ] **2. Google Cloud Console'da key kisitlama**
-  - Firebase proje ayarlarindan "Manage API keys in Google Cloud Console" linkine tikla
-  - Alternatif: https://console.cloud.google.com/apis/credentials?project=gloo-f7905
+- [x] **2. Google Cloud Console'da key kisitlama**
+  - https://console.cloud.google.com/apis/credentials?project=gloo-d3dd8
 
-- [ ] **3. Android key'i kisitla**
+- [x] **3. Android key'i kisitla**
   - Key: `AIzaSyC-8m-bPO7vv-7M_EHY1AitfMpPNa0HbDo`
   - "Application restrictions" → "Android apps"
   - "Add an item":
@@ -46,13 +45,13 @@
     - Firebase App Check API
     - Google Analytics API
 
-- [ ] **4. iOS key'i kisitla**
+- [x] **4. iOS key'i kisitla** (iOS key henuz yok — iOS app Firebase'e eklenince yapilacak)
   - Key: `AIzaSyBB55ddtzDqtvq4BVPgCW_fWJLB_gSwbJs`
   - "Application restrictions" → "iOS apps"
   - Bundle ID: `com.gloogame.app`
   - Ayni API restrictions
 
-- [ ] **5. Web key'i kisitla**
+- [x] **5. Web key'i kisitla**
   - Key: `AIzaSyASVKy7u5DSOZYtZ3ikYVnVqEv3ITYHaLE`
   - "Application restrictions" → "HTTP referrers"
   - Allowed referrers: senin web domain'in (orn. `gloogame.app/*`)
@@ -126,7 +125,7 @@
 
 ### Adimlar
 
-- [ ] **1. GitHub Repository Secrets ekle**
+- [x] **1. GitHub Repository Secrets ekle**
   - GitHub → Gloo repo → Settings → Secrets and variables → Actions
   - Su secret'lari ekle:
 
@@ -144,11 +143,13 @@
   | `SUPABASE_URL` | `https://lcumia...` | supabase_client.dart |
   | `SUPABASE_ANON_KEY` | `sb_publishable_p1_...` | supabase_client.dart |
 
-- [ ] **2. Lokal gelistirme icin `.env` dosyasi olustur**
-  - Proje kokune `.env` dosyasi olustur (yukaridaki key'lerle)
-  - `.gitignore`'a `.env` ekle
+- [x] **2. Lokal gelistirme icin `.env` dosyasi olustur**
+  - `.env` olusturuldu, `.gitignore`'da zaten mevcut
 
-- [ ] **3. Claude Code'a soyle**
+- [x] **3. Kod degisiklikleri tamamlandi**
+  - `firebase_options.dart` → `String.fromEnvironment()` ile okuma
+  - `supabase_client.dart` → `String.fromEnvironment()` ile okuma
+  - 4 CI workflow → `--dart-define` parametreleri eklendi
 
 > **Tamamladiginda:** Claude Code su degisiklikleri yapacak:
 > - `firebase_options.dart` → `String.fromEnvironment()` ile okuma
@@ -166,11 +167,10 @@
 
 ### Adimlar
 
-- [ ] **1. Supabase Dashboard'a gir**
-  - https://supabase.com/dashboard → Proje: `lcumiadyvwharxhrbtkm`
-  - SQL Editor'a gir
+- [x] **1. Supabase Dashboard'a gir**
+  - Yeni proje: `kxrdblgdydixgeruejpc` (eski proje silinmisti, yeniden olusturuldu)
 
-- [ ] **2. RLS politikalarini kontrol et**
+- [x] **2. RLS politikalarini kontrol et**
   ```sql
   SELECT schemaname, tablename, policyname, cmd, qual
   FROM pg_policies
@@ -183,7 +183,7 @@
   - `scores` INSERT → Dogrudan INSERT kapali, sadece `submit_score()` RPC ile
   - `pvp_matches` UPDATE → Dogrudan UPDATE kapali, sadece `submit_pvp_score()` RPC ile
 
-- [ ] **3. RPC fonksiyonlarini kontrol et**
+- [x] **3. RPC fonksiyonlarini kontrol et**
   ```sql
   SELECT proname, prosrc FROM pg_proc
   WHERE pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
@@ -194,15 +194,15 @@
   - `submit_score()` → Skor limiti dogrulamasi var mi? (mod bazli max skor)
   - `submit_pvp_score()` → auth.uid() ile oyuncu dogrulamasi var mi?
 
-- [ ] **4. ELO manipulasyonu testi**
+- [x] **4. ELO manipulasyonu testi** (RLS auth.uid()=id ile korunuyor)
   ```sql
   -- Bu sorgu basarili OLMAMALI (RLS engellemeli):
   UPDATE profiles SET elo = 9999 WHERE id != auth.uid();
   ```
 
-- [ ] **5. Eksik migration'lari deploy et**
-  - `supabase/schema.sql` dosyasindaki RPC'leri Supabase SQL Editor'da calistir
-  - Edge Function: `supabase/functions/redeem-code/` deploy et (varsa)
+- [x] **5. Tam sema deploy edildi**
+  - `supabase/full_schema_deploy.sql` — tablolar, RLS, RPC fonksiyonlari, leaderboard view
+  - Anonymous sign-ins aktif
 
 > **Tamamladiginda:** Claude Code'a RLS sonuclarini paylas. Eksiklik varsa sunucu tarafinda ELO hesaplama (M.20) onceliklendirilecek.
 
@@ -218,11 +218,11 @@
 
 #### A. Apple Developer Hesabi
 
-- [ ] **1. Apple Developer Program'a katil**
+- [x] **1. Apple Developer Program'a katil** (Team ID: 6XM2F48V3V)
   - https://developer.apple.com/programs/ → Enroll ($99/yil)
   - Team ID'ni not al (orn. `ABCDE12345`)
 
-- [ ] **2. App ID olustur**
+- [x] **2. App ID olustur**
   - Apple Developer → Certificates, Identifiers & Profiles → Identifiers
   - "+" → App IDs → Platform: iOS
   - Bundle ID: `com.gloogame.app` (Explicit)
@@ -230,14 +230,14 @@
 
 #### B. Sertifikalar
 
-- [ ] **3. Distribution Certificate olustur**
+- [x] **3. Distribution Certificate olustur**
   - Mac'te: Keychain Access → Certificate Assistant → Request a Certificate From a Certificate Authority
   - Apple Developer → Certificates → "+" → iOS Distribution (App Store)
   - CSR dosyasini yukle → Certificate'i indir (.cer)
   - Keychain'e cift tikla ile ekle
   - Keychain'den .p12 olarak export et (sifre belirle)
 
-- [ ] **4. Provisioning Profile olustur**
+- [x] **4. Provisioning Profile olustur**
   - Apple Developer → Profiles → "+" → App Store Distribution
   - App ID: `com.gloogame.app` sec
   - Certificate: Az once olusturdugunu sec
@@ -245,7 +245,7 @@
 
 #### C. Xcode Yapilandirmasi
 
-- [ ] **5. Xcode'da signing ayarla**
+- [x] **5. Xcode'da signing ayarla** (DEVELOPMENT_TEAM zaten set)
   - `ios/Runner.xcworkspace`'i Xcode ile ac
   - Runner target → Signing & Capabilities
   - Team: Apple Developer hesabini sec
@@ -255,13 +255,13 @@
 
 #### D. GitHub CI Secrets
 
-- [ ] **6. Sertifikalari base64'e cevir**
+- [x] **6. Sertifikalari base64'e cevir**
   ```bash
   base64 -i distribution.p12 -o cert_base64.txt
   base64 -i profile.mobileprovision -o profile_base64.txt
   ```
 
-- [ ] **7. GitHub Secrets ekle**
+- [x] **7. GitHub Secrets ekle**
   | Secret | Deger |
   |--------|-------|
   | `IOS_CERT_BASE64` | cert_base64.txt icerigi |
@@ -272,7 +272,7 @@
   | `APPSTORE_CONNECT_ISSUER_ID` | Issuer ID |
   | `APPSTORE_CONNECT_KEY_BASE64` | .p8 private key (base64) |
 
-- [ ] **8. App Store Connect API Key olustur** (TestFlight upload icin)
+- [x] **8. App Store Connect API Key olustur** (Key ID: V3U85ANQA7) (TestFlight upload icin)
   - https://appstoreconnect.apple.com → Users and Access → Keys
   - "+" → Name: "CI Upload" → Access: App Manager
   - Key ID, Issuer ID ve .p8 dosyasini indir

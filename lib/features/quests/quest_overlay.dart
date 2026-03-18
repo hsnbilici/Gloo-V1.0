@@ -9,7 +9,6 @@ import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 import 'quest_widgets.dart';
 
-const Color _kWeekly = Color(0xFFFF8C42);
 
 class QuestOverlay extends ConsumerStatefulWidget {
   const QuestOverlay({super.key});
@@ -179,7 +178,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                           const SizedBox(height: 20),
                           const SectionHeader(
                             title: 'HAFTALIK',
-                            color: _kWeekly,
+                            color: kOrange,
                             icon: Icons.date_range_rounded,
                             showDivider: true,
                           ).animate(delay: 250.ms).fadeIn(duration: 250.ms),
@@ -190,7 +189,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                             return QuestCard(
                               quest: quest,
                               progress: progress,
-                              accentColor: _kWeekly,
+                              accentColor: kOrange,
                               delay: Duration(milliseconds: 300 + 60 * e.key),
                             );
                           }),

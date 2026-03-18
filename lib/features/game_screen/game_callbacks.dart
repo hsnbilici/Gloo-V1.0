@@ -205,6 +205,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         nextLevelLabel: l.nextLevelLabel,
         levelListLabel: l.levelListLabel,
         mainMenuLabel: l.mainMenuLabel,
+        levelLabel: l.levelLabel,
+        completedLabel: l.completedLabel,
       );
     };
 
@@ -284,6 +286,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         matchId: widget.duelMatchId,
         isBot: widget.duelIsBot,
         seed: widget.duelSeed ?? 0,
+        opponentElo: widget.duelOpponentElo,
         onStateChanged: () {
           // Grid was mutated in-place by incoming PvP obstacles;
           // trigger rebuild so GridView reflects new cell states.

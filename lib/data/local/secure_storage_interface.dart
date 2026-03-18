@@ -16,8 +16,13 @@ class SecureStorageImpl implements SecureStorageInterface {
   Future<String?> read({required String key}) => _storage.read(key: key);
 
   @override
-  Future<void> write({required String key, required String? value}) =>
-      _storage.write(key: key, value: value ?? '');
+  Future<void> write({required String key, required String? value}) async {
+    if (value == null) {
+      await _storage.delete(key: key);
+    } else {
+      await _storage.write(key: key, value: value);
+    }
+  }
 
   @override
   Future<void> deleteAll() => _storage.deleteAll();

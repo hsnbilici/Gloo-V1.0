@@ -75,7 +75,7 @@ class XpProgressBar extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [kGold, Color(0xFFFF8C42)],
+                        colors: [kGold, kOrange],
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),

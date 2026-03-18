@@ -393,4 +393,9 @@ class StringsRu extends AppStrings {
   String get characterLabel => 'Персонаж';
   @override
   String get seasonLabel => 'Сезон';
+
+  @override
+  String get completedLabel => 'ЗАВЕРШЕНО!';
+  @override
+  String get secondChanceMoves => '+3 хода';
 }

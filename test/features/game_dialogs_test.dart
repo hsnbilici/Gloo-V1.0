@@ -120,13 +120,14 @@ void main() {
               onSecondChance: () {},
               onReplay: () {},
               onHome: () {},
+              secondChanceLabel: '+3 Moves',
             ),
           ),
         ),
       );
       await tester.pump(const Duration(seconds: 2));
       expect(find.text('Watch Ad'), findsOneWidget);
-      expect(find.text('+3 Hamle'), findsOneWidget);
+      expect(find.text('+3 Moves'), findsOneWidget);
     });
 
     testWidgets('hides second chance button when disabled', (tester) async {
@@ -135,12 +136,12 @@ void main() {
       expect(find.text('Watch Ad'), findsNothing);
     });
 
-    testWidgets('modeColor returns correct color per mode', (tester) async {
-      expect(GameOverOverlay.modeColor(GameMode.classic), kColorClassic);
-      expect(GameOverOverlay.modeColor(GameMode.colorChef), kColorChef);
-      expect(GameOverOverlay.modeColor(GameMode.timeTrial), kColorTimeTrial);
-      expect(GameOverOverlay.modeColor(GameMode.zen), kColorZen);
-      expect(GameOverOverlay.modeColor(GameMode.daily), kCyan);
+    testWidgets('kModeColors maps correct color per mode', (tester) async {
+      expect(kModeColors[GameMode.classic], kColorClassic);
+      expect(kModeColors[GameMode.colorChef], kColorChef);
+      expect(kModeColors[GameMode.timeTrial], kColorTimeTrial);
+      expect(kModeColors[GameMode.zen], kColorZen);
+      expect(kModeColors[GameMode.daily], kCyan);
     });
   });
 
@@ -229,20 +230,22 @@ void main() {
           nextLevelLabel: 'Next Level',
           levelListLabel: 'Level List',
           mainMenuLabel: 'Main Menu',
+          levelLabel: 'Level',
+          completedLabel: 'COMPLETED!',
         ),
       );
     }
 
-    testWidgets('renders TAMAMLANDI text', (tester) async {
+    testWidgets('renders COMPLETED text', (tester) async {
       await tester.pumpWidget(buildLevelComplete());
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('TAMAMLANDI!'), findsOneWidget);
+      expect(find.text('COMPLETED!'), findsOneWidget);
     });
 
     testWidgets('shows level ID', (tester) async {
       await tester.pumpWidget(buildLevelComplete(levelId: 7));
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Seviye 7'), findsOneWidget);
+      expect(find.text('Level 7'), findsOneWidget);
     });
 
     testWidgets('shows Sonraki Seviye button', (tester) async {
@@ -388,14 +391,16 @@ void main() {
         nextLevelLabel: 'Next Level',
         levelListLabel: 'Level List',
         mainMenuLabel: 'Main Menu',
+        levelLabel: 'Level',
+        completedLabel: 'COMPLETED!',
       );
 
       await tester.pump();
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.byType(LevelCompleteOverlay), findsOneWidget);
-      expect(find.text('Seviye 5'), findsOneWidget);
-      expect(find.text('TAMAMLANDI!'), findsOneWidget);
+      expect(find.text('Level 5'), findsOneWidget);
+      expect(find.text('COMPLETED!'), findsOneWidget);
       // Clean up flutter_animate timers
       await tester.pumpWidget(const SizedBox());
       await tester.pump(const Duration(seconds: 5));
