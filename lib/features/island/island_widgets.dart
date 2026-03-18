@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/meta/resource_manager.dart';
 
@@ -53,6 +54,8 @@ class _BuildingCardState extends State<BuildingCard> {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
+    final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     final color = _buildingColor;
     final isMaxLevel = !widget.canBuild;
 
@@ -62,8 +65,8 @@ class _BuildingCardState extends State<BuildingCard> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            begin: gradBegin,
+            end: gradEnd,
             colors: [
               color.withValues(alpha: 0.10),
               color.withValues(alpha: 0.03),

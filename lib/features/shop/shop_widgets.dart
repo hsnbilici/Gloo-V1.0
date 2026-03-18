@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 
 // ─── Arkaplan ─────────────────────────────────────────────────────────────────
@@ -55,6 +56,8 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
+    final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     return Semantics(
       label: label,
       child: Container(
@@ -62,8 +65,8 @@ class ProductTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            begin: gradBegin,
+            end: gradEnd,
             colors: [
               color.withValues(alpha: isFeatured ? 0.14 : 0.08),
               color.withValues(alpha: 0.02),

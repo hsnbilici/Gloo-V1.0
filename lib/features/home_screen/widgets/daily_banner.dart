@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/layout/rtl_helpers.dart';
 import '../../../providers/user_provider.dart';
 
 class DailyBanner extends ConsumerWidget {
@@ -15,6 +16,8 @@ class DailyBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dir = Directionality.of(context);
+    final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     final repoAsync = ref.watch(localRepositoryProvider);
     final completed = repoAsync.valueOrNull?.isDailyCompleted() ?? false;
     final score = repoAsync.valueOrNull?.getDailyScore() ?? 0;
@@ -26,8 +29,8 @@ class DailyBanner extends ConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(UIConstants.radiusLg),
           gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
+            begin: gradBegin,
+            end: gradEnd,
             colors: [
               _kAccent.withValues(alpha: 0.12),
               _kAccent.withValues(alpha: 0.03),

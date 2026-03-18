@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/layout/rtl_helpers.dart';
 
 class ModeCard extends StatefulWidget {
   const ModeCard({
@@ -36,6 +37,8 @@ class ModeCardState extends State<ModeCard> {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
+    final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     return Semantics(
       label: widget.label,
       button: true,
@@ -57,8 +60,8 @@ class ModeCardState extends State<ModeCard> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(UIConstants.radiusLg),
             gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+              begin: gradBegin,
+              end: gradEnd,
               colors: widget.isFeatured
                   ? [
                       widget.color.withValues(alpha: _pressed ? 0.28 : 0.20),

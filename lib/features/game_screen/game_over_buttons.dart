@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 
 // ─── Aksiyon butonu ──────────────────────────────────────────────────────────
 
@@ -113,6 +114,8 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
 
   @override
   Widget build(BuildContext context) {
+    final dir = Directionality.of(context);
+    final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     return Semantics(
       label: widget.secondChanceLabel,
       button: true,
@@ -130,8 +133,8 @@ class _SecondChanceButtonState extends State<SecondChanceButton> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
+              begin: gradBegin,
+              end: gradEnd,
               colors: [
                 kGold.withValues(alpha: _pressed ? 0.22 : 0.15),
                 widget.color.withValues(alpha: _pressed ? 0.18 : 0.10),
