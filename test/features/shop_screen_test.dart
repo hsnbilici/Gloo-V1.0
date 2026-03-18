@@ -61,13 +61,16 @@ void main() {
       expect(find.text('SOUND PACKS'), findsOneWidget);
     });
 
+    // flutter_animate widget'ları scroll'da inflate olunca timer başlatır.
+    // pump ile animasyonları bitirmeli, birden fazla pump gerekebilir.
     testWidgets('shows redeem code section after scrolling', (tester) async {
       await tester.pumpWidget(buildShop());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       // Scroll down to reveal redeem code section
       await tester.drag(find.byType(ListView), const Offset(0, -500));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('REDEEM CODE'), findsOneWidget);
       expect(find.text('Redeem'), findsOneWidget);
@@ -75,11 +78,13 @@ void main() {
 
     testWidgets('shows restore purchases after scrolling', (tester) async {
       await tester.pumpWidget(buildShop());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       // Scroll down to reveal restore purchases link
       await tester.drag(find.byType(ListView), const Offset(0, -800));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('Restore Purchases'), findsOneWidget);
     });

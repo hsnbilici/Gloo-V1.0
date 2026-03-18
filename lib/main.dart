@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app/app.dart';
 import 'core/constants/color_constants.dart';
 import 'core/l10n/app_strings.dart';
+import 'core/network/certificate_pinner.dart';
+import 'core/network/pinned_http_overrides.dart';
 import 'data/local/local_repository.dart';
 import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
@@ -23,6 +27,14 @@ import 'services/purchase_service.dart';
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Certificate pinning — Android'de network_security_config.xml ile,
+  // Dart katmaninda ek guvenlik olarak badCertificateCallback ile
+  if (!kIsWeb) {
+    HttpOverrides.global = PinnedHttpOverrides(
+      pinner: const CertificatePinner(pins: kCertificatePins),
+    );
+  }
 
   runZonedGuarded(() async {
     // Fallback hata yakalayici — Firebase basarisiz olsa bile aktif

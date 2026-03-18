@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">supabase.co</domain>
+        <pin-set expiration="2027-06-01">
+            <pin digest="SHA-256">GU2W4j1P24T3sqlI+o6YTnidzz0PI8fB/Gvd2ITfSZE=</pin>
+            <pin digest="SHA-256">kIdp6NNEd8wsugYyyIYFsi1ylMCED3hZbSR8ZFsa/A4=</pin>
+        </pin-set>
+    </domain-config>
+    <domain-config>
+        <domain includeSubdomains="true">googleapis.com</domain>
+        <pin-set expiration="2027-06-01">
+            <pin digest="SHA-256">UaKBWnoEx6t0je/kqEQQI8mTFKQx23cg3on7tECzBf4=</pin>
+            <pin digest="SHA-256">vh78KSg1Ry4NaqGDV10w/cTb9VH3BQUZoCWNa93W/EY=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>
