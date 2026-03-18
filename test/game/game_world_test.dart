@@ -105,6 +105,23 @@ void main() {
       game.setCurrencyBalance(100);
       expect(game.currencyManager.balance, 100);
     });
+
+    test('startGame can be called twice — grid resets fully', () {
+      final game = GlooGame(mode: GameMode.classic);
+      game.startGame();
+
+      // Place a piece on the grid
+      const dot = GelShape(cells: [(0, 0)], name: 'dot');
+      game.placePiece(dot.at(0, 0), GelColor.red);
+      expect(game.gridManager.getCell(0, 0).color, GelColor.red);
+      expect(game.movesUsed, 1);
+
+      // Restart — grid and moves should reset
+      game.startGame();
+      expect(game.gridManager.getCell(0, 0).color, isNull);
+      expect(game.movesUsed, 0);
+      expect(game.status, GameStatus.playing);
+    });
   });
 
   // ─── GlooGame.placePiece ────────────────────────────────────────────────

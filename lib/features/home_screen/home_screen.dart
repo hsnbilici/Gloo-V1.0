@@ -58,12 +58,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .fold<int>(0, (best, day) => day > best ? day : best);
       if (eligibleTier > 0 && mounted) {
         final reward = GameConstants.streakRewards[eligibleTier]!;
+        await _showStreakRewardDialog(streak: eligibleTier, reward: reward);
+        // Persist after dialog so user sees the reward before it's credited
         await repo.setLastStreakRewardDay(eligibleTier);
         final currentGelOzu = await repo.getGelOzu();
         await repo.saveGelOzu(currentGelOzu + reward);
-        if (mounted) {
-          await _showStreakRewardDialog(streak: eligibleTier, reward: reward);
-        }
       }
       if (!mounted) return;
       // 3) GDPR consent henüz gösterilmemişse dialog aç

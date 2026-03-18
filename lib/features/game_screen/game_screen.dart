@@ -434,6 +434,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
             activePowerUpMode = null;
             _secondChanceUsed = false;
             _epicComboCount = 0;
+            confettiKey = 0;
+            showConfetti = false;
             showNearMissRescueBadge = false;
             showHighScoreBadge = false;
           });

@@ -237,6 +237,10 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       previewValid = false;
       previewAnchor = null;
     });
+    // Advance tutorial from step 0 (select shape) to step 1
+    if (tutorialActive && tutorialStep == 0) {
+      setState(() => tutorialStep = 1);
+    }
   }
 
   void onDragOver(int row, int col) {
@@ -267,6 +271,15 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     ref
         .read(gameProvider(widget.mode).notifier)
         .updateFill(game.gridManager.filledCells);
+
+    // Complete tutorial on drag-and-drop placement
+    if (tutorialActive && tutorialStep >= 1) {
+      tutorialActive = false;
+      tutorialStep = -1;
+      ref
+          .read(localRepositoryProvider.future)
+          .then((repo) => repo.setTutorialDone());
+    }
 
     final feedbackCx = ac + (shape.colCount - 1) / 2.0;
     final feedbackCy = ar + (shape.rowCount - 1) / 2.0;

@@ -70,7 +70,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           if (mounted) setState(() => showHighScoreBadge = true);
         });
       }
-      if (game.isNewHighScore && !showConfetti) {
+      if (game.isNewHighScore && !showConfetti && confettiKey == 0) {
         setState(() {
           showConfetti = true;
           confettiKey++;

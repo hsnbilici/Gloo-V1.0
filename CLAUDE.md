@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (1289 test)
+flutter test                                   # tum testler (1295 test)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
 flutter build web --release --dart-define-from-file=.env  # web build
@@ -51,7 +51,7 @@ app/ → features/ → providers/ → game/ → core/
 
 - `core/` — Saf Dart; Flutter bagimliligi yok. Sabitler, utils, l10n, extensions.
 - `game/` — Saf Dart oyun motoru (Flutter'dan bagimsiz). GlooGame, GridManager, systems, shapes, levels, economy, pvp, physics.
-- `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin ile bolunmus: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`.
+- `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin ile bolunmus: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`. Ek: `tutorial_overlay.dart` (ilk oyun 3 adimli rehber), `share_prompt_dialog.dart` (epic combo sonrasi paylasim), `effects/confetti_effect.dart` (high score kutlama).
 - `data/` — `local/` (SharedPreferences), `remote/` (Supabase). Tum remote metodlarda `isConfigured` guard zorunlu.
 - `services/` — AnalyticsService (Firebase), AdManager, PurchaseService.
 - `providers/` — Riverpod: game, audio, user, locale, pvp, service providers.
@@ -191,7 +191,7 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 - `AudioManager`: `assets/audio/sfx/` ve `assets/audio/music/`. Dosya bulunamazsa sessizce atlar.
 - `HapticManager`: 14 haptic profil, tam implementasyon.
 - `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format kullanilmali.
-- `SoundBank`: Tam pipeline (L.9). Mevcut event'ler: `onGelPlaced` (SFX+haptic), `onGelMerge` (SFX tier-based+haptic), `onLineClear` (SFX+haptic), `onCombo` (SFX tier-based, epic haptic), `onGameOver` (SFX only), `onLevelComplete` (SFX+haptic). Yeni event'ler: `onSynthesis`, `onIceBreak`, `onPowerUpActivate`, `onGravityDrop`, `onButtonTap`, `onGelOzuEarn`, `onNearMiss(survived:)`.
+- `SoundBank`: Tam pipeline (L.9). Mevcut event'ler: `onGelPlaced` (SFX+haptic), `onGelMerge` (SFX tier-based+haptic), `onLineClear` (SFX+haptic), `onCombo` (SFX all tiers — small@0.5 vol, medium, large+haptic, epic+haptic), `onGameOver` (SFX only), `onLevelComplete` (SFX+haptic). Yeni event'ler: `onSynthesis`, `onIceBreak`, `onPowerUpActivate`, `onGravityDrop`, `onButtonTap`, `onGelOzuEarn`, `onNearMiss(survived:)`.
 
 ## l10n
 
@@ -208,7 +208,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 `flutter_lints` temel. Ek kurallar: `prefer_single_quotes`, `prefer_const_constructors`, `prefer_const_declarations`, `prefer_final_fields`, `sort_child_properties_last`, `use_super_parameters`, `avoid_print`, `always_declare_return_types`.
 
-14 info-seviyesi sorun mevcut (13x `curly_braces_in_flow_control_structures` + 1x `prefer_const_constructors`). 0 error, 0 warning.
+15 info-seviyesi sorun mevcut (14x `curly_braces_in_flow_control_structures` + 1x `prefer_const_constructors`). 0 error, 0 warning.
 
 ## Monetizasyon
 
@@ -227,16 +227,29 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 - CI versioning (L.21): `main`'e push'ta `scripts/version_bump.sh` build number'i git commit count'a esitler. `[skip ci]` ile sonsuz dongu onlenir.
 - Dependabot (L.11): `.github/dependabot.yml` — haftalik pub + GitHub Actions taramasi.
 
-## Proje Durumu (2026-03-18)
+### Streak ve Tutorial Sistemi
 
-**Scorecard:** 87/100 (P0 + P2 + P3 bagimsiz gorevler tamamlandi)
+- `GameConstants.streakRewards`: Milestone map (3→10, 7→50, 14→100, 30→200 Jel Ozu). `HomeScreen.initState` icinde kontrol edilir.
+- `LocalRepository.getTutorialDone()/setTutorialDone()`: Ilk oyun tutorial persistence. Tutorial yalnizca `GameMode.classic`'te gosterilir.
+- `TutorialOverlay`: 3 adim (sekil sec → onizleme → yerlestir). Hem tap hem drag-and-drop path'lerde ilerler. `game_interactions.dart`'ta `tutorialActive`/`tutorialStep` mixin interface'leri.
+
+### Viral Pipeline
+
+- `ShareManager.shareComboResult()`: Epic combo sonrasi text share (share_plus). Not: share metinleri su anda Turkce hardcoded, l10n yapilmadi.
+- `ConfettiEffect`: High score asildiginda 40 particle CustomPaint patlamasi. Oyun basina bir kez tetiklenir (`confettiKey == 0` guard).
+- `BombExplosionEffect`: 100ms freeze-frame delay (`Future.delayed`) animasyon oncesi dramatik etki.
+- Video export: FFmpeg discontinued, `ClipRecorder` frame yakaliyor ama video uretmiyor.
+
+## Proje Durumu (2026-03-19)
+
+**Scorecard:** 87/100 (P0 + P2 + P3 bagimsiz gorevler + Tier 1 Growth tamamlandi)
 
 | Alan | Puan | En Kritik Sorun |
 |------|:----:|-----------------|
 | Mimari | 85 | Katman ihlalleri duzeltildi |
 | Gameplay | 82 | availableColors + inflasyon eklendi |
-| UI/UX | 76 | Erisilebilirlik (55), Responsive 45/100 |
-| QA | 89 | 1289 test, coverage threshold %70, pipeline testleri |
+| UI/UX | 78 | Tutorial eklendi, Responsive 45/100 |
+| QA | 90 | 1295 test, coverage threshold %70, pipeline testleri |
 | DevOps | 78 | CI versioning + Dependabot eklendi |
 | Backend | 77 | GDPR uyumlulugu (68) |
 | Guvenlik | 80 | iOS native pinning eksik |
@@ -251,3 +264,4 @@ Detayli gorev listesi ve alt alan puanlari: `_dev/tasks/todo.md`
 | `_dev/docs/TECHNICAL_ARCHITECTURE.md` | Sistem diyagrami, algoritma ornekleri |
 | `_dev/tasks/todo.md` | Yol haritasi, scorecard, kalan gorevler (P0-P3 oncelikli) |
 | `_dev/tasks/lessons.md` | Sprint bazli dersler ve kurallar |
+| `_dev/docs/GROWTH_REPORT.md` | Organik buyume analizi — viral, retention, monetizasyon firsatlari |

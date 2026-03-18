@@ -121,6 +121,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                         previewAnchor = null;
                       }),
                       child: GridView.builder(
+                        padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: cols,

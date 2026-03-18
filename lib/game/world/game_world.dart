@@ -25,7 +25,7 @@ class GlooGame {
   final LevelData? levelData;
   final ShapeGenerator _shapeGenerator;
 
-  late final GridManager _gridManager;
+  late GridManager _gridManager;
   final ScoreSystem _scoreSystem = ScoreSystem();
   final ComboDetector _comboDetector = ComboDetector();
   final ColorSynthesisSystem _synthesisSystem = ColorSynthesisSystem();
@@ -35,7 +35,7 @@ class GlooGame {
   final CurrencyManager currencyManager = CurrencyManager();
 
   /// Faz 4: Power-up sistemi.
-  late final PowerUpSystem powerUpSystem;
+  late PowerUpSystem powerUpSystem;
 
   GameStatus status = GameStatus.idle;
   Timer? _countdownTimer;
