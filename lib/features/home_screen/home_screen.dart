@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../data/local/local_repository.dart';
@@ -227,9 +228,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           const DeepBackground(),

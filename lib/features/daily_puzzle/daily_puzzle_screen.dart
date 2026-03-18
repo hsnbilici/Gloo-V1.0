@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../data/local/local_repository.dart';
@@ -32,9 +33,11 @@ class DailyPuzzleScreen extends ConsumerWidget {
     final repoAsync = ref.watch(localRepositoryProvider);
 
     final screenWidth = MediaQuery.sizeOf(context).width;
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           const Positioned(
@@ -66,7 +69,13 @@ class DailyPuzzleScreen extends ConsumerWidget {
               error: (_, __) => Center(
                 child: Text(
                   '...',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
+                  style: TextStyle(
+                    color: resolveColor(
+                      brightness,
+                      dark: Colors.white.withValues(alpha: 0.4),
+                      light: kTextSecondaryLight,
+                    ),
+                  ),
                 ),
               ),
                 ),
@@ -101,6 +110,12 @@ class _DailyContent extends StatelessWidget {
     final dir = Directionality.of(context);
     final completed = repo.isDailyCompleted();
     final score = repo.getDailyScore();
+    final brightness = Theme.of(context).brightness;
+    final textSecondary = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.25),
+      light: kTextSecondaryLight,
+    );
 
     return Column(
       children: [
@@ -141,7 +156,7 @@ class _DailyContent extends StatelessWidget {
                 Text(
                   '#$puzzleNumber',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.25),
+                    color: textSecondary,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,

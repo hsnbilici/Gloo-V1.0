@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
@@ -89,8 +90,12 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     final dir = Directionality.of(context);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           const IslandBackground(),
@@ -111,15 +116,13 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
+                            color: surfaceColor,
                             borderRadius:
                                 BorderRadius.circular(UIConstants.radiusMd),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.10),
-                            ),
+                            border: Border.all(color: borderColor),
                           ),
                           child: Icon(directionalBackIcon(dir),
-                              color: Colors.white70, size: 20),
+                              color: kGreen, size: 20),
                         ),
                       ),
                       const SizedBox(width: 14),

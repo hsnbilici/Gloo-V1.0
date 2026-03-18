@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
@@ -36,9 +37,13 @@ class LevelSelectScreen extends ConsumerWidget {
     final dir = Directionality.of(context);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           // Arkaplan
@@ -64,15 +69,13 @@ class LevelSelectScreen extends ConsumerWidget {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.06),
+                              color: surfaceColor,
                               borderRadius:
                                   BorderRadius.circular(UIConstants.radiusMd),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.10),
-                              ),
+                              border: Border.all(color: borderColor),
                             ),
                             child: Icon(directionalBackIcon(dir),
-                                color: Colors.white70, size: 20),
+                                color: kOrange, size: 20),
                           ),
                         ),
                       ),
@@ -183,6 +186,8 @@ class _LevelSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final columns = responsiveColumns(screenWidth, phone: 5, tablet: 7, desktop: 10);
+    final brightness = Theme.of(context).brightness;
+    final textColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.85), light: kTextPrimaryLight);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -203,7 +208,7 @@ class _LevelSection extends StatelessWidget {
               Text(
                 sectionName,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: textColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1.5,
@@ -275,6 +280,11 @@ class _LevelCellState extends State<_LevelCell> {
     final isCompleted = widget.isCompleted;
     final isUnlocked = widget.isUnlocked;
 
+    final brightness = Theme.of(context).brightness;
+    final resolvedTextPrimary = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final resolvedTextMuted = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.25), light: kTextSecondaryLight);
+    final resolvedBorderMuted = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBorderLight);
+
     Color bgColor;
     Color borderColor;
     Color textColor;
@@ -286,11 +296,11 @@ class _LevelCellState extends State<_LevelCell> {
     } else if (isUnlocked) {
       bgColor = kOrange.withValues(alpha: 0.12);
       borderColor = kOrange.withValues(alpha: 0.50);
-      textColor = Colors.white;
+      textColor = resolvedTextPrimary;
     } else {
       bgColor = LevelSelectScreen._kLocked.withValues(alpha: 0.30);
-      borderColor = Colors.white.withValues(alpha: 0.06);
-      textColor = Colors.white.withValues(alpha: 0.25);
+      borderColor = resolvedBorderMuted;
+      textColor = resolvedTextMuted;
     }
 
     return Semantics(
@@ -328,8 +338,7 @@ class _LevelCellState extends State<_LevelCell> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (!isUnlocked)
-                Icon(Icons.lock_rounded,
-                    color: Colors.white.withValues(alpha: 0.20), size: 16)
+                Icon(Icons.lock_rounded, color: resolvedTextMuted, size: 16)
               else ...[
                 Text(
                   '${widget.levelId}',
@@ -376,9 +385,11 @@ class _LevelSelectBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     return Stack(
       children: [
-        Container(color: kBgDark),
+        Container(color: bgColor),
         const Positioned(
           top: -100,
           right: -60,

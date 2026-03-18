@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
@@ -34,9 +35,14 @@ class SettingsScreen extends ConsumerWidget {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final dir = Directionality.of(context);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -51,14 +57,13 @@ class SettingsScreen extends ConsumerWidget {
                 height: 44,
                 margin: const EdgeInsetsDirectional.only(start: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.06),
+                  color: surfaceColor,
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(color: borderColor),
                 ),
                 child: Icon(
                   directionalBackIcon(dir),
-                  color: Colors.white,
+                  color: textColor,
                   size: 18,
                 ),
               ),
@@ -68,7 +73,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(
           l.settingsTitle,
           style: TextStyle(
-            color: Colors.white,
+            color: textColor,
             fontSize: MediaQuery.textScalerOf(context).scale(18),
             fontWeight: FontWeight.w700,
             letterSpacing: 0.3,
@@ -280,9 +285,11 @@ class _SettingsBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     return Stack(
       children: [
-        Container(color: kBgDark),
+        Container(color: bgColor),
         Positioned(
           top: -100,
           right: -80,

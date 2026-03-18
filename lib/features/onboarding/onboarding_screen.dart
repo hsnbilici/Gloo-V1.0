@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../shared/glow_orb.dart';
@@ -77,9 +78,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final stepColor = steps[_page].color;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           // Dinamik arka plan parıltısı — aktif adım rengiyle değişir
@@ -118,7 +125,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       Text(
                         'GLOO',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.90),
+                          color: textColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 5,
@@ -132,17 +139,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
+                            color: surfaceColor,
                             borderRadius:
                                 BorderRadius.circular(UIConstants.radiusXl),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.10),
-                            ),
+                            border: Border.all(color: borderColor),
                           ),
                           child: Text(
                             l.onboardingSkip,
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.50),
+                              color: textSecondary,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.3,
@@ -184,7 +189,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             decoration: BoxDecoration(
                               color: active
                                   ? stepColor
-                                  : Colors.white.withValues(alpha: 0.20),
+                                  : resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.20), light: kCardBorderLight),
                               borderRadius:
                                   BorderRadius.circular(UIConstants.radiusXxs),
                               boxShadow: active
@@ -288,6 +293,9 @@ class _StepPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
+    final brightness = Theme.of(context).brightness;
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: hPadding),
       child: Column(
@@ -324,7 +332,7 @@ class _StepPage extends StatelessWidget {
             step.title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white,
+              color: textColor,
               fontSize: 26,
               fontWeight: FontWeight.w900,
               letterSpacing: 1.5,
@@ -346,7 +354,7 @@ class _StepPage extends StatelessWidget {
             step.desc,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.60),
+              color: textSecondary,
               fontSize: 15,
               fontWeight: FontWeight.w400,
               height: 1.55,

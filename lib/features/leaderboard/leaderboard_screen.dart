@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
@@ -72,9 +73,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final dir = Directionality.of(context);
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return Scaffold(
-      backgroundColor: kBgDark,
+      backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -89,21 +95,20 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 height: 44,
                 margin: const EdgeInsetsDirectional.only(start: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.06),
+                  color: surfaceColor,
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border:
-                      Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                  border: Border.all(color: borderColor),
                 ),
                 child: Icon(directionalBackIcon(dir),
-                    color: Colors.white, size: 18),
+                    color: textColor, size: 18),
               ),
             ),
           ),
         ),
         title: Text(
           l.leaderboardTitle,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: textColor,
             fontSize: 18,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.3,
