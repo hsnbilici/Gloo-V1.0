@@ -423,7 +423,8 @@ class StringsTr extends AppStrings {
   @override
   String get tutorialStep2 => 'Izgaraya dokunarak önizleme yapın';
   @override
-  String get tutorialStep3 => 'Yerleştirmek için tekrar dokunun! Dolu satırlar otomatik temizlenir.';
+  String get tutorialStep3 =>
+      'Yerleştirmek için tekrar dokunun! Dolu satırlar otomatik temizlenir.';
   @override
   String get tutorialGotIt => 'Anladım!';
 }

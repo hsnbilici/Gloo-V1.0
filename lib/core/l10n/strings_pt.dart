@@ -424,7 +424,8 @@ class StringsPt extends AppStrings {
   @override
   String get tutorialStep2 => 'Toque na grelha para pré-visualizar';
   @override
-  String get tutorialStep3 => 'Toque novamente para colocar! Linhas cheias são eliminadas.';
+  String get tutorialStep3 =>
+      'Toque novamente para colocar! Linhas cheias são eliminadas.';
   @override
   String get tutorialGotIt => 'Entendi!';
 }

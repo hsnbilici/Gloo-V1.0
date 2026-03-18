@@ -429,7 +429,8 @@ class StringsEs extends AppStrings {
   @override
   String get tutorialStep2 => 'Toca la cuadrícula para previsualizar';
   @override
-  String get tutorialStep3 => '¡Toca de nuevo para colocar! Las líneas llenas se eliminan.';
+  String get tutorialStep3 =>
+      '¡Toca de nuevo para colocar! Las líneas llenas se eliminan.';
   @override
   String get tutorialGotIt => '¡Entendido!';
 }

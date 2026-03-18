@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/features/game_screen/share_prompt_dialog.dart';
 
 void main() {
-  testWidgets('SharePromptDialog renders share and skip buttons', (tester) async {
+  testWidgets('SharePromptDialog renders share and skip buttons',
+      (tester) async {
     bool skipped = false;
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(

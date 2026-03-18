@@ -220,7 +220,8 @@ void main() {
       const combo =
           ComboEvent(size: 4, tier: ComboTier.medium, multiplier: 1.5);
       await bank.onCombo(combo);
-      verify(() => audio.playSfx(AudioPaths.comboMedium, volume: 1.0)).called(1);
+      verify(() => audio.playSfx(AudioPaths.comboMedium, volume: 1.0))
+          .called(1);
       verifyNever(() => haptic.trigger(any()));
     });
 

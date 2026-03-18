@@ -426,7 +426,8 @@ class StringsAr extends AppStrings {
   @override
   String get tutorialStep2 => 'انقر على الشبكة لمعاينة الموضع';
   @override
-  String get tutorialStep3 => 'انقر مرة أخرى للوضع! الصفوف الممتلئة تُمسح تلقائيًا.';
+  String get tutorialStep3 =>
+      'انقر مرة أخرى للوضع! الصفوف الممتلئة تُمسح تلقائيًا.';
   @override
   String get tutorialGotIt => 'فهمت!';
 }

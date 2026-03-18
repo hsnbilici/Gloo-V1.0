@@ -425,7 +425,8 @@ class StringsFr extends AppStrings {
   @override
   String get tutorialStep2 => 'Appuyez sur la grille pour prévisualiser';
   @override
-  String get tutorialStep3 => 'Appuyez à nouveau pour placer ! Les lignes pleines sont supprimées.';
+  String get tutorialStep3 =>
+      'Appuyez à nouveau pour placer ! Les lignes pleines sont supprimées.';
   @override
   String get tutorialGotIt => 'Compris !';
 }

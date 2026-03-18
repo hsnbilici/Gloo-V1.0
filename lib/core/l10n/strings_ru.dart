@@ -429,7 +429,8 @@ class StringsRu extends AppStrings {
   @override
   String get tutorialStep2 => 'Нажмите на сетку для предпросмотра';
   @override
-  String get tutorialStep3 => 'Нажмите ещё раз, чтобы поставить! Полные линии очищаются.';
+  String get tutorialStep3 =>
+      'Нажмите ещё раз, чтобы поставить! Полные линии очищаются.';
   @override
   String get tutorialGotIt => 'Понятно!';
 }

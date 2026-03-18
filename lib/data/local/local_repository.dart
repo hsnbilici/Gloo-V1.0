@@ -111,8 +111,7 @@ class LocalRepository {
     return streak;
   }
 
-  int getLastStreakRewardDay() =>
-      _prefs.getInt('streak_last_reward_day') ?? 0;
+  int getLastStreakRewardDay() => _prefs.getInt('streak_last_reward_day') ?? 0;
 
   Future<void> setLastStreakRewardDay(int day) async {
     await _prefs.setInt('streak_last_reward_day', day);

@@ -111,55 +111,58 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                     }),
                     builder: (context, candidateData, rejectedData) {
                       return SizedBox(
-                    key: _gridKey,
-                    width: gridW,
-                    height: gridH,
-                    child: MouseRegion(
-                      onExit: (_) => setState(() {
-                        previewCells = {};
-                        previewValid = false;
-                        previewAnchor = null;
-                      }),
-                      child: GridView.builder(
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: cols,
-                          crossAxisSpacing: 2.0,
-                          mainAxisSpacing: 2.0,
-                        ),
-                        itemCount: cols * rows,
-                        itemBuilder: (context, index) {
-                          final row = index ~/ cols;
-                          final col = index % cols;
-                          final gridCell = game.gridManager.getCell(row, col);
-                          final cellColor = gridCell.color;
-                          final isPreview = previewCells.contains((row, col));
+                        key: _gridKey,
+                        width: gridW,
+                        height: gridH,
+                        child: MouseRegion(
+                          onExit: (_) => setState(() {
+                            previewCells = {};
+                            previewValid = false;
+                            previewAnchor = null;
+                          }),
+                          child: GridView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: cols,
+                              crossAxisSpacing: 2.0,
+                              mainAxisSpacing: 2.0,
+                            ),
+                            itemCount: cols * rows,
+                            itemBuilder: (context, index) {
+                              final row = index ~/ cols;
+                              final col = index % cols;
+                              final gridCell =
+                                  game.gridManager.getCell(row, col);
+                              final cellColor = gridCell.color;
+                              final isPreview =
+                                  previewCells.contains((row, col));
 
-                          return GameCellWidget(
-                            row: row,
-                            col: col,
-                            gridCell: gridCell,
-                            cellColor: cellColor,
-                            isPreview: isPreview,
-                            colorBlindMode: colorBlindMode,
-                            cols: cols,
-                            breathCtrl: breathCtrl,
-                            recentlyPlacedCells: recentlyPlacedCells,
-                            waveKey: waveKey,
-                            previewValid: previewValid,
-                            previewSlotColor: selectedSlot != null
-                                ? hand[selectedSlot!]?.$2
-                                : null,
-                            selectedSlot: selectedSlot,
-                            activePowerUpMode: activePowerUpMode,
-                            onTap: () => onCellTap(row, col),
-                            onHover: () => onCellHover(row, col),
-                          );
-                        },
-                      ),
-                    ),
-                  );
+                              return GameCellWidget(
+                                row: row,
+                                col: col,
+                                gridCell: gridCell,
+                                cellColor: cellColor,
+                                isPreview: isPreview,
+                                colorBlindMode: colorBlindMode,
+                                cols: cols,
+                                breathCtrl: breathCtrl,
+                                recentlyPlacedCells: recentlyPlacedCells,
+                                waveKey: waveKey,
+                                previewValid: previewValid,
+                                previewSlotColor: selectedSlot != null
+                                    ? hand[selectedSlot!]?.$2
+                                    : null,
+                                selectedSlot: selectedSlot,
+                                activePowerUpMode: activePowerUpMode,
+                                onTap: () => onCellTap(row, col),
+                                onHover: () => onCellHover(row, col),
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     },
                   )),
                   // Hucre patlamasi overlay'leri

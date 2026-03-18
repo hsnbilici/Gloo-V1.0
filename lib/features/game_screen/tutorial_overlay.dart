@@ -92,10 +92,7 @@ class TutorialOverlay extends StatelessWidget {
                   ],
                 ],
               ),
-            )
-                .animate()
-                .fadeIn(duration: 300.ms)
-                .slideY(
+            ).animate().fadeIn(duration: 300.ms).slideY(
                   begin: pointDown ? 0.1 : -0.1,
                   duration: 300.ms,
                   curve: Curves.easeOutCubic,

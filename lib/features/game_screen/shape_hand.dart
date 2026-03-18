@@ -90,8 +90,7 @@ class ShapeHand extends StatelessWidget {
             child: Draggable<int>(
               data: i,
               onDragStarted: () => onDragStarted?.call(i),
-              onDragEnd: (details) =>
-                  onDragEnd?.call(i, details.wasAccepted),
+              onDragEnd: (details) => onDragEnd?.call(i, details.wasAccepted),
               feedback: Material(
                 color: Colors.transparent,
                 child: Opacity(

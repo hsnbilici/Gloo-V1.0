@@ -424,7 +424,8 @@ class StringsHi extends AppStrings {
   @override
   String get tutorialStep2 => 'पूर्वावलोकन के लिए ग्रिड पर टैप करें';
   @override
-  String get tutorialStep3 => 'रखने के लिए फिर से टैप करें! भरी हुई पंक्तियाँ अपने-आप हट जाती हैं।';
+  String get tutorialStep3 =>
+      'रखने के लिए फिर से टैप करें! भरी हुई पंक्तियाँ अपने-आप हट जाती हैं।';
   @override
   String get tutorialGotIt => 'समझ गया!';
 }

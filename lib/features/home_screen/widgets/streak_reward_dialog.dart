@@ -50,9 +50,7 @@ class StreakRewardDialog extends StatelessWidget {
             const Text(
               '🔥',
               style: TextStyle(fontSize: 52),
-            )
-                .animate()
-                .scale(
+            ).animate().scale(
                   begin: const Offset(0.4, 0.4),
                   end: const Offset(1.0, 1.0),
                   duration: 500.ms,

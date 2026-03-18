@@ -22,7 +22,8 @@ void main() {
     expect(find.text('Tap a shape'), findsOneWidget);
   });
 
-  testWidgets('TutorialOverlay shows dismiss button on last step', (tester) async {
+  testWidgets('TutorialOverlay shows dismiss button on last step',
+      (tester) async {
     bool dismissed = false;
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
