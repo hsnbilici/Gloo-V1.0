@@ -99,29 +99,31 @@ final List<GelShape> kLargeShapes = [
 
 /// Rastgele el (hand) oluşturucu — Smart Seed RNG destekli.
 class ShapeGenerator {
-  static final _rng = Random();
+  ShapeGenerator({Random? rng}) : _rng = rng ?? Random();
+
+  final Random _rng;
 
   // ─── Merhamet Mekanizması durumu ──────────────────────────────────────────
-  static int _consecutiveLosses = 0;
-  static int _movesSinceLastClear = 0;
+  int _consecutiveLosses = 0;
+  int _movesSinceLastClear = 0;
 
-  static void recordLoss() => _consecutiveLosses++;
-  static void recordWin() => _consecutiveLosses = 0;
-  static void recordClear() => _movesSinceLastClear = 0;
-  static void recordMoveWithoutClear() => _movesSinceLastClear++;
+  void recordLoss() => _consecutiveLosses++;
+  void recordWin() => _consecutiveLosses = 0;
+  void recordClear() => _movesSinceLastClear = 0;
+  void recordMoveWithoutClear() => _movesSinceLastClear++;
 
-  static (GelShape, GelColor) _randomPiece() {
+  (GelShape, GelColor) _randomPiece() {
     final shape = kAllShapes[_rng.nextInt(kAllShapes.length)];
     final color = kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
     return (shape, color);
   }
 
   /// [GameConstants.shapesInHand] adet rastgele parça üretir.
-  static List<(GelShape, GelColor)> generateHand() =>
+  List<(GelShape, GelColor)> generateHand() =>
       List.generate(GameConstants.shapesInHand, (_) => _randomPiece());
 
   /// Akıllı el üretimi: zorluk, adalet ve merhamet mekanizması dahil.
-  static List<(GelShape, GelColor)> generateSmartHand({
+  List<(GelShape, GelColor)> generateSmartHand({
     required GridManager gridManager,
     required double difficulty,
     int gamesPlayed = 0,
@@ -160,7 +162,7 @@ class ShapeGenerator {
   }
 
   /// Ağırlıklı rastgele şekil seçimi (zorluğa göre).
-  static GelShape _weightedRandomShape(double difficulty) {
+  GelShape _weightedRandomShape(double difficulty) {
     final roll = _rng.nextDouble();
 
     // Zorluk 0.0-0.3: %60 küçük, %30 orta, %10 büyük
@@ -186,7 +188,7 @@ class ShapeGenerator {
 
   /// Izgaradaki renk dağılımına göre ağırlıklı renk seçimi.
   /// Az bulunan birincil renkler daha yüksek ağırlık alır → sentez fırsatı.
-  static GelColor _weightedRandomColor(Grid grid) {
+  GelColor _weightedRandomColor(Grid grid) {
     // Izgaradaki renk dağılımını analiz et
     final colorCounts = <GelColor, int>{};
     for (final color in kPrimaryColors) {
@@ -227,7 +229,7 @@ class ShapeGenerator {
   }
 
   /// Eldeki şekillerden herhangi biri ızgaraya yerleştirilebilir mi?
-  static bool _canAnyBePlaced(
+  bool _canAnyBePlaced(
     GridManager gridManager,
     List<(GelShape, GelColor)> candidates,
   ) {
@@ -244,7 +246,7 @@ class ShapeGenerator {
   }
 
   /// Izgaraya yerleştirilebilir garanti bir şekil bul.
-  static (GelShape, GelColor) _findPlaceableShape(GridManager gridManager) {
+  (GelShape, GelColor) _findPlaceableShape(GridManager gridManager) {
     // Önce küçük şekillerden dene
     for (final pool in [kSmallShapes, kMediumShapes, kLargeShapes]) {
       final shuffled = List<GelShape>.from(pool)..shuffle(_rng);

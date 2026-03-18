@@ -78,8 +78,14 @@ void main() {
   // ─── ShapeGenerator ────────────────────────────────────────────────────────
 
   group('ShapeGenerator', () {
+    late ShapeGenerator sg;
+
+    setUp(() {
+      sg = ShapeGenerator();
+    });
+
     test('generateHand returns 3 pieces', () {
-      final hand = ShapeGenerator.generateHand();
+      final hand = sg.generateHand();
       expect(hand.length, GameConstants.shapesInHand);
       expect(hand.length, 3);
     });
@@ -87,7 +93,7 @@ void main() {
     test('generateHand pieces use only primary colors', () {
       // Coklu deneme — rastgele oldugundan birden fazla cagri
       for (int i = 0; i < 20; i++) {
-        final hand = ShapeGenerator.generateHand();
+        final hand = sg.generateHand();
         for (final (_, color) in hand) {
           expect(kPrimaryColors, contains(color),
               reason: '$color should be a primary color');
@@ -97,7 +103,7 @@ void main() {
 
     test('generateHand pieces use valid shapes', () {
       for (int i = 0; i < 20; i++) {
-        final hand = ShapeGenerator.generateHand();
+        final hand = sg.generateHand();
         for (final (shape, _) in hand) {
           expect(kAllShapes, contains(shape));
         }
@@ -153,7 +159,7 @@ void main() {
 
     test('generateSmartHand returns 3 pieces', () {
       final gm = GridManager(rows: 8, cols: 8);
-      final hand = ShapeGenerator.generateSmartHand(
+      final hand = sg.generateSmartHand(
         gridManager: gm,
         difficulty: 0.5,
       );
@@ -170,7 +176,7 @@ void main() {
         }
       }
 
-      final hand = ShapeGenerator.generateSmartHand(
+      final hand = sg.generateSmartHand(
         gridManager: gm,
         difficulty: 0.5,
       );
@@ -241,25 +247,25 @@ void main() {
   // ─── Merhamet mekanizmasi ──────────────────────────────────────────────────
 
   group('Mercy mechanism', () {
+    late ShapeGenerator sg;
+
     setUp(() {
-      // State'i temizle
-      ShapeGenerator.recordWin();
-      ShapeGenerator.recordClear();
+      sg = ShapeGenerator();
     });
 
     test('recordLoss and recordWin track state', () {
-      ShapeGenerator.recordLoss();
-      ShapeGenerator.recordLoss();
-      ShapeGenerator.recordLoss();
+      sg.recordLoss();
+      sg.recordLoss();
+      sg.recordLoss();
       // 3 ardisik kayip → generateSmartHand zorlugu dusurur
-      ShapeGenerator.recordWin();
+      sg.recordWin();
       // Win sonrasi sifirlandi
     });
 
     test('recordClear and recordMoveWithoutClear track state', () {
-      ShapeGenerator.recordMoveWithoutClear();
-      ShapeGenerator.recordMoveWithoutClear();
-      ShapeGenerator.recordClear();
+      sg.recordMoveWithoutClear();
+      sg.recordMoveWithoutClear();
+      sg.recordClear();
       // Clear sonrasi sifirlandi
     });
   });

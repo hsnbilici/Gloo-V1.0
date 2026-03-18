@@ -18,10 +18,12 @@ import 'grid_manager.dart';
 enum GameStatus { idle, playing, paused, gameOver, frozen }
 
 class GlooGame {
-  GlooGame({required this.mode, this.levelData});
+  GlooGame({required this.mode, this.levelData, ShapeGenerator? shapeGenerator})
+      : _shapeGenerator = shapeGenerator ?? ShapeGenerator();
 
   final GameMode mode;
   final LevelData? levelData;
+  final ShapeGenerator _shapeGenerator;
 
   late final GridManager _gridManager;
   final ScoreSystem _scoreSystem = ScoreSystem();
@@ -188,7 +190,7 @@ class GlooGame {
     }
 
     status = GameStatus.gameOver;
-    ShapeGenerator.recordLoss();
+    _shapeGenerator.recordLoss();
     onGameOver?.call();
   }
 
@@ -229,7 +231,7 @@ class GlooGame {
       score: _scoreSystem.score,
       gamesPlayed: _totalGamesPlayed,
     );
-    return ShapeGenerator.generateSmartHand(
+    return _shapeGenerator.generateSmartHand(
       gridManager: _gridManager,
       difficulty: difficulty,
       gamesPlayed: _totalGamesPlayed,
@@ -250,7 +252,7 @@ class GlooGame {
       if (_checkLevelCompletion()) return;
     } else {
       // Satır temizlenmedi → Merhamet RNG güncelleme
-      ShapeGenerator.recordMoveWithoutClear();
+      _shapeGenerator.recordMoveWithoutClear();
     }
 
     _evaluateNearMiss();
@@ -328,7 +330,7 @@ class GlooGame {
 
     // Faz 4: Satır temizleme → Jel Özü + Merhamet RNG güncelleme
     currencyManager.earnFromLineClear(clearResult.totalLines);
-    ShapeGenerator.recordClear();
+    _shapeGenerator.recordClear();
 
     // Faz 4: Jel Enerjisi kazanımı (meta-game kaynak)
     onJelEnergyEarned?.call(clearResult.totalLines);

@@ -127,13 +127,19 @@ void main() {
   // ─── ShapeGenerator ─────────────────────────────────────────────────────
 
   group('ShapeGenerator', () {
+    late ShapeGenerator sg;
+
+    setUp(() {
+      sg = ShapeGenerator();
+    });
+
     test('generateHand returns shapesInHand pieces', () {
-      final hand = ShapeGenerator.generateHand();
+      final hand = sg.generateHand();
       expect(hand.length, GameConstants.shapesInHand);
     });
 
     test('generateHand returns valid shapes and primary colors', () {
-      final hand = ShapeGenerator.generateHand();
+      final hand = sg.generateHand();
       for (final (shape, color) in hand) {
         expect(shape.cells, isNotEmpty);
         expect(kPrimaryColors, contains(color));
@@ -200,7 +206,7 @@ void main() {
 
     test('generateSmartHand returns valid hand', () {
       final grid = GridManager();
-      final hand = ShapeGenerator.generateSmartHand(
+      final hand = sg.generateSmartHand(
         gridManager: grid,
         difficulty: 0.5,
       );
@@ -212,13 +218,13 @@ void main() {
     });
 
     test('mercy mechanism: recordLoss and recordWin work', () {
-      // These are static methods — just ensure they don't throw
-      ShapeGenerator.recordLoss();
-      ShapeGenerator.recordLoss();
-      ShapeGenerator.recordLoss();
-      ShapeGenerator.recordWin();
-      ShapeGenerator.recordClear();
-      ShapeGenerator.recordMoveWithoutClear();
+      // Instance methods — just ensure they don't throw
+      sg.recordLoss();
+      sg.recordLoss();
+      sg.recordLoss();
+      sg.recordWin();
+      sg.recordClear();
+      sg.recordMoveWithoutClear();
     });
   });
 }
