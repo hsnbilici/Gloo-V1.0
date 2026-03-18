@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../shared/glow_orb.dart';
-import '../../data/remote/pvp_realtime_service.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/pvp_provider.dart';
@@ -139,21 +138,25 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => context.go('/'),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.06),
-                            borderRadius:
-                                BorderRadius.circular(UIConstants.radiusMd),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.10),
+                      Semantics(
+                        label: 'Geri',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () => context.go('/'),
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.06),
+                              borderRadius:
+                                  BorderRadius.circular(UIConstants.radiusMd),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.10),
+                              ),
                             ),
+                            child: const Icon(Icons.arrow_back_rounded,
+                                color: Colors.white70, size: 20),
                           ),
-                          child: const Icon(Icons.arrow_back_rounded,
-                              color: Colors.white70, size: 20),
                         ),
                       ),
                       const SizedBox(width: 14),

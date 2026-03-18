@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/remote/pvp_realtime_service.dart';
 import '../data/remote/supabase_client.dart';
 
+export '../data/remote/pvp_realtime_service.dart' show PvpRealtimeService;
+
 /// Sentinel for nullable copyWith fields — identity-based, never equals a real value.
 const _absent = _Absent();
 
