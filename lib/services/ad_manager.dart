@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'consent_service.dart';
 
@@ -35,6 +36,12 @@ class AdManager {
   int _dailyRewardedOfferCount = 0;
   DateTime? _lastDailyReset;
   DateTime? _lastRewardedTime;
+
+  SharedPreferences? _prefs;
+
+  static const _kPrefInterstitial = 'ad_daily_interstitial';
+  static const _kPrefRewarded = 'ad_daily_rewarded';
+  static const _kPrefDailyReset = 'ad_daily_reset';
 
   InterstitialAd? _interstitialAd;
   RewardedAd? _rewardedAd;
@@ -126,6 +133,36 @@ class AdManager {
       _dailyInterstitialCount = 0;
       _dailyRewardedOfferCount = 0;
       _lastDailyReset = today;
+      _persistDailyCaps();
+    }
+  }
+
+  // ── Günlük cap kalıcılığı ────────────────────────────────────────────────
+
+  /// Uygulama başlangıcında SharedPreferences'tan günlük cap değerlerini yükler.
+  /// Yeni gün başlamışsa [_checkDailyReset] otomatik sıfırlar.
+  Future<void> restoreDailyCaps(SharedPreferences prefs) async {
+    _prefs = prefs;
+    _dailyInterstitialCount = prefs.getInt(_kPrefInterstitial) ?? 0;
+    _dailyRewardedOfferCount = prefs.getInt(_kPrefRewarded) ?? 0;
+    final resetStr = prefs.getString(_kPrefDailyReset);
+    if (resetStr != null) {
+      try {
+        _lastDailyReset = DateTime.parse(resetStr);
+      } catch (_) {
+        _lastDailyReset = null;
+      }
+    }
+    _checkDailyReset();
+  }
+
+  void _persistDailyCaps() {
+    final prefs = _prefs;
+    if (prefs == null) return;
+    prefs.setInt(_kPrefInterstitial, _dailyInterstitialCount);
+    prefs.setInt(_kPrefRewarded, _dailyRewardedOfferCount);
+    if (_lastDailyReset != null) {
+      prefs.setString(_kPrefDailyReset, _lastDailyReset!.toIso8601String());
     }
   }
 
@@ -199,6 +236,7 @@ class AdManager {
     ad.show();
     _interstitialAd = null;
     _dailyInterstitialCount++;
+    _persistDailyCaps();
   }
 
   // ── Rewarded ──────────────────────────────────────────────────────────────
@@ -294,6 +332,7 @@ class AdManager {
   void recordRewardedView() {
     _dailyRewardedOfferCount++;
     _lastRewardedTime = DateTime.now();
+    _persistDailyCaps();
   }
 
   /// İkinci Şans: Rewarded izle → ekstra hamle ver.

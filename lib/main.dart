@@ -95,6 +95,7 @@ Future<void> main() async {
         final localRepo = LocalRepository(prefs);
         await PurchaseService().loadPendingVerifications(localRepo);
         await PurchaseService().syncLocalProducts(localRepo);
+        await AdManager().restoreDailyCaps(prefs);
       } catch (_) {
         // Network hatasi — sonraki baslatmada tekrar denenir
       }

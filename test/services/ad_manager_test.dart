@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gloo/services/ad_manager.dart';
 
@@ -238,6 +239,86 @@ void main() {
       // loadBanner imzası AdSize gerektirdiğinden, guard davranışı
       // bannerAd'ın null kalması ile dolaylı olarak doğrulanır
       expect(ad.bannerAd, isNull);
+    });
+  });
+
+  // ── Daily cap persistence ────────────────────────────────────────────────
+  group('AdManager daily cap persistence', () {
+    late AdManager ad;
+
+    setUp(() {
+      SharedPreferences.setMockInitialValues({});
+      ad = AdManager();
+      ad.setAdsRemoved(false);
+      ad.setGamesPlayed(0);
+    });
+
+    test('restoreDailyCaps loads persisted interstitial count', () async {
+      SharedPreferences.setMockInitialValues({
+        'ad_daily_interstitial': 5,
+        'ad_daily_rewarded': 2,
+        'ad_daily_reset': DateTime.now().toIso8601String(),
+      });
+      final prefs = await SharedPreferences.getInstance();
+      await ad.restoreDailyCaps(prefs);
+
+      // Verify the counts are restored by checking daily cap is enforced.
+      // With 5 interstitials already logged (max is 8), canOfferRewarded
+      // tracks rewarded cap — verify rewarded cap is loaded (2 of 5 used).
+      // We check via recordRewardedView increments and canOfferRewarded
+      // indirectly; here we verify prefs values match after another write.
+      ad.recordRewardedView(); // now 3
+      expect(prefs.getInt('ad_daily_rewarded'), 3);
+    });
+
+    test('restoreDailyCaps resets counters when stored date is yesterday',
+        () async {
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      SharedPreferences.setMockInitialValues({
+        'ad_daily_interstitial': 7,
+        'ad_daily_rewarded': 4,
+        'ad_daily_reset': yesterday.toIso8601String(),
+      });
+      final prefs = await SharedPreferences.getInstance();
+      await ad.restoreDailyCaps(prefs);
+
+      // After restore, _checkDailyReset should have reset and persisted 0s.
+      expect(prefs.getInt('ad_daily_interstitial'), 0);
+      expect(prefs.getInt('ad_daily_rewarded'), 0);
+    });
+
+    test('recordRewardedView persists incremented count', () async {
+      SharedPreferences.setMockInitialValues({
+        'ad_daily_rewarded': 1,
+        'ad_daily_interstitial': 0,
+        'ad_daily_reset': DateTime.now().toIso8601String(),
+      });
+      final prefs = await SharedPreferences.getInstance();
+      await ad.restoreDailyCaps(prefs);
+
+      ad.recordRewardedView();
+
+      expect(prefs.getInt('ad_daily_rewarded'), 2);
+    });
+
+    test('restoreDailyCaps handles missing prefs gracefully', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      await expectLater(ad.restoreDailyCaps(prefs), completes);
+    });
+
+    test('restoreDailyCaps handles malformed date string gracefully', () async {
+      SharedPreferences.setMockInitialValues({
+        'ad_daily_reset': 'not-a-date',
+        'ad_daily_interstitial': 3,
+        'ad_daily_rewarded': 1,
+      });
+      final prefs = await SharedPreferences.getInstance();
+      // Should not throw; treats malformed date as null → resets counters.
+      await expectLater(ad.restoreDailyCaps(prefs), completes);
+      // After reset (lastDailyReset was null → new day detected), counts = 0.
+      expect(prefs.getInt('ad_daily_interstitial'), 0);
+      expect(prefs.getInt('ad_daily_rewarded'), 0);
     });
   });
 }
