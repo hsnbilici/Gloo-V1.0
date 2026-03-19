@@ -467,4 +467,18 @@ class StringsEs extends AppStrings {
   String get levelSectionColorGarden => 'Jardín de Colores';
   @override
   String get levelSectionDarkCellar => 'Sótano Oscuro';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '¡$score puntos en $modeName!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Puzzle Diario [$dateLabel] — ¡$score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '¡$comboLabel! ¡$score en $modeName!';
+  @override
+  String get shareScoreChallenge => '¿Cuál es tu récord?';
+  @override
+  String get shareDailyChallenge => '¿Cuánto sacaste hoy?';
 }

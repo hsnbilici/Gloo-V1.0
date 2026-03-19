@@ -467,4 +467,18 @@ class StringsRu extends AppStrings {
   String get levelSectionColorGarden => 'Цветной сад';
   @override
   String get levelSectionDarkCellar => 'Тёмный подвал';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$score очков в $modeName!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Ежедневная головоломка [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $score в $modeName!';
+  @override
+  String get shareScoreChallenge => 'Какой у тебя рекорд?';
+  @override
+  String get shareDailyChallenge => 'А сколько у тебя сегодня?';
 }

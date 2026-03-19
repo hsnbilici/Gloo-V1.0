@@ -293,6 +293,13 @@ abstract class AppStrings {
   String get levelSectionColorGarden;
   String get levelSectionDarkCellar;
 
+  // Share texts
+  String shareScoreCaption(String modeName, String score);
+  String shareDailyCaption(String dateLabel, String score);
+  String shareComboCaption(String comboLabel, String modeName, String score);
+  String get shareScoreChallenge;
+  String get shareDailyChallenge;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

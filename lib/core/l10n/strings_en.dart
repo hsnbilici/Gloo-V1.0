@@ -459,4 +459,18 @@ class StringsEn extends AppStrings {
   String get levelSectionColorGarden => 'Color Garden';
   @override
   String get levelSectionDarkCellar => 'Dark Cellar';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      'I scored $score in $modeName!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Daily Puzzle [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $score in $modeName!';
+  @override
+  String get shareScoreChallenge => 'What\'s your high score?';
+  @override
+  String get shareDailyChallenge => 'What did you get today?';
 }

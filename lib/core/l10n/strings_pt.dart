@@ -462,4 +462,18 @@ class StringsPt extends AppStrings {
   String get levelSectionColorGarden => 'Jardim de Cores';
   @override
   String get levelSectionDarkCellar => 'Porão Escuro';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$score pontos em $modeName!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Puzzle Diário [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $score em $modeName!';
+  @override
+  String get shareScoreChallenge => 'Qual é a sua pontuação máxima?';
+  @override
+  String get shareDailyChallenge => 'Quanto você fez hoje?';
 }

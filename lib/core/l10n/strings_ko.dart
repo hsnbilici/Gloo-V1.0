@@ -459,4 +459,18 @@ class StringsKo extends AppStrings {
   String get levelSectionColorGarden => '색 정원';
   @override
   String get levelSectionDarkCellar => '어둠의 지하실';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$modeName에서 $score점 달성!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      '일일 퍼즐 [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $modeName에서 $score점!';
+  @override
+  String get shareScoreChallenge => '당신의 최고 점수는?';
+  @override
+  String get shareDailyChallenge => '오늘 몇 점이었나요?';
 }

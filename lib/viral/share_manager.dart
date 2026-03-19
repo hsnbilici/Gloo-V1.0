@@ -1,14 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../core/l10n/app_strings.dart';
 import '../services/analytics_service.dart';
 
 class ShareManager {
   static const String _hashtags = '#Gloo #ASMR #satisfying #puzzle #colorsort';
   static const String _appUrl = 'https://gloo.app';
 
-  Future<void> shareScore({required int score, required String mode}) async {
-    final text = _buildCaption(score: score, mode: mode);
+  Future<void> shareScore({
+    required int score,
+    required String mode,
+    required AppStrings l,
+  }) async {
+    final text = _buildCaption(score: score, mode: mode, l: l);
     AnalyticsService().logShare(mode: mode);
     await Share.share(text);
   }
@@ -34,10 +39,11 @@ class ShareManager {
   Future<void> shareDailyResult({
     required int score,
     required String dateLabel,
+    required AppStrings l,
   }) async {
     AnalyticsService().logShare(mode: 'daily');
-    final text = 'Günlük Bulmaca [$dateLabel] — ${_formatScore(score)} puan! '
-        'Sen bugün kaç yaptın? '
+    final text = '${l.shareDailyCaption(dateLabel, _formatScore(score))} '
+        '${l.shareDailyChallenge} '
         '$_appUrl\n\n$_hashtags';
     await Share.share(text);
   }
@@ -46,26 +52,33 @@ class ShareManager {
     required int score,
     required String mode,
     required String comboLabel,
+    required AppStrings l,
   }) async {
-    final label = _modeLabel(mode);
-    final text = '$comboLabel! $label modunda ${_formatScore(score)} puan! '
+    final modeName = _modeName(l, mode);
+    final text =
+        '${l.shareComboCaption(comboLabel, modeName, _formatScore(score))} '
         '$_appUrl\n\n$_hashtags';
     AnalyticsService().logShare(mode: 'combo');
     await Share.share(text);
   }
 
-  String _buildCaption({required int score, required String mode}) {
-    return '${_modeLabel(mode)} modunda ${_formatScore(score)} puan yaptım! '
-        'Senin en yüksek puanın nedir? '
+  String _buildCaption({
+    required int score,
+    required String mode,
+    required AppStrings l,
+  }) {
+    final modeName = _modeName(l, mode);
+    return '${l.shareScoreCaption(modeName, _formatScore(score))} '
+        '${l.shareScoreChallenge} '
         '$_appUrl\n\n$_hashtags';
   }
 
-  String _modeLabel(String mode) => switch (mode) {
-        'classic' => 'Klasik',
-        'colorChef' => 'Renk Şefi',
-        'timeTrial' => 'Zaman Koşusu',
-        'zen' => 'Zen',
-        'daily' => 'Günlük Bulmaca',
+  String _modeName(AppStrings l, String mode) => switch (mode) {
+        'classic' => l.modeLabelClassic,
+        'colorChef' => l.modeLabelColorChef,
+        'timeTrial' => l.modeLabelTimeTrial,
+        'zen' => l.modeLabelZen,
+        'daily' => l.modeLabelDaily,
         _ => mode,
       };
 

@@ -463,4 +463,18 @@ class StringsFr extends AppStrings {
   String get levelSectionColorGarden => 'Jardin des Couleurs';
   @override
   String get levelSectionDarkCellar => 'Cave Sombre';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$score points en $modeName !';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Puzzle du jour [$dateLabel] — $score !';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel ! $score en $modeName !';
+  @override
+  String get shareScoreChallenge => 'Quel est ton meilleur score ?';
+  @override
+  String get shareDailyChallenge => 'Combien as-tu fait aujourd\'hui ?';
 }

@@ -464,4 +464,18 @@ class StringsAr extends AppStrings {
   String get levelSectionColorGarden => 'حديقة الألوان';
   @override
   String get levelSectionDarkCellar => 'القبو المظلم';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      'حصلت على $score في $modeName!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'اللغز اليومي [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $score في $modeName!';
+  @override
+  String get shareScoreChallenge => 'ما هي أعلى نتيجة لديك؟';
+  @override
+  String get shareDailyChallenge => 'كم حصلت اليوم؟';
 }

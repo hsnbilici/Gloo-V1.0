@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../data/local/local_repository.dart';
@@ -98,7 +99,7 @@ class _DailyContent extends StatelessWidget {
     required this.hPadding,
   });
 
-  final dynamic l;
+  final AppStrings l;
   final LocalRepository repo;
   final Color accent;
   final String dateLabel;

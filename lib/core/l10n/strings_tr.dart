@@ -461,4 +461,18 @@ class StringsTr extends AppStrings {
   String get levelSectionColorGarden => 'Renk Bahçesi';
   @override
   String get levelSectionDarkCellar => 'Karanlık Mahzen';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$modeName modunda $score puan yaptım!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'Günlük Bulmaca [$dateLabel] — $score puan!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $modeName modunda $score puan!';
+  @override
+  String get shareScoreChallenge => 'Senin en yüksek puanın nedir?';
+  @override
+  String get shareDailyChallenge => 'Sen bugün kaç yaptın?';
 }

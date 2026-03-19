@@ -455,4 +455,18 @@ class StringsZh extends AppStrings {
   String get levelSectionColorGarden => '色彩花园';
   @override
   String get levelSectionDarkCellar => '暗黑地窖';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '在$modeName中获得了$score分！';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      '每日谜题 [$dateLabel] — $score！';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel！$modeName中$score分！';
+  @override
+  String get shareScoreChallenge => '你的最高分是多少？';
+  @override
+  String get shareDailyChallenge => '你今天得了多少分？';
 }

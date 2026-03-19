@@ -458,4 +458,18 @@ class StringsJa extends AppStrings {
   String get levelSectionColorGarden => '色の庭園';
   @override
   String get levelSectionDarkCellar => '暗黒の地下室';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$modeNameで$scoreポイント獲得！';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'デイリーパズル [$dateLabel] — $score！';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel！$modeNameで$scoreポイント！';
+  @override
+  String get shareScoreChallenge => 'あなたのハイスコアは？';
+  @override
+  String get shareDailyChallenge => '今日は何点だった？';
 }

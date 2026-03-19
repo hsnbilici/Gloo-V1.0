@@ -155,6 +155,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
                     score: game.score,
                     mode: widget.mode.name,
                     comboLabel: 'EPIC COMBO',
+                    l: l,
                   );
                 },
                 onSkip: () => Navigator.pop(context),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/models/game_mode.dart';
 import '../../viral/share_manager.dart';
 
@@ -83,7 +84,7 @@ class CalendarCard extends StatelessWidget {
 class PlayState extends StatelessWidget {
   const PlayState({super.key, required this.l, required this.accent});
 
-  final dynamic l;
+  final AppStrings l;
   final Color accent;
 
   @override
@@ -126,7 +127,7 @@ class CompletedState extends StatelessWidget {
     required this.dateLabel,
   });
 
-  final dynamic l;
+  final AppStrings l;
   final int score;
   final Color accent;
   final String dateLabel;
@@ -211,6 +212,7 @@ class CompletedState extends StatelessWidget {
             ShareManager().shareDailyResult(
               score: score,
               dateLabel: dateLabel,
+              l: l,
             );
           },
         ),

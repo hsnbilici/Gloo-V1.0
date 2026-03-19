@@ -462,4 +462,18 @@ class StringsHi extends AppStrings {
   String get levelSectionColorGarden => 'रंग बगीचा';
   @override
   String get levelSectionDarkCellar => 'अंधेरा तहखाना';
+
+  @override
+  String shareScoreCaption(String modeName, String score) =>
+      '$modeName में $score अंक!';
+  @override
+  String shareDailyCaption(String dateLabel, String score) =>
+      'दैनिक पहेली [$dateLabel] — $score!';
+  @override
+  String shareComboCaption(String comboLabel, String modeName, String score) =>
+      '$comboLabel! $modeName में $score!';
+  @override
+  String get shareScoreChallenge => 'आपका उच्चतम स्कोर क्या है?';
+  @override
+  String get shareDailyChallenge => 'आज आपने कितना किया?';
 }
