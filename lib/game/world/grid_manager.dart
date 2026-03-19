@@ -313,6 +313,36 @@ class GridManager {
         setStone(row, col);
     }
   }
+
+  /// Rastgele bir merkez seçip çevresine alan bazlı engel uygular (epic PvP).
+  void applyAreaObstacle(ObstacleType obstacleType, int size) {
+    final radius = size ~/ 2; // size=3 → radius=1
+    // Merkezin alan içinde kalması için sınırları daralt
+    final minR = radius;
+    final maxR = _rows - 1 - radius;
+    final minC = radius;
+    final maxC = _cols - 1 - radius;
+    if (minR > maxR || minC > maxC) return; // Grid çok küçük
+
+    final centerR = minR + _rng.nextInt(maxR - minR + 1);
+    final centerC = minC + _rng.nextInt(maxC - minC + 1);
+
+    for (int r = centerR - radius; r <= centerR + radius; r++) {
+      for (int c = centerC - radius; c <= centerC + radius; c++) {
+        final cell = _cells[r][c];
+        if (!cell.isEmpty || cell.type != CellType.normal) continue;
+        switch (obstacleType) {
+          case ObstacleType.ice:
+            setCellType(r, c, CellType.ice, iceLayer: 1);
+          case ObstacleType.locked:
+            final randomColor = kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
+            setCellType(r, c, CellType.locked, lockedColor: randomColor);
+          case ObstacleType.stone:
+            setStone(r, c);
+        }
+      }
+    }
+  }
 }
 
 /// Seviye verisi için hücre konfigürasyonu.

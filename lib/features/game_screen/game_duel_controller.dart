@@ -109,8 +109,12 @@ class GameDuelController {
 
   void _applyIncomingObstacle(ObstaclePacket packet) {
     final grid = game.gridManager;
-    for (var i = 0; i < packet.count; i++) {
-      grid.applyRandomObstacle(packet.type);
+    if (packet.areaSize != null) {
+      grid.applyAreaObstacle(packet.type, packet.areaSize!);
+    } else {
+      for (var i = 0; i < packet.count; i++) {
+        grid.applyRandomObstacle(packet.type);
+      }
     }
     onStateChanged();
   }

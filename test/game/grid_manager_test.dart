@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/core/constants/color_constants.dart';
+import 'package:gloo/game/pvp/matchmaking.dart';
 import 'package:gloo/game/world/cell_type.dart';
 import 'package:gloo/game/world/grid_manager.dart';
 
@@ -536,6 +537,49 @@ void main() {
         clearedCellColors: {},
       );
       expect(result.totalLines, 0);
+    });
+  });
+
+  // ─── applyAreaObstacle ─────────────────────────────────────────────────────
+
+  group('GridManager.applyAreaObstacle', () {
+    test('applyAreaObstacle places ice in a 3x3 cluster', () {
+      final gm = GridManager(rows: 8, cols: 8);
+      gm.applyAreaObstacle(ObstacleType.ice, 3);
+
+      var iceCount = 0;
+      for (var r = 0; r < 8; r++) {
+        for (var c = 0; c < 8; c++) {
+          if (gm.getCell(r, c).type == CellType.ice) iceCount++;
+        }
+      }
+      // A 3x3 area on an empty grid must produce exactly 9 ice cells
+      expect(iceCount, 9);
+    });
+
+    test('applyAreaObstacle skips non-empty cells', () {
+      final gm = GridManager(rows: 8, cols: 8);
+      // Fill center area with color so those cells are not empty
+      gm.place([(3, 3), (3, 4), (4, 3), (4, 4)], GelColor.red);
+      gm.applyAreaObstacle(ObstacleType.ice, 3);
+
+      // Pre-filled cells must still have color, not ice
+      for (final (r, c) in [(3, 3), (3, 4), (4, 3), (4, 4)]) {
+        expect(gm.getCell(r, c).type, isNot(CellType.ice));
+        expect(gm.getCell(r, c).color, GelColor.red);
+      }
+    });
+
+    test('applyAreaObstacle on grid too small for area does nothing', () {
+      final gm = GridManager(rows: 2, cols: 2);
+      // size=3 requires radius=1, minR=1 > maxR=0 → should return early
+      gm.applyAreaObstacle(ObstacleType.ice, 3);
+
+      for (var r = 0; r < 2; r++) {
+        for (var c = 0; c < 2; c++) {
+          expect(gm.getCell(r, c).type, CellType.normal);
+        }
+      }
     });
   });
 }
