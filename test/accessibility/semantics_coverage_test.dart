@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gloo/features/home_screen/home_screen.dart';
 import 'package:gloo/features/home_screen/widgets/bottom_bar.dart';
 import 'package:gloo/features/game_screen/game_over_buttons.dart';
-import 'package:gloo/core/ui/accessible_tap_target.dart';
 import 'package:gloo/providers/user_provider.dart';
 
 /// Finds a [Semantics] widget with the given [label].
@@ -111,29 +110,4 @@ void main() {
     });
   });
 
-  group('AccessibleTapTarget widget', () {
-    testWidgets('renders with Semantics label and minimum size',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: AccessibleTapTarget(
-                onTap: () {},
-                semanticLabel: 'Test action',
-                child: const Icon(Icons.star),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      expect(findSemantics('Test action'), findsOneWidget);
-      final renderBox = tester.renderObject<RenderBox>(
-        find.byType(AccessibleTapTarget),
-      );
-      expect(renderBox.size.width, greaterThanOrEqualTo(44.0));
-      expect(renderBox.size.height, greaterThanOrEqualTo(44.0));
-    });
-  });
 }

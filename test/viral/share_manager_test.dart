@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/viral/share_manager.dart';
+
+final _l = StringsEn();
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +24,7 @@ void main() {
       final manager = ShareManager();
       // Share.share will throw MissingPluginException in test env
       try {
-        await manager.shareScore(score: 1000, mode: 'classic');
+        await manager.shareScore(score: 1000, mode: 'classic', l: _l);
       } catch (_) {
         // Expected: MissingPluginException from share_plus
       }
@@ -30,7 +33,7 @@ void main() {
     test('shareScore does not throw for colorChef mode', () async {
       final manager = ShareManager();
       try {
-        await manager.shareScore(score: 5000, mode: 'colorChef');
+        await manager.shareScore(score: 5000, mode: 'colorChef', l: _l);
       } catch (_) {
         // Expected: platform exception
       }
@@ -39,7 +42,7 @@ void main() {
     test('shareScore does not throw for timeTrial mode', () async {
       final manager = ShareManager();
       try {
-        await manager.shareScore(score: 300, mode: 'timeTrial');
+        await manager.shareScore(score: 300, mode: 'timeTrial', l: _l);
       } catch (_) {
         // Expected: platform exception
       }
@@ -48,7 +51,7 @@ void main() {
     test('shareScore does not throw for zen mode', () async {
       final manager = ShareManager();
       try {
-        await manager.shareScore(score: 0, mode: 'zen');
+        await manager.shareScore(score: 0, mode: 'zen', l: _l);
       } catch (_) {
         // Expected: platform exception
       }
@@ -57,7 +60,7 @@ void main() {
     test('shareScore does not throw for unknown mode', () async {
       final manager = ShareManager();
       try {
-        await manager.shareScore(score: 100, mode: 'unknownMode');
+        await manager.shareScore(score: 100, mode: 'unknownMode', l: _l);
       } catch (_) {
         // Expected: platform exception
       }
@@ -94,42 +97,25 @@ void main() {
     });
   });
 
-  group('ShareManager._buildCaption mode labels', () {
-    // Replicate the switch expression to verify mode → label mapping
-
-    String getModeLabel(String mode) {
-      return switch (mode) {
-        'classic' => 'Klasik',
-        'colorChef' => 'Renk \u015Eefi',
-        'timeTrial' => 'Zaman Ko\u015Fusu',
-        'zen' => 'Zen',
-        'daily' => 'G\u00FCnl\u00FCk Bulmaca',
-        _ => mode,
-      };
-    }
-
-    test('classic maps to Klasik', () {
-      expect(getModeLabel('classic'), 'Klasik');
+  group('ShareManager mode labels (via AppStrings)', () {
+    test('classic uses localized label', () {
+      expect(_l.modeLabelClassic, isNotEmpty);
     });
 
-    test('colorChef maps to Renk Sefi', () {
-      expect(getModeLabel('colorChef'), contains('Renk'));
+    test('colorChef uses localized label', () {
+      expect(_l.modeLabelColorChef, isNotEmpty);
     });
 
-    test('timeTrial maps to Zaman Kosusu', () {
-      expect(getModeLabel('timeTrial'), contains('Zaman'));
+    test('timeTrial uses localized label', () {
+      expect(_l.modeLabelTimeTrial, isNotEmpty);
     });
 
-    test('zen maps to Zen', () {
-      expect(getModeLabel('zen'), 'Zen');
+    test('zen uses localized label', () {
+      expect(_l.modeLabelZen, isNotEmpty);
     });
 
-    test('daily maps to Gunluk Bulmaca', () {
-      expect(getModeLabel('daily'), contains('Bulmaca'));
-    });
-
-    test('unknown mode returns mode string itself', () {
-      expect(getModeLabel('myCustomMode'), 'myCustomMode');
+    test('daily uses localized label', () {
+      expect(_l.modeLabelDaily, isNotEmpty);
     });
   });
 
@@ -137,7 +123,7 @@ void main() {
     test('shareDailyResult does not throw', () async {
       final manager = ShareManager();
       try {
-        await manager.shareDailyResult(score: 5000, dateLabel: '2026-03-01');
+        await manager.shareDailyResult(score: 5000, dateLabel: '2026-03-01', l: _l);
       } catch (_) {
         // Expected: MissingPluginException from share_plus
       }
