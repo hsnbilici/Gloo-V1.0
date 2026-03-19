@@ -350,23 +350,33 @@ class GlooGame {
   }
 
   /// Yerçekimi uygula ve zincirleme temizleme kontrolü.
+  /// Yerçekimi → temizleme döngüsü, değişiklik kalmayana kadar (veya
+  /// maksimum güvenlik sınırına ulaşana kadar) tekrar eder.
   void _applyGravityAndCascade() {
-    final gravityMoves = _gridManager.applyGravity();
-    if (gravityMoves.isNotEmpty) {
+    const maxIterations = 20;
+    int iterations = 0;
+
+    while (iterations < maxIterations) {
+      final gravityMoves = _gridManager.applyGravity();
+      if (gravityMoves.isEmpty) break;
+
       onGravityApplied?.call(gravityMoves);
-      // Yerçekimi sonrası tekrar temizleme kontrolü
-      final secondClear = _gridManager.detectAndClear();
-      if (secondClear.totalLines > 0) {
-        onLineClear?.call(secondClear);
-        final combo2 = _comboDetector.registerClear(secondClear.totalLines);
-        final points2 = _scoreSystem.addLineClear(
-          linesCleared: secondClear.totalLines,
-          combo: combo2,
+
+      final cascadeClear = _gridManager.detectAndClear();
+      if (cascadeClear.totalLines > 0) {
+        onLineClear?.call(cascadeClear);
+        final combo = _comboDetector.registerClear(cascadeClear.totalLines);
+        final points = _scoreSystem.addLineClear(
+          linesCleared: cascadeClear.totalLines,
+          combo: combo,
         );
-        onScoreGained?.call(points2);
-        if (combo2.tier != ComboTier.none) onCombo?.call(combo2);
-        currencyManager.earnFromLineClear(secondClear.totalLines);
+        onScoreGained?.call(points);
+        if (combo.tier != ComboTier.none) onCombo?.call(combo);
+        currencyManager.earnFromLineClear(cascadeClear.totalLines);
+        _checkTimeTrialBonus(cascadeClear);
       }
+
+      iterations++;
     }
   }
 
