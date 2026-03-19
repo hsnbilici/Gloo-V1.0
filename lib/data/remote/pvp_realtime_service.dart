@@ -4,7 +4,8 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../game/pvp/matchmaking.dart';
+import '../../core/models/match_models.dart';
+import '../../game/pvp/matchmaking.dart' show MatchmakingManager;
 import 'dto/broadcast_game_over.dart';
 import 'dto/broadcast_obstacle.dart';
 import 'dto/broadcast_score.dart';

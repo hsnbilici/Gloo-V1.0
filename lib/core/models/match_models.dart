@@ -1,3 +1,25 @@
+/// PvP engel türleri.
+enum ObstacleType {
+  ice, // Buz hücresi
+  locked, // Kilitli hücre
+  stone, // Taş engel
+}
+
+/// Rakibe gönderilen engel paketi.
+class ObstaclePacket {
+  const ObstaclePacket({
+    required this.type,
+    required this.count,
+    this.areaSize,
+  });
+
+  final ObstacleType type;
+  final int count;
+
+  /// Buz alanı için boyut (epic kombo: 3×3).
+  final int? areaSize;
+}
+
 /// Eşleştirme isteği.
 class MatchRequest {
   const MatchRequest({
