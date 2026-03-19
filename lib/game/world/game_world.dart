@@ -363,20 +363,26 @@ class GlooGame {
       onGravityApplied?.call(gravityMoves);
 
       final cascadeClear = _gridManager.detectAndClear();
-      if (cascadeClear.totalLines > 0) {
-        onLineClear?.call(cascadeClear);
-        final combo = _comboDetector.registerClear(cascadeClear.totalLines);
-        final points = _scoreSystem.addLineClear(
-          linesCleared: cascadeClear.totalLines,
-          combo: combo,
-        );
-        onScoreGained?.call(points);
-        if (combo.tier != ComboTier.none) onCombo?.call(combo);
-        currencyManager.earnFromLineClear(cascadeClear.totalLines);
-        _checkTimeTrialBonus(cascadeClear);
-      }
+      if (cascadeClear.totalLines == 0) break; // yerçekimi durdu, yeni satır yok
 
       iterations++;
+      onLineClear?.call(cascadeClear);
+      final combo = _comboDetector.registerClear(cascadeClear.totalLines);
+      final points = _scoreSystem.addLineClear(
+        linesCleared: cascadeClear.totalLines,
+        combo: combo,
+      );
+      onScoreGained?.call(points);
+      if (combo.tier != ComboTier.none) onCombo?.call(combo);
+      currencyManager.earnFromLineClear(cascadeClear.totalLines);
+      if (combo.tier != ComboTier.none) {
+        currencyManager.earnFromCombo(combo.tier.name);
+      }
+      onJelEnergyEarned?.call(cascadeClear.totalLines);
+      if (cascadeClear.crackedIceCells.isNotEmpty) {
+        onIceCracked?.call(cascadeClear.crackedIceCells);
+      }
+      _checkTimeTrialBonus(cascadeClear);
     }
   }
 
