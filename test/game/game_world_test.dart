@@ -432,6 +432,34 @@ void main() {
       expect(game.gridManager.getCell(4, 4).color, isNull);
     });
 
+    test('useBomb triggers synthesis for adjacent compatible colors', () {
+      // Place red and yellow adjacent to each other directly on the grid
+      // (bypassing placePiece so synthesis has not yet fired).
+      // red + yellow → orange (kColorMixingTable).
+      game.gridManager.setCell(7, 0, GelColor.red);
+      game.gridManager.setCell(7, 1, GelColor.yellow);
+
+      // Verify synthesis has NOT fired yet (cells are set directly).
+      expect(game.gridManager.getCell(7, 0).color, GelColor.red);
+      expect(game.gridManager.getCell(7, 1).color, GelColor.yellow);
+
+      // Track onColorSynthesis callback.
+      GelColor? synthesisColor;
+      game.onColorSynthesis = (color, _) => synthesisColor = color;
+
+      // Bomb a cell far enough that (7,0) and (7,1) are outside the 3×3 area
+      // but still in a valid grid position. The bomb triggers _applySyntheses()
+      // which will find the red+yellow pair and convert it.
+      game.useBomb(4, 4);
+
+      // Synthesis should have fired: red+yellow → orange.
+      expect(synthesisColor, GelColor.orange);
+      // First position becomes the result color.
+      expect(game.gridManager.getCell(7, 0).color, GelColor.orange);
+      // Second position is consumed.
+      expect(game.gridManager.getCell(7, 1).color, isNull);
+    });
+
     test('useUndo restores last placement', () {
       game.placePiece([(0, 0), (0, 1)], GelColor.red);
       expect(game.gridManager.getCell(0, 0).color, GelColor.red);

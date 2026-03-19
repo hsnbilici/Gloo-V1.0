@@ -434,17 +434,16 @@ class GlooGame {
   Map<(int, int), GelColor>? useBomb(int centerRow, int centerCol) {
     final result = powerUpSystem.useBomb(_gridManager, centerRow, centerCol);
     if (result != null) {
-      // Temizleme sonrası yerçekimi ve zincirleme kontrol
-      _gridManager.applyGravity();
+      // Sentez kontrolü: bomb sonrası açığa çıkan hücreler sentez oluşturabilir
+      _applySyntheses();
+
+      // Temizleme + kombo + ekonomi
       final clearResult = _gridManager.detectAndClear();
       if (clearResult.totalLines > 0) {
-        onLineClear?.call(clearResult);
-        final combo = _comboDetector.registerClear(clearResult.totalLines);
-        final points = _scoreSystem.addLineClear(
-          linesCleared: clearResult.totalLines,
-          combo: combo,
-        );
-        onScoreGained?.call(points);
+        _clearAndScore(clearResult, 0);
+        _applyGravityAndCascade();
+        _checkTimeTrialBonus(clearResult);
+        _checkLevelCompletion();
       }
     }
     return result?.clearedCells;
