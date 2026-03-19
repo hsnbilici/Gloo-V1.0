@@ -455,4 +455,15 @@ class StringsDe extends AppStrings {
   String get settingsThemeLight => 'Hell';
   @override
   String get settingsThemeDark => 'Dunkel';
+
+  @override
+  String get levelSectionGelValley => 'Gel-Tal';
+  @override
+  String get levelSectionIcyFields => 'Eisfelder';
+  @override
+  String get levelSectionStoneMaze => 'Steinlabyrinth';
+  @override
+  String get levelSectionColorGarden => 'Farbgarten';
+  @override
+  String get levelSectionDarkCellar => 'Dunkler Keller';
 }

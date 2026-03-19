@@ -451,4 +451,15 @@ class StringsHi extends AppStrings {
   String get settingsThemeLight => 'लाइट';
   @override
   String get settingsThemeDark => 'डार्क';
+
+  @override
+  String get levelSectionGelValley => 'जेल घाटी';
+  @override
+  String get levelSectionIcyFields => 'बर्फीले मैदान';
+  @override
+  String get levelSectionStoneMaze => 'पत्थर भूलभुलैया';
+  @override
+  String get levelSectionColorGarden => 'रंग बगीचा';
+  @override
+  String get levelSectionDarkCellar => 'अंधेरा तहखाना';
 }

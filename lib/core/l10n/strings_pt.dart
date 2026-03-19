@@ -451,4 +451,15 @@ class StringsPt extends AppStrings {
   String get settingsThemeLight => 'Claro';
   @override
   String get settingsThemeDark => 'Escuro';
+
+  @override
+  String get levelSectionGelValley => 'Vale do Gel';
+  @override
+  String get levelSectionIcyFields => 'Campos Gelados';
+  @override
+  String get levelSectionStoneMaze => 'Labirinto de Pedra';
+  @override
+  String get levelSectionColorGarden => 'Jardim de Cores';
+  @override
+  String get levelSectionDarkCellar => 'Porão Escuro';
 }

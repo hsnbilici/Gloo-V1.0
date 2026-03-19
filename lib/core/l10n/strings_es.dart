@@ -456,4 +456,15 @@ class StringsEs extends AppStrings {
   String get settingsThemeLight => 'Claro';
   @override
   String get settingsThemeDark => 'Oscuro';
+
+  @override
+  String get levelSectionGelValley => 'Valle de Gel';
+  @override
+  String get levelSectionIcyFields => 'Campos Helados';
+  @override
+  String get levelSectionStoneMaze => 'Laberinto de Piedra';
+  @override
+  String get levelSectionColorGarden => 'Jardín de Colores';
+  @override
+  String get levelSectionDarkCellar => 'Sótano Oscuro';
 }

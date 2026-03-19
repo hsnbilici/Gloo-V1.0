@@ -456,4 +456,15 @@ class StringsRu extends AppStrings {
   String get settingsThemeLight => 'Светлая';
   @override
   String get settingsThemeDark => 'Тёмная';
+
+  @override
+  String get levelSectionGelValley => 'Гелевая долина';
+  @override
+  String get levelSectionIcyFields => 'Ледяные поля';
+  @override
+  String get levelSectionStoneMaze => 'Каменный лабиринт';
+  @override
+  String get levelSectionColorGarden => 'Цветной сад';
+  @override
+  String get levelSectionDarkCellar => 'Тёмный подвал';
 }

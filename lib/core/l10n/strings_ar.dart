@@ -453,4 +453,15 @@ class StringsAr extends AppStrings {
   String get settingsThemeLight => 'فاتح';
   @override
   String get settingsThemeDark => 'داكن';
+
+  @override
+  String get levelSectionGelValley => 'وادي الجل';
+  @override
+  String get levelSectionIcyFields => 'الحقول الجليدية';
+  @override
+  String get levelSectionStoneMaze => 'متاهة الحجر';
+  @override
+  String get levelSectionColorGarden => 'حديقة الألوان';
+  @override
+  String get levelSectionDarkCellar => 'القبو المظلم';
 }

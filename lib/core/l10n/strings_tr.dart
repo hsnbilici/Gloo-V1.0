@@ -450,4 +450,15 @@ class StringsTr extends AppStrings {
   String get settingsThemeLight => 'Aydınlık';
   @override
   String get settingsThemeDark => 'Karanlık';
+
+  @override
+  String get levelSectionGelValley => 'Jel Vadisi';
+  @override
+  String get levelSectionIcyFields => 'Buzlu Alanlar';
+  @override
+  String get levelSectionStoneMaze => 'Taş Labirent';
+  @override
+  String get levelSectionColorGarden => 'Renk Bahçesi';
+  @override
+  String get levelSectionDarkCellar => 'Karanlık Mahzen';
 }

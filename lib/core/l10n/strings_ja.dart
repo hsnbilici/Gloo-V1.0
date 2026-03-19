@@ -447,4 +447,15 @@ class StringsJa extends AppStrings {
   String get settingsThemeLight => 'ライト';
   @override
   String get settingsThemeDark => 'ダーク';
+
+  @override
+  String get levelSectionGelValley => 'ジェルバレー';
+  @override
+  String get levelSectionIcyFields => '氷原';
+  @override
+  String get levelSectionStoneMaze => '石の迷路';
+  @override
+  String get levelSectionColorGarden => '色の庭園';
+  @override
+  String get levelSectionDarkCellar => '暗黒の地下室';
 }

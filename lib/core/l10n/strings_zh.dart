@@ -444,4 +444,15 @@ class StringsZh extends AppStrings {
   String get settingsThemeLight => '浅色';
   @override
   String get settingsThemeDark => '深色';
+
+  @override
+  String get levelSectionGelValley => '凝胶谷';
+  @override
+  String get levelSectionIcyFields => '冰原';
+  @override
+  String get levelSectionStoneMaze => '石迷宫';
+  @override
+  String get levelSectionColorGarden => '色彩花园';
+  @override
+  String get levelSectionDarkCellar => '暗黑地窖';
 }

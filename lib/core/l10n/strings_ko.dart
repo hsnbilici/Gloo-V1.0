@@ -448,4 +448,15 @@ class StringsKo extends AppStrings {
   String get settingsThemeLight => '라이트';
   @override
   String get settingsThemeDark => '다크';
+
+  @override
+  String get levelSectionGelValley => '젤 밸리';
+  @override
+  String get levelSectionIcyFields => '얼음 벌판';
+  @override
+  String get levelSectionStoneMaze => '돌 미로';
+  @override
+  String get levelSectionColorGarden => '색 정원';
+  @override
+  String get levelSectionDarkCellar => '어둠의 지하실';
 }

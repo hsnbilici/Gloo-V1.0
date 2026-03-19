@@ -10,6 +10,7 @@ import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../shared/glow_orb.dart';
 import '../../game/levels/level_progression.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
 
 // ─── Seviye Secim Ekrani ─────────────────────────────────────────────────────
@@ -19,16 +20,9 @@ class LevelSelectScreen extends ConsumerWidget {
 
   static const _kLocked = kSurfaceNavy;
 
-  static const _kSectionNames = [
-    'Jel Vadisi',
-    'Buzlu Alanlar',
-    'Tas Labirent',
-    'Renk Bahcesi',
-    'Karanlik Mahzen',
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = ref.watch(stringsProvider);
     final repoAsync = ref.watch(localRepositoryProvider);
     final completedLevels =
         repoAsync.valueOrNull?.getCompletedLevels() ?? <int>{};
@@ -134,9 +128,16 @@ class LevelSelectScreen extends ConsumerWidget {
                     itemBuilder: (context, sectionIndex) {
                       final startLevel = sectionIndex * 10 + 1;
                       final endLevel = (startLevel + 9).clamp(1, totalLevels);
-                      final sectionName = sectionIndex < _kSectionNames.length
-                          ? _kSectionNames[sectionIndex]
-                          : 'Bolum ${sectionIndex + 1}';
+                      final sectionNames = [
+                        l.levelSectionGelValley,
+                        l.levelSectionIcyFields,
+                        l.levelSectionStoneMaze,
+                        l.levelSectionColorGarden,
+                        l.levelSectionDarkCellar,
+                      ];
+                      final sectionName = sectionIndex < sectionNames.length
+                          ? sectionNames[sectionIndex]
+                          : '${l.levelLabel} ${sectionIndex + 1}';
 
                       return _LevelSection(
                         sectionName: sectionName,

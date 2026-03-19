@@ -286,6 +286,13 @@ abstract class AppStrings {
   String get tutorialStep3;
   String get tutorialGotIt;
 
+  // Level section names
+  String get levelSectionGelValley;
+  String get levelSectionIcyFields;
+  String get levelSectionStoneMaze;
+  String get levelSectionColorGarden;
+  String get levelSectionDarkCellar;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

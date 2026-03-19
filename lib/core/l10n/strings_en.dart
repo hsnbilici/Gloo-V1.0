@@ -448,4 +448,15 @@ class StringsEn extends AppStrings {
   String get settingsThemeLight => 'Light';
   @override
   String get settingsThemeDark => 'Dark';
+
+  @override
+  String get levelSectionGelValley => 'Gel Valley';
+  @override
+  String get levelSectionIcyFields => 'Icy Fields';
+  @override
+  String get levelSectionStoneMaze => 'Stone Maze';
+  @override
+  String get levelSectionColorGarden => 'Color Garden';
+  @override
+  String get levelSectionDarkCellar => 'Dark Cellar';
 }

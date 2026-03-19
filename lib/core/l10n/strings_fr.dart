@@ -452,4 +452,15 @@ class StringsFr extends AppStrings {
   String get settingsThemeLight => 'Clair';
   @override
   String get settingsThemeDark => 'Sombre';
+
+  @override
+  String get levelSectionGelValley => 'Vallée de Gel';
+  @override
+  String get levelSectionIcyFields => 'Champs Glacés';
+  @override
+  String get levelSectionStoneMaze => 'Labyrinthe de Pierre';
+  @override
+  String get levelSectionColorGarden => 'Jardin des Couleurs';
+  @override
+  String get levelSectionDarkCellar => 'Cave Sombre';
 }
