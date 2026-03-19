@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/color_constants_light.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/layout/rtl_helpers.dart';
 
@@ -39,6 +40,7 @@ class ModeCardState extends State<ModeCard> {
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
     final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
+    final brightness = Theme.of(context).brightness;
     return Semantics(
       label: widget.label,
       button: true,
@@ -119,7 +121,7 @@ class ModeCardState extends State<ModeCard> {
                         Text(
                           widget.label,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight),
                             fontSize: MediaQuery.textScalerOf(context)
                                 .scale(widget.isFeatured ? 17 : 16),
                             fontWeight: FontWeight.w700,
@@ -164,8 +166,8 @@ class ModeCardState extends State<ModeCard> {
                       widget.subtitle,
                       style: TextStyle(
                         color: widget.isFeatured
-                            ? Colors.white.withValues(alpha: 0.55)
-                            : kMuted,
+                            ? resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.55), light: kTextSecondaryLight)
+                            : resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight),
                         fontSize: MediaQuery.textScalerOf(context).scale(11),
                       ),
                     ),
