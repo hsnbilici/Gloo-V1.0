@@ -65,13 +65,23 @@ class LocalRepository {
 
   // ─── COPPA yaş kapısı ──────────────────────────────────────────────────────
 
-  bool getAgeVerified() => _prefs.getBool('age_verified') ?? false;
+  Future<bool> getAgeVerified() async {
+    final secure = await _secure.read(key: 'age_verified');
+    if (secure != null) return secure == 'true';
+    return _prefs.getBool('age_verified') ?? false;
+  }
 
-  bool getIsChild() => _prefs.getBool('is_child') ?? false;
+  Future<bool> getIsChild() async {
+    final secure = await _secure.read(key: 'is_child');
+    if (secure != null) return secure == 'true';
+    return _prefs.getBool('is_child') ?? false;
+  }
 
   Future<void> setAgeVerified({required bool isChild}) async {
-    await _prefs.setBool('age_verified', true);
-    await _prefs.setBool('is_child', isChild);
+    await _secure.write(key: 'age_verified', value: 'true');
+    await _secure.write(key: 'is_child', value: isChild.toString());
+    await _prefs.remove('age_verified');
+    await _prefs.remove('is_child');
   }
 
   // ─── Gizlilik & Analitik ─────────────────────────────────────────────────

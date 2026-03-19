@@ -53,14 +53,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return;
       }
       // 1.5) COPPA yaş kapısı — henüz doğrulanmamışsa dialog göster
-      if (!repo.getAgeVerified()) {
+      if (!await repo.getAgeVerified()) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _showAgeGateDialog(repo);
         });
         return;
       }
       // Çocuk kullanıcı kısıtlamaları (daha önce doğrulanmış)
-      if (repo.getIsChild()) {
+      if (await repo.getIsChild()) {
         _applyChildRestrictions();
       }
       await _continueStartupFlow(repo);
