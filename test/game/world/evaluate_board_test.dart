@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/core/constants/color_constants.dart';
 import 'package:gloo/core/constants/game_constants.dart';
 import 'package:gloo/game/levels/level_data.dart';
+import 'package:gloo/game/shapes/gel_shape.dart';
 import 'package:gloo/game/world/game_world.dart';
 
 void main() {
@@ -234,6 +235,28 @@ void main() {
       game.placePiece([(9, GameConstants.gridCols - 1)], GelColor.red);
 
       expect(levelCompleteFired, isFalse);
+    });
+
+    test('onLevelComplete fires only once when last move completes level', () {
+      // maxMoves: 1 → checkGameOver also checks level completion
+      const level = LevelData(id: 1, targetScore: 1, maxMoves: 1);
+      final game = GlooGame(mode: GameMode.level, levelData: level);
+      game.startGame();
+
+      int fireCount = 0;
+      game.onLevelComplete = () => fireCount++;
+
+      // Fill row except last cell, then place last cell as the only move
+      for (int c = 0; c < GameConstants.gridCols - 1; c++) {
+        game.gridManager.setCell(9, c, GelColor.red);
+      }
+      // placePiece → _evaluateBoard → _checkLevelCompletion fires once
+      game.placePiece([(9, GameConstants.gridCols - 1)], GelColor.red);
+      // checkGameOver → would fire again without the fix
+      const dummyShape = GelShape(cells: [(0, 0)], name: 'dot');
+      game.checkGameOver([dummyShape]);
+
+      expect(fireCount, 1, reason: 'onLevelComplete should fire exactly once');
     });
 
     test('score increases before level completion check', () {

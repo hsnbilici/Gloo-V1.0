@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -665,6 +667,41 @@ void main() {
       await secureRepo.savePendingVerification(['prod1', 'prod2']);
       expect(
           await secureStorage.read(key: 'pending_verification'), 'prod1,prod2');
+    });
+
+    test('savePendingVerificationMap JSON olarak SecureStorage\'a yazar',
+        () async {
+      await secureRepo
+          .savePendingVerificationMap({'prod1': 'receipt1', 'prod2': 'receipt2'});
+      final stored =
+          await secureStorage.read(key: 'pending_verification_map');
+      expect(stored, isNotNull);
+      final decoded = json.decode(stored!) as Map;
+      expect(decoded['prod1'], 'receipt1');
+      expect(decoded['prod2'], 'receipt2');
+    });
+
+    test('getPendingVerificationMap returns saved map', () async {
+      await secureRepo
+          .savePendingVerificationMap({'prod1': 'receipt1'});
+      final map = await secureRepo.getPendingVerificationMap();
+      expect(map, {'prod1': 'receipt1'});
+    });
+
+    test('getPendingVerificationMap migrates legacy comma format', () async {
+      await secureRepo.savePendingVerification(['prod1', 'prod2']);
+      final map = await secureRepo.getPendingVerificationMap();
+      expect(map.keys, containsAll(['prod1', 'prod2']));
+      expect(map['prod1'], '');
+      expect(map['prod2'], '');
+    });
+
+    test('savePendingVerificationMap empty clears data', () async {
+      await secureRepo
+          .savePendingVerificationMap({'prod1': 'receipt1'});
+      await secureRepo.savePendingVerificationMap({});
+      final map = await secureRepo.getPendingVerificationMap();
+      expect(map, isEmpty);
     });
 
     test('addRedeemedCode hassas veriyi SecureStorage\'a yazar', () async {

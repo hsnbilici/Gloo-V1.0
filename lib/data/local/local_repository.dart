@@ -465,6 +465,36 @@ class LocalRepository {
     return _prefs.getStringList('pending_verification') ?? [];
   }
 
+  /// Receipt'li pending verification map'ini döner (productId → receipt).
+  /// Eski formattaki verileri (virgülle ayrılmış ID listesi) boş receipt ile migrate eder.
+  Future<Map<String, String>> getPendingVerificationMap() async {
+    final secure = await _secure.read(key: 'pending_verification_map');
+    if (secure != null && secure.isNotEmpty) {
+      final decoded = json.decode(secure);
+      return Map<String, String>.from(decoded as Map);
+    }
+    // Eski formattan migration: receipt bilgisi yok, boş string olarak aktar
+    final legacy = await getPendingVerification();
+    if (legacy.isNotEmpty) {
+      final map = {for (final id in legacy) id: ''};
+      await savePendingVerificationMap(map);
+      return map;
+    }
+    return {};
+  }
+
+  Future<void> savePendingVerificationMap(Map<String, String> pending) async {
+    if (pending.isEmpty) {
+      await _secure.write(key: 'pending_verification_map', value: null);
+    } else {
+      await _secure.write(
+          key: 'pending_verification_map', value: json.encode(pending));
+    }
+    // Eski formatı temizle
+    await _secure.write(key: 'pending_verification', value: null);
+    await _prefs.remove('pending_verification');
+  }
+
   Future<void> savePendingVerification(List<String> productIds) async {
     await _secure.write(
         key: 'pending_verification', value: productIds.join(','));

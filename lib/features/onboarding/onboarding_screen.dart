@@ -131,26 +131,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           letterSpacing: 5,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: _finish,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: surfaceColor,
-                            borderRadius:
-                                BorderRadius.circular(UIConstants.radiusXl),
-                            border: Border.all(color: borderColor),
-                          ),
-                          child: Text(
-                            l.onboardingSkip,
-                            style: TextStyle(
-                              color: textSecondary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.3,
+                      Semantics(
+                        button: true,
+                        label: l.onboardingSkip,
+                        child: GestureDetector(
+                          onTap: _finish,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: surfaceColor,
+                              borderRadius:
+                                  BorderRadius.circular(UIConstants.radiusXl),
+                              border: Border.all(color: borderColor),
+                            ),
+                            child: ExcludeSemantics(
+                              child: Text(
+                                l.onboardingSkip,
+                                style: TextStyle(
+                                  color: textSecondary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -160,11 +166,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
                 // Sayfa içeriği
                 Expanded(
-                  child: PageView.builder(
-                    controller: _controller,
-                    itemCount: _kTotalPages,
-                    onPageChanged: (i) => setState(() => _page = i),
-                    itemBuilder: (context, i) => _StepPage(step: steps[i]),
+                  child: Semantics(
+                    label: '${_page + 1}/$_kTotalPages',
+                    child: PageView.builder(
+                      controller: _controller,
+                      itemCount: _kTotalPages,
+                      onPageChanged: (i) => setState(() => _page = i),
+                      itemBuilder: (context, i) => _StepPage(step: steps[i]),
+                    ),
                   ),
                 ),
                 // Alt: nokta göstergesi + buton
@@ -207,7 +216,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       const SizedBox(height: 24),
                       // İlerleme butonu
-                      GestureDetector(
+                      Semantics(
+                        button: true,
+                        label: isLast ? l.onboardingStart : l.onboardingNext,
+                        child: GestureDetector(
                         onTap: _next,
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 280),
@@ -229,29 +241,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               ),
                             ],
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                isLast ? l.onboardingStart : l.onboardingNext,
-                                style: TextStyle(
-                                  color: stepColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.8,
+                          child: ExcludeSemantics(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  isLast ? l.onboardingStart : l.onboardingNext,
+                                  style: TextStyle(
+                                    color: stepColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 0.8,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                isLast
-                                    ? Icons.play_arrow_rounded
-                                    : Icons.arrow_forward_rounded,
-                                color: stepColor,
-                                size: 18,
-                              ),
-                            ],
+                                const SizedBox(width: 8),
+                                Icon(
+                                  isLast
+                                      ? Icons.play_arrow_rounded
+                                      : Icons.arrow_forward_rounded,
+                                  color: stepColor,
+                                  size: 18,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                      ),
                       ),
                     ],
                   ),

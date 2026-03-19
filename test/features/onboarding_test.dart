@@ -72,5 +72,21 @@ void main() {
       // First step icon: grid_4x4_rounded
       expect(find.byIcon(Icons.grid_4x4_rounded), findsOneWidget);
     });
+
+    testWidgets('skip button has Semantics with button role', (tester) async {
+      await tester.pumpWidget(buildApp());
+      await tester.pumpAndSettle();
+
+      final semantics = find.bySemanticsLabel('Skip');
+      expect(semantics, findsOneWidget);
+    });
+
+    testWidgets('next button has Semantics with button role', (tester) async {
+      await tester.pumpWidget(buildApp());
+      await tester.pumpAndSettle();
+
+      final semantics = find.bySemanticsLabel('Next');
+      expect(semantics, findsOneWidget);
+    });
   });
 }

@@ -47,6 +47,7 @@ class GlooGame {
 
   // Faz 4: Seviye modu durumu
   int _movesUsed = 0;
+  bool _levelCompleted = false;
   int _handIndex = 0;
 
   // Faz 4: Smart RNG durumu
@@ -111,6 +112,7 @@ class GlooGame {
     _scoreSystem.reset();
     _comboDetector.reset();
     _movesUsed = 0;
+    _levelCompleted = false;
     _handIndex = 0;
     currencyManager.resetGameStats();
 
@@ -168,8 +170,10 @@ class GlooGame {
     // Seviye modu: hamle sınırı kontrolü
     if (mode == GameMode.level && levelData?.maxMoves != null) {
       if (_movesUsed >= levelData!.maxMoves!) {
-        // Hedef skora ulaşıldıysa seviye tamamlandı
+        // _evaluateBoard → _checkLevelCompletion zaten tetiklediyse tekrar çağırma
+        if (_levelCompleted) return;
         if (_scoreSystem.score >= levelData!.targetScore) {
+          _levelCompleted = true;
           onLevelComplete?.call();
           return;
         }
@@ -399,6 +403,7 @@ class GlooGame {
   bool _checkLevelCompletion() {
     if (mode == GameMode.level && levelData != null) {
       if (_scoreSystem.score >= levelData!.targetScore) {
+        _levelCompleted = true;
         onLevelComplete?.call();
         return true;
       }

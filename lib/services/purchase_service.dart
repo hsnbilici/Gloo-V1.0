@@ -142,16 +142,18 @@ class PurchaseService {
   }
 
   // Sunucu dogrulamasi beklemeden eklenen urunler (network hatasi durumunda).
-  // SharedPreferences'a persist edilir, sonraki baslatmada tekrar dogrulanir.
-  final Set<String> _pendingVerification = {};
+  // SecureStorage'a persist edilir, sonraki baslatmada tekrar dogrulanir.
+  // Key: productId, Value: receipt
+  final Map<String, String> _pendingVerification = {};
 
   /// Network hatasi nedeniyle dogrulanamamis urunler.
-  Set<String> get pendingVerification => Set.unmodifiable(_pendingVerification);
+  Set<String> get pendingVerification =>
+      Set.unmodifiable(_pendingVerification.keys);
 
   /// Önceki oturumdan kalan doğrulanamamış ürünleri yükler ve yeniden doğrular.
   Future<void> loadPendingVerifications(LocalRepository localRepo) async {
     _localRepo = localRepo;
-    final pending = await localRepo.getPendingVerification();
+    final pending = await localRepo.getPendingVerificationMap();
     if (pending.isEmpty) return;
     _pendingVerification.addAll(pending);
     if (kDebugMode) {
@@ -159,36 +161,37 @@ class PurchaseService {
           'PurchaseService: retrying ${pending.length} pending verifications');
     }
     final repo = RemoteRepository();
-    for (final productId in List<String>.of(pending)) {
+    final initialCount = pending.length;
+    for (final entry in pending.entries.toList()) {
       final result = await repo.verifyPurchase(
         platform:
             defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android',
-        receipt: '',
-        productId: productId,
+        receipt: entry.value,
+        productId: entry.key,
       );
       if (result == true) {
-        _pendingVerification.remove(productId);
+        _pendingVerification.remove(entry.key);
         if (kDebugMode) {
-          debugPrint('PurchaseService: retry verified $productId');
+          debugPrint('PurchaseService: retry verified ${entry.key}');
         }
       } else if (result == false) {
         // Sunucu reddetti — pending'den cikar, urunu kaldir
-        _pendingVerification.remove(productId);
-        _purchasedIds.remove(productId);
+        _pendingVerification.remove(entry.key);
+        _purchasedIds.remove(entry.key);
         if (kDebugMode) {
-          debugPrint('PurchaseService: retry rejected $productId');
+          debugPrint('PurchaseService: retry rejected ${entry.key}');
         }
       }
       // result == null (network hatasi) → pending'de birak
     }
     await _persistPending();
-    if (_pendingVerification.length != pending.length) {
+    if (_pendingVerification.length != initialCount) {
       onPurchaseUpdate?.call(_purchasedIds);
     }
   }
 
   Future<void> _persistPending() async {
-    await _localRepo?.savePendingVerification(_pendingVerification.toList());
+    await _localRepo?.savePendingVerificationMap(_pendingVerification);
   }
 
   /// Yerel depodan yüklenen ürünleri mevcut durum ile senkronize eder.
@@ -263,7 +266,7 @@ class PurchaseService {
     } else if (result == null) {
       // Network hatasi — graceful degradation: yerel olarak ekle, flag'le
       _addProduct(purchase.productID);
-      _pendingVerification.add(purchase.productID);
+      _pendingVerification[purchase.productID] = receipt;
       await _persistPending();
       if (kDebugMode) {
         debugPrint(
