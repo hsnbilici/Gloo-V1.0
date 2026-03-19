@@ -16,3 +16,10 @@ IconData directionalBackIcon(TextDirection direction) {
   }
   return (Alignment.centerLeft, Alignment.centerRight);
 }
+
+/// Returns the correct forward chevron icon for the given text direction.
+IconData directionalChevronIcon(TextDirection direction) {
+  return direction == TextDirection.rtl
+      ? Icons.chevron_left_rounded
+      : Icons.chevron_right_rounded;
+}

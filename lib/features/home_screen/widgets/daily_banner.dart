@@ -87,7 +87,7 @@ class DailyBanner extends ConsumerWidget {
               ),
             ),
             Icon(
-              Icons.chevron_right_rounded,
+              directionalChevronIcon(Directionality.of(context)),
               color: _kAccent.withValues(alpha: 0.60),
               size: 20,
             ),

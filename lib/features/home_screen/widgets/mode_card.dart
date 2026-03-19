@@ -200,7 +200,7 @@ class ModeCardState extends State<ModeCard> {
                 ),
               ] else
                 Icon(
-                  Icons.chevron_right_rounded,
+                  directionalChevronIcon(Directionality.of(context)),
                   color: widget.color
                       .withValues(alpha: widget.isFeatured ? 0.80 : 0.55),
                   size: widget.isFeatured ? 24 : 22,

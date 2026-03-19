@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/layout/rtl_helpers.dart';
 
 // ─── Toggle satırı ───────────────────────────────────────────────────────────
 
@@ -147,7 +148,7 @@ class ThemeSelectorTile extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.chevron_right_rounded,
+                directionalChevronIcon(Directionality.of(context)),
                 color: accentColor.withValues(alpha: 0.70),
                 size: 18,
               ),
