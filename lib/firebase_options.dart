@@ -25,8 +25,19 @@ class DefaultFirebaseOptions {
   }
 
   /// Firebase key'leri --dart-define ile verilmis mi?
-  static bool get isConfigured =>
-      _apiKeyWeb.isNotEmpty && _projectId.isNotEmpty;
+  static bool get isConfigured {
+    if (_projectId.isEmpty) return false;
+    if (kIsWeb) return _apiKeyWeb.isNotEmpty;
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return _apiKeyAndroid.isNotEmpty;
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return _apiKeyIos.isNotEmpty;
+      default:
+        return false;
+    }
+  }
 
   static const _apiKeyWeb = String.fromEnvironment(
     'FIREBASE_API_KEY_WEB',
@@ -94,7 +105,7 @@ class DefaultFirebaseOptions {
 
   static final FirebaseOptions macos = FirebaseOptions(
     apiKey: _apiKeyIos,
-    appId: '1:473072331709:ios:57de4139590c625caa80d4',
+    appId: _appIdIos,
     messagingSenderId: _messagingSenderId,
     projectId: _projectId,
     storageBucket: _storageBucket,

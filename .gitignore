@@ -60,8 +60,9 @@ _dev/
 **/ios/Runner/GeneratedPluginRegistrant.*
 Podfile.lock
 
-# Firebase (config dosyalari — gizli anahtar icermez, CI icin gerekli)
-# google-services.json ve GoogleService-Info.plist repoda tutuluyor
+# Firebase config — CI'da base64 secret'tan uretilir
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
 
 # Credentials
 *.env
