@@ -47,8 +47,19 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
         run: |
-          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode \
-            -o android/app/google-services.json
+          if [ -n "$GOOGLE_SERVICES_JSON_BASE64" ]; then
+            echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode \
+              -o android/app/google-services.json
+          else
+            echo "⚠️ GOOGLE_SERVICES_JSON_BASE64 not set — generating placeholder"
+            cat > android/app/google-services.json << 'JSON'
+          {
+            "project_info": {"project_number":"000000000000","project_id":"placeholder","storage_bucket":"placeholder.appspot.com"},
+            "client": [{"client_info":{"mobilesdk_app_id":"1:000000000000:android:placeholder","android_client_info":{"package_name":"com.gloogame.app"}},"api_key":[{"current_key":"placeholder"}]}],
+            "configuration_version": "1"
+          }
+          JSON
+          fi
 
       - name: Build debug APK
         env:
@@ -127,8 +138,19 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
         run: |
-          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode \
-            -o android/app/google-services.json
+          if [ -n "$GOOGLE_SERVICES_JSON_BASE64" ]; then
+            echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode \
+              -o android/app/google-services.json
+          else
+            echo "⚠️ GOOGLE_SERVICES_JSON_BASE64 not set — generating placeholder"
+            cat > android/app/google-services.json << 'JSON'
+          {
+            "project_info": {"project_number":"000000000000","project_id":"placeholder","storage_bucket":"placeholder.appspot.com"},
+            "client": [{"client_info":{"mobilesdk_app_id":"1:000000000000:android:placeholder","android_client_info":{"package_name":"com.gloogame.app"}},"api_key":[{"current_key":"placeholder"}]}],
+            "configuration_version": "1"
+          }
+          JSON
+          fi
 
       - name: Build release AAB
         env:

@@ -36,8 +36,26 @@ jobs:
         env:
           GOOGLE_SERVICE_INFO_PLIST_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}
         run: |
-          echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode \
-            -o ios/Runner/GoogleService-Info.plist
+          if [ -n "$GOOGLE_SERVICE_INFO_PLIST_BASE64" ]; then
+            echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode \
+              -o ios/Runner/GoogleService-Info.plist
+          else
+            echo "⚠️ GOOGLE_SERVICE_INFO_PLIST_BASE64 not set — generating placeholder"
+            cat > ios/Runner/GoogleService-Info.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key><string>placeholder</string>
+            <key>GCM_SENDER_ID</key><string>000000000000</string>
+            <key>PLIST_VERSION</key><string>1</string>
+            <key>BUNDLE_ID</key><string>com.gloogame.app</string>
+            <key>PROJECT_ID</key><string>placeholder</string>
+            <key>GOOGLE_APP_ID</key><string>1:000000000000:ios:placeholder</string>
+          </dict>
+          </plist>
+          PLIST
+          fi
 
       - name: Build iOS (simulator)
         env:
@@ -125,8 +143,26 @@ jobs:
         env:
           GOOGLE_SERVICE_INFO_PLIST_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}
         run: |
-          echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode \
-            -o ios/Runner/GoogleService-Info.plist
+          if [ -n "$GOOGLE_SERVICE_INFO_PLIST_BASE64" ]; then
+            echo "$GOOGLE_SERVICE_INFO_PLIST_BASE64" | base64 --decode \
+              -o ios/Runner/GoogleService-Info.plist
+          else
+            echo "⚠️ GOOGLE_SERVICE_INFO_PLIST_BASE64 not set — generating placeholder"
+            cat > ios/Runner/GoogleService-Info.plist << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>API_KEY</key><string>placeholder</string>
+            <key>GCM_SENDER_ID</key><string>000000000000</string>
+            <key>PLIST_VERSION</key><string>1</string>
+            <key>BUNDLE_ID</key><string>com.gloogame.app</string>
+            <key>PROJECT_ID</key><string>placeholder</string>
+            <key>GOOGLE_APP_ID</key><string>1:000000000000:ios:placeholder</string>
+          </dict>
+          </plist>
+          PLIST
+          fi
 
       - name: Build iOS release
         env:
