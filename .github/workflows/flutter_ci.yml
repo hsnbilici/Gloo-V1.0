@@ -58,7 +58,7 @@ jobs:
         run: dart format --set-exit-if-changed lib/ test/
 
       - name: Notify build failure
-        if: failure() && secrets.SLACK_WEBHOOK_URL != ''
+        if: failure() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -91,7 +91,7 @@ jobs:
           git push
 
       - name: Notify build failure
-        if: failure() && secrets.SLACK_WEBHOOK_URL != ''
+        if: failure() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
