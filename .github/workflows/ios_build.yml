@@ -84,7 +84,8 @@ jobs:
           retention-days: 7
 
       - name: Notify build failure
-        if: failure() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        if: failure()
+        continue-on-error: true
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -208,7 +209,8 @@ jobs:
           retention-days: 14
 
       - name: Notify release success
-        if: success() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        if: success()
+        continue-on-error: true
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -217,7 +219,8 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Notify build failure
-        if: failure() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        if: failure()
+        continue-on-error: true
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
