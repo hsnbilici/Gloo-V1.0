@@ -198,9 +198,20 @@ class GameDuelController {
     }
     repo.saveGelOzu(await repo.getGelOzu() + gelReward);
 
-    // Backend sync
+    // Backend sync — bot maçlarında doğrudan güncelle, gerçek maçlarda Edge Function
     final remote = ref.read(remoteRepositoryProvider);
-    remote.updateElo(newElo: newElo);
+    final realMatchId = duelState.matchId;
+    if (!isBot && realMatchId != null && realMatchId != 'local') {
+      remote.updateElo(
+        newElo: newElo,
+        matchId: realMatchId,
+        outcome: outcome.name,
+        playerScore: playerScore,
+        opponentScore: opponentScore,
+      );
+    } else {
+      remote.updateElo(newElo: newElo);
+    }
     remote.incrementPvpStats(isWin: outcome == DuelOutcome.win);
     if (duelState.matchId != null && duelState.matchId != 'local') {
       remote.submitPvpResult(

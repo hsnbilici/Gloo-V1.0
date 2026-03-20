@@ -260,11 +260,40 @@ class RemoteRepository implements IRemoteRepository {
     }
   }
 
-  /// ELO puanini guncelle.
-  Future<void> updateElo({required int newElo}) async {
+  /// ELO puanini sunucu tarafinda hesapla ve guncelle.
+  ///
+  /// Edge Function server-side ELO hesaplamasi yapar, rate limiting ve
+  /// duplicate match korumasini icerir.
+  /// Fallback: Edge Function basarisiz olursa dogrudan profile gunceller.
+  Future<void> updateElo({
+    required int newElo,
+    String? matchId,
+    String? outcome,
+    int? playerScore,
+    int? opponentScore,
+  }) async {
     if (!isConfigured) return;
     final uid = _userId;
     if (uid == null) return;
+
+    // Edge Function ile sunucu tarafinda hesaplama
+    if (matchId != null && outcome != null) {
+      try {
+        await _client.functions.invoke('update-elo', body: {
+          'match_id': matchId,
+          'outcome': outcome,
+          'player_score': playerScore ?? 0,
+          'opponent_score': opponentScore ?? 0,
+        });
+        return;
+      } catch (e) {
+        if (kDebugMode) {
+          debugPrint('RemoteRepository.updateElo RPC error: $e — falling back');
+        }
+      }
+    }
+
+    // Fallback: dogrudan profile guncelle (bot maclari veya RPC hatasi)
     try {
       await _client.from('profiles').update({'elo': newElo}).eq('id', uid);
     } catch (e) {

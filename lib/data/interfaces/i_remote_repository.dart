@@ -53,7 +53,13 @@ abstract class IRemoteRepository {
     required int score,
   });
 
-  Future<void> updateElo({required int newElo});
+  Future<void> updateElo({
+    required int newElo,
+    String? matchId,
+    String? outcome,
+    int? playerScore,
+    int? opponentScore,
+  });
 
   Future<PvpMatch?> getPvpMatch(String matchId);
 
