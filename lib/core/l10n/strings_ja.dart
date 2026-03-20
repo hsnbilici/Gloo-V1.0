@@ -229,15 +229,6 @@ class StringsJa extends AppStrings {
   String get consentDecline => 'いいえ';
 
   @override
-  String get ageGateTitle => '年齢確認';
-  @override
-  String get ageGateMessage => '続行するには年齢を確認してください。13歳未満のプレイヤーは制限された体験になります。';
-  @override
-  String get ageGateConfirm => '13歳以上です';
-  @override
-  String get ageGateUnder13 => '13歳未満です';
-
-  @override
   String get leaderboardTitle => 'ランキング';
   @override
   String get leaderboardComingSoon => 'オンラインランキング近日公開';

@@ -164,12 +164,6 @@ abstract class AppStrings {
   String get consentAccept;
   String get consentDecline;
 
-  // Yaş kapısı (COPPA)
-  String get ageGateTitle;
-  String get ageGateMessage;
-  String get ageGateConfirm;
-  String get ageGateUnder13;
-
   // Sıralama
   String get leaderboardTitle;
   String get leaderboardComingSoon;

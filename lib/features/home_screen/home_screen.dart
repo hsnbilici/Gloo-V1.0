@@ -52,17 +52,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         context.go('/onboarding');
         return;
       }
-      // 1.5) COPPA yaş kapısı — henüz doğrulanmamışsa dialog göster
-      if (!await repo.getAgeVerified()) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) _showAgeGateDialog(repo);
-        });
-        return;
-      }
-      // Çocuk kullanıcı kısıtlamaları (daha önce doğrulanmış)
-      if (await repo.getIsChild()) {
-        _applyChildRestrictions();
-      }
       await _continueStartupFlow(repo);
     });
   }
@@ -98,45 +87,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         if (mounted) _showColorblindDialog(repo);
       });
     }
-  }
-
-  Future<void> _showAgeGateDialog(LocalRepository repo) async {
-    final l = ref.read(stringsProvider);
-    if (!mounted) return;
-    final isChild = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      barrierColor: Colors.black.withValues(alpha: 0.65),
-      builder: (ctx) => AgeGateDialog(
-        title: l.ageGateTitle,
-        message: l.ageGateMessage,
-        confirmLabel: l.ageGateConfirm,
-        under13Label: l.ageGateUnder13,
-      ),
-    );
-    final child = isChild == true;
-    await repo.setAgeVerified(isChild: child);
-    if (child) _applyChildRestrictions();
-    // Devam: streak + consent + diğer kontroller
-    if (mounted) {
-      // initState akışını yeniden başlat (age gate sonrası)
-      ref.read(localRepositoryProvider.future).then((r) async {
-        if (!mounted) return;
-        await _continueStartupFlow(r);
-      });
-    }
-  }
-
-  void _applyChildRestrictions() {
-    // COPPA: 13 yaş altı → reklam yok, analytics yok
-    ref.read(adManagerProvider).setAdsRemoved(true);
-    ref.read(analyticsServiceProvider).setEnabled(false);
-    ref
-        .read(appSettingsProvider.notifier)
-        .setAdsRemoved(removed: true);
-    ref
-        .read(appSettingsProvider.notifier)
-        .setAnalyticsEnabled(enabled: false);
   }
 
   Future<void> _showConsentDialog(LocalRepository repo) async {

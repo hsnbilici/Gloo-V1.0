@@ -233,16 +233,6 @@ class StringsFr extends AppStrings {
   String get consentDecline => 'Non merci';
 
   @override
-  String get ageGateTitle => 'Vérification de l\'âge';
-  @override
-  String get ageGateMessage =>
-      'Veuillez confirmer votre âge pour continuer. Les joueurs de moins de 13 ans auront une expérience limitée.';
-  @override
-  String get ageGateConfirm => 'J\'ai 13 ans ou plus';
-  @override
-  String get ageGateUnder13 => 'J\'ai moins de 13 ans';
-
-  @override
   String get leaderboardTitle => 'Classement';
   @override
   String get leaderboardComingSoon => 'Classement en ligne bientôt disponible';

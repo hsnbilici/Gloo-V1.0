@@ -11,7 +11,9 @@
 // • GameOverOverlay is a ConsumerWidget; wrap in ProviderScope with
 //   stringsProvider overridden to StringsEn() for deterministic text.
 // • TutorialOverlay is a Positioned widget; it must live inside a Stack.
+// • Golden tests are platform-dependent — skipped in CI via --exclude-tags=golden.
 
+@Tags(['golden'])
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

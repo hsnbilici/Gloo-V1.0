@@ -232,16 +232,6 @@ class StringsTr extends AppStrings {
   String get consentDecline => 'Hayır';
 
   @override
-  String get ageGateTitle => 'Yaş Doğrulama';
-  @override
-  String get ageGateMessage =>
-      'Devam etmek için yaşınızı doğrulayın. 13 yaş altı oyuncular sınırlı deneyime sahip olacaktır.';
-  @override
-  String get ageGateConfirm => '13 yaş veya üzeriyim';
-  @override
-  String get ageGateUnder13 => '13 yaşından küçüğüm';
-
-  @override
   String get leaderboardTitle => 'Sıralama';
   @override
   String get leaderboardComingSoon => 'Çevrimiçi sıralama yakında';

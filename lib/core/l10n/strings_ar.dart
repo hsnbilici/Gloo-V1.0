@@ -232,16 +232,6 @@ class StringsAr extends AppStrings {
   String get consentDecline => 'لا شكراً';
 
   @override
-  String get ageGateTitle => 'التحقق من العمر';
-  @override
-  String get ageGateMessage =>
-      'يرجى تأكيد عمرك للمتابعة. اللاعبون الذين تقل أعمارهم عن 13 عامًا سيحصلون على تجربة محدودة.';
-  @override
-  String get ageGateConfirm => 'عمري 13 سنة أو أكثر';
-  @override
-  String get ageGateUnder13 => 'عمري أقل من 13 سنة';
-
-  @override
   String get leaderboardTitle => 'الترتيب';
   @override
   String get leaderboardComingSoon => 'الترتيب عبر الإنترنت قريباً';

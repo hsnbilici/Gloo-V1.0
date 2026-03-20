@@ -225,15 +225,6 @@ class StringsZh extends AppStrings {
   String get consentDecline => '不了';
 
   @override
-  String get ageGateTitle => '年龄验证';
-  @override
-  String get ageGateMessage => '请确认您的年龄以继续。13岁以下的玩家将获得有限体验。';
-  @override
-  String get ageGateConfirm => '我已满13岁';
-  @override
-  String get ageGateUnder13 => '我未满13岁';
-
-  @override
   String get leaderboardTitle => '排行榜';
   @override
   String get leaderboardComingSoon => '在线排行榜即将推出';

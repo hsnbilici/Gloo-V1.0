@@ -224,69 +224,6 @@ void main() {
     });
   });
 
-  // ─── COPPA Yaş Kapısı ───────────────────────────────────────────────────
-
-  group('COPPA Age Gate', () {
-    test('getAgeVerified defaults to false', () async {
-      repo = await createRepo();
-      expect(await repo.getAgeVerified(), isFalse);
-    });
-
-    test('getIsChild defaults to false', () async {
-      repo = await createRepo();
-      expect(await repo.getIsChild(), isFalse);
-    });
-
-    test('setAgeVerified(isChild: false) — age verified, not a child', () async {
-      repo = await createRepo();
-      await repo.setAgeVerified(isChild: false);
-      expect(await repo.getAgeVerified(), isTrue);
-      expect(await repo.getIsChild(), isFalse);
-    });
-
-    test('setAgeVerified(isChild: true) — age verified, is a child', () async {
-      repo = await createRepo();
-      await repo.setAgeVerified(isChild: true);
-      expect(await repo.getAgeVerified(), isTrue);
-      expect(await repo.getIsChild(), isTrue);
-    });
-
-    test('COPPA flags are stored in SecureStorage', () async {
-      final prefs = await SharedPreferences.getInstance();
-      final secure = FakeSecureStorage();
-      final r = LocalRepository(prefs, secureStorage: secure);
-      await r.setAgeVerified(isChild: true);
-      expect(await secure.read(key: 'age_verified'), 'true');
-      expect(await secure.read(key: 'is_child'), 'true');
-    });
-
-    test('migration: reads age_verified from SharedPreferences when SecureStorage empty',
-        () async {
-      SharedPreferences.setMockInitialValues({'age_verified': true});
-      final prefs = await SharedPreferences.getInstance();
-      final r = LocalRepository(prefs, secureStorage: FakeSecureStorage());
-      expect(await r.getAgeVerified(), isTrue);
-    });
-
-    test('migration: reads is_child from SharedPreferences when SecureStorage empty',
-        () async {
-      SharedPreferences.setMockInitialValues({'is_child': true});
-      final prefs = await SharedPreferences.getInstance();
-      final r = LocalRepository(prefs, secureStorage: FakeSecureStorage());
-      expect(await r.getIsChild(), isTrue);
-    });
-
-    test('setAgeVerified removes old SharedPreferences keys', () async {
-      SharedPreferences.setMockInitialValues(
-          {'age_verified': true, 'is_child': false});
-      final prefs = await SharedPreferences.getInstance();
-      final r = LocalRepository(prefs, secureStorage: FakeSecureStorage());
-      await r.setAgeVerified(isChild: false);
-      expect(prefs.getBool('age_verified'), isNull);
-      expect(prefs.getBool('is_child'), isNull);
-    });
-  });
-
   // ─── Streak ─────────────────────────────────────────────────────────────
 
   group('Streak', () {

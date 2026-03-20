@@ -16,7 +16,7 @@ class LocalRepository {
       {SecureStorageInterface? secureStorage})
       : _secure = secureStorage ?? const SecureStorageImpl(),
         _prefs = prefs {
-    profile = ProfileRepository(_prefs, _secure);
+    profile = ProfileRepository(_prefs);
     gameData = GameDataRepository(_prefs);
     economy = EconomyRepository(_prefs, _secure);
     pvp = PvpRepository(_prefs, _secure);
@@ -65,15 +65,6 @@ class LocalRepository {
 
   Future<void> setColorblindPromptShown() =>
       settings.setColorblindPromptShown();
-
-  // ─── COPPA Yaş Kapısı ────────────────────────────────────────────────────
-
-  Future<bool> getAgeVerified() => profile.getAgeVerified();
-
-  Future<bool> getIsChild() => profile.getIsChild();
-
-  Future<void> setAgeVerified({required bool isChild}) =>
-      profile.setAgeVerified(isChild: isChild);
 
   // ─── Gizlilik & Analitik ─────────────────────────────────────────────────
 

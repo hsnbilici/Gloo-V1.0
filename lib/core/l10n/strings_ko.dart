@@ -230,15 +230,6 @@ class StringsKo extends AppStrings {
   String get consentDecline => '아니요';
 
   @override
-  String get ageGateTitle => '나이 확인';
-  @override
-  String get ageGateMessage => '계속하려면 나이를 확인해 주세요. 13세 미만 플레이어는 제한된 경험을 하게 됩니다.';
-  @override
-  String get ageGateConfirm => '13세 이상입니다';
-  @override
-  String get ageGateUnder13 => '13세 미만입니다';
-
-  @override
   String get leaderboardTitle => '순위';
   @override
   String get leaderboardComingSoon => '온라인 순위 곧 출시';

@@ -232,16 +232,6 @@ class StringsHi extends AppStrings {
   String get consentDecline => 'नहीं';
 
   @override
-  String get ageGateTitle => 'उम्र सत्यापन';
-  @override
-  String get ageGateMessage =>
-      'जारी रखने के लिए अपनी उम्र की पुष्टि करें। 13 वर्ष से कम उम्र के खिलाड़ियों को सीमित अनुभव मिलेगा।';
-  @override
-  String get ageGateConfirm => 'मैं 13 वर्ष या उससे अधिक हूँ';
-  @override
-  String get ageGateUnder13 => 'मैं 13 वर्ष से कम हूँ';
-
-  @override
   String get leaderboardTitle => 'लीडरबोर्ड';
   @override
   String get leaderboardComingSoon => 'ऑनलाइन लीडरबोर्ड जल्द आ रहा है';

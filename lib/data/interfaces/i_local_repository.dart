@@ -35,14 +35,6 @@ abstract class ILocalRepository {
 
   Future<void> setColorblindPromptShown();
 
-  // ─── COPPA Yaş Kapısı ────────────────────────────────────────────────────
-
-  Future<bool> getAgeVerified();
-
-  Future<bool> getIsChild();
-
-  Future<void> setAgeVerified({required bool isChild});
-
   // ─── Gizlilik & Analitik ─────────────────────────────────────────────────
 
   bool getAnalyticsEnabled();
