@@ -109,6 +109,12 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Bump build number to commit count
+        run: |
+          BUILD_NUMBER=$(git rev-list --count HEAD)
+          sed -i '' "s/^version: \(.*\)+.*/version: \1+${BUILD_NUMBER}/" pubspec.yaml
+          echo "Build number set to $BUILD_NUMBER"
+
       - name: Install signing certificate
         env:
           IOS_CERT_BASE64: ${{ secrets.IOS_CERT_BASE64 }}
