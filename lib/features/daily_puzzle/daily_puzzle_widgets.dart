@@ -239,7 +239,10 @@ class ActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
@@ -281,6 +284,7 @@ class ActionBtn extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

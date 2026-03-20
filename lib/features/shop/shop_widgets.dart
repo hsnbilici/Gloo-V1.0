@@ -107,6 +107,8 @@ class ProductTile extends StatelessWidget {
                 children: [
                   Text(
                     label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.textScalerOf(context).scale(14),
@@ -123,6 +125,8 @@ class ProductTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     desc,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.45),
                       fontSize: MediaQuery.textScalerOf(context).scale(11),
@@ -255,6 +259,8 @@ class GlooPlusCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: kGold,
                         fontSize: 20,
@@ -270,6 +276,8 @@ class GlooPlusCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       desc,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.50),
                         fontSize: 11,

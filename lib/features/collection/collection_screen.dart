@@ -288,6 +288,8 @@ class _ColorCard extends StatelessWidget {
           // Renk adı
           Text(
             isDiscovered ? colorName : '???',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: isDiscovered ? textColor : kMuted,
               fontSize: 13,

@@ -56,6 +56,8 @@ class LeagueBadge extends ConsumerWidget {
         const SizedBox(height: 12),
         Text(
           league.leagueName(l),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: color,
             fontSize: 18,
@@ -113,6 +115,8 @@ class PvpStatChip extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.45),
               fontSize: 9,

@@ -118,19 +118,23 @@ class ModeCardState extends State<ModeCard> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          widget.label,
-                          style: TextStyle(
-                            color: resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight),
-                            fontSize: MediaQuery.textScalerOf(context)
-                                .scale(widget.isFeatured ? 17 : 16),
-                            fontWeight: FontWeight.w700,
-                            shadows: [
-                              Shadow(
-                                color: widget.color.withValues(alpha: 0.35),
-                                blurRadius: 8,
-                              ),
-                            ],
+                        Flexible(
+                          child: Text(
+                            widget.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight),
+                              fontSize: MediaQuery.textScalerOf(context)
+                                  .scale(widget.isFeatured ? 17 : 16),
+                              fontWeight: FontWeight.w700,
+                              shadows: [
+                                Shadow(
+                                  color: widget.color.withValues(alpha: 0.35),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         if (widget.isFeatured && widget.badgeLabel != null) ...[
@@ -164,6 +168,8 @@ class ModeCardState extends State<ModeCard> {
                     const SizedBox(height: 2),
                     Text(
                       widget.subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: widget.isFeatured
                             ? resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.55), light: kTextSecondaryLight)

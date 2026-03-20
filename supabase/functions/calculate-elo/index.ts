@@ -87,11 +87,11 @@ serve(async (req: Request) => {
     // ── Request body ────────────────────────────────────────────────────────
     const { matchId } = await req.json()
 
-    if (!matchId) {
-      return new Response(JSON.stringify({ error: 'matchId gerekli' }), {
-        status: 400,
-        headers: CORS_HEADERS,
-      })
+    if (!matchId || typeof matchId !== 'string' || matchId.length > 100) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid matchId' }),
+        { status: 400, headers: CORS_HEADERS },
+      )
     }
 
     // Supabase service role client (RLS bypass)

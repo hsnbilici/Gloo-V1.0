@@ -306,6 +306,7 @@ class PvpRealtimeService {
 
   /// Rakip skor guncellemelerini dinle.
   Stream<int> listenOpponentScore(String matchId) {
+    _duelControllers.removeWhere((c) => c.isClosed);
     final controller = StreamController<int>();
     _duelControllers.add(controller);
 
@@ -325,6 +326,7 @@ class PvpRealtimeService {
 
   /// Rakip engellerini dinle.
   Stream<ObstaclePacket> listenOpponentObstacles(String matchId) {
+    _duelControllers.removeWhere((c) => c.isClosed);
     final controller = StreamController<ObstaclePacket>();
     _duelControllers.add(controller);
 
@@ -352,6 +354,7 @@ class PvpRealtimeService {
 
   /// Rakip oyun bitis sinyalini dinle.
   Stream<int> listenOpponentGameOver(String matchId) {
+    _duelControllers.removeWhere((c) => c.isClosed);
     final controller = StreamController<int>();
     _duelControllers.add(controller);
 

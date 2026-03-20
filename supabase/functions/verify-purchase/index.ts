@@ -83,15 +83,172 @@ async function verifyAppleReceipt(
   return { verified: true }
 }
 
+// ── Google Play Developer API ────────────────────────────────────────────────
+
+const GOOGLE_PLAY_API_BASE = 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications'
+const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token'
+const PACKAGE_NAME = 'com.gloogame.app'
+
+// Subscription urun ID'leri — "gloo_plus" iceren urunler
+const SUBSCRIPTION_PRODUCT_IDS = new Set([
+  'gloo_plus_monthly',
+  'gloo_plus_yearly',
+])
+
+/**
+ * Google service account JSON'dan JWT olustur ve OAuth2 access token al.
+ * Web Crypto API (crypto.subtle) kullanir — npm bagimliligi yok.
+ */
+async function getGoogleAccessToken(
+  serviceAccountKey: { client_email: string; private_key: string },
+): Promise<string> {
+  const now = Math.floor(Date.now() / 1000)
+  const header = { alg: 'RS256', typ: 'JWT' }
+  const payload = {
+    iss: serviceAccountKey.client_email,
+    scope: 'https://www.googleapis.com/auth/androidpublisher',
+    aud: GOOGLE_TOKEN_URL,
+    iat: now,
+    exp: now + 3600,
+  }
+
+  const encoder = new TextEncoder()
+
+  const toBase64Url = (data: Uint8Array): string => {
+    let binary = ''
+    for (const byte of data) {
+      binary += String.fromCharCode(byte)
+    }
+    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+  }
+
+  const headerB64 = toBase64Url(encoder.encode(JSON.stringify(header)))
+  const payloadB64 = toBase64Url(encoder.encode(JSON.stringify(payload)))
+  const unsignedToken = `${headerB64}.${payloadB64}`
+
+  // PEM → binary DER
+  const pemBody = serviceAccountKey.private_key
+    .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+    .replace(/-----END PRIVATE KEY-----/g, '')
+    .replace(/\s/g, '')
+  const binaryDer = Uint8Array.from(atob(pemBody), (c) => c.charCodeAt(0))
+
+  const cryptoKey = await crypto.subtle.importKey(
+    'pkcs8',
+    binaryDer,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  )
+
+  const signature = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5',
+    cryptoKey,
+    encoder.encode(unsignedToken),
+  )
+
+  const signatureB64 = toBase64Url(new Uint8Array(signature))
+  const jwt = `${unsignedToken}.${signatureB64}`
+
+  // JWT → access token exchange
+  const tokenResponse = await fetch(GOOGLE_TOKEN_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`,
+  })
+
+  if (!tokenResponse.ok) {
+    const errText = await tokenResponse.text()
+    throw new Error(`Google OAuth token exchange failed: ${tokenResponse.status} ${errText}`)
+  }
+
+  const tokenData = await tokenResponse.json()
+  return tokenData.access_token
+}
+
+/**
+ * Google Play Developer API ile tek seferlik urun (in-app product) dogrula.
+ */
+async function verifyGoogleProduct(
+  accessToken: string,
+  productId: string,
+  purchaseToken: string,
+  expectedOrderId: string,
+): Promise<{ verified: boolean; error?: string }> {
+  const url = `${GOOGLE_PLAY_API_BASE}/${PACKAGE_NAME}/purchases/products/${productId}/tokens/${purchaseToken}`
+
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+
+  if (!response.ok) {
+    const errText = await response.text()
+    return { verified: false, error: `Google Play API error: ${response.status} ${errText}` }
+  }
+
+  const data = await response.json()
+
+  // purchaseState: 0 = purchased, 1 = canceled, 2 = pending
+  if (data.purchaseState !== 0) {
+    return { verified: false, error: `Invalid purchase state: ${data.purchaseState}` }
+  }
+
+  // orderId eslesmesi
+  if (data.orderId !== expectedOrderId) {
+    return { verified: false, error: `Order ID mismatch: expected ${expectedOrderId}, got ${data.orderId}` }
+  }
+
+  return { verified: true }
+}
+
+/**
+ * Google Play Developer API ile abonelik (subscription) dogrula.
+ */
+async function verifyGoogleSubscription(
+  accessToken: string,
+  subscriptionId: string,
+  purchaseToken: string,
+  expectedOrderId: string,
+): Promise<{ verified: boolean; error?: string }> {
+  const url = `${GOOGLE_PLAY_API_BASE}/${PACKAGE_NAME}/purchases/subscriptions/${subscriptionId}/tokens/${purchaseToken}`
+
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+
+  if (!response.ok) {
+    const errText = await response.text()
+    return { verified: false, error: `Google Play API error: ${response.status} ${errText}` }
+  }
+
+  const data = await response.json()
+
+  // paymentState: 0 = pending, 1 = received, 2 = free trial, 3 = deferred
+  if (data.paymentState === undefined || (data.paymentState !== 1 && data.paymentState !== 2)) {
+    return { verified: false, error: `Invalid payment state: ${data.paymentState}` }
+  }
+
+  // Abonelik suresi dolmus mu kontrol et
+  const expiryMillis = parseInt(data.expiryTimeMillis, 10)
+  if (isNaN(expiryMillis) || expiryMillis < Date.now()) {
+    return { verified: false, error: 'Subscription expired' }
+  }
+
+  // orderId eslesmesi — aboneliklerde orderId sonuna ..0, ..1 gibi renewal suffix eklenir
+  // Ilk satin alim icin tam eslesme, yenileme icin prefix eslesmesi kontrol edilir
+  if (data.orderId !== expectedOrderId && !data.orderId?.startsWith(expectedOrderId + '..')) {
+    return { verified: false, error: `Order ID mismatch: expected ${expectedOrderId}, got ${data.orderId}` }
+  }
+
+  return { verified: true }
+}
+
 // ── Android receipt dogrulama ────────────────────────────────────────────────
 
 async function verifyAndroidReceipt(
   receipt: string,
   productId: string,
 ): Promise<{ verified: boolean; error?: string }> {
-  // Android purchase token dogrulamasi.
-  // Tam entegrasyon icin Google Play Developer API + service account gerekir.
-  // Simdilik temel token format dogrulama yapilir.
   try {
     const purchaseData = JSON.parse(receipt)
 
@@ -105,19 +262,54 @@ async function verifyAndroidReceipt(
       return { verified: false, error: 'Product ID mismatch' }
     }
 
-    // purchaseState: 0 = purchased
+    // purchaseState: 0 = purchased (client-side on-kontrol)
     if (purchaseData.purchaseState !== undefined && purchaseData.purchaseState !== 0) {
       return { verified: false, error: `Invalid purchase state: ${purchaseData.purchaseState}` }
     }
 
-    // Google Play Developer API entegrasyonu icin:
-    // GOOGLE_SERVICE_ACCOUNT_KEY env degiskeni ayarlanmalı
-    // ve googleapis ile subscriptions/products.get cagirilmali.
-    // Su an temel dogrulama yeterli.
+    // ── Google Play Developer API ile sunucu tarafinda dogrulama ──
+    const serviceAccountKeyJson = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_KEY')
 
-    return { verified: true }
-  } catch {
-    return { verified: false, error: 'Failed to parse Android receipt' }
+    if (!serviceAccountKeyJson) {
+      // Service account yoksa temel dogrulamayla devam et (graceful degradation)
+      console.warn('GOOGLE_SERVICE_ACCOUNT_KEY not configured — falling back to basic validation')
+      return { verified: true }
+    }
+
+    let serviceAccountKey: { client_email: string; private_key: string }
+    try {
+      serviceAccountKey = JSON.parse(serviceAccountKeyJson)
+    } catch {
+      console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY JSON')
+      return { verified: true } // Parse hatasi — fallback
+    }
+
+    if (!serviceAccountKey.client_email || !serviceAccountKey.private_key) {
+      console.error('GOOGLE_SERVICE_ACCOUNT_KEY missing client_email or private_key')
+      return { verified: true } // Eksik alan — fallback
+    }
+
+    // Access token al
+    const accessToken = await getGoogleAccessToken(serviceAccountKey)
+
+    // Abonelik mi yoksa tek seferlik urun mu?
+    if (SUBSCRIPTION_PRODUCT_IDS.has(productId)) {
+      return await verifyGoogleSubscription(
+        accessToken,
+        productId,
+        purchaseData.purchaseToken,
+        purchaseData.orderId,
+      )
+    } else {
+      return await verifyGoogleProduct(
+        accessToken,
+        productId,
+        purchaseData.purchaseToken,
+        purchaseData.orderId,
+      )
+    }
+  } catch (err) {
+    return { verified: false, error: `Android verification failed: ${String(err)}` }
   }
 }
 
@@ -191,28 +383,30 @@ serve(async (req: Request) => {
       ? await verifyAppleReceipt(receipt, productId)
       : await verifyAndroidReceipt(receipt, productId)
 
+    // Audit log — purchase_verifications tablosuna kaydet
+    try {
+      await supabase.from('purchase_verifications').insert({
+        user_id: userId,
+        platform,
+        product_id: productId,
+        verified: result.verified,
+        error: result.error ?? null,
+        created_at: new Date().toISOString(),
+      })
+    } catch (auditErr) {
+      console.error('Audit log error:', auditErr)
+    }
+
     if (!result.verified) {
       return new Response(JSON.stringify(result), { status: 400, headers: CORS_HEADERS })
     }
 
-    // Basarili dogrulama — profilde kaydet (service_role ile RLS bypass)
+    // Basarili dogrulama — profilde kaydet (atomic RPC ile race condition onlenir)
     try {
-      // Mevcut purchased_products alanini oku veya olustur
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('purchased_products')
-        .eq('id', userId)
-        .single()
-
-      const currentProducts: string[] = profile?.purchased_products ?? []
-      if (!currentProducts.includes(productId)) {
-        currentProducts.push(productId)
-      }
-
-      await supabase
-        .from('profiles')
-        .update({ purchased_products: currentProducts })
-        .eq('id', userId)
+      await supabase.rpc('append_purchased_product', {
+        p_user_id: userId,
+        p_product_id: productId,
+      })
     } catch (dbError) {
       // DB hatasi receipt dogrulamasini gecersiz kilmaz
       console.error('Profile update error:', dbError)

@@ -96,12 +96,16 @@ class _BuildingCardState extends State<BuildingCard> {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        widget.building.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                      Flexible(
+                        child: Text(
+                          widget.building.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -116,6 +120,8 @@ class _BuildingCardState extends State<BuildingCard> {
                     const SizedBox(height: 3),
                     Text(
                       widget.building.description!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.45),
                         fontSize: 11,
@@ -126,7 +132,11 @@ class _BuildingCardState extends State<BuildingCard> {
               ),
             ),
             if (!isMaxLevel)
-              GestureDetector(
+              Semantics(
+                label: '${widget.building.name} upgrade ${widget.cost}',
+                button: true,
+                enabled: widget.canAfford,
+                child: GestureDetector(
                 onTap: widget.canAfford ? widget.onUpgrade : null,
                 onTapDown: widget.canAfford
                     ? (_) => setState(() => _pressed = true)
@@ -172,6 +182,7 @@ class _BuildingCardState extends State<BuildingCard> {
                     ],
                   ),
                 ),
+              ),
               )
             else
               Container(

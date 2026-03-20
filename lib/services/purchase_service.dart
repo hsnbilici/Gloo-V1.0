@@ -194,20 +194,40 @@ class PurchaseService {
     await _localRepo?.savePendingVerificationMap(_pendingVerification);
   }
 
+  /// Monthly subscription + 5-day grace period (35 days total).
+  static const _kSubscriptionGraceDays = 35;
+
   /// Yerel depodan yüklenen ürünleri mevcut durum ile senkronize eder.
-  /// Süresi dolmuş abonelikler (restore edilmemiş) yerel depodan kaldırılır.
+  /// Süresi dolmuş abonelikler (restore edilmemiş veya timestamp aşılmış)
+  /// yerel depodan kaldırılır.
   Future<void> syncLocalProducts(LocalRepository localRepo) async {
     final saved = await localRepo.getUnlockedProducts();
     if (saved.isEmpty) return;
-    // Kayıtlı ama artık aktif olmayan abonelikleri kaldır
-    final expired = saved
-        .where(
-          (id) => _kSubscriptionIds.contains(id) && !_purchasedIds.contains(id),
-        )
-        .toList();
+
+    final expired = <String>[];
+    for (final id in saved) {
+      if (!_kSubscriptionIds.contains(id)) continue;
+
+      // Store tarafından restore edilmişse aktif kabul et
+      if (_purchasedIds.contains(id)) continue;
+
+      // Timestamp kontrolü: kayıt yoksa veya süre aşılmışsa expired
+      final ts = await localRepo.getSubscriptionTimestamp(id);
+      if (ts != null) {
+        final purchaseDate = DateTime.fromMillisecondsSinceEpoch(ts);
+        final daysSince = DateTime.now().difference(purchaseDate).inDays;
+        if (daysSince <= _kSubscriptionGraceDays) continue;
+      }
+
+      expired.add(id);
+    }
+
     if (expired.isNotEmpty) {
       final updated = saved.where((id) => !expired.contains(id)).toList();
       await localRepo.addUnlockedProducts(updated);
+      for (final id in expired) {
+        await localRepo.removeSubscriptionTimestamp(id);
+      }
       if (kDebugMode) {
         debugPrint('PurchaseService: expired subscriptions removed: $expired');
       }
@@ -258,6 +278,7 @@ class PurchaseService {
     if (result == true) {
       // Sunucu dogruladi
       _addProduct(purchase.productID);
+      await _saveSubscriptionTimestampIfNeeded(purchase.productID);
       _pendingVerification.remove(purchase.productID);
       await _persistPending();
       if (kDebugMode) {
@@ -266,6 +287,7 @@ class PurchaseService {
     } else if (result == null) {
       // Network hatasi — graceful degradation: yerel olarak ekle, flag'le
       _addProduct(purchase.productID);
+      await _saveSubscriptionTimestampIfNeeded(purchase.productID);
       _pendingVerification[purchase.productID] = receipt;
       await _persistPending();
       if (kDebugMode) {
@@ -280,6 +302,16 @@ class PurchaseService {
           'PurchaseService: verification failed for ${purchase.productID}',
         );
       }
+    }
+  }
+
+  /// Abonelik ürünü ise satın alma zamanını kaydeder.
+  Future<void> _saveSubscriptionTimestampIfNeeded(String productId) async {
+    if (_kSubscriptionIds.contains(productId) && _localRepo != null) {
+      await _localRepo!.saveSubscriptionTimestamp(
+        productId,
+        DateTime.now().millisecondsSinceEpoch,
+      );
     }
   }
 

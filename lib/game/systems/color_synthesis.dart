@@ -15,10 +15,65 @@ class SynthesisResult {
 
 class ColorSynthesisSystem {
   /// Izgarada bitişik eşleşen renk çiftlerini tarar ve sentez listesi döner.
-  List<SynthesisResult> findSyntheses(List<List<GelColor?>> grid) {
+  ///
+  /// [modifiedCells] verilirse yalnızca bu hücreler ve komşuları taranır
+  /// (O(k) — k = değişen hücre sayısı). `null` ise tam ızgara taranır (O(n²)).
+  List<SynthesisResult> findSyntheses(
+    List<List<GelColor?>> grid, {
+    Set<(int, int)>? modifiedCells,
+  }) {
     final results = <SynthesisResult>[];
     final rows = grid.length;
     final cols = grid[0].length;
+
+    if (modifiedCells != null) {
+      // Değişen hücrelerin 3×3 komşuluğundaki yatay/dikey çiftleri tara
+      final visited = <(int, int, int, int)>{};
+      for (final (mr, mc) in modifiedCells) {
+        for (int dr = -1; dr <= 1; dr++) {
+          for (int dc = -1; dc <= 1; dc++) {
+            final r = mr + dr;
+            final c = mc + dc;
+            if (r < 0 || r >= rows || c < 0 || c >= cols) continue;
+
+            // Yatay çift: (r,c)-(r,c+1)
+            if (c + 1 < cols && visited.add((r, c, r, c + 1))) {
+              final a = grid[r][c];
+              final b = grid[r][c + 1];
+              if (a != null && b != null) {
+                final mixed = ColorMixer.mix(a, b);
+                if (mixed != null) {
+                  results.add(SynthesisResult(
+                    resultColor: mixed,
+                    positions: [(r, c), (r, c + 1)],
+                    isChain: false,
+                  ));
+                }
+              }
+            }
+
+            // Dikey çift: (r,c)-(r+1,c)
+            if (r + 1 < rows && visited.add((r, c, r + 1, c))) {
+              final a = grid[r][c];
+              final b = grid[r + 1][c];
+              if (a != null && b != null) {
+                final mixed = ColorMixer.mix(a, b);
+                if (mixed != null) {
+                  results.add(SynthesisResult(
+                    resultColor: mixed,
+                    positions: [(r, c), (r + 1, c)],
+                    isChain: false,
+                  ));
+                }
+              }
+            }
+          }
+        }
+      }
+      return results;
+    }
+
+    // Tam ızgara taraması (modifiedCells == null)
 
     // Yatay tarama
     for (int r = 0; r < rows; r++) {

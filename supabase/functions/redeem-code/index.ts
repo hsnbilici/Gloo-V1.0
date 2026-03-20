@@ -61,6 +61,14 @@ serve(async (req: Request) => {
       )
     }
 
+    const MAX_CODE_LENGTH = 50
+    if (code.length > MAX_CODE_LENGTH || !/^[A-Za-z0-9\-_]+$/.test(code)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid code format' }),
+        { status: 400, headers: CORS_HEADERS },
+      )
+    }
+
     const normalizedCode = code.toUpperCase().trim()
 
     // ── Service role client (RLS bypass) ────────────────────────────────────

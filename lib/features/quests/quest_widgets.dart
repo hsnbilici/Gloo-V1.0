@@ -79,6 +79,8 @@ class QuestCard extends StatelessWidget {
                 children: [
                   Text(
                     quest.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: isComplete
                           ? Colors.white.withValues(alpha: 0.50)

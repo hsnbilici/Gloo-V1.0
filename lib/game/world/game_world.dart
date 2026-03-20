@@ -275,8 +275,14 @@ class GlooGame {
   }
 
   /// Sentezleri bul ve ızgaraya uygula — çakışan hücreleri atla.
-  (int appliedSynthesisCount, int chefTargetCount) _applySyntheses() {
-    final syntheses = _synthesisSystem.findSyntheses(_gridManager.grid);
+  /// [changedCells] verilirse yalnızca bu hücreler ve komşuları taranır.
+  (int appliedSynthesisCount, int chefTargetCount) _applySyntheses({
+    Set<(int, int)>? changedCells,
+  }) {
+    final syntheses = _synthesisSystem.findSyntheses(
+      _gridManager.grid,
+      modifiedCells: changedCells,
+    );
 
     int appliedSynthesisCount = 0;
     int chefTargetCount = 0;
@@ -365,15 +371,31 @@ class GlooGame {
   /// Yerçekimi uygula ve zincirleme temizleme kontrolü.
   /// Yerçekimi → temizleme döngüsü, değişiklik kalmayana kadar (veya
   /// maksimum güvenlik sınırına ulaşana kadar) tekrar eder.
+  /// Grid hash karşılaştırması ile erken çıkış: ızgara stabilize olduysa döngü kesilir.
   void _applyGravityAndCascade() {
     const maxIterations = 20;
     int iterations = 0;
+    int previousHash = 0;
 
     while (iterations < maxIterations) {
       final gravityMoves = _gridManager.applyGravity();
       if (gravityMoves.isEmpty) break;
 
+      // Grid hash ile stabilizasyon kontrolü
+      final currentHash = _computeGridHash();
+      if (currentHash == previousHash) break;
+      previousHash = currentHash;
+
       onGravityApplied?.call(gravityMoves);
+
+      // Yerçekimi ile değişen hücreleri topla (hedef pozisyonlar)
+      final movedCells = <(int, int)>{};
+      for (final (_, _, toR, toC) in gravityMoves) {
+        movedCells.add((toR, toC));
+      }
+
+      // Cascade sırasında sentez kontrolü — sadece değişen hücreler taranır
+      _applySyntheses(changedCells: movedCells);
 
       final cascadeClear = _gridManager.detectAndClear();
       if (cascadeClear.totalLines == 0) break; // yerçekimi durdu, yeni satır yok
@@ -397,6 +419,22 @@ class GlooGame {
       }
       _checkTimeTrialBonus(cascadeClear);
     }
+  }
+
+  /// Izgara durumunun basit hash'i — stabilizasyon tespiti için.
+  int _computeGridHash() {
+    final grid = _gridManager.grid;
+    int hash = 0;
+    for (int r = 0; r < grid.length; r++) {
+      final row = grid[r];
+      for (int c = 0; c < row.length; c++) {
+        final color = row[c];
+        if (color != null) {
+          hash += (color.index + 1) * (r * row.length + c + 1);
+        }
+      }
+    }
+    return hash;
   }
 
   /// Time Trial: her temizlenen satır +2 saniye bonus.

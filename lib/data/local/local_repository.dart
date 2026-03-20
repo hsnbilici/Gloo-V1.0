@@ -300,6 +300,15 @@ class LocalRepository {
 
   Future<void> addRedeemedCode(String code) => economy.addRedeemedCode(code);
 
+  Future<int?> getSubscriptionTimestamp(String productId) =>
+      economy.getSubscriptionTimestamp(productId);
+
+  Future<void> saveSubscriptionTimestamp(String productId, int epochMs) =>
+      economy.saveSubscriptionTimestamp(productId, epochMs);
+
+  Future<void> removeSubscriptionTimestamp(String productId) =>
+      economy.removeSubscriptionTimestamp(productId);
+
   Future<List<String>> getUnlockedProducts() => economy.getUnlockedProducts();
 
   Future<void> addUnlockedProducts(List<String> productIds) =>

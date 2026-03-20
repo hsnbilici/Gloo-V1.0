@@ -107,19 +107,23 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                   padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: Row(
                     children: [
-                      GestureDetector(
-                        onTap: () => context.go('/'),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: surfaceColor,
-                            borderRadius:
-                                BorderRadius.circular(UIConstants.radiusMd),
-                            border: Border.all(color: borderColor),
+                      Semantics(
+                        label: 'Geri',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () => context.go('/'),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: surfaceColor,
+                              borderRadius:
+                                  BorderRadius.circular(UIConstants.radiusMd),
+                              border: Border.all(color: borderColor),
+                            ),
+                            child: Icon(directionalBackIcon(dir),
+                                color: kGold, size: 20),
                           ),
-                          child: Icon(directionalBackIcon(dir),
-                              color: kGold, size: 20),
                         ),
                       ),
                       const SizedBox(width: 14),

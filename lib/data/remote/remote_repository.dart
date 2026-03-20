@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -36,7 +38,8 @@ class RemoteRepository implements IRemoteRepository {
         return await action();
       } catch (e) {
         if (i == maxAttempts - 1) rethrow;
-        await Future<void>.delayed(Duration(milliseconds: 500 * (i + 1)));
+        await Future<void>.delayed(
+            Duration(milliseconds: 500 * (i + 1) + Random().nextInt(200)));
       }
     }
     return null;

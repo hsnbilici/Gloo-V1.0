@@ -116,6 +116,22 @@ class EconomyRepository {
     }
   }
 
+  // ─── Subscription Timestamps ─────────────────────────────────────────────
+
+  Future<int?> getSubscriptionTimestamp(String productId) async {
+    final value = await _secure.read(key: 'sub_ts_$productId');
+    if (value != null) return int.tryParse(value);
+    return null;
+  }
+
+  Future<void> saveSubscriptionTimestamp(String productId, int epochMs) async {
+    await _secure.write(key: 'sub_ts_$productId', value: epochMs.toString());
+  }
+
+  Future<void> removeSubscriptionTimestamp(String productId) async {
+    await _secure.write(key: 'sub_ts_$productId', value: null);
+  }
+
   // ─── Unlocked Products ───────────────────────────────────────────────────
 
   Future<List<String>> getUnlockedProducts() async {

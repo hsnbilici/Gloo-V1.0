@@ -22,7 +22,10 @@ class DailyBanner extends ConsumerWidget {
     final completed = repoAsync.valueOrNull?.isDailyCompleted() ?? false;
     final score = repoAsync.valueOrNull?.getDailyScore() ?? 0;
 
-    return GestureDetector(
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
       onTap: () => context.push('/daily'),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
@@ -65,6 +68,8 @@ class DailyBanner extends ConsumerWidget {
                 children: [
                   Text(
                     label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
@@ -93,6 +98,7 @@ class DailyBanner extends ConsumerWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -165,12 +165,16 @@ class TalentCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(
-                        def.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                      Flexible(
+                        child: Text(
+                          def.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -187,6 +191,8 @@ class TalentCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     def.description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.40),
                       fontSize: 11,
@@ -196,7 +202,11 @@ class TalentCard extends StatelessWidget {
               ),
             ),
             if (!isMax)
-              GestureDetector(
+              Semantics(
+                label: '${def.name} upgrade $cost',
+                button: true,
+                enabled: canAfford,
+                child: GestureDetector(
                 onTap: canAfford ? onUpgrade : null,
                 child: Container(
                   padding:
@@ -221,6 +231,7 @@ class TalentCard extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
               )
             else
               Text(

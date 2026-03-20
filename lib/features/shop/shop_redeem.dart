@@ -62,7 +62,11 @@ class RedeemCodeField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          GestureDetector(
+          Semantics(
+            label: buttonLabel,
+            button: true,
+            enabled: enabled,
+            child: GestureDetector(
             onTap: enabled ? onRedeem : null,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -86,6 +90,7 @@ class RedeemCodeField extends StatelessWidget {
                   letterSpacing: 0.5,
                 ),
               ),
+            ),
             ),
           ),
         ],
