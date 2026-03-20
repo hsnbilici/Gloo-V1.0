@@ -82,6 +82,9 @@ class ChefLevelOverlay extends ConsumerWidget {
                       Text(
                         isAllComplete ? l.chefAllComplete : l.chefLevelComplete,
                         textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: isAllComplete ? 24 : 28,

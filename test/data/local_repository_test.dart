@@ -84,6 +84,85 @@ void main() {
     });
   });
 
+  // ─── Username Validation ────────────────────────────────────────────────
+
+  group('Username Validation — UserProfile.validateUsername', () {
+    test('valid username returns null', () {
+      expect(UserProfile.validateUsername('Player1'), isNull);
+    });
+
+    test('valid username with underscore returns null', () {
+      expect(UserProfile.validateUsername('cool_player_42'), isNull);
+    });
+
+    test('exactly 20 characters is valid', () {
+      expect(UserProfile.validateUsername('A' * 20), isNull);
+    });
+
+    test('empty string returns empty error', () {
+      expect(UserProfile.validateUsername(''), 'empty');
+    });
+
+    test('whitespace-only string returns empty error', () {
+      expect(UserProfile.validateUsername('   '), 'empty');
+    });
+
+    test('21 characters returns tooLong error', () {
+      expect(UserProfile.validateUsername('A' * 21), 'tooLong');
+    });
+
+    test('special characters returns invalidChars error', () {
+      expect(UserProfile.validateUsername('user@name!'), 'invalidChars');
+    });
+
+    test('spaces inside username returns invalidChars error', () {
+      expect(UserProfile.validateUsername('hello world'), 'invalidChars');
+    });
+
+    test('emoji in username returns invalidChars error', () {
+      expect(UserProfile.validateUsername('player🎮'), 'invalidChars');
+    });
+
+    test('dot in username returns invalidChars error', () {
+      expect(UserProfile.validateUsername('user.name'), 'invalidChars');
+    });
+  });
+
+  group('Username Validation — saveProfile guard', () {
+    test('saveProfile rejects empty username', () async {
+      repo = await createRepo();
+      await repo.saveProfile(UserProfile(username: ''));
+      expect(await repo.getProfile(), isNull);
+    });
+
+    test('saveProfile rejects whitespace-only username', () async {
+      repo = await createRepo();
+      await repo.saveProfile(UserProfile(username: '   '));
+      expect(await repo.getProfile(), isNull);
+    });
+
+    test('saveProfile rejects username longer than 20 chars', () async {
+      repo = await createRepo();
+      await repo.saveProfile(UserProfile(username: 'A' * 21));
+      expect(await repo.getProfile(), isNull);
+    });
+
+    test('saveProfile rejects username with special characters', () async {
+      repo = await createRepo();
+      await repo.saveProfile(UserProfile(username: 'bad!name'));
+      expect(await repo.getProfile(), isNull);
+    });
+
+    test('saveProfile trims and persists valid username', () async {
+      repo = await createRepo();
+      // Leading/trailing spaces are trimmed before validation —
+      // 'GoodName' with no spaces passes and gets saved trimmed.
+      await repo.saveProfile(UserProfile(username: 'GoodName'));
+      final loaded = await repo.getProfile();
+      expect(loaded?.username, 'GoodName');
+    });
+  });
+
   // ─── Onboarding ─────────────────────────────────────────────────────────
 
   group('Onboarding', () {
@@ -609,6 +688,38 @@ void main() {
       await repo.addUnlockedProducts(['product1', 'product2']);
       final products = await repo.getUnlockedProducts();
       expect(products.where((p) => p == 'product1').length, 1);
+    });
+  });
+
+  // ─── GDPR Export All Data ───────────────────────────────────────────────────
+
+  group('exportAllData', () {
+    test('includes unlocked_products in monetization section', () async {
+      repo = await createRepo();
+      await repo.addUnlockedProducts(['product1', 'product2']);
+      final data = await repo.exportAllData();
+      final monetization = data['monetization'] as Map<String, dynamic>;
+      expect(monetization['unlocked_products'], isNotNull);
+      expect(monetization['unlocked_products'], contains('product1'));
+      expect(monetization['unlocked_products'], contains('product2'));
+    });
+
+    test('includes redeemed_codes in monetization section', () async {
+      repo = await createRepo();
+      await repo.addRedeemedCode('CODE1');
+      await repo.addRedeemedCode('CODE2');
+      final data = await repo.exportAllData();
+      final monetization = data['monetization'] as Map<String, dynamic>;
+      expect(monetization['redeemed_codes'], isNotNull);
+      expect(monetization['redeemed_codes'], contains('CODE1'));
+      expect(monetization['redeemed_codes'], contains('CODE2'));
+    });
+
+    test('includes exported_at timestamp', () async {
+      repo = await createRepo();
+      final data = await repo.exportAllData();
+      expect(data['exported_at'], isNotNull);
+      expect(data['exported_at'], isA<String>());
     });
   });
 

@@ -186,6 +186,22 @@ class StringsEs extends AppStrings {
   String get dailyShareResult => 'Compartir';
 
   @override
+  String get settingsUsernameLabel => 'Nombre de usuario';
+  @override
+  String get settingsUsernameTitle => 'Editar nombre de usuario';
+  @override
+  String get settingsUsernameHint => 'Escribe un nombre de usuario';
+  @override
+  String get settingsUsernameSave => 'Guardar';
+  @override
+  String get settingsUsernameErrorEmpty => 'El nombre de usuario no puede estar vacío';
+  @override
+  String get settingsUsernameErrorTooLong => 'Máximo 20 caracteres';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Solo letras, números y guiones bajos';
+
+  @override
   String get settingsSectionPrivacy => 'PRIVACIDAD';
   @override
   String get settingsAnalytics => 'Análisis e informes de fallos';

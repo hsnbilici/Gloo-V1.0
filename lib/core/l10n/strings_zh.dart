@@ -182,6 +182,21 @@ class StringsZh extends AppStrings {
   String get dailyShareResult => '分享';
 
   @override
+  String get settingsUsernameLabel => '用户名';
+  @override
+  String get settingsUsernameTitle => '编辑用户名';
+  @override
+  String get settingsUsernameHint => '输入用户名';
+  @override
+  String get settingsUsernameSave => '保存';
+  @override
+  String get settingsUsernameErrorEmpty => '用户名不能为空';
+  @override
+  String get settingsUsernameErrorTooLong => '最多20个字符';
+  @override
+  String get settingsUsernameErrorInvalidChars => '只允许字母、数字和下划线';
+
+  @override
   String get settingsSectionPrivacy => '数据隐私';
   @override
   String get settingsAnalytics => '分析与崩溃报告';

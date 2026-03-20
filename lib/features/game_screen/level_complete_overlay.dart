@@ -49,6 +49,9 @@ class LevelCompleteOverlay extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               completedLabel,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaler: TextScaler.noScaling,
               style: const TextStyle(
                 color: kColorChef,
                 fontSize: 32,
@@ -71,6 +74,7 @@ class LevelCompleteOverlay extends StatelessWidget {
               curve: Curves.easeOutCubic,
               builder: (_, val, __) => Text(
                 '$val',
+                textScaler: TextScaler.noScaling,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 48,

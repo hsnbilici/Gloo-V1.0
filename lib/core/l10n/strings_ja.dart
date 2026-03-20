@@ -183,6 +183,22 @@ class StringsJa extends AppStrings {
   String get dailyShareResult => 'シェア';
 
   @override
+  String get settingsUsernameLabel => 'ユーザー名';
+  @override
+  String get settingsUsernameTitle => 'ユーザー名を編集';
+  @override
+  String get settingsUsernameHint => 'ユーザー名を入力';
+  @override
+  String get settingsUsernameSave => '保存';
+  @override
+  String get settingsUsernameErrorEmpty => 'ユーザー名は空にできません';
+  @override
+  String get settingsUsernameErrorTooLong => '最大20文字';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      '英数字とアンダースコアのみ使用可能';
+
+  @override
   String get settingsSectionPrivacy => 'データプライバシー';
   @override
   String get settingsAnalytics => '分析とクラッシュレポート';

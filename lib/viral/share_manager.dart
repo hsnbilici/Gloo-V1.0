@@ -8,13 +8,18 @@ class ShareManager {
   static const String _hashtags = '#Gloo #ASMR #satisfying #puzzle #colorsort';
   static const String _appUrl = 'https://gloo.app';
 
+  final AnalyticsService _analytics;
+
+  ShareManager({AnalyticsService? analyticsService})
+      : _analytics = analyticsService ?? AnalyticsService();
+
   Future<void> shareScore({
     required int score,
     required String mode,
     required AppStrings l,
   }) async {
     final text = _buildCaption(score: score, mode: mode, l: l);
-    AnalyticsService().logShare(mode: mode);
+    _analytics.logShare(mode: mode);
     await Share.share(text);
   }
 
@@ -30,7 +35,7 @@ class ShareManager {
         [XFile(videoPath)],
         text: '$caption\n\n$_hashtags',
       );
-      AnalyticsService().logShare(mode: 'video');
+      _analytics.logShare(mode: 'video');
     } catch (e) {
       if (kDebugMode) debugPrint('ShareManager.shareVideo error: $e');
     }
@@ -41,7 +46,7 @@ class ShareManager {
     required String dateLabel,
     required AppStrings l,
   }) async {
-    AnalyticsService().logShare(mode: 'daily');
+    _analytics.logShare(mode: 'daily');
     final text = '${l.shareDailyCaption(dateLabel, _formatScore(score))} '
         '${l.shareDailyChallenge} '
         '$_appUrl\n\n$_hashtags';
@@ -58,7 +63,7 @@ class ShareManager {
     final text =
         '${l.shareComboCaption(comboLabel, modeName, _formatScore(score))} '
         '$_appUrl\n\n$_hashtags';
-    AnalyticsService().logShare(mode: 'combo');
+    _analytics.logShare(mode: 'combo');
     await Share.share(text);
   }
 

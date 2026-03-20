@@ -53,6 +53,10 @@ class GlooGame {
   // Faz 4: Smart RNG durumu
   int _totalGamesPlayed = 0;
 
+  // Near-miss: eldeki kalan şekil sayısı (her placePiece'de azalır, her
+  // generateNextHand'de sıfırlanır). Gerçek availableMoves değerini sağlar.
+  int _handRemaining = GameConstants.shapesInHand;
+
   // Faz 4: Freeze durumu
   Timer? _freezeTimer;
 
@@ -114,6 +118,7 @@ class GlooGame {
     _movesUsed = 0;
     _levelCompleted = false;
     _handIndex = 0;
+    _handRemaining = GameConstants.shapesInHand;
     currencyManager.resetGameStats();
 
     powerUpSystem = PowerUpSystem(currencyManager: currencyManager);
@@ -205,6 +210,7 @@ class GlooGame {
     _gridManager.place(cells, color);
     _movesUsed++;
     _handIndex++;
+    if (_handRemaining > 0) _handRemaining--;
 
     // Power-up: Undo için yerleştirme kaydı
     powerUpSystem.recordPlacement(cells, color);
@@ -215,7 +221,10 @@ class GlooGame {
   }
 
   /// Smart RNG ile yeni el oluştur.
+  /// Her çağrıda _handRemaining sıfırlanır (yeni el = tam dolu el).
   List<(GelShape, GelColor)> generateNextHand() {
+    _handRemaining = GameConstants.shapesInHand;
+
     if (mode == GameMode.daily) {
       return ShapeGenerator.generateNextSeededHand(
         baseSeed: ShapeGenerator.todaySeed(),
@@ -412,16 +421,20 @@ class GlooGame {
   }
 
   /// Near-miss değerlendirmesi (Time Trial ve Duel modlarında atlanır).
+  ///
+  /// Time Trial: süre baskısı zaten gerilim yaratır; near-miss bildirimi
+  /// gürültüye dönüşür, bu nedenle atlanır.
+  /// Duel: 120s limitli, ELO bazlı mod — benzer nedenle atlanır.
+  /// Zen: sonsuz mod olduğundan near-miss tetiklenebilir (atlanmaz).
   void _evaluateNearMiss() {
-    // Time Trial: near-miss gürültü yapar, atla
     if (mode == GameMode.timeTrial) return;
     if (mode == GameMode.duel) return;
 
     final nearMiss = _nearMissDetector.evaluate(
       filledCells: _gridManager.filledCells,
       totalCells: _gridManager.totalCells,
-      lastComboSize: 0,
-      availableMoves: 3,
+      lastComboSize: _comboDetector.lastComboSize,
+      availableMoves: _handRemaining,
       grid: _gridManager.grid,
     );
     if (nearMiss != null) onNearMiss?.call(nearMiss);

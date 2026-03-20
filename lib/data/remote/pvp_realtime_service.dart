@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../core/constants/game_constants.dart';
 import '../../core/models/match_models.dart';
 import '../../game/pvp/matchmaking.dart' show MatchmakingManager;
 import 'dto/broadcast_game_over.dart';
@@ -30,6 +31,9 @@ class PvpRealtimeService {
   RealtimeChannel? _duelChannel;
   Timer? _matchmakingTimeout;
   Timer? _evaluateDebounce;
+
+  // ── Obstacle throttle ────────────────────────────────────────────────
+  DateTime? _lastObstacleSentAt;
 
   // ── Reconnection ─────────────────────────────────────────────────────
   String? _activeDuelMatchId;
@@ -251,6 +255,13 @@ class PvpRealtimeService {
     ObstaclePacket packet,
   ) async {
     if (_duelChannel == null) return;
+    final now = DateTime.now();
+    if (_lastObstacleSentAt != null &&
+        now.difference(_lastObstacleSentAt!).inMilliseconds <
+            GameConstants.duelObstacleCooldownMs) {
+      return;
+    }
+    _lastObstacleSentAt = now;
     final dto = BroadcastObstacle(
       userId: _userId,
       type: packet.type.name,

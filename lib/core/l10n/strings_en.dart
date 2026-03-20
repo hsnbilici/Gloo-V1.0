@@ -186,6 +186,22 @@ class StringsEn extends AppStrings {
   String get dailyShareResult => 'Share';
 
   @override
+  String get settingsUsernameLabel => 'Username';
+  @override
+  String get settingsUsernameTitle => 'Edit Username';
+  @override
+  String get settingsUsernameHint => 'Enter username';
+  @override
+  String get settingsUsernameSave => 'Save';
+  @override
+  String get settingsUsernameErrorEmpty => 'Username cannot be empty';
+  @override
+  String get settingsUsernameErrorTooLong => 'Max 20 characters';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Only letters, numbers and underscores';
+
+  @override
   String get settingsSectionPrivacy => 'DATA PRIVACY';
   @override
   String get settingsAnalytics => 'Analytics & Crash Reports';

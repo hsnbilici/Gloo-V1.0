@@ -79,7 +79,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
-    return Scaffold(
+    return ResponsiveScaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -115,11 +115,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
           ),
         ),
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
-          child: Stack(
+      body: Stack(
             children: [
               const LeaderboardBackground(),
               Column(
@@ -195,8 +191,6 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

@@ -184,6 +184,22 @@ class StringsKo extends AppStrings {
   String get dailyShareResult => '공유';
 
   @override
+  String get settingsUsernameLabel => '사용자 이름';
+  @override
+  String get settingsUsernameTitle => '사용자 이름 편집';
+  @override
+  String get settingsUsernameHint => '사용자 이름 입력';
+  @override
+  String get settingsUsernameSave => '저장';
+  @override
+  String get settingsUsernameErrorEmpty => '사용자 이름을 비워둘 수 없습니다';
+  @override
+  String get settingsUsernameErrorTooLong => '최대 20자';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      '영문자, 숫자, 밑줄만 사용 가능';
+
+  @override
   String get settingsSectionPrivacy => '데이터 개인정보';
   @override
   String get settingsAnalytics => '분석 및 충돌 보고';

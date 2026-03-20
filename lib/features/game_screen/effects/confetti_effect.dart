@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/constants/color_constants.dart';
+
 /// Tam ekran konfeti patlama efekti — yeni yuksek skor kazanildiginda oynatilir.
 ///
 /// 40 dikdortgen parcacik yukari firlatilip yercekim ile duserken opakligi
@@ -61,14 +63,14 @@ class _ConfettiEffectState extends State<ConfettiEffect>
 // ─── Parcacik modeli ────────────────────────────────────────────────────────
 
 const List<Color> _kConfettiColors = [
-  Color(0xFFFF6B6B),
-  Color(0xFF4ECDC4),
-  Color(0xFFFFE66D),
-  Color(0xFFA8E6CF),
-  Color(0xFFFF8A5C),
-  Color(0xFF6C5CE7),
-  Color(0xFFFF85A1),
-  Color(0xFF00D2FF),
+  kConfettiRed,
+  kConfettiTeal,
+  kConfettiYellow,
+  kConfettiLightGreen,
+  kConfettiOrange,
+  kConfettiPurple,
+  kConfettiPink,
+  kConfettiLightBlue,
 ];
 
 class _Particle {

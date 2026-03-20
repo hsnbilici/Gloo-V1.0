@@ -59,6 +59,7 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
         run: |
           flutter build apk --debug \
             --dart-define=FIREBASE_API_KEY_ANDROID="$FIREBASE_API_KEY_ANDROID" \
@@ -67,7 +68,9 @@ jobs:
             --dart-define=FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" \
             --dart-define=FIREBASE_STORAGE_BUCKET="$FIREBASE_STORAGE_BUCKET" \
             --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+            --dart-define=ADMOB_APP_ID="$ADMOB_APP_ID" \
+            -PADMOB_APP_ID="$ADMOB_APP_ID"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -75,6 +78,15 @@ jobs:
           name: app-debug
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 7
+
+      - name: Notify build failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build-aab:
     runs-on: ubuntu-latest
@@ -127,6 +139,7 @@ jobs:
           FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID }}
         run: |
           flutter build appbundle --release \
             --dart-define=FIREBASE_API_KEY_ANDROID="$FIREBASE_API_KEY_ANDROID" \
@@ -135,7 +148,18 @@ jobs:
             --dart-define=FIREBASE_PROJECT_ID="$FIREBASE_PROJECT_ID" \
             --dart-define=FIREBASE_STORAGE_BUCKET="$FIREBASE_STORAGE_BUCKET" \
             --dart-define=SUPABASE_URL="$SUPABASE_URL" \
-            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
+            --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY" \
+            --dart-define=ADMOB_APP_ID="$ADMOB_APP_ID" \
+            -PADMOB_APP_ID="$ADMOB_APP_ID"
+
+      - name: Upload Crashlytics mapping file
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: crashlytics-mapping
+          path: build/app/outputs/mapping/release/mapping.txt
+          retention-days: 30
+          if-no-files-found: warn
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
@@ -144,3 +168,33 @@ jobs:
           name: app-release-bundle
           path: build/app/outputs/bundle/release/app-release.aab
           retention-days: 14
+
+      - name: Upload to Play Store (internal track)
+        if: success() && env.PLAY_SERVICE_ACCOUNT_JSON != ''
+        uses: r0adkll/upload-google-play@v1
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.gloo.app
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: internal
+          status: draft
+
+      - name: Notify release success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify build failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

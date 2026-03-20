@@ -138,6 +138,15 @@ abstract class AppStrings {
   String get dailyScore;
   String get dailyShareResult;
 
+  // Kullanıcı adı
+  String get settingsUsernameLabel;
+  String get settingsUsernameTitle;
+  String get settingsUsernameHint;
+  String get settingsUsernameSave;
+  String get settingsUsernameErrorEmpty;
+  String get settingsUsernameErrorTooLong;
+  String get settingsUsernameErrorInvalidChars;
+
   // Veri Gizliliği (GDPR)
   String get settingsSectionPrivacy;
   String get settingsAnalytics;

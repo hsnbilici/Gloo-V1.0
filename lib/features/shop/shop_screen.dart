@@ -77,7 +77,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
-    return Scaffold(
+    return ResponsiveScaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -113,14 +113,11 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
           ),
         ),
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
-          child: Stack(
-            children: [
-              const ShopBackground(),
-              ListView(
-                padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 8),
+      body: Stack(
+        children: [
+          const ShopBackground(),
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 8),
             children: [
               // ── Gloo+ Abonelik
               SectionHeader(title: l.shopSectionSubscription, color: kGold),
@@ -219,8 +216,6 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
               child: ShopToast(message: toastMsg!),
             ),
         ],
-      ),
-        ),
       ),
     );
   }

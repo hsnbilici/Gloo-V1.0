@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gloo/features/home_screen/home_screen.dart';
 import 'package:gloo/features/home_screen/widgets/bottom_bar.dart';
+import 'package:gloo/features/home_screen/widgets/dialogs.dart';
 import 'package:gloo/features/game_screen/game_over_buttons.dart';
 import 'package:gloo/providers/user_provider.dart';
 
@@ -70,6 +71,78 @@ void main() {
         expect(renderBox.size.height, greaterThanOrEqualTo(44.0),
             reason: 'BottomItem should be at least 44dp tall');
       }
+    });
+  });
+
+  group('AgeGateDialog accessibility', () {
+    testWidgets('age gate buttons have Semantics', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: AgeGateDialog(
+              title: 'Age Check',
+              message: 'Please confirm your age.',
+              confirmLabel: 'I am 13 or older',
+              under13Label: 'I am under 13',
+            ),
+          ),
+        ),
+      );
+
+      expect(findSemantics('I am 13 or older'), findsOneWidget);
+      expect(findSemantics('I am under 13'), findsOneWidget);
+    });
+
+    testWidgets('AgeGateDialog buttons are marked as buttons in Semantics',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: AgeGateDialog(
+              title: 'Age Check',
+              message: 'Please confirm your age.',
+              confirmLabel: 'I am 13 or older',
+              under13Label: 'I am under 13',
+            ),
+          ),
+        ),
+      );
+
+      final confirmFinder = find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.label == 'I am 13 or older' &&
+            (widget.properties.button ?? false),
+      );
+      final under13Finder = find.byWidgetPredicate(
+        (widget) =>
+            widget is Semantics &&
+            widget.properties.label == 'I am under 13' &&
+            (widget.properties.button ?? false),
+      );
+
+      expect(confirmFinder, findsOneWidget);
+      expect(under13Finder, findsOneWidget);
+    });
+  });
+
+  group('ConsentDialog accessibility', () {
+    testWidgets('consent dialog buttons have Semantics', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: ConsentDialog(
+              title: 'Analytics',
+              message: 'Help us improve the app.',
+              acceptLabel: 'Accept',
+              declineLabel: 'Decline',
+            ),
+          ),
+        ),
+      );
+
+      expect(findSemantics('Accept'), findsOneWidget);
+      expect(findSemantics('Decline'), findsOneWidget);
     });
   });
 

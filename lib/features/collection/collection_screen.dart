@@ -50,7 +50,7 @@ class CollectionScreen extends ConsumerWidget {
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
-    return Scaffold(
+    return ResponsiveScaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -110,11 +110,7 @@ class CollectionScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
-          child: Stack(
+      body: Stack(
             children: [
               const _CollectionBackground(),
               found == 0
@@ -167,8 +163,6 @@ class CollectionScreen extends ConsumerWidget {
                     ),
             ],
           ),
-        ),
-      ),
     );
   }
 

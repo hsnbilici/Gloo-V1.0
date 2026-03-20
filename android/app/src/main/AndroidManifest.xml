@@ -28,10 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!-- AdMob App ID (test ID — üretime geçişte gerçek ID ile değiştirilmeli) -->
+        <!-- AdMob App ID — injected via manifestPlaceholders from build.gradle.kts.
+             Pass -PADMOB_APP_ID=ca-app-pub-xxx~yyy at build time for production.
+             Falls back to Google's official test App ID when not provided. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="${admobAppId}" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

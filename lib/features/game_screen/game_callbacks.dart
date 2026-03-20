@@ -6,6 +6,7 @@ part of 'game_screen.dart';
 mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   GlooGame get game;
   ClipRecorder get clipRecorder;
+  SoundBank get soundBank;
   List<({int row, int col, Color color, int key, Duration delay})>
       get burstCells;
   int get burstKeyBase;
@@ -274,6 +275,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     };
 
     game.onColorSynthesis = (resultColor, position) {
+      soundBank.onSynthesis();
       if (!mounted) return;
       setState(() {
         synthesisBlooms.add((

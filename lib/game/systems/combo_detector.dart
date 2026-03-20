@@ -23,6 +23,9 @@ class ComboDetector {
     return _buildEvent(_currentChain);
   }
 
+  /// Son kombo zincirinin büyüklüğü. Near-miss hesaplamasında kullanılır.
+  int get lastComboSize => _currentChain;
+
   void reset() {
     _currentChain = 0;
     _lastClearTime = null;

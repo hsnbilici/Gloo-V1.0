@@ -19,6 +19,7 @@ import '../../providers/game_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import '../../audio/sound_bank.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../viral/clip_recorder.dart';
 import '../../viral/share_manager.dart';
@@ -73,6 +74,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
   late final GlooGame game;
   @override
   final ClipRecorder clipRecorder = ClipRecorder();
+  @override
+  final SoundBank soundBank = SoundBank();
 
   @override
   late List<(GelShape, GelColor)?> hand;
@@ -478,6 +481,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     game.onLevelComplete = null;
     game.onIceCracked = null;
     game.onGravityApplied = null;
+    game.onColorSynthesis = null;
     game.currencyManager.onBalanceChanged = null;
     duelController?.dispose();
     breathCtrl.dispose();

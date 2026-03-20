@@ -460,6 +460,17 @@ void main() {
       expect(game.gridManager.getCell(7, 1).color, isNull);
     });
 
+    test('useBomb returns null when balance insufficient (no synthesis scan)', () {
+      game.setCurrencyBalance(0);
+      // Place a color so bomb would have work to do
+      game.placePiece([(4, 4)], GelColor.red);
+      final cleared = game.useBomb(4, 4);
+      // Insufficient balance → powerUpSystem.useBomb returns null
+      expect(cleared, isNull);
+      // Cell should remain (bomb didn't activate)
+      expect(game.gridManager.getCell(4, 4).color, GelColor.red);
+    });
+
     test('useUndo restores last placement', () {
       game.placePiece([(0, 0), (0, 1)], GelColor.red);
       expect(game.gridManager.getCell(0, 0).color, GelColor.red);

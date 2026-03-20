@@ -1,8 +1,281 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../data/local/data_models.dart';
+
+// ─── Kullanıcı adı satırı ─────────────────────────────────────────────────────
+
+class UsernameTile extends StatelessWidget {
+  const UsernameTile({
+    super.key,
+    required this.label,
+    required this.currentUsername,
+    required this.dialogTitle,
+    required this.dialogHint,
+    required this.saveLabel,
+    required this.errorEmpty,
+    required this.errorTooLong,
+    required this.errorInvalidChars,
+    required this.onSave,
+  });
+
+  final String label;
+  final String currentUsername;
+  final String dialogTitle;
+  final String dialogHint;
+  final String saveLabel;
+  final String errorEmpty;
+  final String errorTooLong;
+  final String errorInvalidChars;
+  final Future<void> Function(String username) onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final surfaceBg = resolveColor(
+      brightness,
+      dark: kCyan.withValues(alpha: 0.05),
+      light: kCardBgLight,
+    );
+    final borderColor = resolveColor(
+      brightness,
+      dark: kCyan.withValues(alpha: 0.22),
+      light: kCardBorderLight,
+    );
+    final labelColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final valueColor = resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
+        onTap: () => _showEditDialog(context),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: surfaceBg,
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(color: borderColor),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.person_outline_rounded, color: kCyan, size: 18),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: labelColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Text(
+                currentUsername.isEmpty ? '—' : currentUsername,
+                style: TextStyle(color: valueColor, fontSize: 13),
+              ),
+              const SizedBox(width: 6),
+              Icon(Icons.edit_rounded, color: kCyan.withValues(alpha: 0.70), size: 15),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.70),
+      builder: (_) => _UsernameEditDialog(
+        dialogTitle: dialogTitle,
+        dialogHint: dialogHint,
+        saveLabel: saveLabel,
+        initialValue: currentUsername,
+        errorEmpty: errorEmpty,
+        errorTooLong: errorTooLong,
+        errorInvalidChars: errorInvalidChars,
+        onSave: onSave,
+      ),
+    );
+  }
+}
+
+// ─── Kullanıcı adı düzenleme diyalogu ────────────────────────────────────────
+
+class _UsernameEditDialog extends StatefulWidget {
+  const _UsernameEditDialog({
+    required this.dialogTitle,
+    required this.dialogHint,
+    required this.saveLabel,
+    required this.initialValue,
+    required this.errorEmpty,
+    required this.errorTooLong,
+    required this.errorInvalidChars,
+    required this.onSave,
+  });
+
+  final String dialogTitle;
+  final String dialogHint;
+  final String saveLabel;
+  final String initialValue;
+  final String errorEmpty;
+  final String errorTooLong;
+  final String errorInvalidChars;
+  final Future<void> Function(String) onSave;
+
+  @override
+  State<_UsernameEditDialog> createState() => _UsernameEditDialogState();
+}
+
+class _UsernameEditDialogState extends State<_UsernameEditDialog> {
+  late final TextEditingController _controller;
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String? _validate(String value) {
+    final error = UserProfile.validateUsername(value);
+    if (error == null) return null;
+    return switch (error) {
+      'empty' => widget.errorEmpty,
+      'tooLong' => widget.errorTooLong,
+      'invalidChars' => widget.errorInvalidChars,
+      _ => widget.errorEmpty,
+    };
+  }
+
+  Future<void> _submit() async {
+    final errorMsg = _validate(_controller.text);
+    if (errorMsg != null) {
+      setState(() => _errorText = errorMsg);
+      return;
+    }
+    await widget.onSave(_controller.text.trim());
+    if (mounted) Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final dialogBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final inputBg = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.06),
+      light: kCardBgLight,
+    );
+    final inputBorder = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.15),
+      light: kCardBorderLight,
+    );
+    return Dialog(
+      backgroundColor: dialogBg,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(UIConstants.radiusXl),
+        side: BorderSide(color: kCyan.withValues(alpha: 0.35)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              widget.dialogTitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: titleColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _controller,
+              maxLength: UserProfile.maxUsernameLength,
+              autofocus: true,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_]')),
+              ],
+              onChanged: (_) {
+                if (_errorText != null) setState(() => _errorText = null);
+              },
+              onSubmitted: (_) => _submit(),
+              style: TextStyle(color: titleColor, fontSize: 14),
+              decoration: InputDecoration(
+                hintText: widget.dialogHint,
+                hintStyle: TextStyle(
+                  color: titleColor.withValues(alpha: 0.40),
+                  fontSize: 14,
+                ),
+                errorText: _errorText,
+                filled: true,
+                fillColor: inputBg,
+                counterStyle: TextStyle(
+                  color: titleColor.withValues(alpha: 0.40),
+                  fontSize: 11,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  borderSide: BorderSide(color: inputBorder),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  borderSide: const BorderSide(color: kCyan),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  borderSide: const BorderSide(color: kColorClassic),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  borderSide: const BorderSide(color: kColorClassic),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: _submit,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                decoration: BoxDecoration(
+                  color: kCyan.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+                  border: Border.all(color: kCyan.withValues(alpha: 0.55)),
+                ),
+                child: Text(
+                  widget.saveLabel,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: kCyan,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 // ─── Veri silme satırı ───────────────────────────────────────────────────────
 

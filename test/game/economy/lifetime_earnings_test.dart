@@ -94,5 +94,17 @@ void main() {
       final currency = data['currency'] as Map<String, dynamic>;
       expect(currency['lifetime_earnings'], 450);
     });
+
+    test('exportAllData includes monetization section with products and codes',
+        () async {
+      final repo = await createRepo();
+      await repo.addUnlockedProducts(['productA', 'productB']);
+      await repo.addRedeemedCode('CODE123');
+      final data = await repo.exportAllData();
+      expect(data['monetization'], isNotNull);
+      final monetization = data['monetization'] as Map<String, dynamic>;
+      expect(monetization['unlocked_products'], isNotNull);
+      expect(monetization['redeemed_codes'], isNotNull);
+    });
   });
 }

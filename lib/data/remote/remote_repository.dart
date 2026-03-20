@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../interfaces/i_remote_repository.dart';
 import 'dto/daily_puzzle.dart';
 import 'dto/leaderboard_entry.dart';
 import 'dto/meta_state.dart';
@@ -14,7 +15,7 @@ import 'supabase_client.dart';
 /// - `profiles`: kullanıcı profilleri (auth.users ile 1:1)
 /// - `scores`: oyun skorları (mode, score, created_at)
 /// - `daily_tasks`: günlük bulmaca tamamlanma durumu
-class RemoteRepository {
+class RemoteRepository implements IRemoteRepository {
   SupabaseClient get _client => SupabaseConfig.client;
 
   String? get _userId => SupabaseConfig.currentUserId;
@@ -22,6 +23,10 @@ class RemoteRepository {
   /// Supabase yapilandirilmis ve initialize edilmis mi?
   bool get isConfigured =>
       SupabaseConfig.isConfigured && SupabaseConfig.isInitialized;
+
+  /// ELO submission idempotency guard — submitted matchId'leri izler.
+  /// Duplicate submission'ları önler (network retry veya double-tap).
+  final Set<String> _submittedMatchIds = {};
 
   /// Basit retry mekanizmasi — network hatasinda exponential backoff ile tekrar dener.
   Future<T?> _retry<T>(Future<T> Function() action,
@@ -223,6 +228,9 @@ class RemoteRepository {
 
   /// Mac skorunu sunucu tarafinda kaydet.
   /// Winner belirleme ve mac tamamlama sunucu tarafinda (RPC) yapilir.
+  ///
+  /// Idempotent: ayni matchId'ye ait duplicate submission'lar sessizce yoksayilir.
+  /// Orn: network timeout veya double-tap retry'lerinde.
   Future<void> submitPvpResult({
     required String matchId,
     required int score,
@@ -230,11 +238,23 @@ class RemoteRepository {
     if (!isConfigured) return;
     final uid = _userId;
     if (uid == null) return;
+
+    // Idempotency guard: ayni matchId daha once submit edilmis mi?
+    if (_submittedMatchIds.contains(matchId)) {
+      if (kDebugMode) {
+        debugPrint(
+            'RemoteRepository.submitPvpResult: duplicate matchId=$matchId skipped (idempotent)');
+      }
+      return;
+    }
+
     try {
       await _retry(() => _client.rpc('submit_pvp_score', params: {
             'p_match_id': matchId,
             'p_score': score,
           }));
+      // Basarili submission sonrasi matchId'yi markala
+      _submittedMatchIds.add(matchId);
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.submitPvpResult error: $e');
     }

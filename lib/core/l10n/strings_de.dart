@@ -186,6 +186,22 @@ class StringsDe extends AppStrings {
   String get dailyShareResult => 'Teilen';
 
   @override
+  String get settingsUsernameLabel => 'Benutzername';
+  @override
+  String get settingsUsernameTitle => 'Benutzername bearbeiten';
+  @override
+  String get settingsUsernameHint => 'Benutzername eingeben';
+  @override
+  String get settingsUsernameSave => 'Speichern';
+  @override
+  String get settingsUsernameErrorEmpty => 'Benutzername darf nicht leer sein';
+  @override
+  String get settingsUsernameErrorTooLong => 'Maximal 20 Zeichen';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Nur Buchstaben, Zahlen und Unterstriche';
+
+  @override
   String get settingsSectionPrivacy => 'DATENSCHUTZ';
   @override
   String get settingsAnalytics => 'Analyse & Absturzberichte';

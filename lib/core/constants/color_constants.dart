@@ -254,6 +254,32 @@ const Map<GameMode, Color> kModeColors = {
   GameMode.duel: kColorClassic,
 };
 
+// ─── Konfeti efekti renkleri ─────────────────────────────────────────────────
+
+/// Konfeti parçacığı kırmızı — yüksek skor patlaması.
+const Color kConfettiRed = Color(0xFFFF6B6B);
+
+/// Konfeti parçacığı camgöbeği — yüksek skor patlaması.
+const Color kConfettiTeal = Color(0xFF4ECDC4);
+
+/// Konfeti parçacığı sarı — yüksek skor patlaması.
+const Color kConfettiYellow = Color(0xFFFFE66D);
+
+/// Konfeti parçacığı açık yeşil — yüksek skor patlaması.
+const Color kConfettiLightGreen = Color(0xFFA8E6CF);
+
+/// Konfeti parçacığı turuncu — yüksek skor patlaması.
+const Color kConfettiOrange = Color(0xFFFF8A5C);
+
+/// Konfeti parçacığı mor — yüksek skor patlaması.
+const Color kConfettiPurple = Color(0xFF6C5CE7);
+
+/// Konfeti parçacığı pembe — yüksek skor patlaması.
+const Color kConfettiPink = Color(0xFFFF85A1);
+
+/// Konfeti parçacığı açık mavi — yüksek skor patlaması.
+const Color kConfettiLightBlue = Color(0xFF00D2FF);
+
 /// Returns the appropriate color based on brightness.
 Color resolveColor(
   Brightness brightness, {

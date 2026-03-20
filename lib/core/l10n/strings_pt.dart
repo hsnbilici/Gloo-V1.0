@@ -186,6 +186,23 @@ class StringsPt extends AppStrings {
   String get dailyShareResult => 'Compartilhar';
 
   @override
+  String get settingsUsernameLabel => 'Nome de usuário';
+  @override
+  String get settingsUsernameTitle => 'Editar nome de usuário';
+  @override
+  String get settingsUsernameHint => 'Digite um nome de usuário';
+  @override
+  String get settingsUsernameSave => 'Salvar';
+  @override
+  String get settingsUsernameErrorEmpty =>
+      'O nome de usuário não pode estar vazio';
+  @override
+  String get settingsUsernameErrorTooLong => 'Máximo 20 caracteres';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Apenas letras, números e sublinhados';
+
+  @override
   String get settingsSectionPrivacy => 'PRIVACIDADE';
   @override
   String get settingsAnalytics => 'Análises e Relatórios de Falhas';

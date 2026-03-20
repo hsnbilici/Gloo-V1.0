@@ -186,6 +186,23 @@ class StringsFr extends AppStrings {
   String get dailyShareResult => 'Partager';
 
   @override
+  String get settingsUsernameLabel => "Nom d'utilisateur";
+  @override
+  String get settingsUsernameTitle => "Modifier le nom d'utilisateur";
+  @override
+  String get settingsUsernameHint => "Saisir un nom d'utilisateur";
+  @override
+  String get settingsUsernameSave => 'Enregistrer';
+  @override
+  String get settingsUsernameErrorEmpty =>
+      "Le nom d'utilisateur ne peut pas être vide";
+  @override
+  String get settingsUsernameErrorTooLong => '20 caractères maximum';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Lettres, chiffres et tirets bas uniquement';
+
+  @override
   String get settingsSectionPrivacy => 'CONFIDENTIALITÉ';
   @override
   String get settingsAnalytics => 'Analyses et Rapports de Plantage';

@@ -65,6 +65,15 @@ jobs:
           path: build/ios/iphonesimulator/Runner.app
           retention-days: 7
 
+      - name: Notify build failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
   build-release:
     runs-on: macos-latest
     timeout-minutes: 60
@@ -140,20 +149,13 @@ jobs:
             --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
       - name: Upload to TestFlight
-        env:
-          APPSTORE_CONNECT_KEY_ID: ${{ secrets.APPSTORE_CONNECT_KEY_ID }}
-          APPSTORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
-          APPSTORE_CONNECT_KEY_BASE64: ${{ secrets.APPSTORE_CONNECT_KEY_BASE64 }}
-        run: |
-          mkdir -p ~/private_keys
-          echo "$APPSTORE_CONNECT_KEY_BASE64" | base64 --decode \
-            -o "$HOME/private_keys/AuthKey_${APPSTORE_CONNECT_KEY_ID}.p8"
-
-          xcrun altool --upload-app \
-            --type ios \
-            --file build/ios/ipa/*.ipa \
-            --apiKey "$APPSTORE_CONNECT_KEY_ID" \
-            --apiIssuer "$APPSTORE_CONNECT_ISSUER_ID"
+        if: success()
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: build/ios/ipa/Gloo.ipa
+          issuer-id: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_CONNECT_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_CONNECT_PRIVATE_KEY }}
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
@@ -162,6 +164,24 @@ jobs:
           name: ios-release-ipa
           path: build/ios/ipa/*.ipa
           retention-days: 14
+
+      - name: Notify release success
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify build failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Cleanup keychain
         if: always()

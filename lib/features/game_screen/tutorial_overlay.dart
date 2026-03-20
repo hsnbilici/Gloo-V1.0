@@ -58,6 +58,8 @@ class TutorialOverlay extends StatelessWidget {
                   Text(
                     message,
                     textAlign: TextAlign.center,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

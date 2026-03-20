@@ -186,6 +186,22 @@ class StringsHi extends AppStrings {
   String get dailyShareResult => 'साझा करें';
 
   @override
+  String get settingsUsernameLabel => 'उपयोगकर्ता नाम';
+  @override
+  String get settingsUsernameTitle => 'उपयोगकर्ता नाम संपादित करें';
+  @override
+  String get settingsUsernameHint => 'उपयोगकर्ता नाम दर्ज करें';
+  @override
+  String get settingsUsernameSave => 'सहेजें';
+  @override
+  String get settingsUsernameErrorEmpty => 'उपयोगकर्ता नाम खाली नहीं हो सकता';
+  @override
+  String get settingsUsernameErrorTooLong => 'अधिकतम 20 अक्षर';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'केवल अक्षर, अंक और अंडरस्कोर';
+
+  @override
   String get settingsSectionPrivacy => 'डेटा गोपनीयता';
   @override
   String get settingsAnalytics => 'एनालिटिक्स और क्रैश रिपोर्ट';

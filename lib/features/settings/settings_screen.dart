@@ -13,6 +13,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../data/local/data_models.dart';
 import '../shared/section_header.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -32,6 +33,7 @@ class SettingsScreen extends ConsumerWidget {
     final notifier = ref.read(appSettingsProvider.notifier);
     final l = ref.watch(stringsProvider);
     final currentLocale = ref.watch(localeProvider);
+    final profileAsync = ref.watch(userProfileProvider);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final dir = Directionality.of(context);
@@ -41,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
-    return Scaffold(
+    return ResponsiveScaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -80,15 +82,31 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
-          child: Stack(
+      body: Stack(
+        children: [
+          const _SettingsBackground(),
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 8),
             children: [
-              const _SettingsBackground(),
-              ListView(
-                padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 8),
-            children: [
+              SectionHeader(title: l.settingsUsernameLabel, color: kCyan),
+              UsernameTile(
+                label: l.settingsUsernameLabel,
+                currentUsername: profileAsync.valueOrNull?.username ?? '',
+                dialogTitle: l.settingsUsernameTitle,
+                dialogHint: l.settingsUsernameHint,
+                saveLabel: l.settingsUsernameSave,
+                errorEmpty: l.settingsUsernameErrorEmpty,
+                errorTooLong: l.settingsUsernameErrorTooLong,
+                errorInvalidChars: l.settingsUsernameErrorInvalidChars,
+                onSave: (newName) async {
+                  final repo = await ref.read(localRepositoryProvider.future);
+                  final profile = await repo.getProfile() ??
+                      UserProfile(username: newName);
+                  profile.username = newName;
+                  await repo.saveProfile(profile);
+                  ref.invalidate(userProfileProvider);
+                },
+              ),
               SectionHeader(title: l.settingsSectionAudio, color: kCyan),
               SettingsToggleTile(
                 label: l.settingsSfx,
@@ -231,8 +249,6 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ],
-      ),
-        ),
       ),
     );
   }

@@ -1,0 +1,89 @@
+name: Certificate Pin Expiry Monitor
+
+on:
+  schedule:
+    # Monthly check: 1st of every month at 09:00 UTC
+    - cron: '0 9 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-pin-expiry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check certificate pin expiry dates
+        id: check
+        run: |
+          echo "## Certificate Pin Expiry Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Pin expiry date defined in code comments
+          EXPIRY_DATE="2027-06-01"
+          EXPIRY_EPOCH=$(date -d "$EXPIRY_DATE" +%s 2>/dev/null || date -j -f "%Y-%m-%d" "$EXPIRY_DATE" +%s 2>/dev/null)
+          NOW_EPOCH=$(date +%s)
+          DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+
+          echo "| Source | Expiry Date | Days Left | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------------|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          STATUS="OK"
+          if [ "$DAYS_LEFT" -le 30 ]; then
+            STATUS="CRITICAL"
+          elif [ "$DAYS_LEFT" -le 90 ]; then
+            STATUS="WARNING"
+          fi
+
+          # Check Dart layer pin expiry
+          if grep -q "Pin expiry" lib/core/network/certificate_pinner.dart 2>/dev/null; then
+            DART_EXPIRY=$(grep -oP 'Pin expiry: \K[\d-]+' lib/core/network/certificate_pinner.dart 2>/dev/null || echo "$EXPIRY_DATE")
+          else
+            DART_EXPIRY="$EXPIRY_DATE"
+          fi
+          echo "| Dart (certificate_pinner.dart) | $DART_EXPIRY | $DAYS_LEFT | $STATUS |" >> $GITHUB_STEP_SUMMARY
+
+          # Check iOS Swift layer
+          if [ -f ios/Runner/CertificatePinningPlugin.swift ]; then
+            IOS_EXPIRY=$(grep -oP 'Pin expiry: \K[\d-]+' ios/Runner/CertificatePinningPlugin.swift 2>/dev/null || echo "$EXPIRY_DATE")
+            echo "| iOS (CertificatePinningPlugin.swift) | $IOS_EXPIRY | $DAYS_LEFT | $STATUS |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Check Android network_security_config
+          if [ -f android/app/src/main/res/xml/network_security_config.xml ]; then
+            ANDROID_EXPIRY=$(grep -oP 'expiration="\K[^"]+' android/app/src/main/res/xml/network_security_config.xml 2>/dev/null || echo "N/A")
+            echo "| Android (network_security_config.xml) | $ANDROID_EXPIRY | $DAYS_LEFT | $STATUS |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$STATUS" = "CRITICAL" ]; then
+            echo "### CRITICAL: Certificate pins expire in $DAYS_LEFT days!" >> $GITHUB_STEP_SUMMARY
+            echo "Action required: Update SPKI pins in all three layers before $EXPIRY_DATE." >> $GITHUB_STEP_SUMMARY
+            echo "status=critical" >> $GITHUB_OUTPUT
+          elif [ "$STATUS" = "WARNING" ]; then
+            echo "### WARNING: Certificate pins expire in $DAYS_LEFT days" >> $GITHUB_STEP_SUMMARY
+            echo "Plan pin rotation before $EXPIRY_DATE." >> $GITHUB_STEP_SUMMARY
+            echo "status=warning" >> $GITHUB_OUTPUT
+          else
+            echo "### All pins valid ($DAYS_LEFT days remaining)" >> $GITHUB_STEP_SUMMARY
+            echo "status=ok" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Notify if expiry approaching
+        if: steps.check.outputs.status == 'critical' || steps.check.outputs.status == 'warning'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "Certificate Pin Expiry Alert: Pins need rotation. Check workflow summary for details."
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

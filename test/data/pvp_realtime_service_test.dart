@@ -267,6 +267,60 @@ void main() {
     });
   });
 
+  // ── Obstacle throttle pattern ────────────────────────────────────────
+
+  group('obstacle throttle pattern', () {
+    DateTime? lastSent;
+    const cooldownMs = 3000;
+
+    bool canSend() {
+      if (lastSent != null &&
+          DateTime.now().difference(lastSent!).inMilliseconds < cooldownMs) {
+        return false;
+      }
+      lastSent = DateTime.now();
+      return true;
+    }
+
+    setUp(() {
+      lastSent = null;
+    });
+
+    test('first send is always allowed', () {
+      expect(canSend(), isTrue);
+    });
+
+    test('second immediate send is blocked by cooldown', () {
+      canSend(); // first send
+      expect(canSend(), isFalse);
+    });
+
+    test('send after cooldown elapsed is allowed', () {
+      lastSent = DateTime.now().subtract(const Duration(milliseconds: 3001));
+      expect(canSend(), isTrue);
+    });
+
+    test('send just before cooldown expires is blocked', () {
+      lastSent = DateTime.now().subtract(const Duration(milliseconds: 2999));
+      expect(canSend(), isFalse);
+    });
+
+    test('multiple rapid calls only succeed once', () {
+      var successCount = 0;
+      for (var i = 0; i < 5; i++) {
+        if (canSend()) successCount++;
+      }
+      expect(successCount, 1);
+    });
+
+    test('cooldown resets after successful send', () {
+      canSend(); // first send sets lastSent
+      lastSent = DateTime.now().subtract(const Duration(milliseconds: 3001));
+      expect(canSend(), isTrue); // allowed after cooldown
+      expect(canSend(), isFalse); // blocked immediately after
+    });
+  });
+
   // ── Unconfigured repository entegrasyonu ─────────────────────────────
 
   group('unconfigured repository integration', () {

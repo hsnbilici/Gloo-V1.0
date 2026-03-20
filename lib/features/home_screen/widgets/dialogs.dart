@@ -337,29 +337,35 @@ class DialogBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: filled ? color.withValues(alpha: 0.13) : Colors.transparent,
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: filled
-                ? color.withValues(alpha: 0.50)
-                : Colors.white.withValues(alpha: 0.08),
-            width: filled ? 1.5 : 1,
+    return Semantics(
+      button: true,
+      label: label,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: filled ? color.withValues(alpha: 0.13) : Colors.transparent,
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(
+              color: filled
+                  ? color.withValues(alpha: 0.50)
+                  : Colors.white.withValues(alpha: 0.08),
+              width: filled ? 1.5 : 1,
+            ),
           ),
-        ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: filled ? color : color,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.3,
+          child: ExcludeSemantics(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: filled ? color : color,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.3,
+              ),
+            ),
           ),
         ),
       ),

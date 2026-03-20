@@ -63,3 +63,12 @@ jobs:
           name: web-release
           path: build/web/
           retention-days: 7
+
+      - name: Notify build failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

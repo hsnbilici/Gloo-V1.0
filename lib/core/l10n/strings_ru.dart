@@ -186,6 +186,22 @@ class StringsRu extends AppStrings {
   String get dailyShareResult => 'Поделиться';
 
   @override
+  String get settingsUsernameLabel => 'Имя пользователя';
+  @override
+  String get settingsUsernameTitle => 'Изменить имя пользователя';
+  @override
+  String get settingsUsernameHint => 'Введите имя пользователя';
+  @override
+  String get settingsUsernameSave => 'Сохранить';
+  @override
+  String get settingsUsernameErrorEmpty => 'Имя не может быть пустым';
+  @override
+  String get settingsUsernameErrorTooLong => 'Максимум 20 символов';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Только буквы, цифры и подчёркивания';
+
+  @override
   String get settingsSectionPrivacy => 'КОНФИДЕНЦИАЛЬНОСТЬ';
   @override
   String get settingsAnalytics => 'Аналитика и отчёты об ошибках';

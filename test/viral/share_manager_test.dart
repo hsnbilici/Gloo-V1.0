@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/viral/share_manager.dart';
+import '../helpers/mocks.dart';
 
 final _l = StringsEn();
 
@@ -10,6 +11,12 @@ void main() {
   group('ShareManager creation', () {
     test('can be instantiated', () {
       final manager = ShareManager();
+      expect(manager, isNotNull);
+    });
+
+    test('can be instantiated with custom AnalyticsService', () {
+      final mockAnalytics = MockAnalyticsService();
+      final manager = ShareManager(analyticsService: mockAnalytics);
       expect(manager, isNotNull);
     });
   });

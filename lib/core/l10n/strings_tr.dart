@@ -186,6 +186,22 @@ class StringsTr extends AppStrings {
   String get dailyShareResult => 'Paylaş';
 
   @override
+  String get settingsUsernameLabel => 'Kullanıcı Adı';
+  @override
+  String get settingsUsernameTitle => 'Kullanıcı Adını Düzenle';
+  @override
+  String get settingsUsernameHint => 'Kullanıcı adı gir';
+  @override
+  String get settingsUsernameSave => 'Kaydet';
+  @override
+  String get settingsUsernameErrorEmpty => 'Kullanıcı adı boş olamaz';
+  @override
+  String get settingsUsernameErrorTooLong => 'En fazla 20 karakter';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'Sadece harf, rakam ve alt çizgi';
+
+  @override
   String get settingsSectionPrivacy => 'VERİ GİZLİLİĞİ';
   @override
   String get settingsAnalytics => 'Analitik & Kilitlenme Raporları';

@@ -186,6 +186,22 @@ class StringsAr extends AppStrings {
   String get dailyShareResult => 'مشاركة';
 
   @override
+  String get settingsUsernameLabel => 'اسم المستخدم';
+  @override
+  String get settingsUsernameTitle => 'تعديل اسم المستخدم';
+  @override
+  String get settingsUsernameHint => 'أدخل اسم المستخدم';
+  @override
+  String get settingsUsernameSave => 'حفظ';
+  @override
+  String get settingsUsernameErrorEmpty => 'لا يمكن أن يكون اسم المستخدم فارغاً';
+  @override
+  String get settingsUsernameErrorTooLong => 'الحد الأقصى 20 حرفاً';
+  @override
+  String get settingsUsernameErrorInvalidChars =>
+      'أحرف وأرقام وشرطات سفلية فقط';
+
+  @override
   String get settingsSectionPrivacy => 'خصوصية البيانات';
   @override
   String get settingsAnalytics => 'التحليلات وتقارير الأعطال';

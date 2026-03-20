@@ -97,6 +97,9 @@ class GameOverOverlay extends ConsumerWidget {
                       // Başlık
                       Text(
                         l.gameOverTitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        textScaler: TextScaler.noScaling,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 32,
