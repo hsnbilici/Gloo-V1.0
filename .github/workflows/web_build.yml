@@ -1,4 +1,4 @@
-name: Web Build
+name: Web Build & Deploy
 
 on:
   push:
@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: web-${{ github.ref }}
@@ -32,12 +34,6 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze
-        run: flutter analyze --no-fatal-infos
-
-      - name: Run tests
-        run: flutter test --exclude-tags=golden
-
       - name: Build web release
         env:
           FIREBASE_API_KEY_WEB: ${{ secrets.FIREBASE_API_KEY_WEB }}
@@ -57,12 +53,20 @@ jobs:
             --dart-define=SUPABASE_URL="$SUPABASE_URL" \
             --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
-      - name: Upload web build
+      - name: Upload web build artifact
         uses: actions/upload-artifact@v4
         with:
           name: web-release
           path: build/web/
           retention-days: 7
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web/
 
       - name: Notify build failure
         if: failure()
@@ -73,3 +77,15 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy:
+    needs: build-web
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

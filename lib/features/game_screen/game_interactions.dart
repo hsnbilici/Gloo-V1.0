@@ -170,7 +170,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     });
 
     waveClearTimer?.cancel();
-    waveClearTimer = Timer(const Duration(milliseconds: 480), () {
+    waveClearTimer = Timer(AnimationDurations.waveClear, () {
       if (mounted) setState(() => recentlyPlacedCells = {});
     });
 
@@ -303,7 +303,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     });
 
     waveClearTimer?.cancel();
-    waveClearTimer = Timer(const Duration(milliseconds: 480), () {
+    waveClearTimer = Timer(AnimationDurations.waveClear, () {
       if (mounted) setState(() => recentlyPlacedCells = {});
     });
 

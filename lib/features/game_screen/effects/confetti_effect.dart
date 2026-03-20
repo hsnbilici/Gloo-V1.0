@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/ui_constants.dart';
 
 /// Tam ekran konfeti patlama efekti — yeni yuksek skor kazanildiginda oynatilir.
 ///
@@ -19,7 +20,7 @@ class ConfettiEffect extends StatefulWidget {
 
 class _ConfettiEffectState extends State<ConfettiEffect>
     with SingleTickerProviderStateMixin {
-  static const _duration = Duration(milliseconds: 2500);
+  static const _duration = AnimationDurations.confetti;
 
   late final AnimationController _controller;
   late final List<_Particle> _particles;

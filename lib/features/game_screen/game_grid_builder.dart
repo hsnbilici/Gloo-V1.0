@@ -43,8 +43,58 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
 
   final GlobalKey _gridKey = GlobalKey();
 
+  void syncGridState() {
+    final rows = game.gridManager.rows;
+    final cols = game.gridManager.cols;
+    final isInteractive =
+        selectedSlot != null || activePowerUpMode == PowerUpType.bomb;
+    final slotColor =
+        selectedSlot != null ? hand[selectedSlot!]?.$2 : null;
+
+    final cells = <(int, int), CellRenderData>{};
+    for (int r = 0; r < rows; r++) {
+      for (int c = 0; c < cols; c++) {
+        final gridCell = game.gridManager.getCell(r, c);
+        final isPreview = previewCells.contains((r, c));
+        final isPlaced = recentlyPlacedCells.contains((r, c));
+
+        int waveDist = -1;
+        if (gridCell.color != null &&
+            recentlyPlacedCells.isNotEmpty &&
+            !isPlaced) {
+          int minDist = 999;
+          for (final placed in recentlyPlacedCells) {
+            final d = (placed.$1 - r).abs() + (placed.$2 - c).abs();
+            if (d < minDist) minDist = d;
+          }
+          if (minDist <= 3) waveDist = minDist;
+        }
+
+        cells[(r, c)] = CellRenderData(
+          color: gridCell.color,
+          type: gridCell.type,
+          iceLayer: gridCell.iceLayer,
+          lockedColor: gridCell.lockedColor,
+          isPreview: isPreview,
+          previewValid: previewValid,
+          previewSlotColor: isPreview ? slotColor : null,
+          isRecentlyPlaced: isPlaced,
+          waveDistance: waveDist,
+          isInteractive: isInteractive,
+        );
+      }
+    }
+    ref.read(gridStateProvider.notifier).updateCells(cells);
+  }
+
   Widget buildGrid() {
     final colorBlindMode = ref.watch(appSettingsProvider).colorBlindMode;
+
+    // Push current cell state to provider before building
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) syncGridState();
+    });
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final cols = game.gridManager.cols;
@@ -133,29 +183,14 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                             itemBuilder: (context, index) {
                               final row = index ~/ cols;
                               final col = index % cols;
-                              final gridCell =
-                                  game.gridManager.getCell(row, col);
-                              final cellColor = gridCell.color;
-                              final isPreview =
-                                  previewCells.contains((row, col));
 
                               return GameCellWidget(
                                 row: row,
                                 col: col,
-                                gridCell: gridCell,
-                                cellColor: cellColor,
-                                isPreview: isPreview,
                                 colorBlindMode: colorBlindMode,
                                 cols: cols,
                                 breathCtrl: breathCtrl,
-                                recentlyPlacedCells: recentlyPlacedCells,
                                 waveKey: waveKey,
-                                previewValid: previewValid,
-                                previewSlotColor: selectedSlot != null
-                                    ? hand[selectedSlot!]?.$2
-                                    : null,
-                                selectedSlot: selectedSlot,
-                                activePowerUpMode: activePowerUpMode,
                                 onTap: () => onCellTap(row, col),
                                 onHover: () => onCellHover(row, col),
                               );

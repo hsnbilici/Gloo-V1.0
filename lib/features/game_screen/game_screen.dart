@@ -16,6 +16,7 @@ import '../../game/systems/powerup_system.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/game_provider.dart';
+import '../../providers/grid_state_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
@@ -23,12 +24,14 @@ import '../../audio/sound_bank.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../viral/clip_recorder.dart';
 import '../../viral/share_manager.dart';
+import 'cell_render_data.dart';
 import 'game_background.dart';
 import 'share_prompt_dialog.dart';
 import 'tutorial_overlay.dart';
 import 'game_cell_widget.dart';
 import 'game_dialogs.dart';
 import 'game_duel_controller.dart';
+import 'game_effect_manager.dart';
 import 'game_effects.dart';
 import 'game_overlay.dart';
 import 'hint_toast.dart';
@@ -139,8 +142,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
   int undoFxKey = 0;
 
   // ─── Animasyon & dalga ─────────────────────────────────────────────
+  late final GameEffectManager effectManager;
   @override
-  late final AnimationController breathCtrl;
+  AnimationController get breathCtrl => effectManager.breathCtrl;
   @override
   Set<(int, int)> recentlyPlacedCells = {};
   @override
@@ -188,11 +192,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     super.initState();
     game = GlooGame(mode: widget.mode, levelData: widget.levelData);
 
-    // Protokol 1: Jel nefes alma — 2.4sn periyot, surekli tekrar
-    breathCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat();
+    effectManager = GameEffectManager(this);
 
     // Kalici verileri yukle
     ref.read(localRepositoryProvider.future).then((repo) async {
@@ -395,7 +395,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   void showToast(String msg) {
     _toastTimer?.cancel();
     setState(() => _toastMsg = msg);
-    _toastTimer = Timer(const Duration(milliseconds: 1400), () {
+    _toastTimer = Timer(AnimationDurations.toast, () {
       if (mounted) setState(() => _toastMsg = null);
     });
   }
@@ -484,7 +484,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     game.onColorSynthesis = null;
     game.currencyManager.onBalanceChanged = null;
     duelController?.dispose();
-    breathCtrl.dispose();
+    effectManager.dispose();
     clipRecorder.dispose();
     super.dispose();
   }

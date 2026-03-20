@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/near_miss_detector.dart';
 import '../../../game/systems/combo_detector.dart';
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/ui_constants.dart';
 import '../../../providers/locale_provider.dart';
 
 /// Combo kazanildiginda ortada beliren animasyonlu banner.
@@ -27,7 +28,7 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
   void initState() {
     super.initState();
     // Toplam animasyon suresi: 350ms giris + 750ms bekleme + 400ms cikis = ~1500ms
-    _dismissTimer = Timer(const Duration(milliseconds: 1500), () {
+    _dismissTimer = Timer(AnimationDurations.comboWindow, () {
       if (mounted) widget.onDismiss();
     });
   }
@@ -134,7 +135,7 @@ class _PlaceFeedbackEffectState extends State<PlaceFeedbackEffect> {
   @override
   void initState() {
     super.initState();
-    _dismissTimer = Timer(const Duration(milliseconds: 650), () {
+    _dismissTimer = Timer(AnimationDurations.explosion, () {
       if (mounted) widget.onDismiss();
     });
   }
@@ -192,12 +193,12 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 480),
+      duration: AnimationDurations.waveClear,
     )..repeat(reverse: true);
     _pulseAnim =
         CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut);
 
-    _dismissTimer = Timer(const Duration(milliseconds: 2000), () {
+    _dismissTimer = Timer(AnimationDurations.longToast, () {
       if (mounted) widget.onDismiss();
     });
   }

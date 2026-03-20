@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/ui_constants.dart';
 
 /// Power-up kullanildiginda gosterilen parilti efekti.
 class PowerUpActivateEffect extends StatefulWidget {
@@ -95,7 +96,7 @@ class _BombExplosionEffectState extends State<BombExplosionEffect>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 650),
+      duration: AnimationDurations.explosion,
     );
     _ctrl.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) widget.onDismiss();

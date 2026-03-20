@@ -2,56 +2,49 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
-import '../../game/systems/powerup_system.dart';
 import '../../game/world/cell_type.dart';
+import '../../providers/grid_state_provider.dart';
 import 'gel_cell_painter.dart';
 
 /// Tek bir izgara hucresini render eden widget.
-class GameCellWidget extends StatelessWidget {
+class GameCellWidget extends ConsumerWidget {
   const GameCellWidget({
     super.key,
     required this.row,
     required this.col,
-    required this.gridCell,
-    required this.cellColor,
-    required this.isPreview,
     required this.colorBlindMode,
     required this.cols,
     required this.breathCtrl,
-    required this.recentlyPlacedCells,
     required this.waveKey,
-    required this.previewValid,
-    required this.previewSlotColor,
-    required this.selectedSlot,
-    required this.activePowerUpMode,
     required this.onTap,
     required this.onHover,
   });
 
   final int row;
   final int col;
-  final Cell gridCell;
-  final GelColor? cellColor;
-  final bool isPreview;
   final bool colorBlindMode;
   final int cols;
   final AnimationController breathCtrl;
-  final Set<(int, int)> recentlyPlacedCells;
   final int waveKey;
-  final bool previewValid;
-  final GelColor? previewSlotColor;
-  final int? selectedSlot;
-  final PowerUpType? activePowerUpMode;
   final VoidCallback onTap;
   final VoidCallback onHover;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(
+      gridStateProvider.select((state) => state[(row, col)]),
+    );
+
+    if (data == null) {
+      return const SizedBox.shrink();
+    }
+
     // Stone hucreler: koyu, yerlestirilemez
-    if (gridCell.type == CellType.stone) {
+    if (data.type == CellType.stone) {
       return Container(
         decoration: BoxDecoration(
           color: kSurfaceDeepNavy,
@@ -66,34 +59,34 @@ class GameCellWidget extends StatelessWidget {
 
     // Hucre tipi overlay'leri
     Widget? typeOverlay;
-    if (gridCell.type == CellType.ice && gridCell.iceLayer > 0) {
+    if (data.type == CellType.ice && data.iceLayer > 0) {
       typeOverlay = Container(
         decoration: BoxDecoration(
           color: kIceBlue.withValues(
-            alpha: gridCell.iceLayer == 2 ? 0.45 : 0.25,
+            alpha: data.iceLayer == 2 ? 0.45 : 0.25,
           ),
           borderRadius: BorderRadius.circular(UIConstants.radiusXs),
           border: Border.all(
             color: kIceBlueBright.withValues(alpha: 0.5),
-            width: gridCell.iceLayer == 2 ? 2 : 1,
+            width: data.iceLayer == 2 ? 2 : 1,
           ),
         ),
       );
-    } else if (gridCell.type == CellType.locked) {
-      final lockColor = gridCell.lockedColor?.displayColor ?? Colors.grey;
+    } else if (data.type == CellType.locked) {
+      final lockColor = data.lockedColor?.displayColor ?? Colors.grey;
       typeOverlay = Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(UIConstants.radiusXs),
           border: Border.all(color: lockColor, width: 2),
         ),
-        child: cellColor == null
+        child: data.color == null
             ? Center(
                 child: Icon(Icons.lock_outline,
                     size: 10, color: lockColor.withValues(alpha: 0.7)),
               )
             : null,
       );
-    } else if (gridCell.type == CellType.gravity) {
+    } else if (data.type == CellType.gravity) {
       typeOverlay = Align(
         alignment: Alignment.bottomCenter,
         child: Container(
@@ -105,8 +98,8 @@ class GameCellWidget extends StatelessWidget {
           ),
         ),
       );
-    } else if (gridCell.type == CellType.rainbow) {
-      if (cellColor == null) {
+    } else if (data.type == CellType.rainbow) {
+      if (data.color == null) {
         typeOverlay = Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(UIConstants.radiusXs),
@@ -130,12 +123,12 @@ class GameCellWidget extends StatelessWidget {
     // Hucre icerigi
     Widget cellContent;
 
-    if (cellColor != null) {
+    if (data.color != null) {
       // DOLU HUCRE — Protokol 1: GelCellPainter ile jel render
       cellContent = RepaintBoundary(
         child: CustomPaint(
           painter: GelCellPainter(
-            color: cellColor!.displayColor,
+            color: data.color!.displayColor,
             borderRadius: UIConstants.radiusXs,
             breathAnimation: breathCtrl,
             breathPhase: (row * cols + col) * 0.12,
@@ -143,7 +136,7 @@ class GameCellWidget extends StatelessWidget {
           child: colorBlindMode
               ? Center(
                   child: Text(
-                    cellColor!.shortLabel,
+                    data.color!.shortLabel,
                     style: const TextStyle(
                       color: Colors.black87,
                       fontSize: 9,
@@ -164,25 +157,17 @@ class GameCellWidget extends StatelessWidget {
       );
 
       // Protokol 2: Dalga yayilimi — komsu hucrelere bounce
-      if (recentlyPlacedCells.isNotEmpty &&
-          !recentlyPlacedCells.contains((row, col))) {
-        int minDist = 999;
-        for (final placed in recentlyPlacedCells) {
-          final d = (placed.$1 - row).abs() + (placed.$2 - col).abs();
-          if (d < minDist) minDist = d;
-        }
-        if (minDist <= 3) {
-          cellContent = WaveRipple(
-            key: ValueKey(('wave', row, col, waveKey)),
-            distance: minDist,
-            child: cellContent,
-          );
-        }
+      if (data.waveDistance >= 0 && data.waveDistance <= 3) {
+        cellContent = WaveRipple(
+          key: ValueKey(('wave', row, col, waveKey)),
+          distance: data.waveDistance,
+          child: cellContent,
+        );
       }
-    } else if (isPreview) {
+    } else if (data.isPreview) {
       // PREVIEW HUCRE
-      final base = previewSlotColor?.displayColor ?? Colors.white;
-      final bg = previewValid
+      final base = data.previewSlotColor?.displayColor ?? Colors.white;
+      final bg = data.previewValid
           ? base.withValues(alpha: 0.50)
           : kRed.withValues(alpha: 0.55);
       cellContent = Container(
@@ -218,11 +203,11 @@ class GameCellWidget extends StatelessWidget {
 
     // Semantics label: hücre durumunu ekran okuyuculara bildirir
     final String semanticLabel;
-    if (cellColor != null) {
-      semanticLabel = '${cellColor!.shortLabel} ${row + 1}, ${col + 1}';
-    } else if (isPreview) {
+    if (data.color != null) {
+      semanticLabel = '${data.color!.shortLabel} ${row + 1}, ${col + 1}';
+    } else if (data.isPreview) {
       semanticLabel = 'Preview ${row + 1}, ${col + 1}';
-    } else if (gridCell.type == CellType.stone) {
+    } else if (data.type == CellType.stone) {
       semanticLabel = 'Stone ${row + 1}, ${col + 1}';
     } else {
       semanticLabel = 'Empty ${row + 1}, ${col + 1}';
@@ -230,10 +215,10 @@ class GameCellWidget extends StatelessWidget {
 
     return Semantics(
       label: semanticLabel,
-      button: selectedSlot != null || activePowerUpMode == PowerUpType.bomb,
+      button: data.isInteractive,
       child: MouseRegion(
         onEnter: (_) => onHover(),
-        cursor: selectedSlot != null || activePowerUpMode == PowerUpType.bomb
+        cursor: data.isInteractive
             ? SystemMouseCursors.click
             : MouseCursor.defer,
         child: GestureDetector(
@@ -270,18 +255,21 @@ class SquashStretchCell extends StatefulWidget {
 
 class _SquashStretchCellState extends State<SquashStretchCell>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
+  AnimationController? _ctrl;
   bool _prevPlaced = false;
+
+  AnimationController _ensureController() {
+    return _ctrl ??= AnimationController(
+      vsync: this,
+      duration: AnimationDurations.dialog,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 380),
-    );
     if (widget.isPlaced) {
-      _ctrl.forward(from: 0);
+      _ensureController().forward(from: 0);
       _prevPlaced = true;
     }
   }
@@ -290,47 +278,43 @@ class _SquashStretchCellState extends State<SquashStretchCell>
   void didUpdateWidget(SquashStretchCell old) {
     super.didUpdateWidget(old);
     if (widget.isPlaced && !_prevPlaced) {
-      _ctrl.forward(from: 0);
+      _ensureController().forward(from: 0);
     } else if (!widget.isPlaced && _prevPlaced) {
-      _ctrl.value = 0;
+      _ctrl?.value = 0;
     }
     _prevPlaced = widget.isPlaced;
   }
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    _ctrl?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isPlaced) return widget.child;
+    if (!widget.isPlaced || _ctrl == null) return widget.child;
 
     return AnimatedBuilder(
-      animation: _ctrl,
+      animation: _ctrl!,
       builder: (_, __) {
-        final p = _ctrl.value;
+        final p = _ctrl!.value;
         if (p >= 0.99) return widget.child;
 
         double scaleX, scaleY;
 
         if (p < 0.16) {
-          // Faz 1: Anticipation — hafif buyume
           final t = Curves.easeOutQuad.transform(p / 0.16);
           scaleX = scaleY = 1.0 + 0.08 * t;
         } else if (p < 0.32) {
-          // Faz 2: Impact — SQUASH
           final t = Curves.easeInQuad.transform((p - 0.16) / 0.16);
           scaleX = 1.08 + (1.15 - 1.08) * t;
           scaleY = 1.08 + (0.82 - 1.08) * t;
         } else if (p < 0.53) {
-          // Faz 3: Overshoot — STRETCH
           final t = Curves.easeOutQuad.transform((p - 0.32) / 0.21);
           scaleX = 1.15 + (1.0 - 1.15) * t;
           scaleY = 0.82 + (1.06 - 0.82) * t;
         } else {
-          // Faz 4: Settle
           final t = Curves.easeInOutSine.transform((p - 0.53) / 0.47);
           scaleX = 1.0;
           scaleY = 1.06 + (1.0 - 1.06) * t;
@@ -365,38 +349,43 @@ class WaveRipple extends StatefulWidget {
 
 class _WaveRippleState extends State<WaveRipple>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
+  AnimationController? _ctrl;
   Timer? _delayTimer;
+
+  AnimationController _ensureController() {
+    return _ctrl ??= AnimationController(
+      vsync: this,
+      duration: AnimationDurations.quick,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 180),
-    );
     _delayTimer = Timer(Duration(milliseconds: widget.distance * 25), () {
-      if (mounted) _ctrl.forward();
+      if (mounted) _ensureController().forward();
     });
   }
 
   @override
   void dispose() {
     _delayTimer?.cancel();
-    _ctrl.dispose();
+    _ctrl?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_ctrl == null) return widget.child;
+
     return AnimatedBuilder(
-      animation: _ctrl,
+      animation: _ctrl!,
       builder: (_, __) {
-        if (!_ctrl.isAnimating && _ctrl.value <= 0) return widget.child;
-        if (_ctrl.isCompleted) return widget.child;
+        if (!_ctrl!.isAnimating && _ctrl!.value <= 0) return widget.child;
+        if (_ctrl!.isCompleted) return widget.child;
 
         final magnitude = 0.03 / (1.0 + widget.distance * 0.6);
-        final t = Curves.easeOutSine.transform(_ctrl.value);
+        final t = Curves.easeOutSine.transform(_ctrl!.value);
         final bounce = magnitude * math.sin(t * math.pi);
         final scale = 1.0 + bounce;
 

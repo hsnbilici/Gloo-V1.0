@@ -106,6 +106,7 @@ class RemoteRepository implements IRemoteRepository {
   }
 
   /// Kullanıcının belirli moddaki en yüksek sırasını döner.
+  /// Sunucu tarafında tek RPC çağrısı ile hesaplanır.
   Future<int?> getUserRank({
     required String mode,
     bool weekly = false,
@@ -114,33 +115,12 @@ class RemoteRepository implements IRemoteRepository {
     final uid = _userId;
     if (uid == null) return null;
     try {
-      // Kullanıcının en yüksek skoru
-      final userScores = await _client
-          .from('scores')
-          .select('score')
-          .eq('mode', mode)
-          .eq('user_id', uid)
-          .order('score', ascending: false)
-          .limit(1);
-
-      if (userScores.isEmpty) return null;
-      final topScore = userScores[0]['score'] as int;
-
-      // Bu skorun üzerindeki kayıt sayısı = sıra - 1
-      var query = _client
-          .from('scores')
-          .select('id')
-          .eq('mode', mode)
-          .gt('score', topScore);
-
-      if (weekly) {
-        final weekAgo =
-            DateTime.now().subtract(const Duration(days: 7)).toIso8601String();
-        query = query.gte('created_at', weekAgo);
-      }
-
-      final above = await query;
-      return above.length + 1;
+      final result = await _client.rpc('get_user_rank', params: {
+        'p_mode': mode,
+        'p_weekly': weekly,
+      });
+      if (result == null) return null;
+      return result as int;
     } catch (e) {
       if (kDebugMode) debugPrint('RemoteRepository.getUserRank error: $e');
       return null;

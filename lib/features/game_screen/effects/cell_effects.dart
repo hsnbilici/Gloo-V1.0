@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/ui_constants.dart';
 
 /// Satir/sutun temizlendiginde her hucrenin uzerinde oynayan jel patlamasi.
 /// [delay] ile stagger uygulanir; efekt bitince [onDismiss] cagrilir.
@@ -35,7 +36,7 @@ class _CellBurstEffectState extends State<CellBurstEffect>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 580),
+      duration: AnimationDurations.cellBurst,
     );
     _ctrl.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) widget.onDismiss();
@@ -412,7 +413,7 @@ class _ColorSynthesisBloomEffectState extends State<ColorSynthesisBloomEffect>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: AnimationDurations.synthBloom,
     )..forward();
     _ctrl.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) widget.onDismiss();

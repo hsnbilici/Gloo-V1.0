@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/ui_constants.dart';
 
 /// Kombo veya guclu olaylarda kisa sureli ekran sarsintisi uygular.
 /// [child] widget'ini saran Transform.translate ile calisir.
@@ -11,7 +12,7 @@ class ScreenShake extends StatefulWidget {
     super.key,
     required this.child,
     required this.intensity,
-    this.duration = const Duration(milliseconds: 300),
+    this.duration = AnimationDurations.medium,
   });
 
   final Widget child;

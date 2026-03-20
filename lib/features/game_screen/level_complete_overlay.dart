@@ -70,7 +70,7 @@ class LevelCompleteOverlay extends StatelessWidget {
             const SizedBox(height: 16),
             TweenAnimationBuilder<int>(
               tween: IntTween(begin: 0, end: score),
-              duration: const Duration(milliseconds: 1200),
+              duration: AnimationDurations.levelComplete,
               curve: Curves.easeOutCubic,
               builder: (_, val, __) => Text(
                 '$val',
