@@ -134,6 +134,7 @@ class LocalRepository {
         'gel_ozu': await getGelOzu(),
         'gel_energy': await getGelEnergy(),
         'total_earned_energy': getTotalEarnedEnergy(),
+        'lifetime_earnings': await getLifetimeEarnings(),
       },
       'progress': {
         'current_level': getCurrentLevel(),
@@ -241,6 +242,17 @@ class LocalRepository {
   Future<void> saveGelOzu(int value) async {
     await _secure.write(key: 'gel_ozu', value: value.toString());
     await _prefs.remove('gel_ozu');
+  }
+
+  Future<int> getLifetimeEarnings() async {
+    final secure = await _secure.read(key: 'lifetime_earnings');
+    if (secure != null) return int.tryParse(secure) ?? 0;
+    return _prefs.getInt('lifetime_earnings') ?? 0;
+  }
+
+  Future<void> saveLifetimeEarnings(int value) async {
+    await _secure.write(key: 'lifetime_earnings', value: value.toString());
+    await _prefs.remove('lifetime_earnings');
   }
 
   // ─── Faz 4: Jel Enerjisi (Meta-game Resource) ────────────────────────────

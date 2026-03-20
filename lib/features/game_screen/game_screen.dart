@@ -197,6 +197,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
       game.setInitialHighScore(saved);
       game.setGamesPlayed(repo.getTotalGamesPlayed());
       game.setCurrencyBalance(await repo.getGelOzu());
+      final lifetime = await repo.getLifetimeEarnings();
+      game.currencyManager.setLifetimeEarnings(lifetime);
     });
 
     game.startGame();
