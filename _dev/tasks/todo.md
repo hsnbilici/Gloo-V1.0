@@ -1,8 +1,8 @@
 # Gloo v1.0 — Yol Haritasi
 
 > Son guncelleme: 2026-03-21
-> **Durum:** 88/88 gorev tamamlandi | 7 Expert Audit yapildi
-> flutter analyze: 0 error | flutter test: 2057 (golden haric)
+> **Durum:** 129/133 gorev tamamlandi | 7 Expert Audit + 1 UI/UX Audit yapildi
+> flutter analyze: 0 error | flutter test: 2086 (golden haric)
 > **Proje skoru:** 98 / 100 (expert audit sonrasi)
 
 ---
@@ -79,6 +79,35 @@
 
 ---
 
+## UI/UX Audit Bulgulari (2026-03-21)
+
+> Kapsamli UI/UX degerlendirmesi sonucu tespit edilen ve uygulanan iyilestirmeler.
+
+### TAMAMLANAN (5/5)
+
+- [x] **UX.1 — Renk koru modu metin kontrasti:** `shortLabel` ve `_ColorBlindPatternPainter` desenleri luminance-tabanli renk secimi yaparak koyu hucreler uzerinde okunabilirlik sagliyor ✅
+- [x] **UX.2 — Level complete yildiz sistemi:** 1-3 yildiz (score/targetScore orani: 1x=1★, 1.5x=2★, 2x=3★), staggered easeOutBack animasyon, gold/muted gorsel hiyerarsisi ✅
+- [x] **UX.3 — Bottom bar basma geri bildirimi:** AnimatedScale (0.92x) + ikon/metin parlaklik artisi ile press state ✅
+- [x] **UX.4 — Tutorial skip butonu (tum adimlar):** Adim 0-1'de "Skip" butonu, IgnorePointer disinda interaktif, Semantics erisilebilir ✅
+- [x] **UX.5 — Zen modu kilit etiketi l10n:** Hardcoded `'GLOO+'` → `l.glooPlusTitle` ile lokalize ✅
+
+### ORTA ONCELIK — Gelecek Sprint
+
+- [x] **UX.6 — Typography sistemi merkezi:** `AppTextStyles` abstract class: displayLarge (32), heading (18), subheading (16), body (14), bodySecondary (13), label (11), caption (10), micro (9) ✅
+- [x] **UX.7 — Dikey bosluk standardizasyonu:** `Spacing` abstract class: xxs (2), xs (4), sm (8), md (12), lg (16), xl (20), xxl (24), xxxl (32) ✅
+- [x] **UX.8 — Home screen bilgi yogunlugu:** Level + Duel modlari yatay cift (Row + Expanded) olarak gruplanip gorsel hiyerarsi iyilestirildi ✅
+- [x] **UX.9 — Ilk acilis dialog yigilmasi:** Onboarding'e 4. sayfa (Tercihler) eklendi — analytics consent + renk koru modu toggle'lari; dialog yigilmasi ortadan kaldirildi ✅
+- [x] **UX.10 — ModeCard badge non-featured:** `isFeatured &&` kosulu kaldirildi — `badgeLabel != null` kontrolu yeterli. Levels ve Duel "NEW" badge artik gosteriliyor ✅
+
+### DUSUK ONCELIK — Nice-to-Have
+
+- [x] **UX.11 — Desktop/tablet hover/focus gorseli:** BottomItem ve ModeCard'a MouseRegion ile hover state eklendi — arka plan vurgusu, border parlaklik artisi, click cursor ✅
+- [x] **UX.12 — Bottom bar ikon farklilastirmasi:** Collection ikonu `collections_bookmark_rounded` → `auto_awesome_mosaic_rounded` ile degistirildi ✅
+- [x] **UX.13 — Season pass claim gostergesi:** TierCard'da claimed free/premium odullerde check_circle overlay + icon soluklasmasi eklendi ✅
+- [x] **UX.14 — Onboarding marka adi sabiti:** Hardcoded `'GLOO'` → `kAppName` sabiti (`app_constants.dart`) ile degistirildi ✅
+
+---
+
 ## Ozet Tablo
 
 | Kategori | Tamamlanan | Toplam |
@@ -88,8 +117,11 @@
 | Yuksek Oncelik (Bu Sprint) | 10/10 | 10 |
 | Orta Oncelik (Bu Ay) | 8/8 | 8 |
 | Dusuk Oncelik | 6/6 | 6 |
+| UI/UX Audit — Tamamlanan | 5/5 | 5 |
+| UI/UX Audit — Orta Oncelik | 5/5 | 5 |
+| UI/UX Audit — Dusuk Oncelik | 4/4 | 4 |
 | Onceki Bekleyen | 0/4 | 4 |
-| **Toplam** | **115/119** | **119** |
+| **Toplam** | **129/133** | **133** |
 
-**115/119 gorev tamamlandi (%97). Kalan 4 gorev: onceki bekleyen (manual aksiyonlar).**
-**Test sayisi: 2057 (1947 → +110 yeni test)**
+**129/133 gorev tamamlandi (%97). Kalan 4 gorev: manuel/harici isler (Play Console, screenshots, entegrasyon testleri, ToS).**
+**Test sayisi: 2086 (2057 → +29 yeni/guncellenen test)**
