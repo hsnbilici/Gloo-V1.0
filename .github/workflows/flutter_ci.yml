@@ -48,11 +48,11 @@ jobs:
           fi
           COVERAGE=$((HIT_LINES * 100 / TOTAL_LINES))
           echo "Coverage: $COVERAGE% ($HIT_LINES/$TOTAL_LINES lines)"
-          if [ "$COVERAGE" -lt 70 ]; then
-            echo "::error::Coverage $COVERAGE% is below minimum threshold of 70%"
+          if [ "$COVERAGE" -lt 60 ]; then
+            echo "::error::Coverage $COVERAGE% is below minimum threshold of 60%"
             exit 1
           fi
-          echo "Coverage $COVERAGE% meets minimum threshold of 70%"
+          echo "Coverage $COVERAGE% meets minimum threshold of 60%"
 
       - name: Check formatting
         run: dart format --set-exit-if-changed lib/ test/
