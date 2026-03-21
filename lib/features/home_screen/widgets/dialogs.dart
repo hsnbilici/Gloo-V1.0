@@ -25,13 +25,15 @@ class ColorblindPromptDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final dialogBg = resolveColor(brightness, dark: kBgDark, light: kSurfaceLight);
+    final dialogBg =
+        resolveColor(brightness, dark: kBgDark, light: kSurfaceLight);
     final borderColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.10),
       light: kCardBorderLight,
     );
-    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final titleColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final messageColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.60),
@@ -130,13 +132,15 @@ class ConsentDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final dialogBg = resolveColor(brightness, dark: kBgDark, light: kSurfaceLight);
+    final dialogBg =
+        resolveColor(brightness, dark: kBgDark, light: kSurfaceLight);
     final borderColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.10),
       light: kCardBorderLight,
     );
-    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final titleColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final messageColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.60),

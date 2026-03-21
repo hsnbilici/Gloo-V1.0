@@ -40,9 +40,12 @@ class SettingsScreen extends ConsumerWidget {
     final dir = Directionality.of(context);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return ResponsiveScaffold(
       backgroundColor: bgColor,
@@ -101,8 +104,8 @@ class SettingsScreen extends ConsumerWidget {
                 errorInvalidChars: l.settingsUsernameErrorInvalidChars,
                 onSave: (newName) async {
                   final repo = await ref.read(localRepositoryProvider.future);
-                  final profile = await repo.getProfile() ??
-                      UserProfile(username: newName);
+                  final profile =
+                      await repo.getProfile() ?? UserProfile(username: newName);
                   profile.username = newName;
                   await repo.saveProfile(profile);
                   ref.invalidate(userProfileProvider);
@@ -187,8 +190,7 @@ class SettingsScreen extends ConsumerWidget {
                 onExport: () async {
                   final repo = await ref.read(localRepositoryProvider.future);
                   final data = await repo.exportAllData();
-                  final json =
-                      const JsonEncoder.withIndent('  ').convert(data);
+                  final json = const JsonEncoder.withIndent('  ').convert(data);
                   if (!context.mounted) return;
                   if (kIsWeb) {
                     // Web: panoya kopyala

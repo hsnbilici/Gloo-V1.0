@@ -89,7 +89,9 @@ class ScoreCountUp extends StatelessWidget {
           ],
         ),
       ),
-    ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 300.ms).fadeIn(duration: 360.ms);
+    )
+        .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 300.ms)
+        .fadeIn(duration: 360.ms);
   }
 }
 

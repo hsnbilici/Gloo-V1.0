@@ -197,8 +197,7 @@ class StringsJa extends AppStrings {
   @override
   String get settingsUsernameErrorTooLong => '最大20文字';
   @override
-  String get settingsUsernameErrorInvalidChars =>
-      '英数字とアンダースコアのみ使用可能';
+  String get settingsUsernameErrorInvalidChars => '英数字とアンダースコアのみ使用可能';
 
   @override
   String get settingsSectionPrivacy => 'データプライバシー';

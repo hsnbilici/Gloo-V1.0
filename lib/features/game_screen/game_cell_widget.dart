@@ -227,9 +227,8 @@ class GameCellWidget extends ConsumerWidget {
       button: data.isInteractive,
       child: MouseRegion(
         onEnter: (_) => onHover(),
-        cursor: data.isInteractive
-            ? SystemMouseCursors.click
-            : MouseCursor.defer,
+        cursor:
+            data.isInteractive ? SystemMouseCursors.click : MouseCursor.defer,
         child: GestureDetector(
           onTap: onTap,
           child: Stack(
@@ -447,7 +446,8 @@ class _ColorBlindPatternPainter extends CustomPainter {
       case GelColor.blue:
         // Kare
         canvas.drawRect(
-          Rect.fromCenter(center: Offset(cx, cy), width: r * 1.6, height: r * 1.6),
+          Rect.fromCenter(
+              center: Offset(cx, cy), width: r * 1.6, height: r * 1.6),
           _paint,
         );
       case GelColor.white:
@@ -508,7 +508,8 @@ class _ColorBlindPatternPainter extends CustomPainter {
         canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), _paint);
         canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), _paint);
         canvas.drawRect(
-          Rect.fromCenter(center: Offset(cx, cy), width: r * 1.4, height: r * 1.4),
+          Rect.fromCenter(
+              center: Offset(cx, cy), width: r * 1.4, height: r * 1.4),
           _paint,
         );
     }

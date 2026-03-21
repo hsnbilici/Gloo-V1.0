@@ -287,7 +287,8 @@ void main() {
   // Threshold: 0.85 (standard), 0.95 (critical).
 
   group('_evaluateNearMiss uses real parameters', () {
-    test('no near-miss on sparse grid with full hand — real params stay below threshold',
+    test(
+        'no near-miss on sparse grid with full hand — real params stay below threshold',
         () {
       // With real availableMoves=3 (full hand, after startGame):
       //   normalizedMoves = (1-3/10)*0.1 = 0.07
@@ -427,8 +428,7 @@ void main() {
         expect(
           withCombo.score,
           greaterThan(withHardcoded?.score ?? 0),
-          reason:
-              'using real lastComboSize=3 and availableMoves=0 produces a '
+          reason: 'using real lastComboSize=3 and availableMoves=0 produces a '
               'higher near-miss score than the old hardcoded 0/3 defaults',
         );
       } else {
@@ -439,7 +439,8 @@ void main() {
         // hardcoded: 0.875*0.4 + 0*0.3 + 0.2 + 0.7*0.1 = 0.62
         // The test is meaningful even if neither exceeds threshold.
         expect(withHardcoded, isNull,
-            reason: 'hardcoded params always produce lower score than real params');
+            reason:
+                'hardcoded params always produce lower score than real params');
       }
     });
 
@@ -528,7 +529,8 @@ void main() {
       expect(nearMissFired, isFalse,
           reason: 'no near-miss at low fill ratio with 3 available moves');
       expect(game.status, GameStatus.playing,
-          reason: 'game must still be playing after generateNextHand and next placement');
+          reason:
+              'game must still be playing after generateNextHand and next placement');
     });
   });
 }

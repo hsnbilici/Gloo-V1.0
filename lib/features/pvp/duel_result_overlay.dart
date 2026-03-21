@@ -133,7 +133,9 @@ class DuelResultOverlay extends StatelessWidget {
                   isWinner: result.outcome == DuelOutcome.loss,
                 ),
               ],
-            ).animateOrSkip(reduceMotion: rm, delay: 350.ms).fadeIn(duration: 350.ms),
+            )
+                .animateOrSkip(reduceMotion: rm, delay: 350.ms)
+                .fadeIn(duration: 350.ms),
             const SizedBox(height: 28),
             // ELO degisimi
             Container(
@@ -165,7 +167,10 @@ class DuelResultOverlay extends StatelessWidget {
                   ),
                 ],
               ),
-            ).animateOrSkip(reduceMotion: rm, delay: 450.ms).fadeIn(duration: 300.ms).scale(
+            )
+                .animateOrSkip(reduceMotion: rm, delay: 450.ms)
+                .fadeIn(duration: 300.ms)
+                .scale(
                   begin: const Offset(0.9, 0.9),
                   duration: 300.ms,
                   curve: Curves.easeOutBack,
@@ -179,7 +184,9 @@ class DuelResultOverlay extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
-            ).animateOrSkip(reduceMotion: rm, delay: 500.ms).fadeIn(duration: 250.ms),
+            )
+                .animateOrSkip(reduceMotion: rm, delay: 500.ms)
+                .fadeIn(duration: 250.ms),
             const Spacer(flex: 2),
             // Butonlar
             Padding(

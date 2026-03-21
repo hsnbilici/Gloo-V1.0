@@ -104,9 +104,11 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
 
       final cellWidgets = find.byType(GameCellWidget);
-      expect(cellWidgets, findsNWidgets(
-        GameConstants.gridRows * GameConstants.gridCols,
-      ));
+      expect(
+          cellWidgets,
+          findsNWidgets(
+            GameConstants.gridRows * GameConstants.gridCols,
+          ));
     });
 
     testWidgets('grid renders inside LayoutBuilder', (tester) async {
@@ -120,8 +122,7 @@ void main() {
   });
 
   group('GameGridBuilder — cell rendering', () {
-    testWidgets('empty cells have GestureDetector for tapping',
-        (tester) async {
+    testWidgets('empty cells have GestureDetector for tapping', (tester) async {
       await tester.pumpWidget(buildGameScreenApp());
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));

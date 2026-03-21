@@ -28,5 +28,4 @@ class ProfileRepository {
     await _prefs.setBool('haptics', profile.hapticsEnabled);
     await _prefs.setInt('streak_count', profile.currentStreak);
   }
-
 }

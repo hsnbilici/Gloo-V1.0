@@ -47,9 +47,12 @@ class CollectionScreen extends ConsumerWidget {
     final dir = Directionality.of(context);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return ResponsiveScaffold(
       backgroundColor: bgColor,
@@ -71,8 +74,8 @@ class CollectionScreen extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border: Border.all(color: borderColor),
                 ),
-                child: Icon(directionalBackIcon(dir),
-                    color: textColor, size: 18),
+                child:
+                    Icon(directionalBackIcon(dir), color: textColor, size: 18),
               ),
             ),
           ),
@@ -112,58 +115,58 @@ class CollectionScreen extends ConsumerWidget {
         ],
       ),
       body: Stack(
-            children: [
-              const _CollectionBackground(),
-              found == 0
-                  ? Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: hPadding),
-                        child: Text(
-                          l.collectionEmpty,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              color: kMuted, fontSize: 14, height: 1.5),
-                        ),
-                      ),
-                    )
-                  : GridView.builder(
-                      padding: EdgeInsets.fromLTRB(
-                          hPadding, 16, hPadding, 40),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: responsiveColumns(screenWidth,
-                            phone: 2, tablet: 3, desktop: 4),
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 1.1,
-                      ),
-                      itemCount: _kCollectibleColors.length,
-                      itemBuilder: (context, index) {
-                        final gelColor = _kCollectibleColors[index];
-                        final isDiscovered =
-                            discovered.contains(gelColor.name);
-
-                        // Sentez girdisini bul
-                        final recipe = _findRecipe(gelColor);
-
-                        return _ColorCard(
-                          gelColor: gelColor,
-                          isDiscovered: isDiscovered,
-                          colorName: l.colorName(gelColor),
-                          discoveredLabel: l.collectionDiscovered,
-                          lockedLabel: l.collectionLocked,
-                          recipe: recipe,
-                        )
-                            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: (60 * index).ms)
-                            .fadeIn(duration: 350.ms)
-                            .scale(
-                              begin: const Offset(0.92, 0.92),
-                              duration: 350.ms,
-                              curve: Curves.easeOutCubic,
-                            );
-                      },
+        children: [
+          const _CollectionBackground(),
+          found == 0
+              ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: hPadding),
+                    child: Text(
+                      l.collectionEmpty,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: kMuted, fontSize: 14, height: 1.5),
                     ),
-            ],
-          ),
+                  ),
+                )
+              : GridView.builder(
+                  padding: EdgeInsets.fromLTRB(hPadding, 16, hPadding, 40),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: responsiveColumns(screenWidth,
+                        phone: 2, tablet: 3, desktop: 4),
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 1.1,
+                  ),
+                  itemCount: _kCollectibleColors.length,
+                  itemBuilder: (context, index) {
+                    final gelColor = _kCollectibleColors[index];
+                    final isDiscovered = discovered.contains(gelColor.name);
+
+                    // Sentez girdisini bul
+                    final recipe = _findRecipe(gelColor);
+
+                    return _ColorCard(
+                      gelColor: gelColor,
+                      isDiscovered: isDiscovered,
+                      colorName: l.colorName(gelColor),
+                      discoveredLabel: l.collectionDiscovered,
+                      lockedLabel: l.collectionLocked,
+                      recipe: recipe,
+                    )
+                        .animateOrSkip(
+                            reduceMotion: shouldReduceMotion(context),
+                            delay: (60 * index).ms)
+                        .fadeIn(duration: 350.ms)
+                        .scale(
+                          begin: const Offset(0.92, 0.92),
+                          duration: 350.ms,
+                          curve: Curves.easeOutCubic,
+                        );
+                  },
+                ),
+        ],
+      ),
     );
   }
 
@@ -225,7 +228,8 @@ class _ColorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = gelColor.displayColor;
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
 
     return Container(
       padding: const EdgeInsets.all(14),

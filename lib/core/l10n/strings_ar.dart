@@ -196,7 +196,8 @@ class StringsAr extends AppStrings {
   @override
   String get settingsUsernameSave => 'حفظ';
   @override
-  String get settingsUsernameErrorEmpty => 'لا يمكن أن يكون اسم المستخدم فارغاً';
+  String get settingsUsernameErrorEmpty =>
+      'لا يمكن أن يكون اسم المستخدم فارغاً';
   @override
   String get settingsUsernameErrorTooLong => 'الحد الأقصى 20 حرفاً';
   @override

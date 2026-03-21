@@ -83,4 +83,3 @@ final duelProvider = NotifierProvider<DuelNotifier, DuelState>(
 final currentUserIdProvider = Provider<String?>((ref) {
   return SupabaseConfig.currentUserId;
 });
-

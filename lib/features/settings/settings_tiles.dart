@@ -26,7 +26,8 @@ class SettingsToggleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final inactiveBg = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.03),
@@ -46,14 +47,10 @@ class SettingsToggleTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       decoration: BoxDecoration(
-        color: value
-            ? accentColor.withValues(alpha: 0.06)
-            : inactiveBg,
+        color: value ? accentColor.withValues(alpha: 0.06) : inactiveBg,
         borderRadius: BorderRadius.circular(UIConstants.radiusTile),
         border: Border.all(
-          color: value
-              ? accentColor.withValues(alpha: 0.25)
-              : inactiveBorder,
+          color: value ? accentColor.withValues(alpha: 0.25) : inactiveBorder,
         ),
       ),
       child: Row(
@@ -121,7 +118,8 @@ class ThemeSelectorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: _modeLabel(currentMode),
       button: true,
@@ -189,7 +187,8 @@ class ThemeSheet extends StatelessWidget {
       (ThemeMode.dark, Icons.dark_mode_rounded, darkLabel),
     ];
     final brightness = Theme.of(context).brightness;
-    final sheetBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final sheetBg =
+        resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
     final handleColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.18),
@@ -270,7 +269,8 @@ class _ThemeModeChip extends StatelessWidget {
       dark: Colors.white.withValues(alpha: 0.09),
       light: kCardBorderLight,
     );
-    final unselectedText = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final unselectedText =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: label,
       button: true,
@@ -312,8 +312,7 @@ class _ThemeModeChip extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected ? kThemeTertiary : unselectedText,
                   fontSize: 14,
-                  fontWeight:
-                      isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
             ],
@@ -345,8 +344,10 @@ class SettingsInfoTile extends StatelessWidget {
       dark: Colors.white.withValues(alpha: 0.07),
       light: kCardBorderLight,
     );
-    final labelColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final valueColor = resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
+    final labelColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final valueColor =
+        resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

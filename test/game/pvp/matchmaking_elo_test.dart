@@ -209,15 +209,19 @@ void main() {
   group('MatchmakingManager — compatibility', () {
     test('players within 200 ELO range are compatible', () {
       final now = DateTime.now();
-      final a = MatchRequest(userId: 'a', elo: 1000, region: 'eu', timestamp: now);
-      final b = MatchRequest(userId: 'b', elo: 1150, region: 'eu', timestamp: now);
+      final a =
+          MatchRequest(userId: 'a', elo: 1000, region: 'eu', timestamp: now);
+      final b =
+          MatchRequest(userId: 'b', elo: 1150, region: 'eu', timestamp: now);
       expect(MatchmakingManager.isCompatible(a, b), isTrue);
     });
 
     test('players outside 200 ELO range are not compatible', () {
       final now = DateTime.now();
-      final a = MatchRequest(userId: 'a', elo: 1000, region: 'eu', timestamp: now);
-      final b = MatchRequest(userId: 'b', elo: 1300, region: 'eu', timestamp: now);
+      final a =
+          MatchRequest(userId: 'a', elo: 1000, region: 'eu', timestamp: now);
+      final b =
+          MatchRequest(userId: 'b', elo: 1300, region: 'eu', timestamp: now);
       expect(MatchmakingManager.isCompatible(a, b), isFalse);
     });
 
@@ -231,7 +235,8 @@ void main() {
         region: 'eu',
         timestamp: longAgo,
       );
-      final b = MatchRequest(userId: 'b', elo: 1250, region: 'eu', timestamp: now);
+      final b =
+          MatchRequest(userId: 'b', elo: 1250, region: 'eu', timestamp: now);
       // a.waitSeconds > 10, so range = 200 + 100 = 300
       // ELO diff = 250, which is within 300
       expect(a.waitSeconds, greaterThan(10));

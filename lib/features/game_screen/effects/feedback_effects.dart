@@ -60,9 +60,7 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
         fontSize: 36,
         fontWeight: FontWeight.w900,
         letterSpacing: 3,
-        shadows: [
-          Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)
-        ],
+        shadows: [Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)],
       ),
     );
 
@@ -92,10 +90,7 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
       multiplierWidget = multiplierWidget
           .animate()
           .slideY(
-              begin: 0.8,
-              end: 0,
-              duration: 350.ms,
-              curve: Curves.easeOutCubic)
+              begin: 0.8, end: 0, duration: 350.ms, curve: Curves.easeOutCubic)
           .fadeIn(duration: 200.ms)
           .then(delay: 750.ms)
           .fadeOut(duration: 400.ms);
@@ -241,9 +236,7 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
         fontSize: isCritical ? 30 : 24,
         fontWeight: FontWeight.w900,
         letterSpacing: 5,
-        shadows: [
-          Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)
-        ],
+        shadows: [Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)],
       ),
     );
 
@@ -274,8 +267,7 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
                   child: CustomPaint(
                     painter: _VignettePainter(
                       color: color,
-                      intensity:
-                          isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
+                      intensity: isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
                     ),
                     child: const SizedBox.expand(),
                   ),

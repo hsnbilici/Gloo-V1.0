@@ -262,7 +262,8 @@ class GlooGame {
     final clearResult = _gridManager.detectAndClear();
 
     if (clearResult.totalLines > 0) {
-      _processLineClear(clearResult, colorSynthesisCount: appliedSynthesisCount);
+      _processLineClear(clearResult,
+          colorSynthesisCount: appliedSynthesisCount);
       _applyGravityAndCascade();
       _checkTimeTrialBonus(clearResult);
       if (_checkLevelCompletion()) return;
@@ -340,7 +341,8 @@ class GlooGame {
 
   /// Satır temizleme, puan hesaplama, kombo ve ekonomi güncellemesi.
   /// [isCascade] true ise cascade döngüsünden çağrılmıştır (time trial bonus kontrol edilir).
-  void _processLineClear(LineClearResult clearResult, {
+  void _processLineClear(
+    LineClearResult clearResult, {
     int colorSynthesisCount = 0,
     bool isCascade = false,
   }) {

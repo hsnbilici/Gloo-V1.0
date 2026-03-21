@@ -76,9 +76,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     final dir = Directionality.of(context);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return ResponsiveScaffold(
       backgroundColor: bgColor,
@@ -100,8 +103,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border: Border.all(color: borderColor),
                 ),
-                child: Icon(directionalBackIcon(dir),
-                    color: textColor, size: 18),
+                child:
+                    Icon(directionalBackIcon(dir), color: textColor, size: 18),
               ),
             ),
           ),
@@ -117,81 +120,82 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         ),
       ),
       body: Stack(
+        children: [
+          const LeaderboardBackground(),
+          Column(
             children: [
-              const LeaderboardBackground(),
-              Column(
-                children: [
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: hPadding),
-                    child: ModeTabs(
-                      controller: _tabController,
-                      classicLabel: l.leaderboardTabClassic,
-                      timeTrialLabel: l.leaderboardTabTimeTrial,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: hPadding),
-                    child: FilterRow(
-                      weeklyLabel: l.leaderboardFilterWeekly,
-                      allTimeLabel: l.leaderboardFilterAllTime,
-                      isWeekly: _weekly,
-                      onChanged: (weekly) {
-                        setState(() => _weekly = weekly);
-                        _fetchData();
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  if (_userRank != null)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: hPadding),
-                      child: UserRankBanner(
-                          rank: _userRank!, label: l.leaderboardYourRank),
-                    ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: _loading
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                                color: kCyan, strokeWidth: 2),
+              const SizedBox(height: 8),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPadding),
+                child: ModeTabs(
+                  controller: _tabController,
+                  classicLabel: l.leaderboardTabClassic,
+                  timeTrialLabel: l.leaderboardTabTimeTrial,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: hPadding),
+                child: FilterRow(
+                  weeklyLabel: l.leaderboardFilterWeekly,
+                  allTimeLabel: l.leaderboardFilterAllTime,
+                  isWeekly: _weekly,
+                  onChanged: (weekly) {
+                    setState(() => _weekly = weekly);
+                    _fetchData();
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+              if (_userRank != null)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: UserRankBanner(
+                      rank: _userRank!, label: l.leaderboardYourRank),
+                ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: _loading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                            color: kCyan, strokeWidth: 2),
+                      )
+                    : _scores.isEmpty
+                        ? Center(
+                            child: Text(
+                              l.leaderboardEmpty,
+                              style:
+                                  const TextStyle(color: kMuted, fontSize: 14),
+                            ),
                           )
-                        : _scores.isEmpty
-                            ? Center(
-                                child: Text(
-                                  l.leaderboardEmpty,
-                                  style: const TextStyle(
-                                      color: kMuted, fontSize: 14),
-                                ),
+                        : ListView.builder(
+                            padding: EdgeInsets.symmetric(horizontal: hPadding),
+                            itemCount: _scores.length,
+                            itemBuilder: (context, index) {
+                              final entry = _scores[index];
+                              final rank = index + 1;
+                              return ScoreRow(
+                                rank: rank,
+                                username: entry.username,
+                                score: entry.score,
                               )
-                            : ListView.builder(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: hPadding),
-                                itemCount: _scores.length,
-                                itemBuilder: (context, index) {
-                                  final entry = _scores[index];
-                                  final rank = index + 1;
-                                  return ScoreRow(
-                                    rank: rank,
-                                    username: entry.username,
-                                    score: entry.score,
-                                  )
-                                      .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: (40 * index).ms)
-                                      .fadeIn(duration: 250.ms)
-                                      .slideX(
-                                        begin: 0.05,
-                                        end: 0,
-                                        duration: 250.ms,
-                                        curve: Curves.easeOutCubic,
-                                      );
-                                },
-                              ),
-                  ),
-                ],
+                                  .animateOrSkip(
+                                      reduceMotion: shouldReduceMotion(context),
+                                      delay: (40 * index).ms)
+                                  .fadeIn(duration: 250.ms)
+                                  .slideX(
+                                    begin: 0.05,
+                                    end: 0,
+                                    duration: 250.ms,
+                                    curve: Curves.easeOutCubic,
+                                  );
+                            },
+                          ),
               ),
             ],
           ),
+        ],
+      ),
     );
   }
 }

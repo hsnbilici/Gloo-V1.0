@@ -157,7 +157,8 @@ void main() {
 
       // All cells must land in the gravity row (row 4).
       final toRows = moves.map((m) => m.$3).toSet();
-      expect(toRows, {4}, reason: 'Every suspended cell drops to gravity row 4');
+      expect(toRows, {4},
+          reason: 'Every suspended cell drops to gravity row 4');
     });
 
     // ── Post-cascade grid state ────────────────────────────────────────────
@@ -221,8 +222,7 @@ void main() {
       expect(
         lineClearCount,
         2,
-        reason:
-            'The while-loop fix must produce 2 line clears; '
+        reason: 'The while-loop fix must produce 2 line clears; '
             'the old single-pass produced only 1',
       );
     });
@@ -248,7 +248,8 @@ void main() {
 
     // ── No-gravity regression ──────────────────────────────────────────────
 
-    test('no cascade when no gravity cells exist — onLineClear fires exactly once',
+    test(
+        'no cascade when no gravity cells exist — onLineClear fires exactly once',
         () {
       // Regression guard: standard grids (no gravity cells) must be unaffected.
       const level = LevelData(id: 998, rows: 5, cols: 4, targetScore: 999999);
@@ -277,7 +278,8 @@ void main() {
 
     // ── TimeTrial bonus fires for cascade clears ───────────────────────────
 
-    test('timeTrial time bonus fires for cascade clear as well as initial clear',
+    test(
+        'timeTrial time bonus fires for cascade clear as well as initial clear',
         () {
       final game = GlooGame(
         mode: GameMode.timeTrial,

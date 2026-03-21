@@ -86,7 +86,8 @@ void main() {
       expect(constrained.constraints.maxWidth, 960.0);
     });
 
-    testWidgets('full width on phone — no ConstrainedBox ancestor', (tester) async {
+    testWidgets('full width on phone — no ConstrainedBox ancestor',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: MediaQuery(

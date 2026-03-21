@@ -60,7 +60,10 @@ class ChefLevelOverlay extends ConsumerWidget {
                   levelNumber: isAllComplete ? null : levelNumber,
                   isAllComplete: isAllComplete,
                   color: color,
-                ).animateOrSkip(reduceMotion: rm, delay: 60.ms).fadeIn(duration: 260.ms).scale(
+                )
+                    .animateOrSkip(reduceMotion: rm, delay: 60.ms)
+                    .fadeIn(duration: 260.ms)
+                    .scale(
                       begin: const Offset(0.75, 0.75),
                       duration: 260.ms,
                       curve: Curves.easeOutBack,
@@ -99,7 +102,10 @@ class ChefLevelOverlay extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      ).animateOrSkip(reduceMotion: rm, delay: 200.ms).fadeIn(duration: 300.ms).slideY(
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 200.ms)
+                          .fadeIn(duration: 300.ms)
+                          .slideY(
                             begin: -0.10,
                             end: 0,
                             duration: 300.ms,
@@ -115,10 +121,14 @@ class ChefLevelOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.w700,
                           letterSpacing: 2,
                         ),
-                      ).animateOrSkip(reduceMotion: rm, delay: 280.ms).fadeIn(duration: 260.ms),
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 280.ms)
+                          .fadeIn(duration: 260.ms),
                       const SizedBox(height: 10),
                       // Parıldayan ayraç
-                      _GlowLine(color: color).animateOrSkip(reduceMotion: rm, delay: 340.ms).scaleX(
+                      _GlowLine(color: color)
+                          .animateOrSkip(reduceMotion: rm, delay: 340.ms)
+                          .scaleX(
                             begin: 0,
                             end: 1,
                             duration: 360.ms,
@@ -160,7 +170,9 @@ class ChefLevelOverlay extends ConsumerWidget {
                         filled: false,
                         onTap: onHome,
                       )
-                          .animateOrSkip(reduceMotion: rm, delay: isAllComplete ? 480.ms : 560.ms)
+                          .animateOrSkip(
+                              reduceMotion: rm,
+                              delay: isAllComplete ? 480.ms : 560.ms)
                           .fadeIn(duration: 300.ms)
                           .slideY(begin: 0.18, end: 0, duration: 300.ms),
                     ],
@@ -292,7 +304,11 @@ class _AllCompleteStars extends StatelessWidget {
             Icons.star_rounded,
             color: color.withValues(alpha: 0.3 + i * 0.14),
             size: 20 + i * 3.0,
-          ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: Duration(milliseconds: 420 + i * 80)).scale(
+          )
+              .animateOrSkip(
+                  reduceMotion: shouldReduceMotion(context),
+                  delay: Duration(milliseconds: 420 + i * 80))
+              .scale(
                 begin: const Offset(0, 0),
                 end: const Offset(1, 1),
                 duration: 300.ms,

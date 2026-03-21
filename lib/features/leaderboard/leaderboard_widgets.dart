@@ -99,30 +99,30 @@ class LeaderboardFilterChip extends StatelessWidget {
       label: label,
       button: true,
       child: GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? kCyan.withValues(alpha: 0.12)
-              : Colors.white.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-          border: Border.all(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+          decoration: BoxDecoration(
             color: isSelected
-                ? kCyan.withValues(alpha: 0.40)
-                : Colors.white.withValues(alpha: 0.08),
+                ? kCyan.withValues(alpha: 0.12)
+                : Colors.white.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+            border: Border.all(
+              color: isSelected
+                  ? kCyan.withValues(alpha: 0.40)
+                  : Colors.white.withValues(alpha: 0.08),
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? kCyan : kMuted,
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            ),
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? kCyan : kMuted,
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-          ),
-        ),
-      ),
       ),
     );
   }
@@ -219,59 +219,59 @@ class ScoreRow extends StatelessWidget {
     return Semantics(
       label: '#$rank $username ${_formatScore(score)}',
       child: Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-      decoration: BoxDecoration(
-        color: rank <= 3
-            ? _rankColor.withValues(alpha: 0.06)
-            : Colors.white.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-        border: Border.all(
+        margin: const EdgeInsets.only(bottom: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        decoration: BoxDecoration(
           color: rank <= 3
-              ? _rankColor.withValues(alpha: 0.22)
-              : Colors.white.withValues(alpha: 0.06),
+              ? _rankColor.withValues(alpha: 0.06)
+              : Colors.white.withValues(alpha: 0.03),
+          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+          border: Border.all(
+            color: rank <= 3
+                ? _rankColor.withValues(alpha: 0.22)
+                : Colors.white.withValues(alpha: 0.06),
+          ),
         ),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 32,
-            child: _rankIcon != null
-                ? Icon(_rankIcon, color: _rankColor, size: 18)
-                : Text(
-                    '$rank',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: kMuted,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 32,
+              child: _rankIcon != null
+                  ? Icon(_rankIcon, color: _rankColor, size: 18)
+                  : Text(
+                      '$rank',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: kMuted,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              username,
-              style: TextStyle(
-                color: rank <= 3
-                    ? Colors.white
-                    : Colors.white.withValues(alpha: 0.80),
-                fontSize: 14,
-                fontWeight: rank <= 3 ? FontWeight.w700 : FontWeight.w500,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                username,
+                style: TextStyle(
+                  color: rank <= 3
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.80),
+                  fontSize: 14,
+                  fontWeight: rank <= 3 ? FontWeight.w700 : FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-          Text(
-            _formatScore(score),
-            style: TextStyle(
-              color: rank <= 3 ? _rankColor : kMuted,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            Text(
+              _formatScore(score),
+              style: TextStyle(
+                color: rank <= 3 ? _rankColor : kMuted,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }

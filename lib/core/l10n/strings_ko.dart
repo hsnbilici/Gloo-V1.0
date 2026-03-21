@@ -198,8 +198,7 @@ class StringsKo extends AppStrings {
   @override
   String get settingsUsernameErrorTooLong => '최대 20자';
   @override
-  String get settingsUsernameErrorInvalidChars =>
-      '영문자, 숫자, 밑줄만 사용 가능';
+  String get settingsUsernameErrorInvalidChars => '영문자, 숫자, 밑줄만 사용 가능';
 
   @override
   String get settingsSectionPrivacy => '데이터 개인정보';

@@ -80,7 +80,9 @@ void main() {
       expect(await repo.getLifetimeEarnings(), 200);
     });
 
-    test('getLifetimeEarnings falls back to SharedPreferences when secure is empty', () async {
+    test(
+        'getLifetimeEarnings falls back to SharedPreferences when secure is empty',
+        () async {
       SharedPreferences.setMockInitialValues({'lifetime_earnings': 300});
       final prefs = await SharedPreferences.getInstance();
       final repo = LocalRepository(prefs, secureStorage: fakeSecure);

@@ -14,8 +14,8 @@ class GelLogo extends StatelessWidget {
     final isDark = brightness == Brightness.dark;
 
     final cyanColor = resolveColor(brightness, dark: kCyan, light: kCyanLight);
-    final classicColor = resolveColor(
-        brightness, dark: kColorClassic, light: kColorClassicLight);
+    final classicColor = resolveColor(brightness,
+        dark: kColorClassic, light: kColorClassicLight);
     final mutedColor =
         resolveColor(brightness, dark: kMuted, light: kMutedLight);
 
@@ -70,9 +70,7 @@ class GelLogo extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-                width: 28,
-                height: 1,
-                color: mutedColor.withValues(alpha: 0.4)),
+                width: 28, height: 1, color: mutedColor.withValues(alpha: 0.4)),
             const SizedBox(width: 10),
             Text(
               subtitle,
@@ -85,9 +83,7 @@ class GelLogo extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Container(
-                width: 28,
-                height: 1,
-                color: mutedColor.withValues(alpha: 0.4)),
+                width: 28, height: 1, color: mutedColor.withValues(alpha: 0.4)),
           ],
         ),
       ],

@@ -57,9 +57,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           .setAnalyticsEnabled(enabled: _analyticsEnabled);
       ref.read(analyticsServiceProvider).setEnabled(_analyticsEnabled);
       if (_colorBlindEnabled) {
-        ref
-            .read(appSettingsProvider.notifier)
-            .setColorBlindMode(enabled: true);
+        ref.read(appSettingsProvider.notifier).setColorBlindMode(enabled: true);
       }
     }
     if (mounted) context.go('/');
@@ -80,19 +78,32 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
 
-    final stepTitles = [l.onboardingStep1Title, l.onboardingStep2Title, l.onboardingStep3Title];
-    final stepDescs = [l.onboardingStep1Desc, l.onboardingStep2Desc, l.onboardingStep3Desc];
+    final stepTitles = [
+      l.onboardingStep1Title,
+      l.onboardingStep2Title,
+      l.onboardingStep3Title
+    ];
+    final stepDescs = [
+      l.onboardingStep1Desc,
+      l.onboardingStep2Desc,
+      l.onboardingStep3Desc
+    ];
 
     final isLast = _page == _kTotalPages - 1;
-    final stepColor = _page < _kStepMeta.length ? _kStepMeta[_page].color : kCyan;
+    final stepColor =
+        _page < _kStepMeta.length ? _kStepMeta[_page].color : kCyan;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
-    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final textSecondary = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -103,7 +114,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCubic,
             top: -120,
-            left: _page == 0 ? -80 : (_page == 1 ? 60 : (_page == 2 ? 200 : 40)),
+            left:
+                _page == 0 ? -80 : (_page == 1 ? 60 : (_page == 2 ? 200 : 40)),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               child: GlowOrb(
@@ -122,189 +134,199 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Column(
-              children: [
-                // Üst bar: Gloo logosu + Geç butonu
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        kAppName,
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 5,
-                        ),
-                      ),
-                      Semantics(
-                        button: true,
-                        label: l.onboardingSkip,
-                        child: GestureDetector(
-                          onTap: _finish,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 6,
+                  children: [
+                    // Üst bar: Gloo logosu + Geç butonu
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: hPadding, vertical: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            kAppName,
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 5,
                             ),
-                            decoration: BoxDecoration(
-                              color: surfaceColor,
-                              borderRadius:
-                                  BorderRadius.circular(UIConstants.radiusXl),
-                              border: Border.all(color: borderColor),
-                            ),
-                            child: ExcludeSemantics(
-                              child: Text(
-                                l.onboardingSkip,
-                                style: TextStyle(
-                                  color: textSecondary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.3,
+                          ),
+                          Semantics(
+                            button: true,
+                            label: l.onboardingSkip,
+                            child: GestureDetector(
+                              onTap: _finish,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 6,
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Sayfa içeriği
-                Expanded(
-                  child: Semantics(
-                    label: '${_page + 1}/$_kTotalPages',
-                    child: PageView.builder(
-                      controller: _controller,
-                      itemCount: _kTotalPages,
-                      onPageChanged: (i) => setState(() => _page = i),
-                      itemBuilder: (context, i) {
-                        if (i < 3) {
-                          return _StepPage(
-                            step: _StepData(
-                              icon: _kStepMeta[i].icon,
-                              color: _kStepMeta[i].color,
-                              title: stepTitles[i],
-                              desc: stepDescs[i],
-                            ),
-                          );
-                        }
-                        return _PrefsPage(
-                          analyticsEnabled: _analyticsEnabled,
-                          colorBlindEnabled: _colorBlindEnabled,
-                          onAnalyticsChanged: (v) =>
-                              setState(() => _analyticsEnabled = v),
-                          onColorBlindChanged: (v) =>
-                              setState(() => _colorBlindEnabled = v),
-                          prefsTitle: l.settingsTitle,
-                          consentTitle: l.consentTitle,
-                          consentMessage: l.consentMessage,
-                          colorblindTitle: l.colorblindDialogTitle,
-                          colorblindMessage: l.colorblindDialogMessage,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                // Alt: nokta göstergesi + buton
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: hPadding,
-                    vertical: 32,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Nokta göstergesi
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_kTotalPages, (i) {
-                          final active = i == _page;
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 280),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: active ? 22 : 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: active
-                                  ? stepColor
-                                  : resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.20), light: kCardBorderLight),
-                              borderRadius:
-                                  BorderRadius.circular(UIConstants.radiusXxs),
-                              boxShadow: active
-                                  ? [
-                                      BoxShadow(
-                                        color:
-                                            stepColor.withValues(alpha: 0.55),
-                                        blurRadius: 8,
-                                      )
-                                    ]
-                                  : null,
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 24),
-                      // İlerleme butonu
-                      Semantics(
-                        button: true,
-                        label: isLast ? l.onboardingStart : l.onboardingNext,
-                        child: GestureDetector(
-                        onTap: _next,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 280),
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          decoration: BoxDecoration(
-                            color: stepColor.withValues(alpha: 0.14),
-                            borderRadius:
-                                BorderRadius.circular(UIConstants.radiusTile),
-                            border: Border.all(
-                              color: stepColor.withValues(alpha: 0.55),
-                              width: 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: stepColor.withValues(alpha: 0.18),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: ExcludeSemantics(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  isLast ? l.onboardingStart : l.onboardingNext,
-                                  style: TextStyle(
-                                    color: stepColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 0.8,
+                                decoration: BoxDecoration(
+                                  color: surfaceColor,
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusXl),
+                                  border: Border.all(color: borderColor),
+                                ),
+                                child: ExcludeSemantics(
+                                  child: Text(
+                                    l.onboardingSkip,
+                                    style: TextStyle(
+                                      color: textSecondary,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.3,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
-                                Icon(
-                                  isLast
-                                      ? Icons.play_arrow_rounded
-                                      : Icons.arrow_forward_rounded,
-                                  color: stepColor,
-                                  size: 18,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    // Sayfa içeriği
+                    Expanded(
+                      child: Semantics(
+                        label: '${_page + 1}/$_kTotalPages',
+                        child: PageView.builder(
+                          controller: _controller,
+                          itemCount: _kTotalPages,
+                          onPageChanged: (i) => setState(() => _page = i),
+                          itemBuilder: (context, i) {
+                            if (i < 3) {
+                              return _StepPage(
+                                step: _StepData(
+                                  icon: _kStepMeta[i].icon,
+                                  color: _kStepMeta[i].color,
+                                  title: stepTitles[i],
+                                  desc: stepDescs[i],
+                                ),
+                              );
+                            }
+                            return _PrefsPage(
+                              analyticsEnabled: _analyticsEnabled,
+                              colorBlindEnabled: _colorBlindEnabled,
+                              onAnalyticsChanged: (v) =>
+                                  setState(() => _analyticsEnabled = v),
+                              onColorBlindChanged: (v) =>
+                                  setState(() => _colorBlindEnabled = v),
+                              prefsTitle: l.settingsTitle,
+                              consentTitle: l.consentTitle,
+                              consentMessage: l.consentMessage,
+                              colorblindTitle: l.colorblindDialogTitle,
+                              colorblindMessage: l.colorblindDialogMessage,
+                            );
+                          },
                         ),
                       ),
+                    ),
+                    // Alt: nokta göstergesi + buton
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: hPadding,
+                        vertical: 32,
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Nokta göstergesi
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(_kTotalPages, (i) {
+                              final active = i == _page;
+                              return AnimatedContainer(
+                                duration: const Duration(milliseconds: 280),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                width: active ? 22 : 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: active
+                                      ? stepColor
+                                      : resolveColor(brightness,
+                                          dark: Colors.white
+                                              .withValues(alpha: 0.20),
+                                          light: kCardBorderLight),
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusXxs),
+                                  boxShadow: active
+                                      ? [
+                                          BoxShadow(
+                                            color: stepColor.withValues(
+                                                alpha: 0.55),
+                                            blurRadius: 8,
+                                          )
+                                        ]
+                                      : null,
+                                ),
+                              );
+                            }),
+                          ),
+                          const SizedBox(height: 24),
+                          // İlerleme butonu
+                          Semantics(
+                            button: true,
+                            label:
+                                isLast ? l.onboardingStart : l.onboardingNext,
+                            child: GestureDetector(
+                              onTap: _next,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 280),
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                decoration: BoxDecoration(
+                                  color: stepColor.withValues(alpha: 0.14),
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusTile),
+                                  border: Border.all(
+                                    color: stepColor.withValues(alpha: 0.55),
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: stepColor.withValues(alpha: 0.18),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: ExcludeSemantics(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        isLast
+                                            ? l.onboardingStart
+                                            : l.onboardingNext,
+                                        style: TextStyle(
+                                          color: stepColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                          letterSpacing: 0.8,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Icon(
+                                        isLast
+                                            ? Icons.play_arrow_rounded
+                                            : Icons.arrow_forward_rounded,
+                                        color: stepColor,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -360,10 +382,14 @@ class _PrefsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textSecondary = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
     final rm = shouldReduceMotion(context);
 
     return SingleChildScrollView(
@@ -411,7 +437,9 @@ class _PrefsPage extends StatelessWidget {
                 ),
               ],
             ),
-          ).animateOrSkip(reduceMotion: rm, delay: 80.ms).fadeIn(duration: 280.ms),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 80.ms)
+              .fadeIn(duration: 280.ms),
           const SizedBox(height: 28),
           // Analytics toggle
           _PrefToggle(
@@ -425,8 +453,14 @@ class _PrefsPage extends StatelessWidget {
             borderColor: borderColor,
             textColor: textColor,
             textSecondary: textSecondary,
-          ).animateOrSkip(reduceMotion: rm, delay: 120.ms).fadeIn(duration: 280.ms).slideY(
-              begin: 0.08, end: 0, duration: 280.ms, curve: Curves.easeOutCubic),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 120.ms)
+              .fadeIn(duration: 280.ms)
+              .slideY(
+                  begin: 0.08,
+                  end: 0,
+                  duration: 280.ms,
+                  curve: Curves.easeOutCubic),
           const SizedBox(height: 12),
           // Colorblind toggle
           _PrefToggle(
@@ -440,13 +474,18 @@ class _PrefsPage extends StatelessWidget {
             borderColor: borderColor,
             textColor: textColor,
             textSecondary: textSecondary,
-          ).animateOrSkip(reduceMotion: rm, delay: 200.ms).fadeIn(duration: 280.ms).slideY(
-              begin: 0.08, end: 0, duration: 280.ms, curve: Curves.easeOutCubic),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 200.ms)
+              .fadeIn(duration: 280.ms)
+              .slideY(
+                  begin: 0.08,
+                  end: 0,
+                  duration: 280.ms,
+                  curve: Curves.easeOutCubic),
         ],
       ),
     );
   }
-
 }
 
 class _PrefToggle extends StatelessWidget {
@@ -537,8 +576,10 @@ class _StepPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textSecondary = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
     final rm = shouldReduceMotion(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: hPadding),
@@ -587,11 +628,14 @@ class _StepPage extends StatelessWidget {
                 ),
               ],
             ),
-          ).animateOrSkip(reduceMotion: rm, delay: 80.ms).fadeIn(duration: 280.ms).slideY(
-              begin: -0.08,
-              end: 0,
-              duration: 280.ms,
-              curve: Curves.easeOutCubic),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 80.ms)
+              .fadeIn(duration: 280.ms)
+              .slideY(
+                  begin: -0.08,
+                  end: 0,
+                  duration: 280.ms,
+                  curve: Curves.easeOutCubic),
           const SizedBox(height: 16),
           // Açıklama
           Text(
@@ -604,11 +648,14 @@ class _StepPage extends StatelessWidget {
               height: 1.55,
               letterSpacing: 0.1,
             ),
-          ).animateOrSkip(reduceMotion: rm, delay: 160.ms).fadeIn(duration: 300.ms).slideY(
-              begin: 0.08,
-              end: 0,
-              duration: 300.ms,
-              curve: Curves.easeOutCubic),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 160.ms)
+              .fadeIn(duration: 300.ms)
+              .slideY(
+                  begin: 0.08,
+                  end: 0,
+                  duration: 300.ms,
+                  curve: Curves.easeOutCubic),
         ],
       ),
     );

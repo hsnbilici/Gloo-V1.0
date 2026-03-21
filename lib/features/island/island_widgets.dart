@@ -139,52 +139,52 @@ class _BuildingCardState extends State<BuildingCard> {
                 button: true,
                 enabled: widget.canAfford,
                 child: GestureDetector(
-                onTap: widget.canAfford ? widget.onUpgrade : null,
-                onTapDown: widget.canAfford
-                    ? (_) => setState(() => _pressed = true)
-                    : null,
-                onTapUp: widget.canAfford
-                    ? (_) => setState(() => _pressed = false)
-                    : null,
-                onTapCancel: widget.canAfford
-                    ? () => setState(() => _pressed = false)
-                    : null,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 80),
-                  transform: Matrix4.diagonal3Values(
-                      _pressed ? 0.93 : 1.0, _pressed ? 0.93 : 1.0, 1.0),
-                  transformAlignment: Alignment.center,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: widget.canAfford
-                        ? color.withValues(alpha: 0.15)
-                        : Colors.white.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                    border: Border.all(
+                  onTap: widget.canAfford ? widget.onUpgrade : null,
+                  onTapDown: widget.canAfford
+                      ? (_) => setState(() => _pressed = true)
+                      : null,
+                  onTapUp: widget.canAfford
+                      ? (_) => setState(() => _pressed = false)
+                      : null,
+                  onTapCancel: widget.canAfford
+                      ? () => setState(() => _pressed = false)
+                      : null,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 80),
+                    transform: Matrix4.diagonal3Values(
+                        _pressed ? 0.93 : 1.0, _pressed ? 0.93 : 1.0, 1.0),
+                    transformAlignment: Alignment.center,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
                       color: widget.canAfford
-                          ? color.withValues(alpha: 0.50)
-                          : Colors.white.withValues(alpha: 0.10),
+                          ? color.withValues(alpha: 0.15)
+                          : Colors.white.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                      border: Border.all(
+                        color: widget.canAfford
+                            ? color.withValues(alpha: 0.50)
+                            : Colors.white.withValues(alpha: 0.10),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.bolt_rounded,
+                            color: widget.canAfford ? color : kMuted, size: 14),
+                        const SizedBox(width: 3),
+                        Text(
+                          '${widget.cost}',
+                          style: TextStyle(
+                            color: widget.canAfford ? color : kMuted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.bolt_rounded,
-                          color: widget.canAfford ? color : kMuted, size: 14),
-                      const SizedBox(width: 3),
-                      Text(
-                        '${widget.cost}',
-                        style: TextStyle(
-                          color: widget.canAfford ? color : kMuted,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
               )
             else
               Container(
@@ -209,7 +209,8 @@ class _BuildingCardState extends State<BuildingCard> {
         ),
       ),
     )
-        .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: widget.delay)
+        .animateOrSkip(
+            reduceMotion: shouldReduceMotion(context), delay: widget.delay)
         .fadeIn(duration: 300.ms)
         .slideX(begin: 0.08, end: 0, duration: 300.ms);
   }
@@ -272,8 +273,8 @@ class IslandBackground extends StatelessWidget {
         Positioned(
           bottom: -80,
           right: -40,
-          child: GlowOrb(
-              size: 260, color: kDiamondBlue, opacity: 0.06 * orbAlpha),
+          child:
+              GlowOrb(size: 260, color: kDiamondBlue, opacity: 0.06 * orbAlpha),
         ),
       ],
     );

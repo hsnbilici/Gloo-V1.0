@@ -35,8 +35,10 @@ class LevelSelectScreen extends ConsumerWidget {
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -47,113 +49,115 @@ class LevelSelectScreen extends ConsumerWidget {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Column(
-              children: [
-                const SizedBox(height: 12),
-                // Ust bar
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding),
-                  child: Row(
-                    children: [
-                      Semantics(
-                        label: ref.read(stringsProvider).backLabel,
-                        button: true,
-                        child: GestureDetector(
-                          onTap: () => context.go('/'),
-                          child: Container(
-                            width: 44,
-                            height: 44,
+                  children: [
+                    const SizedBox(height: 12),
+                    // Ust bar
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      child: Row(
+                        children: [
+                          Semantics(
+                            label: ref.read(stringsProvider).backLabel,
+                            button: true,
+                            child: GestureDetector(
+                              onTap: () => context.go('/'),
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: surfaceColor,
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusMd),
+                                  border: Border.all(color: borderColor),
+                                ),
+                                child: Icon(directionalBackIcon(dir),
+                                    color: kOrange, size: 20),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              'SEVIYELER',
+                              style: TextStyle(
+                                color: kOrange,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 4,
+                                shadows: [
+                                  Shadow(
+                                    color: kOrange.withValues(alpha: 0.5),
+                                    blurRadius: 12,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Ilerleme
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: surfaceColor,
+                              color: kOrange.withValues(alpha: 0.10),
                               borderRadius:
                                   BorderRadius.circular(UIConstants.radiusMd),
-                              border: Border.all(color: borderColor),
-                            ),
-                            child: Icon(directionalBackIcon(dir),
-                                color: kOrange, size: 20),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(
-                          'SEVIYELER',
-                          style: TextStyle(
-                            color: kOrange,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 4,
-                            shadows: [
-                              Shadow(
-                                color: kOrange.withValues(alpha: 0.5),
-                                blurRadius: 12,
+                              border: Border.all(
+                                color: kOrange.withValues(alpha: 0.30),
                               ),
-                            ],
+                            ),
+                            child: Text(
+                              '${completedLevels.length}/$totalLevels',
+                              style: const TextStyle(
+                                color: kOrange,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      // Ilerleme
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: kOrange.withValues(alpha: 0.10),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusMd),
-                          border: Border.all(
-                            color: kOrange.withValues(alpha: 0.30),
-                          ),
-                        ),
-                        child: Text(
-                          '${completedLevels.length}/$totalLevels',
-                          style: const TextStyle(
-                            color: kOrange,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                    .animateOrSkip(reduceMotion: rm)
-                    .fadeIn(duration: 300.ms)
-                    .slideY(begin: -0.1, end: 0, duration: 300.ms),
-                const SizedBox(height: 16),
-                // Seviye gridi
-                Expanded(
-                  child: ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.symmetric(horizontal: hPadding),
-                    itemCount: (totalLevels / 10).ceil(),
-                    itemBuilder: (context, sectionIndex) {
-                      final startLevel = sectionIndex * 10 + 1;
-                      final endLevel = (startLevel + 9).clamp(1, totalLevels);
-                      final sectionNames = [
-                        l.levelSectionGelValley,
-                        l.levelSectionIcyFields,
-                        l.levelSectionStoneMaze,
-                        l.levelSectionColorGarden,
-                        l.levelSectionDarkCellar,
-                      ];
-                      final sectionName = sectionIndex < sectionNames.length
-                          ? sectionNames[sectionIndex]
-                          : '${l.levelLabel} ${sectionIndex + 1}';
+                    )
+                        .animateOrSkip(reduceMotion: rm)
+                        .fadeIn(duration: 300.ms)
+                        .slideY(begin: -0.1, end: 0, duration: 300.ms),
+                    const SizedBox(height: 16),
+                    // Seviye gridi
+                    Expanded(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: hPadding),
+                        itemCount: (totalLevels / 10).ceil(),
+                        itemBuilder: (context, sectionIndex) {
+                          final startLevel = sectionIndex * 10 + 1;
+                          final endLevel =
+                              (startLevel + 9).clamp(1, totalLevels);
+                          final sectionNames = [
+                            l.levelSectionGelValley,
+                            l.levelSectionIcyFields,
+                            l.levelSectionStoneMaze,
+                            l.levelSectionColorGarden,
+                            l.levelSectionDarkCellar,
+                          ];
+                          final sectionName = sectionIndex < sectionNames.length
+                              ? sectionNames[sectionIndex]
+                              : '${l.levelLabel} ${sectionIndex + 1}';
 
-                      return _LevelSection(
-                        sectionName: sectionName,
-                        startLevel: startLevel,
-                        endLevel: endLevel,
-                        completedLevels: completedLevels,
-                        maxCompleted: maxCompleted,
-                        repo: repoAsync.valueOrNull,
-                        delay: Duration(milliseconds: 100 * sectionIndex),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                          return _LevelSection(
+                            sectionName: sectionName,
+                            startLevel: startLevel,
+                            endLevel: endLevel,
+                            completedLevels: completedLevels,
+                            maxCompleted: maxCompleted,
+                            repo: repoAsync.valueOrNull,
+                            delay: Duration(milliseconds: 100 * sectionIndex),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -188,9 +192,11 @@ class _LevelSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
-    final columns = responsiveColumns(screenWidth, phone: 5, tablet: 7, desktop: 10);
+    final columns =
+        responsiveColumns(screenWidth, phone: 5, tablet: 7, desktop: 10);
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.85), light: kTextPrimaryLight);
+    final textColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.85), light: kTextPrimaryLight);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -220,7 +226,8 @@ class _LevelSection extends StatelessWidget {
             ],
           ),
         )
-            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: delay)
+            .animateOrSkip(
+                reduceMotion: shouldReduceMotion(context), delay: delay)
             .fadeIn(duration: 300.ms)
             .slideX(begin: -0.1, end: 0, duration: 300.ms),
         // 5 sutun grid
@@ -284,9 +291,12 @@ class _LevelCellState extends State<_LevelCell> {
     final isUnlocked = widget.isUnlocked;
 
     final brightness = Theme.of(context).brightness;
-    final resolvedTextPrimary = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final resolvedTextMuted = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.25), light: kTextSecondaryLight);
-    final resolvedBorderMuted = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBorderLight);
+    final resolvedTextPrimary =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final resolvedTextMuted = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.25), light: kTextSecondaryLight);
+    final resolvedBorderMuted = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBorderLight);
 
     Color bgColor;
     Color borderColor;
@@ -367,7 +377,11 @@ class _LevelCellState extends State<_LevelCell> {
           ),
         ),
       ),
-    ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: widget.delay).fadeIn(duration: 200.ms).scale(
+    )
+        .animateOrSkip(
+            reduceMotion: shouldReduceMotion(context), delay: widget.delay)
+        .fadeIn(duration: 200.ms)
+        .scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1.0, 1.0),
           duration: 200.ms,

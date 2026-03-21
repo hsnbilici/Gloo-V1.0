@@ -35,7 +35,10 @@ class HintToast extends StatelessWidget {
           ),
         ),
       ),
-    ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 120.ms).slideY(
-        begin: 0.3, end: 0, duration: 200.ms, curve: Curves.easeOutCubic);
+    )
+        .animateOrSkip(reduceMotion: shouldReduceMotion(context))
+        .fadeIn(duration: 120.ms)
+        .slideY(
+            begin: 0.3, end: 0, duration: 200.ms, curve: Curves.easeOutCubic);
   }
 }

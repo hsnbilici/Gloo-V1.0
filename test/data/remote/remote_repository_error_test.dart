@@ -203,7 +203,8 @@ void main() {
           delayFactory: zeroDuration,
         ),
         throwsA(
-          predicate<Exception>((e) => e.toString().contains('specific message')),
+          predicate<Exception>(
+              (e) => e.toString().contains('specific message')),
         ),
       );
     });
@@ -341,7 +342,8 @@ void main() {
       expect(result, isA<List>());
     });
 
-    test('getDailyPuzzle returns null on no configuration (simulates network error path)',
+    test(
+        'getDailyPuzzle returns null on no configuration (simulates network error path)',
         () async {
       final result = await repo.getDailyPuzzle();
       expect(result, isNull);
@@ -412,7 +414,8 @@ void main() {
       expect(shouldSubmit('abc'), isFalse); // Duplicate rejected
       expect(shouldSubmit('def'), isTrue); // Different matchId accepted
       expect(shouldSubmit('def'), isFalse); // Duplicate rejected
-      expect(shouldSubmit('abc'), isFalse); // Previously submitted — still rejected
+      expect(shouldSubmit('abc'),
+          isFalse); // Previously submitted — still rejected
     });
 
     test(

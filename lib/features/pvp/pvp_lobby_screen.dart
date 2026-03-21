@@ -136,8 +136,10 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     final brightness = Theme.of(context).brightness;
     _rm = shouldReduceMotion(context);
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
     return Scaffold(
       backgroundColor: bgColor,
       body: Stack(
@@ -147,98 +149,104 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Column(
-              children: [
-                const SizedBox(height: 12),
-                // Ust bar
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding),
-                  child: Row(
-                    children: [
-                      Semantics(
-                        label: ref.read(stringsProvider).backLabel,
-                        button: true,
-                        child: GestureDetector(
-                          onTap: () => context.go('/'),
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              color: surfaceColor,
-                              borderRadius:
-                                  BorderRadius.circular(UIConstants.radiusMd),
-                              border: Border.all(color: borderColor),
+                  children: [
+                    const SizedBox(height: 12),
+                    // Ust bar
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      child: Row(
+                        children: [
+                          Semantics(
+                            label: ref.read(stringsProvider).backLabel,
+                            button: true,
+                            child: GestureDetector(
+                              onTap: () => context.go('/'),
+                              child: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: surfaceColor,
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusMd),
+                                  border: Border.all(color: borderColor),
+                                ),
+                                child: Icon(directionalBackIcon(dir),
+                                    color: kColorClassic, size: 20),
+                              ),
                             ),
-                            child: Icon(directionalBackIcon(dir),
-                                color: kColorClassic, size: 20),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Text(
-                        'PvP DUELLO',
-                        style: TextStyle(
-                          color: kColorClassic,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 4,
-                          shadows: [
-                            Shadow(
-                              color: kColorClassic.withValues(alpha: 0.5),
-                              blurRadius: 12,
+                          const SizedBox(width: 14),
+                          Text(
+                            'PvP DUELLO',
+                            style: TextStyle(
+                              color: kColorClassic,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 4,
+                              shadows: [
+                                Shadow(
+                                  color: kColorClassic.withValues(alpha: 0.5),
+                                  blurRadius: 12,
+                                ),
+                              ],
                             ),
+                          ),
+                        ],
+                      ),
+                    )
+                        .animateOrSkip(reduceMotion: _rm)
+                        .fadeIn(duration: 300.ms)
+                        .slideY(begin: -0.1, end: 0, duration: 300.ms),
+                    // Merkez icerik
+                    Expanded(
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Lig rozeti
+                            LeagueBadge(
+                              elo: _playerElo,
+                              league: _league,
+                            )
+                                .animateOrSkip(reduceMotion: _rm, delay: 100.ms)
+                                .fadeIn(duration: 400.ms)
+                                .scale(
+                                  begin: const Offset(0.8, 0.8),
+                                  duration: 400.ms,
+                                  curve: Curves.easeOutBack,
+                                ),
+                            const SizedBox(height: 32),
+                            // PvP kayit
+                            _buildPvpStats(),
+                            const SizedBox(height: 40),
+                            // Eslestirme butonu / bekleme
+                            if (_searching)
+                              SearchingIndicator(
+                                waitSeconds: _waitSeconds,
+                                pulseCtrl: _pulseCtrl,
+                                onCancel: _cancelSearch,
+                                cancelLabel:
+                                    ref.watch(stringsProvider).cancelLabel,
+                              )
+                            else
+                              MatchButton(onTap: _startSearch)
+                                  .animateOrSkip(
+                                      reduceMotion: _rm, delay: 300.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                )
-                    .animateOrSkip(reduceMotion: _rm)
-                    .fadeIn(duration: 300.ms)
-                    .slideY(begin: -0.1, end: 0, duration: 300.ms),
-                // Merkez icerik
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Lig rozeti
-                        LeagueBadge(
-                          elo: _playerElo,
-                          league: _league,
-                        ).animateOrSkip(reduceMotion: _rm, delay: 100.ms).fadeIn(duration: 400.ms).scale(
-                              begin: const Offset(0.8, 0.8),
-                              duration: 400.ms,
-                              curve: Curves.easeOutBack,
-                            ),
-                        const SizedBox(height: 32),
-                        // PvP kayit
-                        _buildPvpStats(),
-                        const SizedBox(height: 40),
-                        // Eslestirme butonu / bekleme
-                        if (_searching)
-                          SearchingIndicator(
-                            waitSeconds: _waitSeconds,
-                            pulseCtrl: _pulseCtrl,
-                            onCancel: _cancelSearch,
-                            cancelLabel: ref.watch(stringsProvider).cancelLabel,
-                          )
-                        else
-                          MatchButton(onTap: _startSearch)
-                              .animateOrSkip(reduceMotion: _rm, delay: 300.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                      ],
                     ),
-                  ),
-                ),
-              ],
+                  ],
                 ),
               ),
             ),

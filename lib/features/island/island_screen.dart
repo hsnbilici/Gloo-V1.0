@@ -94,9 +94,12 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
-    final accentColor = resolveColor(brightness, dark: kGreen, light: kGreenLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final accentColor =
+        resolveColor(brightness, dark: kGreen, light: kGreenLight);
     return Scaffold(
       backgroundColor: bgColor,
       body: Stack(
@@ -105,111 +108,116 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Column(
-              children: [
-                const SizedBox(height: 12),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding),
-                  child: Row(
-                    children: [
-                      Semantics(
-                        label: ref.read(stringsProvider).backLabel,
-                        button: true,
-                        child: GestureDetector(
-                          onTap: () => context.go('/'),
-                          child: Container(
-                            width: 40,
-                            height: 40,
+                  children: [
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      child: Row(
+                        children: [
+                          Semantics(
+                            label: ref.read(stringsProvider).backLabel,
+                            button: true,
+                            child: GestureDetector(
+                              onTap: () => context.go('/'),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: surfaceColor,
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusMd),
+                                  border: Border.all(color: borderColor),
+                                ),
+                                child: Icon(directionalBackIcon(dir),
+                                    color: accentColor, size: 20),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Text(
+                            'GLOO ADASI',
+                            style: TextStyle(
+                              color: accentColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 4,
+                              shadows: [
+                                Shadow(
+                                  color: accentColor.withValues(alpha: 0.5),
+                                  blurRadius: 12,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: surfaceColor,
+                              color: kCyan.withValues(alpha: 0.10),
                               borderRadius:
                                   BorderRadius.circular(UIConstants.radiusMd),
-                              border: Border.all(color: borderColor),
-                            ),
-                            child: Icon(directionalBackIcon(dir),
-                                color: accentColor, size: 20),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Text(
-                        'GLOO ADASI',
-                        style: TextStyle(
-                          color: accentColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 4,
-                          shadows: [
-                            Shadow(
-                              color: accentColor.withValues(alpha: 0.5),
-                              blurRadius: 12,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: kCyan.withValues(alpha: 0.10),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusMd),
-                          border: Border.all(
-                            color: kCyan.withValues(alpha: 0.30),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.bolt_rounded,
-                                color: kCyan, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              _loaded ? '${_resources.energy}' : '-',
-                              style: const TextStyle(
-                                color: kCyan,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
+                              border: Border.all(
+                                color: kCyan.withValues(alpha: 0.30),
                               ),
                             ),
-                          ],
-                        ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.bolt_rounded,
+                                    color: kCyan, size: 16),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _loaded ? '${_resources.energy}' : '-',
+                                  style: const TextStyle(
+                                    color: kCyan,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-                    .animateOrSkip(reduceMotion: shouldReduceMotion(context))
-                    .fadeIn(duration: 300.ms)
-                    .slideY(begin: -0.1, end: 0, duration: 300.ms),
-                const SizedBox(height: 24),
-                Expanded(
-                  child: _loaded
-                      ? ListView(
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.symmetric(horizontal: hPadding),
-                          children: [
-                            for (final entry
-                                in BuildingType.values.asMap().entries)
-                              BuildingCard(
-                                type: entry.value,
-                                building: kBuildings[entry.value]!,
-                                level: _island.getBuildingLevel(entry.value),
-                                canBuild: _island.canBuild(entry.value),
-                                cost: _island.getUpgradeCost(entry.value),
-                                canAfford: _resources.canAfford(
-                                    _island.getUpgradeCost(entry.value)),
-                                onUpgrade: () => _onUpgrade(entry.value),
-                                delay: Duration(milliseconds: 80 * entry.key),
-                              ),
-                          ],
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator(color: kGreen),
-                        ),
-                ),
-              ],
+                    )
+                        .animateOrSkip(
+                            reduceMotion: shouldReduceMotion(context))
+                        .fadeIn(duration: 300.ms)
+                        .slideY(begin: -0.1, end: 0, duration: 300.ms),
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: _loaded
+                          ? ListView(
+                              physics: const BouncingScrollPhysics(),
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: hPadding),
+                              children: [
+                                for (final entry
+                                    in BuildingType.values.asMap().entries)
+                                  BuildingCard(
+                                    type: entry.value,
+                                    building: kBuildings[entry.value]!,
+                                    level:
+                                        _island.getBuildingLevel(entry.value),
+                                    canBuild: _island.canBuild(entry.value),
+                                    cost: _island.getUpgradeCost(entry.value),
+                                    canAfford: _resources.canAfford(
+                                        _island.getUpgradeCost(entry.value)),
+                                    onUpgrade: () => _onUpgrade(entry.value),
+                                    delay:
+                                        Duration(milliseconds: 80 * entry.key),
+                                  ),
+                              ],
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(color: kGreen),
+                            ),
+                    ),
+                  ],
                 ),
               ),
             ),

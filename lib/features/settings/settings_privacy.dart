@@ -45,8 +45,10 @@ class UsernameTile extends StatelessWidget {
       dark: kCyan.withValues(alpha: 0.22),
       light: kCardBorderLight,
     );
-    final labelColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final valueColor = resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
+    final labelColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final valueColor =
+        resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
     return Semantics(
       label: label,
       button: true,
@@ -79,7 +81,8 @@ class UsernameTile extends StatelessWidget {
                 style: TextStyle(color: valueColor, fontSize: 13),
               ),
               const SizedBox(width: 6),
-              Icon(Icons.edit_rounded, color: kCyan.withValues(alpha: 0.70), size: 15),
+              Icon(Icons.edit_rounded,
+                  color: kCyan.withValues(alpha: 0.70), size: 15),
             ],
           ),
         ),
@@ -172,8 +175,10 @@ class _UsernameEditDialogState extends State<_UsernameEditDialog> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final dialogBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
-    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final dialogBg =
+        resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final titleColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final inputBg = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.06),
@@ -412,8 +417,10 @@ class _DeleteConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final dialogBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
-    final titleColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final dialogBg =
+        resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final titleColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final messageColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.65),
@@ -429,7 +436,8 @@ class _DeleteConfirmDialog extends StatelessWidget {
       dark: Colors.white.withValues(alpha: 0.12),
       light: kCardBorderLight,
     );
-    final cancelText = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final cancelText =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Dialog(
       backgroundColor: dialogBg,
       shape: RoundedRectangleBorder(

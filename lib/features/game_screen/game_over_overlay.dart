@@ -114,7 +114,10 @@ class GameOverOverlay extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      ).animateOrSkip(reduceMotion: rm, delay: 140.ms).fadeIn(duration: 300.ms).slideY(
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 140.ms)
+                          .fadeIn(duration: 300.ms)
+                          .slideY(
                             begin: -0.12,
                             end: 0,
                             duration: 300.ms,
@@ -122,7 +125,9 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 14),
                       // Parıldayan ayraç
-                      GlowDivider(color: color).animateOrSkip(reduceMotion: rm, delay: 240.ms).scaleX(
+                      GlowDivider(color: color)
+                          .animateOrSkip(reduceMotion: rm, delay: 240.ms)
+                          .scaleX(
                             begin: 0,
                             end: 1,
                             duration: 380.ms,
@@ -140,7 +145,9 @@ class GameOverOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.w700,
                           letterSpacing: 4,
                         ),
-                      ).animateOrSkip(reduceMotion: rm, delay: 360.ms).fadeIn(duration: 280.ms),
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 360.ms)
+                          .fadeIn(duration: 280.ms),
                       if (isNewHighScore) ...[
                         const SizedBox(height: 12),
                         NewRecordBadge(label: l.gameOverNewRecord, color: color)
@@ -158,7 +165,10 @@ class GameOverOverlay extends ConsumerWidget {
                         label: l.gameOverGridFill,
                         value: '%$fillPct',
                         color: color,
-                      ).animateOrSkip(reduceMotion: rm, delay: 460.ms).fadeIn(duration: 280.ms).slideX(
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 460.ms)
+                          .fadeIn(duration: 280.ms)
+                          .slideX(
                             begin: 0.12,
                             end: 0,
                             duration: 280.ms,
@@ -201,7 +211,10 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: color,
                         filled: true,
                         onTap: onReplay,
-                      ).animateOrSkip(reduceMotion: rm, delay: 540.ms).fadeIn(duration: 320.ms).slideY(
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 540.ms)
+                          .fadeIn(duration: 320.ms)
+                          .slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,
@@ -214,7 +227,10 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: kMuted,
                         filled: false,
                         onTap: onHome,
-                      ).animateOrSkip(reduceMotion: rm, delay: 610.ms).fadeIn(duration: 320.ms).slideY(
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 610.ms)
+                          .fadeIn(duration: 320.ms)
+                          .slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,

@@ -196,7 +196,8 @@ class StringsEs extends AppStrings {
   @override
   String get settingsUsernameSave => 'Guardar';
   @override
-  String get settingsUsernameErrorEmpty => 'El nombre de usuario no puede estar vacío';
+  String get settingsUsernameErrorEmpty =>
+      'El nombre de usuario no puede estar vacío';
   @override
   String get settingsUsernameErrorTooLong => 'Máximo 20 caracteres';
   @override

@@ -55,31 +55,32 @@ class DailyPuzzleScreen extends ConsumerWidget {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: repoAsync.when(
-              data: (repo) => _DailyContent(
-                l: l,
-                repo: repo,
-                accent: kCyan,
-                dateLabel: _dateLabel(DateTime.now()),
-                puzzleNumber: _puzzleNumber(DateTime.now()),
-                hPadding: responsiveHPadding(screenWidth),
-              ),
-              loading: () => const Center(
-                child: CircularProgressIndicator(color: kCyan),
-              ),
-              error: (_, __) => Center(
-                child: Text(
-                  '...',
-                  style: TextStyle(
-                    color: resolveColor(
-                      brightness,
-                      dark: Colors.white.withValues(alpha: 0.4),
-                      light: kTextSecondaryLight,
+                  data: (repo) => _DailyContent(
+                    l: l,
+                    repo: repo,
+                    accent: kCyan,
+                    dateLabel: _dateLabel(DateTime.now()),
+                    puzzleNumber: _puzzleNumber(DateTime.now()),
+                    hPadding: responsiveHPadding(screenWidth),
+                  ),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: kCyan),
+                  ),
+                  error: (_, __) => Center(
+                    child: Text(
+                      '...',
+                      style: TextStyle(
+                        color: resolveColor(
+                          brightness,
+                          dark: Colors.white.withValues(alpha: 0.4),
+                          light: kTextSecondaryLight,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
                 ),
               ),
             ),
@@ -169,7 +170,10 @@ class _DailyContent extends StatelessWidget {
                 CalendarCard(
                   accent: accent,
                   dateLabel: dateLabel,
-                ).animateOrSkip(reduceMotion: rm, delay: 150.ms).fadeIn(duration: 500.ms).scale(
+                )
+                    .animateOrSkip(reduceMotion: rm, delay: 150.ms)
+                    .fadeIn(duration: 500.ms)
+                    .scale(
                       begin: const Offset(0.88, 0.88),
                       duration: 500.ms,
                       curve: Curves.easeOutCubic,
@@ -181,7 +185,10 @@ class _DailyContent extends StatelessWidget {
                     score: score,
                     accent: accent,
                     dateLabel: dateLabel,
-                  ).animateOrSkip(reduceMotion: rm, delay: 250.ms).fadeIn(duration: 400.ms).slideY(
+                  )
+                      .animateOrSkip(reduceMotion: rm, delay: 250.ms)
+                      .fadeIn(duration: 400.ms)
+                      .slideY(
                         begin: 0.1,
                         end: 0,
                         duration: 400.ms,

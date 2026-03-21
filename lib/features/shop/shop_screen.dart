@@ -30,8 +30,7 @@ class ShopScreen extends ConsumerStatefulWidget {
   ConsumerState<ShopScreen> createState() => _ShopScreenState();
 }
 
-class _ShopScreenState extends ConsumerState<ShopScreen>
-    with _ShopLogicMixin {
+class _ShopScreenState extends ConsumerState<ShopScreen> with _ShopLogicMixin {
   @override
   final redeemController = TextEditingController();
   @override
@@ -74,9 +73,12 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
     final dir = Directionality.of(context);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.1), light: kCardBorderLight);
 
     return ResponsiveScaffold(
       backgroundColor: bgColor,
@@ -98,8 +100,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                   border: Border.all(color: borderColor),
                 ),
-                child: Icon(directionalBackIcon(dir),
-                    color: textColor, size: 18),
+                child:
+                    Icon(directionalBackIcon(dir), color: textColor, size: 18),
               ),
             ),
           ),
@@ -143,7 +145,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 onQuarter: () => buy(PurchaseService.kGlooPlusQuarter),
                 onYearly: () => buy(PurchaseService.kGlooPlusYearly),
               )
-                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 60.ms)
+                  .animateOrSkip(
+                      reduceMotion: shouldReduceMotion(context), delay: 60.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
@@ -160,7 +163,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 purchased: settings.adsRemoved,
                 onBuy: () => buy(PurchaseService.kRemoveAds),
               )
-                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 120.ms)
+                  .animateOrSkip(
+                      reduceMotion: shouldReduceMotion(context), delay: 120.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
@@ -179,7 +183,8 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 enabled: !redeeming,
                 onRedeem: () => redeemCode(redeemController.text),
               )
-                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 400.ms)
+                  .animateOrSkip(
+                      reduceMotion: shouldReduceMotion(context), delay: 400.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 

@@ -68,30 +68,31 @@ class RedeemCodeField extends StatelessWidget {
             button: true,
             enabled: enabled,
             child: GestureDetector(
-            onTap: enabled ? onRedeem : null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: enabled
-                    ? kCyan.withValues(alpha: 0.15)
-                    : kCyan.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                border: Border.all(
+              onTap: enabled ? onRedeem : null,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
                   color: enabled
-                      ? kCyan.withValues(alpha: 0.50)
-                      : kCyan.withValues(alpha: 0.15),
+                      ? kCyan.withValues(alpha: 0.15)
+                      : kCyan.withValues(alpha: 0.06),
+                  borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                  border: Border.all(
+                    color: enabled
+                        ? kCyan.withValues(alpha: 0.50)
+                        : kCyan.withValues(alpha: 0.15),
+                  ),
+                ),
+                child: Text(
+                  buttonLabel,
+                  style: TextStyle(
+                    color: enabled ? kCyan : kCyan.withValues(alpha: 0.35),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
-              child: Text(
-                buttonLabel,
-                style: TextStyle(
-                  color: enabled ? kCyan : kCyan.withValues(alpha: 0.35),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
             ),
           ),
         ],

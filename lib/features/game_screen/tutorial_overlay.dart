@@ -47,8 +47,8 @@ class TutorialOverlay extends StatelessWidget {
                   onTap: onDismiss,
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                     child: Text(
                       skipLabel!,
                       style: TextStyle(

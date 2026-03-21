@@ -196,10 +196,8 @@ void main() {
     });
 
     test('generateSmartSeededHand is deterministic', () {
-      final hand1 =
-          ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
-      final hand2 =
-          ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
+      final hand1 = ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
+      final hand2 = ShapeGenerator.generateSmartSeededHand(42, handIndex: 5);
 
       for (int i = 0; i < hand1.length; i++) {
         expect(hand1[i].$1.name, hand2[i].$1.name);
@@ -212,8 +210,7 @@ void main() {
       int largeCount = 0;
       // Dusuk handIndex (0-2) → kucuk sekiller agirlikli
       for (int seed = 0; seed < 100; seed++) {
-        final hand =
-            ShapeGenerator.generateSmartSeededHand(seed, handIndex: 0);
+        final hand = ShapeGenerator.generateSmartSeededHand(seed, handIndex: 0);
         for (final (shape, _) in hand) {
           if (shape.cellCount <= 2) smallCount++;
           if (shape.cellCount >= 4) largeCount++;

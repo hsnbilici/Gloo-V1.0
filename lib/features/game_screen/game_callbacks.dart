@@ -227,7 +227,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (mounted) {
         ref.read(gameProvider(widget.mode).notifier).updateGelOzu(balance);
         _cachedRepo?.saveGelOzu(balance);
-        _cachedRepo?.saveLifetimeEarnings(game.currencyManager.lifetimeEarnings);
+        _cachedRepo
+            ?.saveLifetimeEarnings(game.currencyManager.lifetimeEarnings);
       }
     };
 

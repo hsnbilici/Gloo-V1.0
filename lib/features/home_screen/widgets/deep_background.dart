@@ -36,8 +36,7 @@ class DeepBackground extends StatelessWidget {
         Positioned(
           top: 250,
           right: -50,
-          child:
-              GlowOrb(size: 220, color: kColorZen, opacity: 0.06 * orbAlpha),
+          child: GlowOrb(size: 220, color: kColorZen, opacity: 0.06 * orbAlpha),
         ),
       ],
     );

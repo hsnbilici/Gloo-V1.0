@@ -279,7 +279,8 @@ void main() {
 
     test('anti-frustration: rapid losses suppress interstitial', () {
       // Two consecutive losses within 5min → _recentLosses >= 2 → return
-      ad.setGamesPlayed(7); // past protection, will hit 8 (4th game) on first call
+      ad.setGamesPlayed(
+          7); // past protection, will hit 8 (4th game) on first call
       ad.onGameOver(); // gamesPlayed=8, _recentLosses=1, _lastLossTime set
       ad.onGameOver(); // gamesPlayed=9, _recentLosses=2, but 9%4!=0
       ad.onGameOver(); // gamesPlayed=10, _recentLosses=3, but 10%4!=0

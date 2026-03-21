@@ -149,7 +149,9 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                     const XpBadge(label: 'XP Kazan'),
                   ],
                 ),
-              ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 300.ms),
+              )
+                  .animateOrSkip(reduceMotion: shouldReduceMotion(context))
+                  .fadeIn(duration: 300.ms),
               const SizedBox(height: 16),
               Expanded(
                 child: _loaded
@@ -163,7 +165,11 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                             color: kCyan,
                             icon: Icons.today_rounded,
                             showDivider: true,
-                          ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 50.ms).fadeIn(duration: 250.ms),
+                          )
+                              .animateOrSkip(
+                                  reduceMotion: shouldReduceMotion(context),
+                                  delay: 50.ms)
+                              .fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeDailies.asMap().entries.map((e) {
                             final quest = e.value;
@@ -181,7 +187,11 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                             color: kOrange,
                             icon: Icons.date_range_rounded,
                             showDivider: true,
-                          ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 250.ms).fadeIn(duration: 250.ms),
+                          )
+                              .animateOrSkip(
+                                  reduceMotion: shouldReduceMotion(context),
+                                  delay: 250.ms)
+                              .fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeWeeklies.asMap().entries.map((e) {
                             final quest = e.value;

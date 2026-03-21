@@ -719,10 +719,9 @@ void main() {
 
     test('savePendingVerificationMap JSON olarak SecureStorage\'a yazar',
         () async {
-      await secureRepo
-          .savePendingVerificationMap({'prod1': 'receipt1', 'prod2': 'receipt2'});
-      final stored =
-          await secureStorage.read(key: 'pending_verification_map');
+      await secureRepo.savePendingVerificationMap(
+          {'prod1': 'receipt1', 'prod2': 'receipt2'});
+      final stored = await secureStorage.read(key: 'pending_verification_map');
       expect(stored, isNotNull);
       final decoded = json.decode(stored!) as Map;
       expect(decoded['prod1'], 'receipt1');
@@ -730,8 +729,7 @@ void main() {
     });
 
     test('getPendingVerificationMap returns saved map', () async {
-      await secureRepo
-          .savePendingVerificationMap({'prod1': 'receipt1'});
+      await secureRepo.savePendingVerificationMap({'prod1': 'receipt1'});
       final map = await secureRepo.getPendingVerificationMap();
       expect(map, {'prod1': 'receipt1'});
     });
@@ -745,8 +743,7 @@ void main() {
     });
 
     test('savePendingVerificationMap empty clears data', () async {
-      await secureRepo
-          .savePendingVerificationMap({'prod1': 'receipt1'});
+      await secureRepo.savePendingVerificationMap({'prod1': 'receipt1'});
       await secureRepo.savePendingVerificationMap({});
       final map = await secureRepo.getPendingVerificationMap();
       expect(map, isEmpty);

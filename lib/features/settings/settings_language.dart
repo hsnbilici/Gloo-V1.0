@@ -32,7 +32,8 @@ class LanguageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: label,
       button: true,
@@ -97,7 +98,8 @@ class LanguageSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final sheetBg = resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
+    final sheetBg =
+        resolveColor(brightness, dark: kSurfaceDark, light: kSurfaceLight);
     final handleColor = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.18),
@@ -186,7 +188,8 @@ class _LangChip extends StatelessWidget {
       dark: Colors.white.withValues(alpha: 0.09),
       light: kCardBorderLight,
     );
-    final unselectedText = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final unselectedText =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
       label: nativeName,
       button: true,
@@ -195,9 +198,8 @@ class _LangChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           decoration: BoxDecoration(
-            color: isSelected
-                ? kColorChef.withValues(alpha: 0.14)
-                : unselectedBg,
+            color:
+                isSelected ? kColorChef.withValues(alpha: 0.14) : unselectedBg,
             borderRadius: BorderRadius.circular(UIConstants.radiusMd),
             border: Border.all(
               color: isSelected

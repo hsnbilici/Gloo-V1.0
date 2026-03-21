@@ -243,48 +243,48 @@ class ActionBtn extends StatelessWidget {
       label: label,
       button: true,
       child: GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: filled ? color.withValues(alpha: 0.14) : Colors.transparent,
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: filled
-                ? color.withValues(alpha: 0.55)
-                : Colors.white.withValues(alpha: 0.12),
-            width: filled ? 1.5 : 1,
-          ),
-          boxShadow: filled
-              ? [
-                  BoxShadow(
-                    color: color.withValues(alpha: 0.15),
-                    blurRadius: 20,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, color: color, size: 18),
-              const SizedBox(width: 8),
-            ],
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(
+            color: filled ? color.withValues(alpha: 0.14) : Colors.transparent,
+            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+            border: Border.all(
+              color: filled
+                  ? color.withValues(alpha: 0.55)
+                  : Colors.white.withValues(alpha: 0.12),
+              width: filled ? 1.5 : 1,
             ),
-          ],
+            boxShadow: filled
+                ? [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.15),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, color: color, size: 18),
+                const SizedBox(width: 8),
+              ],
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }

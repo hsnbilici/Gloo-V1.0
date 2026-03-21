@@ -28,7 +28,8 @@ import '../helpers/mocks.dart';
 /// Stubs all mocktail methods called during GameScreen.initState and callbacks.
 void _stubAnalytics(MockAnalyticsService mock) {
   when(() => mock.logGameStart(mode: any(named: 'mode'))).thenReturn(null);
-  when(() => mock.logGameOver(mode: any(named: 'mode'), score: any(named: 'score'))).thenReturn(null);
+  when(() => mock.logGameOver(
+      mode: any(named: 'mode'), score: any(named: 'score'))).thenReturn(null);
 }
 
 void _stubAdManager(MockAdManager mock) {
@@ -338,7 +339,8 @@ void main() {
   // ── Group 4: PowerUpToolbar ───────────────────────────────────────────────
 
   group('PowerUpToolbar', () {
-    testWidgets('classic mode shows rotate, bomb, undo buttons', (tester) async {
+    testWidgets('classic mode shows rotate, bomb, undo buttons',
+        (tester) async {
       await tester.pumpWidget(buildGameScreenApp(mode: GameMode.classic));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));

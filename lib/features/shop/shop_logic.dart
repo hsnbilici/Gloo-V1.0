@@ -184,7 +184,9 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
           onBuy: () => buy(p.id),
           isFeatured: p.isFeatured,
         )
-            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: Duration(milliseconds: p.delay))
+            .animateOrSkip(
+                reduceMotion: shouldReduceMotion(context),
+                delay: Duration(milliseconds: p.delay))
             .fadeIn(duration: 350.ms)
             .slideY(begin: 0.08, end: 0, duration: 350.ms),
       );

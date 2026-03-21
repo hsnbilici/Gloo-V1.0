@@ -20,8 +20,7 @@ class CharBackground extends StatelessWidget {
         Positioned(
           top: -100,
           right: -50,
-          child:
-              GlowOrb(size: 320, color: kLavender, opacity: 0.07 * orbAlpha),
+          child: GlowOrb(size: 320, color: kLavender, opacity: 0.07 * orbAlpha),
         ),
         Positioned(
           bottom: -80,

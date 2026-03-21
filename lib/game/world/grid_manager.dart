@@ -335,7 +335,8 @@ class GridManager {
           case ObstacleType.ice:
             setCellType(r, c, CellType.ice, iceLayer: 1);
           case ObstacleType.locked:
-            final randomColor = kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
+            final randomColor =
+                kPrimaryColors[_rng.nextInt(kPrimaryColors.length)];
             setCellType(r, c, CellType.locked, lockedColor: randomColor);
           case ObstacleType.stone:
             setStone(r, c);

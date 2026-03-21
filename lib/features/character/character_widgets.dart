@@ -208,31 +208,31 @@ class TalentCard extends StatelessWidget {
                 button: true,
                 enabled: canAfford,
                 child: GestureDetector(
-                onTap: canAfford ? onUpgrade : null,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: canAfford
-                        ? color.withValues(alpha: 0.15)
-                        : Colors.white.withValues(alpha: 0.04),
-                    borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                    border: Border.all(
+                  onTap: canAfford ? onUpgrade : null,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
                       color: canAfford
-                          ? color.withValues(alpha: 0.45)
-                          : Colors.white.withValues(alpha: 0.10),
+                          ? color.withValues(alpha: 0.15)
+                          : Colors.white.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                      border: Border.all(
+                        color: canAfford
+                            ? color.withValues(alpha: 0.45)
+                            : Colors.white.withValues(alpha: 0.10),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    '$cost',
-                    style: TextStyle(
-                      color: canAfford ? color : kMuted,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
+                    child: Text(
+                      '$cost',
+                      style: TextStyle(
+                        color: canAfford ? color : kMuted,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
-              ),
               )
             else
               Text(

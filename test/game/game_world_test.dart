@@ -460,7 +460,8 @@ void main() {
       expect(game.gridManager.getCell(7, 1).color, isNull);
     });
 
-    test('useBomb returns null when balance insufficient (no synthesis scan)', () {
+    test('useBomb returns null when balance insufficient (no synthesis scan)',
+        () {
       game.setCurrencyBalance(0);
       // Place a color so bomb would have work to do
       game.placePiece([(4, 4)], GelColor.red);

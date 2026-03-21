@@ -394,8 +394,7 @@ void main() {
 
       final expired = saved
           .where(
-            (id) =>
-                subscriptionIds.contains(id) && !purchasedIds.contains(id),
+            (id) => subscriptionIds.contains(id) && !purchasedIds.contains(id),
           )
           .toList();
 
@@ -425,16 +424,14 @@ void main() {
 
       final expired = saved
           .where(
-            (id) =>
-                subscriptionIds.contains(id) && !purchasedIds.contains(id),
+            (id) => subscriptionIds.contains(id) && !purchasedIds.contains(id),
           )
           .toList();
 
       expect(expired, isEmpty);
     });
 
-    test(
-        'syncLocalProducts conceptual: non-subscription products never expire',
+    test('syncLocalProducts conceptual: non-subscription products never expire',
         () {
       const subscriptionIds = {
         PurchaseService.kGlooPlusMonthly,
@@ -450,8 +447,7 @@ void main() {
 
       final expired = saved
           .where(
-            (id) =>
-                subscriptionIds.contains(id) && !purchasedIds.contains(id),
+            (id) => subscriptionIds.contains(id) && !purchasedIds.contains(id),
           )
           .toList();
 
@@ -498,8 +494,7 @@ void main() {
       expect(ps.pendingVerification, isA<Set<String>>());
     });
 
-    test(
-        'pendingVerification is unmodifiable — cannot add directly', () {
+    test('pendingVerification is unmodifiable — cannot add directly', () {
       final ps = PurchaseService();
       expect(
         () => ps.pendingVerification.add('test'),

@@ -191,183 +191,190 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: Column(
                     children: [
-                  const SizedBox(height: 52),
-                  GelLogo(subtitle: l.homeSubtitle)
-                      .animateOrSkip(reduceMotion: rm)
-                      .fadeIn(duration: 500.ms)
-                      .scale(
-                        begin: const Offset(0.85, 0.85),
-                        duration: 500.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
-                  if (streak >= 2) ...[
-                    const SizedBox(height: 10),
-                    StreakBadge(streak: streak, days: l.streakDays)
-                        .animateOrSkip(reduceMotion: rm, delay: 200.ms)
-                        .fadeIn(duration: 400.ms)
-                        .scale(
-                          begin: const Offset(0.7, 0.7),
-                          duration: 400.ms,
-                          curve: Curves.easeOutBack,
+                      const SizedBox(height: 52),
+                      GelLogo(subtitle: l.homeSubtitle)
+                          .animateOrSkip(reduceMotion: rm)
+                          .fadeIn(duration: 500.ms)
+                          .scale(
+                            begin: const Offset(0.85, 0.85),
+                            duration: 500.ms,
+                            curve: Curves.easeOutCubic,
+                          ),
+                      if (streak >= 2) ...[
+                        const SizedBox(height: 10),
+                        StreakBadge(streak: streak, days: l.streakDays)
+                            .animateOrSkip(reduceMotion: rm, delay: 200.ms)
+                            .fadeIn(duration: 400.ms)
+                            .scale(
+                              begin: const Offset(0.7, 0.7),
+                              duration: 400.ms,
+                              curve: Curves.easeOutBack,
+                            ),
+                      ],
+                      const SizedBox(height: 14),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              DailyBanner(label: l.dailyTitle)
+                                  .animateOrSkip(reduceMotion: rm, delay: 60.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.08,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 8),
+                              ModeCard(
+                                label: l.modeClassicName,
+                                subtitle: l.modeClassicDesc,
+                                color: kColorClassic,
+                                icon: Icons.grid_view_rounded,
+                                isFeatured: true,
+                                badgeLabel: l.homeBadgeBeginning,
+                                onTap: () => context
+                                    .go('/game/${GameMode.classic.name}'),
+                              )
+                                  .animateOrSkip(reduceMotion: rm, delay: 80.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 10),
+                              ModeCard(
+                                label: l.modeColorChefName,
+                                subtitle: l.modeColorChefDesc,
+                                color: kColorChef,
+                                icon: Icons.colorize_rounded,
+                                onTap: () => context
+                                    .go('/game/${GameMode.colorChef.name}'),
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 160.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 10),
+                              ModeCard(
+                                label: l.modeTimeTrialName,
+                                subtitle: l.modeTimeTrialDesc,
+                                color: kColorTimeTrial,
+                                icon: Icons.timer_rounded,
+                                onTap: () => context
+                                    .go('/game/${GameMode.timeTrial.name}'),
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 240.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 10),
+                              ModeCard(
+                                label: l.modeZenName,
+                                subtitle: l.modeZenDesc,
+                                color: kColorZen,
+                                icon: Icons.spa_rounded,
+                                isLocked:
+                                    !ref.watch(appSettingsProvider).glooPlus,
+                                lockLabel: l.glooPlusTitle,
+                                onTap: () {
+                                  if (ref.read(appSettingsProvider).glooPlus) {
+                                    context.go('/game/${GameMode.zen.name}');
+                                  } else {
+                                    context.push('/shop');
+                                  }
+                                },
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 320.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 10),
+                              ModeCard(
+                                label: l.modeLevelName,
+                                subtitle: l.modeLevelDesc,
+                                color: kOrange,
+                                icon: Icons.map_rounded,
+                                badgeLabel: l.newBadge,
+                                onTap: () => context.go('/levels'),
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 400.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 10),
+                              ModeCard(
+                                label: l.modeDuelName,
+                                subtitle: l.modeDuelDesc,
+                                color: kColorClassic,
+                                icon: Icons.sports_mma_rounded,
+                                badgeLabel: l.newBadge,
+                                onTap: () => context.go('/pvp-lobby'),
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 480.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.15,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         ),
-                  ],
-                  const SizedBox(height: 14),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          DailyBanner(label: l.dailyTitle)
-                              .animateOrSkip(reduceMotion: rm, delay: 60.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.08,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 8),
-                          ModeCard(
-                            label: l.modeClassicName,
-                            subtitle: l.modeClassicDesc,
-                            color: kColorClassic,
-                            icon: Icons.grid_view_rounded,
-                            isFeatured: true,
-                            badgeLabel: l.homeBadgeBeginning,
-                            onTap: () =>
-                                context.go('/game/${GameMode.classic.name}'),
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 80.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          ModeCard(
-                            label: l.modeColorChefName,
-                            subtitle: l.modeColorChefDesc,
-                            color: kColorChef,
-                            icon: Icons.colorize_rounded,
-                            onTap: () =>
-                                context.go('/game/${GameMode.colorChef.name}'),
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 160.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          ModeCard(
-                            label: l.modeTimeTrialName,
-                            subtitle: l.modeTimeTrialDesc,
-                            color: kColorTimeTrial,
-                            icon: Icons.timer_rounded,
-                            onTap: () =>
-                                context.go('/game/${GameMode.timeTrial.name}'),
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 240.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          ModeCard(
-                            label: l.modeZenName,
-                            subtitle: l.modeZenDesc,
-                            color: kColorZen,
-                            icon: Icons.spa_rounded,
-                            isLocked: !ref.watch(appSettingsProvider).glooPlus,
-                            lockLabel: l.glooPlusTitle,
-                            onTap: () {
-                              if (ref.read(appSettingsProvider).glooPlus) {
-                                context.go('/game/${GameMode.zen.name}');
-                              } else {
-                                context.push('/shop');
-                              }
-                            },
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 320.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          ModeCard(
-                            label: l.modeLevelName,
-                            subtitle: l.modeLevelDesc,
-                            color: kOrange,
-                            icon: Icons.map_rounded,
-                            badgeLabel: l.newBadge,
-                            onTap: () => context.go('/levels'),
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 400.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          ModeCard(
-                            label: l.modeDuelName,
-                            subtitle: l.modeDuelDesc,
-                            color: kColorClassic,
-                            icon: Icons.sports_mma_rounded,
-                            badgeLabel: l.newBadge,
-                            onTap: () => context.go('/pvp-lobby'),
-                          )
-                              .animateOrSkip(reduceMotion: rm, delay: 480.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 8),
-                        ],
                       ),
-                    ),
-                  ),
-                  // Faz 4: Meta-game hizli erisim cubugu
-                  MetaGameBar(
-                    islandLabel: l.islandLabel,
-                    characterLabel: l.characterLabel,
-                    seasonLabel: l.seasonLabel,
-                  )
-                      .animateOrSkip(reduceMotion: rm, delay: 600.ms)
-                      .fadeIn(duration: 350.ms)
-                      .slideY(begin: 0.12, end: 0, duration: 350.ms),
-                  const SizedBox(height: 8),
-                  BottomBar(
-                    leaderboardLabel: l.navLeaderboard,
-                    shopLabel: l.navShop,
-                    settingsLabel: l.navSettings,
-                    collectionLabel: l.collectionTitle,
-                  )
-                      .animateOrSkip(reduceMotion: rm, delay: 500.ms)
-                      .fadeIn(duration: 400.ms)
-                      .slideY(begin: 0.2, end: 0, duration: 400.ms),
-                  const SizedBox(height: 28),
+                      // Faz 4: Meta-game hizli erisim cubugu
+                      MetaGameBar(
+                        islandLabel: l.islandLabel,
+                        characterLabel: l.characterLabel,
+                        seasonLabel: l.seasonLabel,
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 600.ms)
+                          .fadeIn(duration: 350.ms)
+                          .slideY(begin: 0.12, end: 0, duration: 350.ms),
+                      const SizedBox(height: 8),
+                      BottomBar(
+                        leaderboardLabel: l.navLeaderboard,
+                        shopLabel: l.navShop,
+                        settingsLabel: l.navSettings,
+                        collectionLabel: l.collectionTitle,
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 500.ms)
+                          .fadeIn(duration: 400.ms)
+                          .slideY(begin: 0.2, end: 0, duration: 400.ms),
+                      const SizedBox(height: 28),
                     ],
                   ),
                 ),
@@ -379,4 +386,3 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 }
-

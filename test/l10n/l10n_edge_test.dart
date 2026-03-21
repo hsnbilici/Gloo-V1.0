@@ -132,7 +132,8 @@ void main() {
       final lang = entry.key;
       final s = entry.value;
 
-      test('[$lang] onboardingStep1Desc length is within reasonable bounds', () {
+      test('[$lang] onboardingStep1Desc length is within reasonable bounds',
+          () {
         final len = s.onboardingStep1Desc.length;
         expect(len, greaterThan(20),
             reason: 'onboardingStep1Desc must be descriptive (>20 chars)');
@@ -233,8 +234,7 @@ void main() {
       for (final league in leagues) {
         test('[$lang] leagueName(${league.name}) is non-empty', () {
           expect(league.leagueName(s), isNotEmpty,
-              reason:
-                  'leagueName(${league.name}) must not be empty in $lang');
+              reason: 'leagueName(${league.name}) must not be empty in $lang');
         });
       }
     }
@@ -284,8 +284,7 @@ void main() {
     });
 
     test('forLocale unsupported locale falls back to StringsEn', () {
-      expect(
-          AppStrings.forLocale(const Locale('sv')), isA<StringsEn>());
+      expect(AppStrings.forLocale(const Locale('sv')), isA<StringsEn>());
     });
   });
 

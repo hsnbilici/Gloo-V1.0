@@ -48,8 +48,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
     final cols = game.gridManager.cols;
     final isInteractive =
         selectedSlot != null || activePowerUpMode == PowerUpType.bomb;
-    final slotColor =
-        selectedSlot != null ? hand[selectedSlot!]?.$2 : null;
+    final slotColor = selectedSlot != null ? hand[selectedSlot!]?.$2 : null;
 
     final cells = <(int, int), CellRenderData>{};
     for (int r = 0; r < rows; r++) {

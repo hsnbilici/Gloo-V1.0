@@ -94,11 +94,10 @@ class LevelCompleteOverlay extends StatelessWidget {
                   child: Icon(
                     earned ? Icons.star_rounded : Icons.star_outline_rounded,
                     size: i == 1 ? 40 : 32,
-                    color: earned
-                        ? kGold
-                        : kMuted.withValues(alpha: 0.3),
+                    color: earned ? kGold : kMuted.withValues(alpha: 0.3),
                   )
-                      .animateOrSkip(reduceMotion: rm, delay: (200 + i * 120).ms)
+                      .animateOrSkip(
+                          reduceMotion: rm, delay: (200 + i * 120).ms)
                       .scale(
                         begin: const Offset(0.3, 0.3),
                         end: const Offset(1.0, 1.0),

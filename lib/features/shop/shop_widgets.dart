@@ -29,8 +29,7 @@ class ShopBackground extends StatelessWidget {
         Positioned(
           bottom: -100,
           right: -50,
-          child:
-              GlowOrb(size: 260, color: kColorZen, opacity: 0.07 * orbAlpha),
+          child: GlowOrb(size: 260, color: kColorZen, opacity: 0.07 * orbAlpha),
         ),
       ],
     );

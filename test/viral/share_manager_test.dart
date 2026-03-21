@@ -130,7 +130,8 @@ void main() {
     test('shareDailyResult does not throw', () async {
       final manager = ShareManager();
       try {
-        await manager.shareDailyResult(score: 5000, dateLabel: '2026-03-01', l: _l);
+        await manager.shareDailyResult(
+            score: 5000, dateLabel: '2026-03-01', l: _l);
       } catch (_) {
         // Expected: MissingPluginException from share_plus
       }

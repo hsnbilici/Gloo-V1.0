@@ -83,10 +83,14 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
-    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
-    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
-    final accentColor = resolveColor(brightness, dark: kLavender, light: kLavenderLight);
+    final surfaceColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final textSecondary = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
+    final accentColor =
+        resolveColor(brightness, dark: kLavender, light: kLavenderLight);
     return Scaffold(
       backgroundColor: bgColor,
       body: Stack(
@@ -95,133 +99,141 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
           SafeArea(
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
+                constraints:
+                    BoxConstraints(maxWidth: responsiveMaxWidth(screenWidth)),
                 child: Column(
-              children: [
-                const SizedBox(height: 12),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding),
-                  child: Row(
-                    children: [
-                      Semantics(
-                        label: ref.read(stringsProvider).backLabel,
-                        button: true,
-                        child: GestureDetector(
-                          onTap: () => context.go('/'),
-                          child: Container(
-                            width: 40,
-                            height: 40,
+                  children: [
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: hPadding),
+                      child: Row(
+                        children: [
+                          Semantics(
+                            label: ref.read(stringsProvider).backLabel,
+                            button: true,
+                            child: GestureDetector(
+                              onTap: () => context.go('/'),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: surfaceColor,
+                                  borderRadius: BorderRadius.circular(
+                                      UIConstants.radiusMd),
+                                  border: Border.all(color: borderColor),
+                                ),
+                                child: Icon(directionalBackIcon(dir),
+                                    color: accentColor, size: 20),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Text(
+                            'KARAKTER',
+                            style: TextStyle(
+                              color: accentColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 4,
+                              shadows: [
+                                Shadow(
+                                  color: accentColor.withValues(alpha: 0.5),
+                                  blurRadius: 12,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: surfaceColor,
+                              color: kCyan.withValues(alpha: 0.10),
                               borderRadius:
                                   BorderRadius.circular(UIConstants.radiusMd),
-                              border: Border.all(color: borderColor),
-                            ),
-                            child: Icon(directionalBackIcon(dir),
-                                color: accentColor, size: 20),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Text(
-                        'KARAKTER',
-                        style: TextStyle(
-                          color: accentColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 4,
-                          shadows: [
-                            Shadow(
-                              color: accentColor.withValues(alpha: 0.5),
-                              blurRadius: 12,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: kCyan.withValues(alpha: 0.10),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusMd),
-                          border: Border.all(
-                            color: kCyan.withValues(alpha: 0.30),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.bolt_rounded,
-                                color: kCyan, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              _loaded ? '${_resources.energy}' : '-',
-                              style: const TextStyle(
-                                color: kCyan,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
+                              border: Border.all(
+                                color: kCyan.withValues(alpha: 0.30),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 300.ms),
-                const SizedBox(height: 20),
-                const GlooMascot()
-                    .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 100.ms)
-                    .fadeIn(duration: 400.ms)
-                    .scale(
-                      begin: const Offset(0.85, 0.85),
-                      duration: 400.ms,
-                      curve: Curves.easeOutBack,
-                    ),
-                const SizedBox(height: 24),
-                Expanded(
-                  child: _loaded
-                      ? ListView(
-                          physics: const BouncingScrollPhysics(),
-                          padding: EdgeInsets.symmetric(horizontal: hPadding),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Text(
-                                'YETENEKLER',
-                                style: TextStyle(
-                                  color: textSecondary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 3,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.bolt_rounded,
+                                    color: kCyan, size: 16),
+                                const SizedBox(width: 4),
+                                Text(
+                                  _loaded ? '${_resources.energy}' : '-',
+                                  style: const TextStyle(
+                                    color: kCyan,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w800,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                            ...TalentType.values.asMap().entries.map((e) {
-                              final type = e.value;
-                              final def = kTalents[type]!;
-                              final level = _character.getTalentLevel(type);
-                              final cost = def.costPerLevel * (level + 1);
-                              final isMax = level >= def.maxLevel;
-
-                              return TalentCard(
-                                def: def,
-                                level: level,
-                                cost: cost,
-                                isMax: isMax,
-                                canAfford: _resources.canAfford(cost),
-                                onUpgrade: () => _onUpgradeTalent(type),
-                                delay: Duration(milliseconds: 100 * e.key),
-                              );
-                            }),
-                          ],
-                        )
-                      : Center(
-                          child: CircularProgressIndicator(color: accentColor),
+                          ),
+                        ],
+                      ),
+                    )
+                        .animateOrSkip(
+                            reduceMotion: shouldReduceMotion(context))
+                        .fadeIn(duration: 300.ms),
+                    const SizedBox(height: 20),
+                    const GlooMascot()
+                        .animateOrSkip(
+                            reduceMotion: shouldReduceMotion(context),
+                            delay: 100.ms)
+                        .fadeIn(duration: 400.ms)
+                        .scale(
+                          begin: const Offset(0.85, 0.85),
+                          duration: 400.ms,
+                          curve: Curves.easeOutBack,
                         ),
-                ),
-              ],
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: _loaded
+                          ? ListView(
+                              physics: const BouncingScrollPhysics(),
+                              padding:
+                                  EdgeInsets.symmetric(horizontal: hPadding),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: Text(
+                                    'YETENEKLER',
+                                    style: TextStyle(
+                                      color: textSecondary,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 3,
+                                    ),
+                                  ),
+                                ),
+                                ...TalentType.values.asMap().entries.map((e) {
+                                  final type = e.value;
+                                  final def = kTalents[type]!;
+                                  final level = _character.getTalentLevel(type);
+                                  final cost = def.costPerLevel * (level + 1);
+                                  final isMax = level >= def.maxLevel;
+
+                                  return TalentCard(
+                                    def: def,
+                                    level: level,
+                                    cost: cost,
+                                    isMax: isMax,
+                                    canAfford: _resources.canAfford(cost),
+                                    onUpgrade: () => _onUpgradeTalent(type),
+                                    delay: Duration(milliseconds: 100 * e.key),
+                                  );
+                                }),
+                              ],
+                            )
+                          : Center(
+                              child:
+                                  CircularProgressIndicator(color: accentColor),
+                            ),
+                    ),
+                  ],
                 ),
               ),
             ),

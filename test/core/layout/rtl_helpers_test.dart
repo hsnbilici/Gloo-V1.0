@@ -9,21 +9,20 @@ void main() {
     });
 
     test('returns arrow_forward in RTL', () {
-      expect(directionalBackIcon(TextDirection.rtl), Icons.arrow_forward_rounded);
+      expect(
+          directionalBackIcon(TextDirection.rtl), Icons.arrow_forward_rounded);
     });
   });
 
   group('directionalGradientAlignment', () {
     test('LTR: start=centerLeft, end=centerRight', () {
-      final (begin, end) =
-          directionalGradientAlignment(TextDirection.ltr);
+      final (begin, end) = directionalGradientAlignment(TextDirection.ltr);
       expect(begin, Alignment.centerLeft);
       expect(end, Alignment.centerRight);
     });
 
     test('RTL: start=centerRight, end=centerLeft', () {
-      final (begin, end) =
-          directionalGradientAlignment(TextDirection.rtl);
+      final (begin, end) = directionalGradientAlignment(TextDirection.rtl);
       expect(begin, Alignment.centerRight);
       expect(end, Alignment.centerLeft);
     });
