@@ -86,6 +86,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
     final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.50), light: kTextSecondaryLight);
+    final accentColor = resolveColor(brightness, dark: kLavender, light: kLavenderLight);
     return Scaffold(
       backgroundColor: bgColor,
       body: Stack(
@@ -117,7 +118,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                               border: Border.all(color: borderColor),
                             ),
                             child: Icon(directionalBackIcon(dir),
-                                color: kLavender, size: 20),
+                                color: accentColor, size: 20),
                           ),
                         ),
                       ),
@@ -125,13 +126,13 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                       Text(
                         'KARAKTER',
                         style: TextStyle(
-                          color: kLavender,
+                          color: accentColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 4,
                           shadows: [
                             Shadow(
-                              color: kLavender.withValues(alpha: 0.5),
+                              color: accentColor.withValues(alpha: 0.5),
                               blurRadius: 12,
                             ),
                           ],
@@ -216,8 +217,8 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                             }),
                           ],
                         )
-                      : const Center(
-                          child: CircularProgressIndicator(color: kLavender),
+                      : Center(
+                          child: CircularProgressIndicator(color: accentColor),
                         ),
                 ),
               ],

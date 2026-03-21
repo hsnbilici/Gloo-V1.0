@@ -96,6 +96,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final accentColor = resolveColor(brightness, dark: kGreen, light: kGreenLight);
     return Scaffold(
       backgroundColor: bgColor,
       body: Stack(
@@ -127,7 +128,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                               border: Border.all(color: borderColor),
                             ),
                             child: Icon(directionalBackIcon(dir),
-                                color: kGreen, size: 20),
+                                color: accentColor, size: 20),
                           ),
                         ),
                       ),
@@ -135,13 +136,13 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                       Text(
                         'GLOO ADASI',
                         style: TextStyle(
-                          color: kGreen,
+                          color: accentColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 4,
                           shadows: [
                             Shadow(
-                              color: kGreen.withValues(alpha: 0.5),
+                              color: accentColor.withValues(alpha: 0.5),
                               blurRadius: 12,
                             ),
                           ],

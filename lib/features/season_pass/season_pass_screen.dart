@@ -93,6 +93,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final accentColor = resolveColor(brightness, dark: kGold, light: kGoldLight);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -125,7 +126,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                               border: Border.all(color: borderColor),
                             ),
                             child: Icon(directionalBackIcon(dir),
-                                color: kGold, size: 20),
+                                color: accentColor, size: 20),
                           ),
                         ),
                       ),
@@ -133,13 +134,13 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                       Text(
                         'SEZON PASI',
                         style: TextStyle(
-                          color: kGold,
+                          color: accentColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 4,
                           shadows: [
                             Shadow(
-                              color: kGold.withValues(alpha: 0.5),
+                              color: accentColor.withValues(alpha: 0.5),
                               blurRadius: 12,
                             ),
                           ],
