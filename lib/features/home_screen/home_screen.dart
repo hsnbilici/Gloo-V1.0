@@ -217,21 +217,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                   ],
                   const SizedBox(height: 14),
-                  DailyBanner(label: l.dailyTitle)
-                      .animateOrSkip(reduceMotion: rm, delay: 60.ms)
-                      .fadeIn(duration: 350.ms)
-                      .slideY(
-                        begin: 0.08,
-                        end: 0,
-                        duration: 350.ms,
-                        curve: Curves.easeOutCubic,
-                      ),
                   Expanded(
                     child: SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          DailyBanner(label: l.dailyTitle)
+                              .animateOrSkip(reduceMotion: rm, delay: 60.ms)
+                              .fadeIn(duration: 350.ms)
+                              .slideY(
+                                begin: 0.08,
+                                end: 0,
+                                duration: 350.ms,
+                                curve: Curves.easeOutCubic,
+                              ),
                           const SizedBox(height: 8),
                           ModeCard(
                             label: l.modeClassicName,
@@ -310,17 +310,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 curve: Curves.easeOutCubic,
                               ),
                           const SizedBox(height: 10),
-                          // Faz 4: Seviye + Düello modları (yatay çift)
-                          _ModePairRow(
-                            levelLabel: l.modeLevelName,
-                            levelSubtitle: l.modeLevelDesc,
-                            duelLabel: l.modeDuelName,
-                            duelSubtitle: l.modeDuelDesc,
+                          ModeCard(
+                            label: l.modeLevelName,
+                            subtitle: l.modeLevelDesc,
+                            color: kOrange,
+                            icon: Icons.map_rounded,
                             badgeLabel: l.newBadge,
-                            onLevelTap: () => context.go('/levels'),
-                            onDuelTap: () => context.go('/pvp-lobby'),
+                            onTap: () => context.go('/levels'),
                           )
                               .animateOrSkip(reduceMotion: rm, delay: 400.ms)
+                              .fadeIn(duration: 350.ms)
+                              .slideY(
+                                begin: 0.15,
+                                end: 0,
+                                duration: 350.ms,
+                                curve: Curves.easeOutCubic,
+                              ),
+                          const SizedBox(height: 10),
+                          ModeCard(
+                            label: l.modeDuelName,
+                            subtitle: l.modeDuelDesc,
+                            color: kColorClassic,
+                            icon: Icons.sports_mma_rounded,
+                            badgeLabel: l.newBadge,
+                            onTap: () => context.go('/pvp-lobby'),
+                          )
+                              .animateOrSkip(reduceMotion: rm, delay: 480.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -339,7 +354,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     characterLabel: l.characterLabel,
                     seasonLabel: l.seasonLabel,
                   )
-                      .animateOrSkip(reduceMotion: rm, delay: 540.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 600.ms)
                       .fadeIn(duration: 350.ms)
                       .slideY(begin: 0.12, end: 0, duration: 350.ms),
                   const SizedBox(height: 8),
@@ -349,7 +364,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     settingsLabel: l.navSettings,
                     collectionLabel: l.collectionTitle,
                   )
-                      .animateOrSkip(reduceMotion: rm, delay: 420.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 500.ms)
                       .fadeIn(duration: 400.ms)
                       .slideY(begin: 0.2, end: 0, duration: 400.ms),
                   const SizedBox(height: 28),
@@ -365,53 +380,3 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-/// Isolated widget for Level+Duel pair — prevents hover rebuild from
-/// propagating to parent Column layout.
-class _ModePairRow extends StatelessWidget {
-  const _ModePairRow({
-    required this.levelLabel,
-    required this.levelSubtitle,
-    required this.duelLabel,
-    required this.duelSubtitle,
-    required this.badgeLabel,
-    required this.onLevelTap,
-    required this.onDuelTap,
-  });
-
-  final String levelLabel;
-  final String levelSubtitle;
-  final String duelLabel;
-  final String duelSubtitle;
-  final String badgeLabel;
-  final VoidCallback onLevelTap;
-  final VoidCallback onDuelTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ModeCard(
-            label: levelLabel,
-            subtitle: levelSubtitle,
-            color: kOrange,
-            icon: Icons.map_rounded,
-            badgeLabel: badgeLabel,
-            onTap: onLevelTap,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ModeCard(
-            label: duelLabel,
-            subtitle: duelSubtitle,
-            color: kColorClassic,
-            icon: Icons.sports_mma_rounded,
-            badgeLabel: badgeLabel,
-            onTap: onDuelTap,
-          ),
-        ),
-      ],
-    );
-  }
-}

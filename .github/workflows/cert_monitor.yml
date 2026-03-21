@@ -78,12 +78,15 @@ jobs:
 
       - name: Notify if expiry approaching
         if: steps.check.outputs.status == 'critical' || steps.check.outputs.status == 'warning'
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              "text": "Certificate Pin Expiry Alert: Pins need rotation. Check workflow summary for details."
-            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"⚠️ Certificate pin expiry alert — pins need rotation. Check workflow summary for details — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true

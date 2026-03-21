@@ -9,7 +9,7 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
   final ThemeMode? _initial;
 
   @override
-  ThemeMode build() => _initial ?? ThemeMode.system;
+  ThemeMode build() => _initial ?? ThemeMode.dark;
 
   void setThemeMode(ThemeMode mode) {
     state = mode;

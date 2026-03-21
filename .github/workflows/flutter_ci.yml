@@ -59,13 +59,18 @@ jobs:
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"\u274c Flutter CI analyze/test failed — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
   version-bump:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -93,10 +98,15 @@ jobs:
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"\u274c Flutter CI version-bump failed — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true

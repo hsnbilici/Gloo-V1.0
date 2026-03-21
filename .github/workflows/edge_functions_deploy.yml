@@ -51,10 +51,13 @@ jobs:
 
       - name: Notify deploy failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"❌ Edge Functions deploy failed — ${{ github.repository }}@${{ github.sha }}\"}" \
+            "$SLACK_WEBHOOK_URL" || true

@@ -185,7 +185,6 @@ class ThemeSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = [
-      (ThemeMode.system, Icons.brightness_auto_rounded, systemLabel),
       (ThemeMode.light, Icons.light_mode_rounded, lightLabel),
       (ThemeMode.dark, Icons.dark_mode_rounded, darkLabel),
     ];

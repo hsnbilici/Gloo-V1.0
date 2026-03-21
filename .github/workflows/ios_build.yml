@@ -88,13 +88,16 @@ jobs:
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"❌ iOS simulator build failed — ${{ github.repository }}@${{ github.sha }}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
   build-release:
     runs-on: macos-15
@@ -215,23 +218,29 @@ jobs:
 
       - name: Notify release success
         if: success()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"✅ iOS release uploaded to TestFlight — ${{ github.repository }}@${{ github.sha }}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"❌ iOS release build failed — ${{ github.repository }}@${{ github.sha }}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
       - name: Cleanup keychain
         if: always()

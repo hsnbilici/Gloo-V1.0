@@ -92,13 +92,18 @@ jobs:
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"\u274c Android debug APK build failed — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
   build-aab:
     runs-on: ubuntu-latest
@@ -206,20 +211,30 @@ jobs:
 
       - name: Notify release success
         if: success()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"\u2705 Android release AAB built and uploaded successfully — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
 
       - name: Notify build failure
         if: failure()
-        continue-on-error: true
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_REPO: ${{ github.repository }}
+          GH_SHA: ${{ github.sha }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"\u274c Android release AAB build failed — ${GH_REPO}@${GH_SHA}\"}" \
+            "$SLACK_WEBHOOK_URL" || true
