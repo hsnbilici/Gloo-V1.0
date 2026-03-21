@@ -30,30 +30,51 @@ class ModeCard extends StatefulWidget {
   final String? lockLabel;
 
   @override
-  State<ModeCard> createState() => ModeCardState();
+  State<ModeCard> createState() => _ModeCardState();
 }
 
-class ModeCardState extends State<ModeCard> {
+class _ModeCardState extends State<ModeCard> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
     final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     final brightness = Theme.of(context).brightness;
+
+    // Pre-compute hover/press-dependent alpha values
+    final double gradAlpha1, gradAlpha2, borderAlpha;
+    if (widget.isFeatured) {
+      gradAlpha1 = _pressed ? 0.28 : _hovered ? 0.24 : 0.20;
+      gradAlpha2 = _hovered ? 0.12 : 0.08;
+      borderAlpha = _pressed ? 0.70 : _hovered ? 0.60 : 0.50;
+    } else {
+      gradAlpha1 = _pressed ? 0.17 : _hovered ? 0.15 : 0.11;
+      gradAlpha2 = _hovered ? 0.07 : 0.04;
+      borderAlpha = _pressed ? 0.38 : _hovered ? 0.30 : 0.22;
+    }
+
     return Semantics(
       label: widget.label,
       button: true,
-      child: GestureDetector(
+      child: MouseRegion(
+        onEnter: (_) {
+          if (!_hovered) setState(() => _hovered = true);
+        },
+        onExit: (_) {
+          if (_hovered) setState(() => _hovered = false);
+        },
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
         onTap: widget.onTap,
         onTapDown: (_) => setState(() => _pressed = true),
         onTapUp: (_) => setState(() => _pressed = false),
         onTapCancel: () => setState(() => _pressed = false),
-        child: AnimatedContainer(
+        child: AnimatedScale(
+          scale: _pressed ? 0.97 : 1.0,
           duration: const Duration(milliseconds: 80),
-          transformAlignment: Alignment.center,
-          transform: Matrix4.diagonal3Values(
-              _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
+          child: Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(
             horizontal: 16,
@@ -64,25 +85,15 @@ class ModeCardState extends State<ModeCard> {
             gradient: LinearGradient(
               begin: gradBegin,
               end: gradEnd,
-              colors: widget.isFeatured
-                  ? [
-                      widget.color.withValues(alpha: _pressed ? 0.28 : 0.20),
-                      widget.color.withValues(alpha: 0.08),
-                      Colors.transparent,
-                    ]
-                  : [
-                      widget.color.withValues(alpha: _pressed ? 0.17 : 0.11),
-                      widget.color.withValues(alpha: 0.04),
-                      Colors.transparent,
-                    ],
+              colors: [
+                widget.color.withValues(alpha: gradAlpha1),
+                widget.color.withValues(alpha: gradAlpha2),
+                Colors.transparent,
+              ],
               stops: const [0.0, 0.35, 1.0],
             ),
             border: Border.all(
-              color: widget.color.withValues(
-                alpha: widget.isFeatured
-                    ? (_pressed ? 0.70 : 0.50)
-                    : (_pressed ? 0.38 : 0.22),
-              ),
+              color: widget.color.withValues(alpha: borderAlpha),
               width: widget.isFeatured ? 1.5 : 1,
             ),
             boxShadow: [
@@ -137,7 +148,7 @@ class ModeCardState extends State<ModeCard> {
                             ),
                           ),
                         ),
-                        if (widget.isFeatured && widget.badgeLabel != null) ...[
+                        if (widget.badgeLabel != null) ...[
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -215,6 +226,8 @@ class ModeCardState extends State<ModeCard> {
                 ),
             ],
           ),
+        ),
+        ),
         ),
       ),
     );

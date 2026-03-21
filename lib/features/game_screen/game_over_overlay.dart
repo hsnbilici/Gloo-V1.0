@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../core/models/game_mode.dart';
 import '../../providers/locale_provider.dart';
@@ -40,6 +41,7 @@ class GameOverOverlay extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = ref.watch(stringsProvider);
+    final rm = shouldReduceMotion(context);
     final color = kModeColors[mode]!;
 
     final modeLabel = switch (mode) {
@@ -82,7 +84,7 @@ class GameOverOverlay extends ConsumerWidget {
                 const SizedBox(height: 8),
                 // ── Mod rozeti
                 GameOverModeBadge(label: modeLabel, color: color)
-                    .animate(delay: 80.ms)
+                    .animateOrSkip(reduceMotion: rm, delay: 80.ms)
                     .fadeIn(duration: 280.ms)
                     .scale(
                       begin: const Offset(0.75, 0.75),
@@ -112,7 +114,7 @@ class GameOverOverlay extends ConsumerWidget {
                             ),
                           ],
                         ),
-                      ).animate(delay: 140.ms).fadeIn(duration: 300.ms).slideY(
+                      ).animateOrSkip(reduceMotion: rm, delay: 140.ms).fadeIn(duration: 300.ms).slideY(
                             begin: -0.12,
                             end: 0,
                             duration: 300.ms,
@@ -120,7 +122,7 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 14),
                       // Parıldayan ayraç
-                      GlowDivider(color: color).animate(delay: 240.ms).scaleX(
+                      GlowDivider(color: color).animateOrSkip(reduceMotion: rm, delay: 240.ms).scaleX(
                             begin: 0,
                             end: 1,
                             duration: 380.ms,
@@ -138,11 +140,11 @@ class GameOverOverlay extends ConsumerWidget {
                           fontWeight: FontWeight.w700,
                           letterSpacing: 4,
                         ),
-                      ).animate(delay: 360.ms).fadeIn(duration: 280.ms),
+                      ).animateOrSkip(reduceMotion: rm, delay: 360.ms).fadeIn(duration: 280.ms),
                       if (isNewHighScore) ...[
                         const SizedBox(height: 12),
                         NewRecordBadge(label: l.gameOverNewRecord, color: color)
-                            .animate(delay: 420.ms)
+                            .animateOrSkip(reduceMotion: rm, delay: 420.ms)
                             .fadeIn(duration: 300.ms)
                             .scale(
                               begin: const Offset(0.7, 0.7),
@@ -156,7 +158,7 @@ class GameOverOverlay extends ConsumerWidget {
                         label: l.gameOverGridFill,
                         value: '%$fillPct',
                         color: color,
-                      ).animate(delay: 460.ms).fadeIn(duration: 280.ms).slideX(
+                      ).animateOrSkip(reduceMotion: rm, delay: 460.ms).fadeIn(duration: 280.ms).slideX(
                             begin: 0.12,
                             end: 0,
                             duration: 280.ms,
@@ -183,7 +185,7 @@ class GameOverOverlay extends ConsumerWidget {
                           secondChanceLabel:
                               secondChanceLabel ?? l.secondChanceMoves,
                         )
-                            .animate(delay: 500.ms)
+                            .animateOrSkip(reduceMotion: rm, delay: 500.ms)
                             .fadeIn(duration: 320.ms)
                             .slideY(
                               begin: 0.18,
@@ -199,7 +201,7 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: color,
                         filled: true,
                         onTap: onReplay,
-                      ).animate(delay: 540.ms).fadeIn(duration: 320.ms).slideY(
+                      ).animateOrSkip(reduceMotion: rm, delay: 540.ms).fadeIn(duration: 320.ms).slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,
@@ -212,7 +214,7 @@ class GameOverOverlay extends ConsumerWidget {
                         accentColor: kMuted,
                         filled: false,
                         onTap: onHome,
-                      ).animate(delay: 610.ms).fadeIn(duration: 320.ms).slideY(
+                      ).animateOrSkip(reduceMotion: rm, delay: 610.ms).fadeIn(duration: 320.ms).slideY(
                             begin: 0.18,
                             end: 0,
                             duration: 320.ms,

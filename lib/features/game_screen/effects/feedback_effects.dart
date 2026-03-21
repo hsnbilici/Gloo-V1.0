@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/utils/motion_utils.dart';
 import '../../../core/utils/near_miss_detector.dart';
 import '../../../game/systems/combo_detector.dart';
 import '../../../core/constants/color_constants.dart';
@@ -50,53 +51,64 @@ class _ComboEffectState extends ConsumerState<ComboEffect> {
       ComboTier.none => '',
     };
     final color = _tierColor(widget.combo.tier);
+    final reduceMotion = shouldReduceMotion(context);
+
+    Widget labelWidget = Text(
+      label,
+      style: TextStyle(
+        color: color,
+        fontSize: 36,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 3,
+        shadows: [
+          Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)
+        ],
+      ),
+    );
+
+    Widget multiplierWidget = Text(
+      'x${widget.combo.multiplier.toStringAsFixed(1)}',
+      style: TextStyle(
+        color: color.withValues(alpha: 0.85),
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1,
+      ),
+    );
+
+    if (!reduceMotion) {
+      labelWidget = labelWidget
+          .animate()
+          .scale(
+            begin: const Offset(0.2, 0.2),
+            end: const Offset(1.0, 1.0),
+            duration: 350.ms,
+            curve: Curves.elasticOut,
+          )
+          .fadeIn(duration: 150.ms)
+          .then(delay: 750.ms)
+          .fadeOut(duration: 400.ms);
+
+      multiplierWidget = multiplierWidget
+          .animate()
+          .slideY(
+              begin: 0.8,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic)
+          .fadeIn(duration: 200.ms)
+          .then(delay: 750.ms)
+          .fadeOut(duration: 400.ms);
+    }
 
     return IgnorePointer(
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 3,
-                shadows: [
-                  Shadow(color: color.withValues(alpha: 0.8), blurRadius: 24)
-                ],
-              ),
-            )
-                .animate()
-                .scale(
-                  begin: const Offset(0.2, 0.2),
-                  end: const Offset(1.0, 1.0),
-                  duration: 350.ms,
-                  curve: Curves.elasticOut,
-                )
-                .fadeIn(duration: 150.ms)
-                .then(delay: 750.ms)
-                .fadeOut(duration: 400.ms),
+            labelWidget,
             const SizedBox(height: 4),
-            Text(
-              'x${widget.combo.multiplier.toStringAsFixed(1)}',
-              style: TextStyle(
-                color: color.withValues(alpha: 0.85),
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1,
-              ),
-            )
-                .animate()
-                .slideY(
-                    begin: 0.8,
-                    end: 0,
-                    duration: 350.ms,
-                    curve: Curves.easeOutCubic)
-                .fadeIn(duration: 200.ms)
-                .then(delay: 750.ms)
-                .fadeOut(duration: 400.ms),
+            multiplierWidget,
           ],
         ),
       ),
@@ -148,24 +160,28 @@ class _PlaceFeedbackEffectState extends State<PlaceFeedbackEffect> {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Text(
-        '+${widget.count}',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-          shadows: [
-            Shadow(color: widget.color.withValues(alpha: 0.9), blurRadius: 10),
-            Shadow(color: widget.color.withValues(alpha: 0.5), blurRadius: 20),
-          ],
-        ),
-      )
+    Widget content = Text(
+      '+${widget.count}',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.w800,
+        shadows: [
+          Shadow(color: widget.color.withValues(alpha: 0.9), blurRadius: 10),
+          Shadow(color: widget.color.withValues(alpha: 0.5), blurRadius: 20),
+        ],
+      ),
+    );
+
+    if (!shouldReduceMotion(context)) {
+      content = content
           .animate()
           .fadeIn(duration: 80.ms)
           .slideY(begin: 0, end: -3.0, duration: 650.ms, curve: Curves.easeOut)
-          .fadeOut(delay: 350.ms, duration: 300.ms),
-    );
+          .fadeOut(delay: 350.ms, duration: 300.ms);
+    }
+
+    return IgnorePointer(child: content);
   }
 }
 
@@ -216,50 +232,68 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
     final isCritical = widget.event.isCritical;
     final color = isCritical ? kRed : kOrangeVivid;
     final label = isCritical ? l.nearMissCritical : l.nearMissStandard;
+    final reduceMotion = shouldReduceMotion(context);
+
+    Widget labelWidget = Text(
+      label,
+      style: TextStyle(
+        color: color,
+        fontSize: isCritical ? 30 : 24,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 5,
+        shadows: [
+          Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)
+        ],
+      ),
+    );
+
+    if (!reduceMotion) {
+      labelWidget = labelWidget
+          .animate()
+          .fadeIn(duration: 150.ms)
+          .then(delay: 1500.ms)
+          .fadeOut(duration: 350.ms);
+    }
 
     return IgnorePointer(
       child: Stack(
         children: [
           // Faz F: Radyal vignette overlay
-          AnimatedBuilder(
-            animation: _pulseAnim,
-            builder: (context, _) {
-              final v = _pulseAnim.value;
-              return Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: color.withValues(alpha: 0.35 + 0.65 * v),
-                    width: isCritical ? 4 : 3,
+          if (!reduceMotion)
+            AnimatedBuilder(
+              animation: _pulseAnim,
+              builder: (context, _) {
+                final v = _pulseAnim.value;
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: color.withValues(alpha: 0.35 + 0.65 * v),
+                      width: isCritical ? 4 : 3,
+                    ),
                   ),
-                ),
-                child: CustomPaint(
-                  painter: _VignettePainter(
-                    color: color,
-                    intensity: isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
+                  child: CustomPaint(
+                    painter: _VignettePainter(
+                      color: color,
+                      intensity:
+                          isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
+                    ),
+                    child: const SizedBox.expand(),
                   ),
-                  child: const SizedBox.expand(),
+                );
+              },
+            )
+          else
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: color.withValues(alpha: 0.5),
+                  width: isCritical ? 4 : 3,
                 ),
-              );
-            },
-          ),
+              ),
+            ),
           Align(
             alignment: const Alignment(0, -0.58),
-            child: Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: isCritical ? 30 : 24,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 5,
-                shadows: [
-                  Shadow(color: color.withValues(alpha: 0.9), blurRadius: 20)
-                ],
-              ),
-            )
-                .animate()
-                .fadeIn(duration: 150.ms)
-                .then(delay: 1500.ms)
-                .fadeOut(duration: 350.ms),
+            child: labelWidget,
           ),
         ],
       ),

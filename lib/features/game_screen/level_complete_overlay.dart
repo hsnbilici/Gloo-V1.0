@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 
 class LevelCompleteOverlay extends StatelessWidget {
   const LevelCompleteOverlay({
@@ -17,6 +18,7 @@ class LevelCompleteOverlay extends StatelessWidget {
     required this.mainMenuLabel,
     required this.levelLabel,
     required this.completedLabel,
+    this.targetScore,
   });
 
   final int score;
@@ -29,9 +31,23 @@ class LevelCompleteOverlay extends StatelessWidget {
   final String mainMenuLabel;
   final String levelLabel;
   final String completedLabel;
+  final int? targetScore;
+
+  /// Skorun hedef skora oranina gore yildiz sayisi hesaplar.
+  /// 1 yildiz: seviye gecildi, 2: 1.5x, 3: 2x
+  int _starCount() {
+    if (targetScore == null || targetScore! <= 0) return 3;
+    final ratio = score / targetScore!;
+    if (ratio >= 2.0) return 3;
+    if (ratio >= 1.5) return 2;
+    return 1;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
+    final stars = _starCount();
+
     return Material(
       color: kBgDark.withValues(alpha: 0.92),
       child: Center(
@@ -59,7 +75,7 @@ class LevelCompleteOverlay extends StatelessWidget {
                 letterSpacing: 4,
               ),
             )
-                .animate()
+                .animateOrSkip(reduceMotion: rm)
                 .scale(
                   begin: const Offset(0.6, 0.6),
                   end: const Offset(1.0, 1.0),
@@ -67,7 +83,33 @@ class LevelCompleteOverlay extends StatelessWidget {
                   curve: Curves.elasticOut,
                 )
                 .fadeIn(duration: 200.ms),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            // Yildiz satiri
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(3, (i) {
+                final earned = i < stars;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Icon(
+                    earned ? Icons.star_rounded : Icons.star_outline_rounded,
+                    size: i == 1 ? 40 : 32,
+                    color: earned
+                        ? kGold
+                        : kMuted.withValues(alpha: 0.3),
+                  )
+                      .animateOrSkip(reduceMotion: rm, delay: (200 + i * 120).ms)
+                      .scale(
+                        begin: const Offset(0.3, 0.3),
+                        end: const Offset(1.0, 1.0),
+                        duration: 400.ms,
+                        curve: Curves.easeOutBack,
+                      )
+                      .fadeIn(duration: 250.ms),
+                );
+              }),
+            ),
+            const SizedBox(height: 12),
             TweenAnimationBuilder<int>(
               tween: IntTween(begin: 0, end: score),
               duration: AnimationDurations.levelComplete,

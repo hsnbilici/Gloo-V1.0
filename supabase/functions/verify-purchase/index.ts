@@ -35,6 +35,16 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// ── Receipt hash — replay korumasi ──────────────────────────────────────────
+
+async function computeReceiptHash(receipt: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(receipt)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}
+
 // ── Apple receipt dogrulama ──────────────────────────────────────────────────
 
 async function verifyAppleReceipt(
@@ -271,9 +281,9 @@ async function verifyAndroidReceipt(
     const serviceAccountKeyJson = Deno.env.get('GOOGLE_SERVICE_ACCOUNT_KEY')
 
     if (!serviceAccountKeyJson) {
-      // Service account yoksa temel dogrulamayla devam et (graceful degradation)
-      console.warn('GOOGLE_SERVICE_ACCOUNT_KEY not configured — falling back to basic validation')
-      return { verified: true }
+      // Service account yoksa dogrulama yapilamaz — guvenlik geregi reddet
+      console.error('GOOGLE_SERVICE_ACCOUNT_KEY not configured — cannot verify purchase')
+      return { verified: false, error: 'Server configuration error: verification unavailable' }
     }
 
     let serviceAccountKey: { client_email: string; private_key: string }
@@ -281,12 +291,12 @@ async function verifyAndroidReceipt(
       serviceAccountKey = JSON.parse(serviceAccountKeyJson)
     } catch {
       console.error('Failed to parse GOOGLE_SERVICE_ACCOUNT_KEY JSON')
-      return { verified: true } // Parse hatasi — fallback
+      return { verified: false, error: 'Server configuration error: invalid credentials' }
     }
 
     if (!serviceAccountKey.client_email || !serviceAccountKey.private_key) {
       console.error('GOOGLE_SERVICE_ACCOUNT_KEY missing client_email or private_key')
-      return { verified: true } // Eksik alan — fallback
+      return { verified: false, error: 'Server configuration error: incomplete credentials' }
     }
 
     // Access token al
@@ -378,6 +388,24 @@ serve(async (req: Request) => {
       )
     }
 
+    // Receipt replay korumasi: ayni receipt'in farkli hesaplardan kullanilmasini onle
+    const receiptHash = await computeReceiptHash(receipt)
+    const { data: existingUse } = await supabase
+      .from('purchase_verifications')
+      .select('user_id')
+      .eq('receipt_hash', receiptHash)
+      .eq('verified', true)
+      .neq('user_id', userId)
+      .limit(1)
+      .maybeSingle()
+
+    if (existingUse) {
+      return new Response(
+        JSON.stringify({ verified: false, error: 'Receipt already used by another account' }),
+        { status: 400, headers: CORS_HEADERS },
+      )
+    }
+
     // Platform bazli dogrulama
     const result = platform === 'ios'
       ? await verifyAppleReceipt(receipt, productId)
@@ -389,6 +417,7 @@ serve(async (req: Request) => {
         user_id: userId,
         platform,
         product_id: productId,
+        receipt_hash: receiptHash,
         verified: result.verified,
         error: result.error ?? null,
         created_at: new Date().toISOString(),

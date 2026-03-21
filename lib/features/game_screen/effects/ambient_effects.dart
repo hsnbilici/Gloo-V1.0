@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/utils/motion_utils.dart';
 
 /// Kombo veya guclu olaylarda kisa sureli ekran sarsintisi uygular.
 /// [child] widget'ini saran Transform.translate ile calisir.
@@ -45,6 +46,8 @@ class _ScreenShakeState extends State<ScreenShake>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) return widget.child;
+
     return AnimatedBuilder(
       animation: _ctrl,
       builder: (_, __) {
@@ -134,6 +137,8 @@ class _AmbientGelDropletsState extends State<AmbientGelDroplets>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) return const SizedBox.shrink();
+
     return IgnorePointer(
       child: CustomPaint(
         painter: _painter,

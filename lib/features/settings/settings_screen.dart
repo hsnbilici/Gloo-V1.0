@@ -15,6 +15,7 @@ import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../data/local/data_models.dart';
 import '../shared/section_header.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -49,7 +50,7 @@ class SettingsScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Semantics(
-          label: 'Geri',
+          label: l.backLabel,
           button: true,
           child: GestureDetector(
             onTap: () => context.pop(),
@@ -130,17 +131,23 @@ class SettingsScreen extends ConsumerWidget {
                 accentColor: kColorZen,
                 onChanged: (_) => notifier.toggleHaptics(),
               ),
-              // Renk körü modu devre dışı — kod korunuyor, UI'dan gizlendi.
-              // SectionHeader(
-              //     title: l.settingsSectionAccessibility,
-              //     color: kColorTimeTrial),
-              // SettingsToggleTile(
-              //   label: l.settingsColorBlind,
-              //   icon: Icons.palette_outlined,
-              //   value: audio.colorBlindMode,
-              //   accentColor: kColorTimeTrial,
-              //   onChanged: (_) => notifier.toggleColorBlindMode(),
-              // ),
+              SectionHeader(
+                  title: l.settingsSectionAccessibility,
+                  color: kColorTimeTrial),
+              SettingsToggleTile(
+                label: l.settingsColorBlind,
+                icon: Icons.palette_outlined,
+                value: audio.colorBlindMode,
+                accentColor: kColorTimeTrial,
+                onChanged: (_) => notifier.toggleColorBlindMode(),
+              ),
+              SettingsToggleTile(
+                label: l.settingsReduceMotion,
+                icon: Icons.animation_rounded,
+                value: shouldReduceMotion(context),
+                accentColor: kColorTimeTrial,
+                onChanged: (_) {},
+              ),
               SectionHeader(
                   title: l.settingsSectionLanguage, color: kColorChef),
               LanguageTile(

@@ -10,6 +10,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../game/pvp/matchmaking.dart';
 import '../../providers/locale_provider.dart';
@@ -32,6 +33,7 @@ class PvpLobbyScreen extends ConsumerStatefulWidget {
 class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     with SingleTickerProviderStateMixin {
   bool _searching = false;
+  bool _rm = false;
   int _waitSeconds = 0;
   Timer? _searchTimer;
   late final AnimationController _pulseCtrl;
@@ -132,6 +134,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
+    _rm = shouldReduceMotion(context);
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
     final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
@@ -154,7 +157,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                   child: Row(
                     children: [
                       Semantics(
-                        label: 'Geri',
+                        label: ref.read(stringsProvider).backLabel,
                         button: true,
                         child: GestureDetector(
                           onTap: () => context.go('/'),
@@ -191,7 +194,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                     ],
                   ),
                 )
-                    .animate()
+                    .animateOrSkip(reduceMotion: _rm)
                     .fadeIn(duration: 300.ms)
                     .slideY(begin: -0.1, end: 0, duration: 300.ms),
                 // Merkez icerik
@@ -204,7 +207,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                         LeagueBadge(
                           elo: _playerElo,
                           league: _league,
-                        ).animate(delay: 100.ms).fadeIn(duration: 400.ms).scale(
+                        ).animateOrSkip(reduceMotion: _rm, delay: 100.ms).fadeIn(duration: 400.ms).scale(
                               begin: const Offset(0.8, 0.8),
                               duration: 400.ms,
                               curve: Curves.easeOutBack,
@@ -223,7 +226,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                           )
                         else
                           MatchButton(onTap: _startSearch)
-                              .animate(delay: 300.ms)
+                              .animateOrSkip(reduceMotion: _rm, delay: 300.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -266,7 +269,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
           color: kGold,
         ),
       ],
-    ).animate(delay: 200.ms).fadeIn(duration: 350.ms);
+    ).animateOrSkip(reduceMotion: _rm, delay: 200.ms).fadeIn(duration: 350.ms);
   }
 }
 

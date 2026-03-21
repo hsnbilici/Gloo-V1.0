@@ -8,7 +8,9 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 import 'island_widgets.dart';
@@ -111,7 +113,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                   child: Row(
                     children: [
                       Semantics(
-                        label: 'Geri',
+                        label: ref.read(stringsProvider).backLabel,
                         button: true,
                         child: GestureDetector(
                           onTap: () => context.go('/'),
@@ -177,7 +179,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                     ],
                   ),
                 )
-                    .animate()
+                    .animateOrSkip(reduceMotion: shouldReduceMotion(context))
                     .fadeIn(duration: 300.ms)
                     .slideY(begin: -0.1, end: 0, duration: 300.ms),
                 const SizedBox(height: 24),

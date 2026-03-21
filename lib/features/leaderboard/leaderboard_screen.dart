@@ -8,6 +8,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -85,7 +86,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Semantics(
-          label: 'Geri',
+          label: ref.read(stringsProvider).backLabel,
           button: true,
           child: GestureDetector(
             onTap: () => context.pop(),
@@ -176,7 +177,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                     username: entry.username,
                                     score: entry.score,
                                   )
-                                      .animate(delay: (40 * index).ms)
+                                      .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: (40 * index).ms)
                                       .fadeIn(duration: 250.ms)
                                       .slideX(
                                         begin: 0.05,

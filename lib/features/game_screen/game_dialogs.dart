@@ -97,6 +97,7 @@ void showLevelComplete({
   required String mainMenuLabel,
   required String levelLabel,
   required String completedLabel,
+  int? targetScore,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -110,6 +111,7 @@ void showLevelComplete({
       pageBuilder: (ctx, _, __) => LevelCompleteOverlay(
         score: score,
         levelId: levelId,
+        targetScore: targetScore,
         nextLevelLabel: nextLevelLabel,
         levelListLabel: levelListLabel,
         mainMenuLabel: mainMenuLabel,

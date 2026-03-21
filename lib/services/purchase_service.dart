@@ -28,6 +28,7 @@ class PurchaseService {
   static const kTexturePack = 'gloo_texture_pack';
   static const kStarterPack = 'gloo_starter_pack';
   static const kGlooPlusMonthly = 'gloo_plus_monthly';
+  static const kGlooPlusQuarter = 'gloo_plus_quarter';
   static const kGlooPlusYearly = 'gloo_plus_yearly';
 
   static const _kConsumableIds = <String>{};
@@ -40,6 +41,7 @@ class PurchaseService {
   };
   static const _kSubscriptionIds = <String>{
     kGlooPlusMonthly,
+    kGlooPlusQuarter,
     kGlooPlusYearly,
   };
 
@@ -66,6 +68,7 @@ class PurchaseService {
   /// Gloo+ abonesi mi? (aylık veya yıllık)
   bool get isGlooPlus =>
       _purchasedIds.contains(kGlooPlusMonthly) ||
+      _purchasedIds.contains(kGlooPlusQuarter) ||
       _purchasedIds.contains(kGlooPlusYearly);
 
   /// Reklamlar kaldırılmış mı? (doğrudan IAP veya Gloo+ ile)

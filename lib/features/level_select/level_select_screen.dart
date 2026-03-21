@@ -8,6 +8,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../game/levels/level_progression.dart';
 import '../../providers/locale_provider.dart';
@@ -23,6 +24,7 @@ class LevelSelectScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = ref.watch(stringsProvider);
+    final rm = shouldReduceMotion(context);
     final repoAsync = ref.watch(localRepositoryProvider);
     final completedLevels =
         repoAsync.valueOrNull?.getCompletedLevels() ?? <int>{};
@@ -55,7 +57,7 @@ class LevelSelectScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Semantics(
-                        label: 'Geri',
+                        label: ref.read(stringsProvider).backLabel,
                         button: true,
                         child: GestureDetector(
                           onTap: () => context.go('/'),
@@ -115,7 +117,7 @@ class LevelSelectScreen extends ConsumerWidget {
                     ],
                   ),
                 )
-                    .animate()
+                    .animateOrSkip(reduceMotion: rm)
                     .fadeIn(duration: 300.ms)
                     .slideY(begin: -0.1, end: 0, duration: 300.ms),
                 const SizedBox(height: 16),
@@ -218,7 +220,7 @@ class _LevelSection extends StatelessWidget {
             ],
           ),
         )
-            .animate(delay: delay)
+            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: delay)
             .fadeIn(duration: 300.ms)
             .slideX(begin: -0.1, end: 0, duration: 300.ms),
         // 5 sutun grid
@@ -365,7 +367,7 @@ class _LevelCellState extends State<_LevelCell> {
           ),
         ),
       ),
-    ).animate(delay: widget.delay).fadeIn(duration: 200.ms).scale(
+    ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: widget.delay).fadeIn(duration: 200.ms).scale(
           begin: const Offset(0.8, 0.8),
           end: const Offset(1.0, 1.0),
           duration: 200.ms,

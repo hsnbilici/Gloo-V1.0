@@ -8,6 +8,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/user_provider.dart';
@@ -56,7 +57,7 @@ class CollectionScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Semantics(
-          label: 'Geri',
+          label: ref.read(stringsProvider).backLabel,
           button: true,
           child: GestureDetector(
             onTap: () => context.pop(),
@@ -152,7 +153,7 @@ class CollectionScreen extends ConsumerWidget {
                           lockedLabel: l.collectionLocked,
                           recipe: recipe,
                         )
-                            .animate(delay: (60 * index).ms)
+                            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: (60 * index).ms)
                             .fadeIn(duration: 350.ms)
                             .scale(
                               begin: const Offset(0.92, 0.92),

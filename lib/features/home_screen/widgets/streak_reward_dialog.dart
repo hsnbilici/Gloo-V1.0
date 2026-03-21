@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/utils/motion_utils.dart';
 import '../../home_screen/widgets/dialogs.dart';
 
 class StreakRewardDialog extends StatelessWidget {
@@ -23,6 +24,7 @@ class StreakRewardDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -50,7 +52,7 @@ class StreakRewardDialog extends StatelessWidget {
             const Text(
               '🔥',
               style: TextStyle(fontSize: 52),
-            ).animate().scale(
+            ).animateOrSkip(reduceMotion: rm).scale(
                   begin: const Offset(0.4, 0.4),
                   end: const Offset(1.0, 1.0),
                   duration: 500.ms,
@@ -78,7 +80,7 @@ class StreakRewardDialog extends StatelessWidget {
                 letterSpacing: 0.5,
               ),
             )
-                .animate(delay: 200.ms)
+                .animateOrSkip(reduceMotion: rm, delay: 200.ms)
                 .fadeIn(duration: 300.ms)
                 .slideY(begin: 0.2, end: 0, duration: 300.ms),
             const SizedBox(height: 24),

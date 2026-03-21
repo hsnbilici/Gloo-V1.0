@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../game/meta/season_pass.dart';
@@ -98,7 +96,6 @@ class TierCard extends StatelessWidget {
     required this.isCurrent,
     required this.claimedFree,
     required this.claimedPremium,
-    required this.delay,
   });
 
   final SeasonTier tier;
@@ -106,7 +103,6 @@ class TierCard extends StatelessWidget {
   final bool isCurrent;
   final bool claimedFree;
   final bool claimedPremium;
-  final Duration delay;
 
   IconData _rewardIcon(SeasonRewardType type) => switch (type) {
         SeasonRewardType.gelOzu => Icons.water_drop_rounded,
@@ -177,10 +173,25 @@ class TierCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Icon(
-                    _rewardIcon(tier.freeReward.type),
-                    color: isUnlocked ? kCyan : kMuted,
-                    size: 20,
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(
+                        _rewardIcon(tier.freeReward.type),
+                        color: claimedFree
+                            ? kCyan.withValues(alpha: 0.35)
+                            : isUnlocked
+                                ? kCyan
+                                : kMuted,
+                        size: 20,
+                      ),
+                      if (claimedFree)
+                        const Icon(
+                          Icons.check_circle_rounded,
+                          color: kGreen,
+                          size: 14,
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -217,12 +228,25 @@ class TierCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Icon(
-                          _rewardIcon(tier.premiumReward!.type),
-                          color: isUnlocked
-                              ? kPink
-                              : kMuted.withValues(alpha: 0.40),
-                          size: 20,
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              _rewardIcon(tier.premiumReward!.type),
+                              color: claimedPremium
+                                  ? kPink.withValues(alpha: 0.35)
+                                  : isUnlocked
+                                      ? kPink
+                                      : kMuted.withValues(alpha: 0.40),
+                              size: 20,
+                            ),
+                            if (claimedPremium)
+                              const Icon(
+                                Icons.check_circle_rounded,
+                                color: kGreen,
+                                size: 14,
+                              ),
+                          ],
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -242,9 +266,6 @@ class TierCard extends StatelessWidget {
           ),
         ],
       ),
-    )
-        .animate(delay: delay)
-        .fadeIn(duration: 200.ms)
-        .slideX(begin: 0.1, end: 0, duration: 200.ms);
+    );
   }
 }

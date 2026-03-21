@@ -249,6 +249,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         context: context,
         score: score,
         levelId: levelId,
+        targetScore: widget.levelData?.targetScore,
         nextLevelLabel: l.nextLevelLabel,
         levelListLabel: l.levelListLabel,
         mainMenuLabel: l.mainMenuLabel,

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/world/cell_type.dart';
 import '../../providers/grid_state_provider.dart';
 import 'gel_cell_painter.dart';
@@ -134,14 +135,22 @@ class GameCellWidget extends ConsumerWidget {
             breathPhase: (row * cols + col) * 0.12,
           ),
           child: colorBlindMode
-              ? Center(
-                  child: Text(
-                    data.color!.shortLabel,
-                    style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 9,
-                      fontWeight: FontWeight.w900,
-                      height: 1,
+              ? CustomPaint(
+                  painter: _ColorBlindPatternPainter(
+                    data.color!,
+                    data.color!.displayColor.computeLuminance() > 0.4,
+                  ),
+                  child: Center(
+                    child: Text(
+                      data.color!.shortLabel,
+                      style: TextStyle(
+                        color: data.color!.displayColor.computeLuminance() > 0.4
+                            ? Colors.black87
+                            : Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.w900,
+                        height: 1,
+                      ),
                     ),
                   ),
                 )
@@ -294,6 +303,7 @@ class _SquashStretchCellState extends State<SquashStretchCell>
   @override
   Widget build(BuildContext context) {
     if (!widget.isPlaced || _ctrl == null) return widget.child;
+    if (shouldReduceMotion(context)) return widget.child;
 
     return AnimatedBuilder(
       animation: _ctrl!,
@@ -377,6 +387,7 @@ class _WaveRippleState extends State<WaveRipple>
   @override
   Widget build(BuildContext context) {
     if (_ctrl == null) return widget.child;
+    if (shouldReduceMotion(context)) return widget.child;
 
     return AnimatedBuilder(
       animation: _ctrl!,
@@ -396,4 +407,115 @@ class _WaveRippleState extends State<WaveRipple>
       },
     );
   }
+}
+
+// ─── Renk Koru Modu: Sekil Deseni ──────────────────────────────────────────
+
+/// Her GelColor icin farkli geometrik desen cizen CustomPainter.
+/// Birincil renkler: basit sekiller (daire, kare, ucgen, elmas).
+/// Sentez renkleri: cizgi desenleri (capraz, yatay, dikey, nokta vb.).
+class _ColorBlindPatternPainter extends CustomPainter {
+  _ColorBlindPatternPainter(this.gelColor, this.isDarkOnLight);
+
+  final GelColor gelColor;
+  final bool isDarkOnLight;
+
+  Paint get _paint => Paint()
+    ..color = isDarkOnLight ? Colors.black38 : Colors.white54
+    ..strokeWidth = 1.2
+    ..style = PaintingStyle.stroke;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final r = size.shortestSide * 0.28;
+
+    switch (gelColor) {
+      // Birincil renkler — belirgin sekiller
+      case GelColor.red:
+        // Ucgen (yukari)
+        final path = Path()
+          ..moveTo(cx, cy - r)
+          ..lineTo(cx + r, cy + r * 0.7)
+          ..lineTo(cx - r, cy + r * 0.7)
+          ..close();
+        canvas.drawPath(path, _paint);
+      case GelColor.yellow:
+        // Daire
+        canvas.drawCircle(Offset(cx, cy), r, _paint);
+      case GelColor.blue:
+        // Kare
+        canvas.drawRect(
+          Rect.fromCenter(center: Offset(cx, cy), width: r * 1.6, height: r * 1.6),
+          _paint,
+        );
+      case GelColor.white:
+        // Elmas (45 derece kare)
+        final path = Path()
+          ..moveTo(cx, cy - r)
+          ..lineTo(cx + r, cy)
+          ..lineTo(cx, cy + r)
+          ..lineTo(cx - r, cy)
+          ..close();
+        canvas.drawPath(path, _paint);
+
+      // Sentez renkleri — cizgi desenleri
+      case GelColor.orange:
+        // Yatay cizgiler
+        for (var y = cy - r; y <= cy + r; y += r * 0.7) {
+          canvas.drawLine(Offset(cx - r, y), Offset(cx + r, y), _paint);
+        }
+      case GelColor.green:
+        // Dikey cizgiler
+        for (var x = cx - r; x <= cx + r; x += r * 0.7) {
+          canvas.drawLine(Offset(x, cy - r), Offset(x, cy + r), _paint);
+        }
+      case GelColor.purple:
+        // Capraz cizgiler (\)
+        canvas.drawLine(Offset(cx - r, cy - r), Offset(cx + r, cy + r), _paint);
+        canvas.drawLine(Offset(cx, cy - r), Offset(cx + r, cy), _paint);
+        canvas.drawLine(Offset(cx - r, cy), Offset(cx, cy + r), _paint);
+      case GelColor.pink:
+        // X deseni
+        canvas.drawLine(Offset(cx - r, cy - r), Offset(cx + r, cy + r), _paint);
+        canvas.drawLine(Offset(cx + r, cy - r), Offset(cx - r, cy + r), _paint);
+      case GelColor.lightBlue:
+        // Arti (+) deseni
+        canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), _paint);
+        canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), _paint);
+      case GelColor.lime:
+        // Nokta deseni
+        final dotPaint = Paint()
+          ..color = isDarkOnLight ? Colors.black38 : Colors.white54
+          ..style = PaintingStyle.fill;
+        final dotR = r * 0.18;
+        canvas.drawCircle(Offset(cx - r * 0.5, cy - r * 0.5), dotR, dotPaint);
+        canvas.drawCircle(Offset(cx + r * 0.5, cy - r * 0.5), dotR, dotPaint);
+        canvas.drawCircle(Offset(cx, cy), dotR, dotPaint);
+        canvas.drawCircle(Offset(cx - r * 0.5, cy + r * 0.5), dotR, dotPaint);
+        canvas.drawCircle(Offset(cx + r * 0.5, cy + r * 0.5), dotR, dotPaint);
+      case GelColor.maroon:
+        // Ucgen (asagi)
+        final path = Path()
+          ..moveTo(cx, cy + r)
+          ..lineTo(cx + r, cy - r * 0.7)
+          ..lineTo(cx - r, cy - r * 0.7)
+          ..close();
+        canvas.drawPath(path, _paint);
+      case GelColor.brown:
+        // Izgara deseni
+        canvas.drawLine(Offset(cx - r, cy), Offset(cx + r, cy), _paint);
+        canvas.drawLine(Offset(cx, cy - r), Offset(cx, cy + r), _paint);
+        canvas.drawRect(
+          Rect.fromCenter(center: Offset(cx, cy), width: r * 1.4, height: r * 1.4),
+          _paint,
+        );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ColorBlindPatternPainter oldDelegate) =>
+      gelColor != oldDelegate.gelColor ||
+      isDarkOnLight != oldDelegate.isDarkOnLight;
 }

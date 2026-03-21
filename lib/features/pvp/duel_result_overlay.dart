@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/pvp/matchmaking.dart';
 
 // ─── Duello Sonuc Overlay ────────────────────────────────────────────────────
@@ -48,6 +49,7 @@ class DuelResultOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
     final color = _outcomeColor;
     final eloChangeStr =
         result.eloChange >= 0 ? '+${result.eloChange}' : '${result.eloChange}';
@@ -77,7 +79,7 @@ class DuelResultOverlay extends StatelessWidget {
               ),
               child: Icon(_outcomeIcon, color: color, size: 42),
             )
-                .animate(delay: 100.ms)
+                .animateOrSkip(reduceMotion: rm, delay: 100.ms)
                 .scale(
                   begin: const Offset(0.3, 0.3),
                   duration: 500.ms,
@@ -98,7 +100,7 @@ class DuelResultOverlay extends StatelessWidget {
                 ],
               ),
             )
-                .animate(delay: 200.ms)
+                .animateOrSkip(reduceMotion: rm, delay: 200.ms)
                 .fadeIn(duration: 300.ms)
                 .slideY(begin: -0.1, end: 0, duration: 300.ms),
             const SizedBox(height: 32),
@@ -131,7 +133,7 @@ class DuelResultOverlay extends StatelessWidget {
                   isWinner: result.outcome == DuelOutcome.loss,
                 ),
               ],
-            ).animate(delay: 350.ms).fadeIn(duration: 350.ms),
+            ).animateOrSkip(reduceMotion: rm, delay: 350.ms).fadeIn(duration: 350.ms),
             const SizedBox(height: 28),
             // ELO degisimi
             Container(
@@ -163,7 +165,7 @@ class DuelResultOverlay extends StatelessWidget {
                   ),
                 ],
               ),
-            ).animate(delay: 450.ms).fadeIn(duration: 300.ms).scale(
+            ).animateOrSkip(reduceMotion: rm, delay: 450.ms).fadeIn(duration: 300.ms).scale(
                   begin: const Offset(0.9, 0.9),
                   duration: 300.ms,
                   curve: Curves.easeOutBack,
@@ -177,7 +179,7 @@ class DuelResultOverlay extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
-            ).animate(delay: 500.ms).fadeIn(duration: 250.ms),
+            ).animateOrSkip(reduceMotion: rm, delay: 500.ms).fadeIn(duration: 250.ms),
             const Spacer(flex: 2),
             // Butonlar
             Padding(

@@ -122,6 +122,8 @@ class StringsKo extends AppStrings {
   @override
   String get settingsColorBlind => '색맹 모드';
   @override
+  String get settingsReduceMotion => '움직임 줄이기';
+  @override
   String get settingsSectionAbout => '정보';
   @override
   String get settingsVersion => '버전';
@@ -296,6 +298,8 @@ class StringsKo extends AppStrings {
   @override
   String get glooPlusMonthly => '월간';
   @override
+  String get glooPlusQuarter => '3개월';
+  @override
   String get glooPlusYearly => '연간';
   @override
   String get glooPlusBadge => '최고 가치';
@@ -327,6 +331,8 @@ class StringsKo extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => '이 코드는 이미 사용되었습니다';
 
+  @override
+  String get backLabel => '뒤로';
   @override
   String get errorOccurred => '오류가 발생했습니다';
 

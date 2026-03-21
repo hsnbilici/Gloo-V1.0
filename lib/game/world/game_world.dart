@@ -262,7 +262,7 @@ class GlooGame {
     final clearResult = _gridManager.detectAndClear();
 
     if (clearResult.totalLines > 0) {
-      _clearAndScore(clearResult, appliedSynthesisCount);
+      _processLineClear(clearResult, colorSynthesisCount: appliedSynthesisCount);
       _applyGravityAndCascade();
       _checkTimeTrialBonus(clearResult);
       if (_checkLevelCompletion()) return;
@@ -339,33 +339,35 @@ class GlooGame {
   }
 
   /// Satır temizleme, puan hesaplama, kombo ve ekonomi güncellemesi.
-  void _clearAndScore(LineClearResult clearResult, int appliedSynthesisCount) {
+  /// [isCascade] true ise cascade döngüsünden çağrılmıştır (time trial bonus kontrol edilir).
+  void _processLineClear(LineClearResult clearResult, {
+    int colorSynthesisCount = 0,
+    bool isCascade = false,
+  }) {
     onLineClear?.call(clearResult);
     final combo = _comboDetector.registerClear(clearResult.totalLines);
     final points = _scoreSystem.addLineClear(
       linesCleared: clearResult.totalLines,
       combo: combo,
-      colorSynthesisCount: appliedSynthesisCount,
+      colorSynthesisCount: colorSynthesisCount,
     );
     onScoreGained?.call(points);
     if (combo.tier != ComboTier.none) onCombo?.call(combo);
 
-    // Faz 4: Satır temizleme → Jel Özü + Merhamet RNG güncelleme
     currencyManager.earnFromLineClear(clearResult.totalLines);
-    _shapeGenerator.recordClear();
+    if (!isCascade) _shapeGenerator.recordClear();
 
-    // Faz 4: Jel Enerjisi kazanımı (meta-game kaynak)
     onJelEnergyEarned?.call(clearResult.totalLines);
 
-    // Faz 4: Kombo bonus
     if (combo.tier != ComboTier.none) {
       currencyManager.earnFromCombo(combo.tier.name);
     }
 
-    // Faz 4: Buz kırılma callback'i
     if (clearResult.crackedIceCells.isNotEmpty) {
       onIceCracked?.call(clearResult.crackedIceCells);
     }
+
+    if (isCascade) _checkTimeTrialBonus(clearResult);
   }
 
   /// Yerçekimi uygula ve zincirleme temizleme kontrolü.
@@ -392,26 +394,10 @@ class GlooGame {
       _updateColorChefProgress(cascadeChefCount);
 
       final cascadeClear = _gridManager.detectAndClear();
-      if (cascadeClear.totalLines == 0) break; // yerçekimi durdu, yeni satır yok
+      if (cascadeClear.totalLines == 0) break;
 
       iterations++;
-      onLineClear?.call(cascadeClear);
-      final combo = _comboDetector.registerClear(cascadeClear.totalLines);
-      final points = _scoreSystem.addLineClear(
-        linesCleared: cascadeClear.totalLines,
-        combo: combo,
-      );
-      onScoreGained?.call(points);
-      if (combo.tier != ComboTier.none) onCombo?.call(combo);
-      currencyManager.earnFromLineClear(cascadeClear.totalLines);
-      if (combo.tier != ComboTier.none) {
-        currencyManager.earnFromCombo(combo.tier.name);
-      }
-      onJelEnergyEarned?.call(cascadeClear.totalLines);
-      if (cascadeClear.crackedIceCells.isNotEmpty) {
-        onIceCracked?.call(cascadeClear.crackedIceCells);
-      }
-      _checkTimeTrialBonus(cascadeClear);
+      _processLineClear(cascadeClear, isCascade: true);
     }
   }
 
@@ -474,7 +460,7 @@ class GlooGame {
       // Temizleme + kombo + ekonomi
       final clearResult = _gridManager.detectAndClear();
       if (clearResult.totalLines > 0) {
-        _clearAndScore(clearResult, 0);
+        _processLineClear(clearResult);
         _applyGravityAndCascade();
         _checkTimeTrialBonus(clearResult);
         _checkLevelCompletion();

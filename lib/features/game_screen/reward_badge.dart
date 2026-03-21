@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 
 class RewardBadge extends StatelessWidget {
   const RewardBadge({
@@ -53,7 +54,7 @@ class RewardBadge extends StatelessWidget {
             Icon(Icons.play_circle_outline, color: color, size: 14),
           ],
         ),
-      ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+      ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).scale(
             begin: const Offset(1.0, 1.0),
             end: const Offset(1.05, 1.05),
             duration: 800.ms,

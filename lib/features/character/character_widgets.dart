@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/meta/resource_manager.dart';
 
 class GlooMascot extends StatelessWidget {
@@ -247,7 +248,7 @@ class TalentCard extends StatelessWidget {
         ),
       ),
     )
-        .animate(delay: delay)
+        .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: delay)
         .fadeIn(duration: 250.ms)
         .slideX(begin: 0.06, end: 0, duration: 250.ms);
   }

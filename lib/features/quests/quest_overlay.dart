@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/section_header.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/service_providers.dart';
@@ -148,7 +149,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                     const XpBadge(label: 'XP Kazan'),
                   ],
                 ),
-              ).animate().fadeIn(duration: 300.ms),
+              ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 300.ms),
               const SizedBox(height: 16),
               Expanded(
                 child: _loaded
@@ -162,7 +163,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                             color: kCyan,
                             icon: Icons.today_rounded,
                             showDivider: true,
-                          ).animate(delay: 50.ms).fadeIn(duration: 250.ms),
+                          ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 50.ms).fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeDailies.asMap().entries.map((e) {
                             final quest = e.value;
@@ -180,7 +181,7 @@ class _QuestOverlayState extends ConsumerState<QuestOverlay> {
                             color: kOrange,
                             icon: Icons.date_range_rounded,
                             showDivider: true,
-                          ).animate(delay: 250.ms).fadeIn(duration: 250.ms),
+                          ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 250.ms).fadeIn(duration: 250.ms),
                           const SizedBox(height: 8),
                           ..._activeWeeklies.asMap().entries.map((e) {
                             final quest = e.value;

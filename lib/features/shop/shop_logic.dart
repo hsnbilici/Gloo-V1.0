@@ -20,6 +20,20 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
     }
   }
 
+  /// Yerel test kodlari — Supabase baglantisi olmadan calisir.
+  static const _kLocalRedeemCodes = <String, List<String>>{
+    'UNLOCKALL': [
+      PurchaseService.kGlooPlusYearly,
+      PurchaseService.kRemoveAds,
+      PurchaseService.kSoundCrystal,
+      PurchaseService.kSoundForest,
+      PurchaseService.kTexturePack,
+      PurchaseService.kStarterPack,
+    ],
+    'GLOOPREMIUM': [PurchaseService.kGlooPlusYearly],
+    'ZENMODE': [PurchaseService.kGlooPlusQuarter],
+  };
+
   Future<void> redeemCode(String code) async {
     if (redeeming || code.trim().isEmpty) return;
     setState(() => redeeming = true);
@@ -27,15 +41,18 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
 
     try {
       final repo = await ref.read(localRepositoryProvider.future);
+      final upperCode = code.toUpperCase();
 
       final redeemed = await repo.getRedeemedCodes();
-      if (redeemed.contains(code.toUpperCase())) {
+      if (redeemed.contains(upperCode)) {
         showToast(l.redeemCodeAlreadyUsed);
         if (mounted) setState(() => redeeming = false);
         return;
       }
 
-      final result = await ref.read(remoteRepositoryProvider).redeemCode(code);
+      // Oncelik: Supabase uzerinden dogrulama
+      final remote = ref.read(remoteRepositoryProvider);
+      final result = await remote.redeemCode(code);
       switch (result) {
         case RedeemSuccess(:final productIds):
           if (productIds.isEmpty) {
@@ -44,14 +61,31 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
             return;
           }
           ref.read(purchaseServiceProvider).unlockProducts(productIds);
-          await repo.addRedeemedCode(code.toUpperCase());
+          await repo.addRedeemedCode(upperCode);
           await repo.addUnlockedProducts(productIds);
           redeemController.clear();
           showToast(l.redeemCodeSuccess);
+          if (mounted) setState(() => redeeming = false);
+          return;
         case RedeemAlreadyRedeemed():
           showToast(l.redeemCodeAlreadyUsed);
+          if (mounted) setState(() => redeeming = false);
+          return;
         case RedeemError():
-          showToast(l.redeemCodeInvalid);
+          // Supabase hatasi veya yapilandirilmamis — yerel kodlari dene
+          break;
+      }
+
+      // Fallback: yerel test kodlari (Supabase offline ise)
+      final localProducts = _kLocalRedeemCodes[upperCode];
+      if (localProducts != null) {
+        ref.read(purchaseServiceProvider).unlockProducts(localProducts);
+        await repo.addRedeemedCode(upperCode);
+        await repo.addUnlockedProducts(localProducts);
+        redeemController.clear();
+        showToast(l.redeemCodeSuccess);
+      } else {
+        showToast(l.redeemCodeInvalid);
       }
     } catch (_) {
       showToast(l.redeemCodeInvalid);
@@ -65,7 +99,11 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
     setState(() => purchasing = true);
     final l = ref.read(stringsProvider);
     try {
-      await ref.read(purchaseServiceProvider).buyProduct(productId);
+      final success =
+          await ref.read(purchaseServiceProvider).buyProduct(productId);
+      if (!success && mounted) {
+        showToast(l.shopPurchaseError);
+      }
     } catch (_) {
       showToast(l.shopPurchaseError);
     }
@@ -146,7 +184,7 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
           onBuy: () => buy(p.id),
           isFeatured: p.isFeatured,
         )
-            .animate(delay: Duration(milliseconds: p.delay))
+            .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: Duration(milliseconds: p.delay))
             .fadeIn(duration: 350.ms)
             .slideY(begin: 0.08, end: 0, duration: 350.ms),
       );

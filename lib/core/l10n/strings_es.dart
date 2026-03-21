@@ -122,6 +122,8 @@ class StringsEs extends AppStrings {
   @override
   String get settingsColorBlind => 'Modo daltonismo';
   @override
+  String get settingsReduceMotion => 'Reducir movimiento';
+  @override
   String get settingsSectionAbout => 'ACERCA DE';
   @override
   String get settingsVersion => 'Versión';
@@ -300,6 +302,8 @@ class StringsEs extends AppStrings {
   @override
   String get glooPlusMonthly => 'Mensual';
   @override
+  String get glooPlusQuarter => '3 Meses';
+  @override
   String get glooPlusYearly => 'Anual';
   @override
   String get glooPlusBadge => 'MEJOR VALOR';
@@ -332,6 +336,8 @@ class StringsEs extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'Este código ya ha sido utilizado';
 
+  @override
+  String get backLabel => 'Volver';
   @override
   String get errorOccurred => 'Se produjo un error';
 

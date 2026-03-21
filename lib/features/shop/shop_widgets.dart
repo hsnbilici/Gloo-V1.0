@@ -188,24 +188,30 @@ class GlooPlusCard extends StatelessWidget {
     required this.title,
     required this.desc,
     required this.monthlyLabel,
+    required this.quarterLabel,
     required this.yearlyLabel,
     required this.badgeLabel,
     required this.monthlyPrice,
+    required this.quarterPrice,
     required this.yearlyPrice,
     required this.isSubscribed,
     required this.onMonthly,
+    required this.onQuarter,
     required this.onYearly,
   });
 
   final String title;
   final String desc;
   final String monthlyLabel;
+  final String quarterLabel;
   final String yearlyLabel;
   final String badgeLabel;
   final String monthlyPrice;
+  final String quarterPrice;
   final String yearlyPrice;
   final bool isSubscribed;
   final VoidCallback onMonthly;
+  final VoidCallback onQuarter;
   final VoidCallback onYearly;
 
   @override
@@ -324,115 +330,125 @@ class GlooPlusCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Semantics(
-                    label: '$monthlyLabel $monthlyPrice',
-                    button: true,
-                    child: GestureDetector(
-                      onTap: onMonthly,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.04),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusMd),
-                          border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.12)),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              monthlyLabel,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.60),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              monthlyPrice,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  child: _SubscriptionOption(
+                    label: monthlyLabel,
+                    price: monthlyPrice,
+                    onTap: onMonthly,
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Semantics(
-                    label: '$yearlyLabel $yearlyPrice',
-                    button: true,
-                    child: GestureDetector(
-                      onTap: onYearly,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: kGold.withValues(alpha: 0.12),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusMd),
-                          border: Border.all(
-                              color: kGold.withValues(alpha: 0.50), width: 1.5),
-                          boxShadow: [
-                            BoxShadow(
-                                color: kGold.withValues(alpha: 0.14),
-                                blurRadius: 10),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: kGold.withValues(alpha: 0.20),
-                                borderRadius:
-                                    BorderRadius.circular(UIConstants.radiusXs),
-                              ),
-                              child: Text(
-                                badgeLabel,
-                                style: const TextStyle(
-                                  color: kGold,
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              yearlyLabel,
-                              style: TextStyle(
-                                color: kGold.withValues(alpha: 0.80),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              yearlyPrice,
-                              style: const TextStyle(
-                                color: kGold,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  child: _SubscriptionOption(
+                    label: quarterLabel,
+                    price: quarterPrice,
+                    onTap: onQuarter,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _SubscriptionOption(
+                    label: yearlyLabel,
+                    price: yearlyPrice,
+                    badgeLabel: badgeLabel,
+                    isHighlighted: true,
+                    onTap: onYearly,
                   ),
                 ),
               ],
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _SubscriptionOption extends StatelessWidget {
+  const _SubscriptionOption({
+    required this.label,
+    required this.price,
+    required this.onTap,
+    this.badgeLabel,
+    this.isHighlighted = false,
+  });
+
+  final String label;
+  final String price;
+  final VoidCallback onTap;
+  final String? badgeLabel;
+  final bool isHighlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: '$label $price',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isHighlighted
+                ? kGold.withValues(alpha: 0.12)
+                : Colors.white.withValues(alpha: 0.04),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(
+              color: isHighlighted
+                  ? kGold.withValues(alpha: 0.50)
+                  : Colors.white.withValues(alpha: 0.12),
+              width: isHighlighted ? 1.5 : 1,
+            ),
+            boxShadow: isHighlighted
+                ? [
+                    BoxShadow(
+                        color: kGold.withValues(alpha: 0.14), blurRadius: 10),
+                  ]
+                : null,
+          ),
+          child: Column(
+            children: [
+              if (badgeLabel != null) ...[
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: kGold.withValues(alpha: 0.20),
+                    borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+                  ),
+                  child: Text(
+                    badgeLabel!,
+                    style: const TextStyle(
+                      color: kGold,
+                      fontSize: 7,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 3),
+              ],
+              Text(
+                label,
+                style: TextStyle(
+                  color: isHighlighted
+                      ? kGold.withValues(alpha: 0.80)
+                      : Colors.white.withValues(alpha: 0.60),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.8,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                price,
+                style: TextStyle(
+                  color: isHighlighted ? kGold : Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

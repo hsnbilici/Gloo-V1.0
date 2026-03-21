@@ -7,6 +7,19 @@ class GridStateNotifier extends Notifier<Map<(int, int), CellRenderData>> {
   Map<(int, int), CellRenderData> build() => const {};
 
   void updateCells(Map<(int, int), CellRenderData> newCells) {
+    // Delta check: yalnizca degisen hucre varsa state'i guncelle.
+    // CellRenderData'nin == operatoru tum alanlari karsilastirir.
+    final prev = state;
+    if (prev.length == newCells.length) {
+      bool changed = false;
+      for (final entry in newCells.entries) {
+        if (prev[entry.key] != entry.value) {
+          changed = true;
+          break;
+        }
+      }
+      if (!changed) return;
+    }
     state = newCells;
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/utils/motion_utils.dart';
 
 /// Power-up kullanildiginda gosterilen parilti efekti.
 class PowerUpActivateEffect extends StatefulWidget {
@@ -41,6 +42,8 @@ class _PowerUpActivateEffectState extends State<PowerUpActivateEffect> {
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) return const SizedBox.shrink();
+
     return IgnorePointer(
       child: Center(
         child: Container(
@@ -114,6 +117,13 @@ class _BombExplosionEffectState extends State<BombExplosionEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
     final size = widget.cellSize * 6.0;
     return SizedBox(
       width: size,
@@ -250,6 +260,13 @@ class _UndoRewindEffectState extends State<UndoRewindEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
     return IgnorePointer(
       child: AnimatedBuilder(
         animation: _ctrl,

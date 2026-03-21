@@ -8,7 +8,9 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 import 'season_pass_background.dart';
@@ -83,6 +85,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
   @override
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
+    final rm = shouldReduceMotion(context);
     final currentTier = _passState.getCurrentTier(_kSeasonTiers);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
@@ -108,7 +111,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                   child: Row(
                     children: [
                       Semantics(
-                        label: 'Geri',
+                        label: ref.read(stringsProvider).backLabel,
                         button: true,
                         child: GestureDetector(
                           onTap: () => context.go('/'),
@@ -165,7 +168,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                       ),
                     ],
                   ),
-                ).animate().fadeIn(duration: 300.ms),
+                ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 300.ms),
                 const SizedBox(height: 16),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: hPadding),
@@ -174,7 +177,7 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                     currentTier: currentTier,
                     tiers: _kSeasonTiers,
                   ),
-                ).animate(delay: 100.ms).fadeIn(duration: 350.ms),
+                ).animateOrSkip(reduceMotion: rm, delay: 100.ms).fadeIn(duration: 350.ms),
                 const SizedBox(height: 16),
                 Expanded(
                   child: _loaded
@@ -196,7 +199,6 @@ class _SeasonPassScreenState extends ConsumerState<SeasonPassScreen> {
                                   _passState.claimedFreeTier >= tier.tier,
                               claimedPremium:
                                   _passState.claimedPremiumTier >= tier.tier,
-                              delay: Duration(milliseconds: 30 * index),
                             );
                           },
                         )

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 
 class HintToast extends StatelessWidget {
   const HintToast({super.key, required this.msg});
@@ -34,7 +35,7 @@ class HintToast extends StatelessWidget {
           ),
         ),
       ),
-    ).animate().fadeIn(duration: 120.ms).slideY(
+    ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 120.ms).slideY(
         begin: 0.3, end: 0, duration: 200.ms, curve: Curves.easeOutCubic);
   }
 }

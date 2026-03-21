@@ -122,6 +122,8 @@ class StringsAr extends AppStrings {
   @override
   String get settingsColorBlind => 'وضع عمى الألوان';
   @override
+  String get settingsReduceMotion => 'تقليل الحركة';
+  @override
   String get settingsSectionAbout => 'حول';
   @override
   String get settingsVersion => 'الإصدار';
@@ -298,6 +300,8 @@ class StringsAr extends AppStrings {
   @override
   String get glooPlusMonthly => 'شهري';
   @override
+  String get glooPlusQuarter => '3 أشهر';
+  @override
   String get glooPlusYearly => 'سنوي';
   @override
   String get glooPlusBadge => 'أفضل قيمة';
@@ -330,6 +334,8 @@ class StringsAr extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'تم استخدام هذا الرمز بالفعل';
 
+  @override
+  String get backLabel => 'رجوع';
   @override
   String get errorOccurred => 'حدث خطأ';
 

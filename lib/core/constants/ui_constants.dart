@@ -55,6 +55,98 @@ abstract final class UIConstants {
   static const double hPaddingGrid = 12.0;
 }
 
+/// Centralized vertical spacing — eliminates ad-hoc SizedBox(height:) magic numbers.
+abstract final class Spacing {
+  /// Micro: metin satirlari arasi, ikon-metin ayrimi.
+  static const double xxs = 2.0;
+
+  /// Tiny: eleman ici bosluk, divider margin.
+  static const double xs = 4.0;
+
+  /// Small: kompakt liste ogeleri, kart ici minimum.
+  static const double sm = 8.0;
+
+  /// Base: standart kart ici, toggle satiri, badge arasi.
+  static const double md = 12.0;
+
+  /// Medium: bolum ici paragraf arasi, buton gruplari.
+  static const double lg = 16.0;
+
+  /// Large: bolumler arasi, ekran ici ana kesimler.
+  static const double xl = 20.0;
+
+  /// XL: buyuk bolum kesmeleri, overlay ici.
+  static const double xxl = 24.0;
+
+  /// XXL: ekran ust/alt padding, ayirici alanlar.
+  static const double xxxl = 32.0;
+}
+
+/// Centralized text styles — reduces inline TextStyle boilerplate.
+///
+/// Kullanim: `style: AppTextStyles.heading` veya
+/// `style: AppTextStyles.body.copyWith(color: kCyan)`
+abstract final class AppTextStyles {
+  // ─── Headings ──────────────────────────────────────────────────────────
+  /// Ekran basligi (32px): overlay title, game over.
+  static const TextStyle displayLarge = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w900,
+    height: 1.1,
+  );
+
+  /// Orta baslik (18px): ekran title, section header.
+  static const TextStyle heading = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w800,
+    height: 1.2,
+  );
+
+  /// Kucuk baslik (16px): kart basligi, mod adi.
+  static const TextStyle subheading = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+  );
+
+  // ─── Body ──────────────────────────────────────────────────────────────
+  /// Ana govde metni (14px): aciklamalar, liste ogeleri.
+  static const TextStyle body = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+  );
+
+  /// Ikincil govde (13px): alt aciklamalar, yardimci metin.
+  static const TextStyle bodySecondary = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w500,
+    height: 1.4,
+  );
+
+  // ─── Labels & Captions ─────────────────────────────────────────────────
+  /// Etiket (11px): badge, meta bilgi, kucuk label.
+  static const TextStyle label = TextStyle(
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+  );
+
+  /// Kucuk etiket (10px): bottom bar, minimal text.
+  static const TextStyle caption = TextStyle(
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    height: 1.2,
+  );
+
+  /// Mikro etiket (8-9px): badge ici, grid label.
+  static const TextStyle micro = TextStyle(
+    fontSize: 9,
+    fontWeight: FontWeight.w800,
+    height: 1.0,
+  );
+}
+
 /// Centralized animation durations — reduces magic numbers across features.
 abstract final class AnimationDurations {
   // ─── Micro feedback ──────────────────────────────────────────────────────

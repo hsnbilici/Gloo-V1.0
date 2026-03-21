@@ -122,6 +122,8 @@ class StringsJa extends AppStrings {
   @override
   String get settingsColorBlind => '色覚サポートモード';
   @override
+  String get settingsReduceMotion => '視差効果を減らす';
+  @override
   String get settingsSectionAbout => 'このアプリについて';
   @override
   String get settingsVersion => 'バージョン';
@@ -295,6 +297,8 @@ class StringsJa extends AppStrings {
   @override
   String get glooPlusMonthly => '月額';
   @override
+  String get glooPlusQuarter => '3ヶ月';
+  @override
   String get glooPlusYearly => '年額';
   @override
   String get glooPlusBadge => 'お得プラン';
@@ -326,6 +330,8 @@ class StringsJa extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'このコードは既に使用されています';
 
+  @override
+  String get backLabel => '戻る';
   @override
   String get errorOccurred => 'エラーが発生しました';
 

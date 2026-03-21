@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../game/meta/resource_manager.dart';
 
@@ -207,7 +208,7 @@ class _BuildingCardState extends State<BuildingCard> {
         ),
       ),
     )
-        .animate(delay: widget.delay)
+        .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: widget.delay)
         .fadeIn(duration: 300.ms)
         .slideX(begin: 0.08, end: 0, duration: 300.ms);
   }

@@ -10,6 +10,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/section_header.dart';
 import '../../data/remote/dto/redeem_result.dart';
 import '../../providers/audio_provider.dart';
@@ -83,7 +84,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Semantics(
-          label: 'Geri',
+          label: l.backLabel,
           button: true,
           child: GestureDetector(
             onTap: () => context.pop(),
@@ -125,19 +126,24 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 title: l.glooPlusTitle,
                 desc: l.glooPlusDesc,
                 monthlyLabel: l.glooPlusMonthly,
+                quarterLabel: l.glooPlusQuarter,
                 yearlyLabel: l.glooPlusYearly,
                 badgeLabel: l.glooPlusBadge,
                 monthlyPrice: ref.read(purchaseServiceProvider).priceOf(
                     PurchaseService.kGlooPlusMonthly,
                     fallback: '\$1.99'),
+                quarterPrice: ref.read(purchaseServiceProvider).priceOf(
+                    PurchaseService.kGlooPlusQuarter,
+                    fallback: '\$4.99'),
                 yearlyPrice: ref.read(purchaseServiceProvider).priceOf(
                     PurchaseService.kGlooPlusYearly,
                     fallback: '\$9.99'),
                 isSubscribed: settings.glooPlus,
                 onMonthly: () => buy(PurchaseService.kGlooPlusMonthly),
+                onQuarter: () => buy(PurchaseService.kGlooPlusQuarter),
                 onYearly: () => buy(PurchaseService.kGlooPlusYearly),
               )
-                  .animate(delay: 60.ms)
+                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 60.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
@@ -154,7 +160,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 purchased: settings.adsRemoved,
                 onBuy: () => buy(PurchaseService.kRemoveAds),
               )
-                  .animate(delay: 120.ms)
+                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 120.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
@@ -173,7 +179,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
                 enabled: !redeeming,
                 onRedeem: () => redeemCode(redeemController.text),
               )
-                  .animate(delay: 400.ms)
+                  .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 400.ms)
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 

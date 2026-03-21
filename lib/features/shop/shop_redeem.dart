@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 
 // ─── Redeem Code Alanı ───────────────────────────────────────────────────────
 
@@ -126,7 +127,7 @@ class ShopToast extends StatelessWidget {
             color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
       ),
     )
-        .animate()
+        .animateOrSkip(reduceMotion: shouldReduceMotion(context))
         .fadeIn(duration: 200.ms)
         .slideY(begin: 0.3, end: 0, duration: 200.ms);
   }

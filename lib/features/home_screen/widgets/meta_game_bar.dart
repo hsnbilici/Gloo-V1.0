@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/color_constants_light.dart';
 import '../../../core/constants/ui_constants.dart';
 
 class MetaGameBar extends StatelessWidget {
@@ -18,12 +19,24 @@ class MetaGameBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final containerColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.03),
+      light: Colors.black.withValues(alpha: 0.03),
+    );
+    final borderColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.06),
+      light: kCardBorderLight,
+    );
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
+        color: containerColor,
         borderRadius: BorderRadius.circular(UIConstants.radiusLg),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -34,20 +47,14 @@ class MetaGameBar extends StatelessWidget {
             color: kGreen,
             onTap: () => context.push('/island'),
           ),
-          Container(
-              width: 1,
-              height: 28,
-              color: Colors.white.withValues(alpha: 0.06)),
+          Container(width: 1, height: 28, color: borderColor),
           MetaItem(
             icon: Icons.person_rounded,
             label: characterLabel,
             color: kLavender,
             onTap: () => context.push('/character'),
           ),
-          Container(
-              width: 1,
-              height: 28,
-              color: Colors.white.withValues(alpha: 0.06)),
+          Container(width: 1, height: 28, color: borderColor),
           MetaItem(
             icon: Icons.military_tech_rounded,
             label: seasonLabel,

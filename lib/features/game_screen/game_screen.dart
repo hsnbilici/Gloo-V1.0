@@ -316,6 +316,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 step: tutorialStep,
                 message: messages[tutorialStep],
                 pointDown: tutorialStep == 0,
+                skipLabel: l.onboardingSkip,
                 dismissLabel: tutorialStep == 2 ? l.tutorialGotIt : null,
                 onDismiss: () {
                   setState(() {

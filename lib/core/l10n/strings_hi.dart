@@ -122,6 +122,8 @@ class StringsHi extends AppStrings {
   @override
   String get settingsColorBlind => 'रंग अंधता मोड';
   @override
+  String get settingsReduceMotion => 'मोशन कम करें';
+  @override
   String get settingsSectionAbout => 'परिचय';
   @override
   String get settingsVersion => 'संस्करण';
@@ -296,6 +298,8 @@ class StringsHi extends AppStrings {
   @override
   String get glooPlusMonthly => 'मासिक';
   @override
+  String get glooPlusQuarter => '3 महीने';
+  @override
   String get glooPlusYearly => 'वार्षिक';
   @override
   String get glooPlusBadge => 'सबसे अच्छा मूल्य';
@@ -327,6 +331,8 @@ class StringsHi extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'यह कोड पहले ही उपयोग किया जा चुका है';
 
+  @override
+  String get backLabel => 'वापस';
   @override
   String get errorOccurred => 'एक त्रुटि हुई';
 

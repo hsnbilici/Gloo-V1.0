@@ -3,12 +3,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
+import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
+import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 
 // ─── Onboarding ekranı (ilk açılışta bir kez gösterilir) ─────────────────────
@@ -23,8 +27,16 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _controller = PageController();
   int _page = 0;
+  bool _analyticsEnabled = true;
+  bool _colorBlindEnabled = false;
 
-  static const _kTotalPages = 3;
+  static const _kTotalPages = 4;
+
+  static const _kStepMeta = [
+    (icon: Icons.grid_4x4_rounded, color: kColorClassic),
+    (icon: Icons.bolt_rounded, color: kColorTimeTrial),
+    (icon: Icons.palette_rounded, color: kColorChef),
+  ];
 
   @override
   void dispose() {
@@ -35,6 +47,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _finish() async {
     final repo = await ref.read(localRepositoryProvider.future);
     await repo.setOnboardingDone();
+    // Only persist consent/colorblind prefs if user reached the prefs page (GDPR)
+    if (_page >= 3) {
+      await repo.setAnalyticsEnabled(_analyticsEnabled);
+      await repo.setConsentShown();
+      await repo.setColorblindPromptShown();
+      ref
+          .read(appSettingsProvider.notifier)
+          .setAnalyticsEnabled(enabled: _analyticsEnabled);
+      ref.read(analyticsServiceProvider).setEnabled(_analyticsEnabled);
+      if (_colorBlindEnabled) {
+        ref
+            .read(appSettingsProvider.notifier)
+            .setColorBlindMode(enabled: true);
+      }
+    }
     if (mounted) context.go('/');
   }
 
@@ -53,29 +80,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
 
-    final steps = [
-      _StepData(
-        icon: Icons.grid_4x4_rounded,
-        color: kColorClassic,
-        title: l.onboardingStep1Title,
-        desc: l.onboardingStep1Desc,
-      ),
-      _StepData(
-        icon: Icons.bolt_rounded,
-        color: kColorTimeTrial,
-        title: l.onboardingStep2Title,
-        desc: l.onboardingStep2Desc,
-      ),
-      _StepData(
-        icon: Icons.palette_rounded,
-        color: kColorChef,
-        title: l.onboardingStep3Title,
-        desc: l.onboardingStep3Desc,
-      ),
-    ];
+    final stepTitles = [l.onboardingStep1Title, l.onboardingStep2Title, l.onboardingStep3Title];
+    final stepDescs = [l.onboardingStep1Desc, l.onboardingStep2Desc, l.onboardingStep3Desc];
 
     final isLast = _page == _kTotalPages - 1;
-    final stepColor = steps[_page].color;
+    final stepColor = _page < _kStepMeta.length ? _kStepMeta[_page].color : kCyan;
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
@@ -94,7 +103,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCubic,
             top: -120,
-            left: _page == 0 ? -80 : (_page == 1 ? 60 : 200),
+            left: _page == 0 ? -80 : (_page == 1 ? 60 : (_page == 2 ? 200 : 40)),
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               child: GlowOrb(
@@ -123,7 +132,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'GLOO',
+                        kAppName,
                         style: TextStyle(
                           color: textColor,
                           fontSize: 18,
@@ -172,7 +181,31 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       controller: _controller,
                       itemCount: _kTotalPages,
                       onPageChanged: (i) => setState(() => _page = i),
-                      itemBuilder: (context, i) => _StepPage(step: steps[i]),
+                      itemBuilder: (context, i) {
+                        if (i < 3) {
+                          return _StepPage(
+                            step: _StepData(
+                              icon: _kStepMeta[i].icon,
+                              color: _kStepMeta[i].color,
+                              title: stepTitles[i],
+                              desc: stepDescs[i],
+                            ),
+                          );
+                        }
+                        return _PrefsPage(
+                          analyticsEnabled: _analyticsEnabled,
+                          colorBlindEnabled: _colorBlindEnabled,
+                          onAnalyticsChanged: (v) =>
+                              setState(() => _analyticsEnabled = v),
+                          onColorBlindChanged: (v) =>
+                              setState(() => _colorBlindEnabled = v),
+                          prefsTitle: l.settingsTitle,
+                          consentTitle: l.consentTitle,
+                          consentMessage: l.consentMessage,
+                          colorblindTitle: l.colorblindDialogTitle,
+                          colorblindMessage: l.colorblindDialogMessage,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -298,6 +331,201 @@ class _StepData {
   final String desc;
 }
 
+// ─── Tercihler sayfası (4. adım) ─────────────────────────────────────────────
+
+class _PrefsPage extends StatelessWidget {
+  const _PrefsPage({
+    required this.analyticsEnabled,
+    required this.colorBlindEnabled,
+    required this.onAnalyticsChanged,
+    required this.onColorBlindChanged,
+    required this.prefsTitle,
+    required this.consentTitle,
+    required this.consentMessage,
+    required this.colorblindTitle,
+    required this.colorblindMessage,
+  });
+
+  final bool analyticsEnabled;
+  final bool colorBlindEnabled;
+  final ValueChanged<bool> onAnalyticsChanged;
+  final ValueChanged<bool> onColorBlindChanged;
+  final String prefsTitle;
+  final String consentTitle;
+  final String consentMessage;
+  final String colorblindTitle;
+  final String colorblindMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
+    final brightness = Theme.of(context).brightness;
+    final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
+    final surfaceColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.06), light: kCardBgLight);
+    final borderColor = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.10), light: kCardBorderLight);
+    final rm = shouldReduceMotion(context);
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: kCyan.withValues(alpha: 0.10),
+              border: Border.all(
+                color: kCyan.withValues(alpha: 0.35),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: kCyan.withValues(alpha: 0.22),
+                  blurRadius: 40,
+                  spreadRadius: 4,
+                ),
+              ],
+            ),
+            child: const Icon(Icons.tune_rounded, color: kCyan, size: 44),
+          ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 320.ms).scale(
+                begin: const Offset(0.6, 0.6),
+                duration: 380.ms,
+                curve: Curves.easeOutBack,
+              ),
+          const SizedBox(height: 36),
+          Text(
+            prefsTitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.5,
+              shadows: [
+                Shadow(
+                  color: kCyan.withValues(alpha: 0.45),
+                  blurRadius: 20,
+                ),
+              ],
+            ),
+          ).animateOrSkip(reduceMotion: rm, delay: 80.ms).fadeIn(duration: 280.ms),
+          const SizedBox(height: 28),
+          // Analytics toggle
+          _PrefToggle(
+            icon: Icons.analytics_outlined,
+            color: kCyan,
+            label: consentTitle,
+            desc: consentMessage,
+            value: analyticsEnabled,
+            onChanged: onAnalyticsChanged,
+            surfaceColor: surfaceColor,
+            borderColor: borderColor,
+            textColor: textColor,
+            textSecondary: textSecondary,
+          ).animateOrSkip(reduceMotion: rm, delay: 120.ms).fadeIn(duration: 280.ms).slideY(
+              begin: 0.08, end: 0, duration: 280.ms, curve: Curves.easeOutCubic),
+          const SizedBox(height: 12),
+          // Colorblind toggle
+          _PrefToggle(
+            icon: Icons.visibility_rounded,
+            color: kColorTimeTrial,
+            label: colorblindTitle,
+            desc: colorblindMessage,
+            value: colorBlindEnabled,
+            onChanged: onColorBlindChanged,
+            surfaceColor: surfaceColor,
+            borderColor: borderColor,
+            textColor: textColor,
+            textSecondary: textSecondary,
+          ).animateOrSkip(reduceMotion: rm, delay: 200.ms).fadeIn(duration: 280.ms).slideY(
+              begin: 0.08, end: 0, duration: 280.ms, curve: Curves.easeOutCubic),
+        ],
+      ),
+    );
+  }
+
+}
+
+class _PrefToggle extends StatelessWidget {
+  const _PrefToggle({
+    required this.icon,
+    required this.color,
+    required this.label,
+    required this.desc,
+    required this.value,
+    required this.onChanged,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.textColor,
+    required this.textSecondary,
+  });
+
+  final IconData icon;
+  final Color color;
+  final String label;
+  final String desc;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  final Color surfaceColor;
+  final Color borderColor;
+  final Color textColor;
+  final Color textSecondary;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+        border: Border.all(color: borderColor),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  desc,
+                  style: TextStyle(
+                    color: textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            height: 28,
+            child: Switch.adaptive(
+              value: value,
+              onChanged: onChanged,
+              activeTrackColor: color.withValues(alpha: 0.50),
+              activeThumbColor: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ─── Tek adım sayfası ─────────────────────────────────────────────────────────
 
 class _StepPage extends StatelessWidget {
@@ -311,6 +539,7 @@ class _StepPage extends StatelessWidget {
     final brightness = Theme.of(context).brightness;
     final textColor = resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     final textSecondary = resolveColor(brightness, dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
+    final rm = shouldReduceMotion(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: hPadding),
       child: Column(
@@ -336,7 +565,7 @@ class _StepPage extends StatelessWidget {
               ],
             ),
             child: Icon(step.icon, color: step.color, size: 44),
-          ).animate().fadeIn(duration: 320.ms).scale(
+          ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 320.ms).scale(
                 begin: const Offset(0.6, 0.6),
                 duration: 380.ms,
                 curve: Curves.easeOutBack,
@@ -358,7 +587,7 @@ class _StepPage extends StatelessWidget {
                 ),
               ],
             ),
-          ).animate(delay: 80.ms).fadeIn(duration: 280.ms).slideY(
+          ).animateOrSkip(reduceMotion: rm, delay: 80.ms).fadeIn(duration: 280.ms).slideY(
               begin: -0.08,
               end: 0,
               duration: 280.ms,
@@ -375,7 +604,7 @@ class _StepPage extends StatelessWidget {
               height: 1.55,
               letterSpacing: 0.1,
             ),
-          ).animate(delay: 160.ms).fadeIn(duration: 300.ms).slideY(
+          ).animateOrSkip(reduceMotion: rm, delay: 160.ms).fadeIn(duration: 300.ms).slideY(
               begin: 0.08,
               end: 0,
               duration: 300.ms,

@@ -134,48 +134,13 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       return;
     }
 
-    game.placePiece(cells, color);
-    ref
-        .read(gameProvider(widget.mode).notifier)
-        .updateFill(game.gridManager.filledCells);
-
-    // Complete tutorial after placing piece on step 2
-    if (tutorialActive && tutorialStep == 2) {
-      tutorialActive = false;
-      tutorialStep = -1;
-      ref
-          .read(localRepositoryProvider.future)
-          .then((repo) => repo.setTutorialDone());
-    }
-
-    final feedbackCx = ac + (shape.colCount - 1) / 2.0;
-    final feedbackCy = ar + (shape.rowCount - 1) / 2.0;
-
-    setState(() {
-      hand[selectedSlot!] = null;
-      selectedSlot = null;
-      previewCells = {};
-      previewValid = false;
-      previewAnchor = null;
-      placeFeedback = (
-        cx: feedbackCx,
-        cy: feedbackCy,
-        count: cells.length,
-        color: color.displayColor,
-        key: ++feedbackKeyIndex,
-      );
-      recentlyPlacedCells = cells.toSet();
-      waveKey++;
-      if (hand.every((h) => h == null)) refillHand();
-    });
-
-    waveClearTimer?.cancel();
-    waveClearTimer = Timer(AnimationDurations.waveClear, () {
-      if (mounted) setState(() => recentlyPlacedCells = {});
-    });
-
-    game.checkGameOver(
-      hand.where((s) => s != null).map((s) => s!.$1).toList(),
+    _executePlacement(
+      cells: cells,
+      color: color,
+      shape: shape,
+      anchorRow: ar,
+      anchorCol: ac,
+      tutorialShouldComplete: () => tutorialStep == 2,
     );
   }
 
@@ -227,6 +192,60 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     }
   }
 
+  // ─── Shared placement logic ──────────────────────────────────────────
+
+  void _executePlacement({
+    required List<(int, int)> cells,
+    required GelColor color,
+    required GelShape shape,
+    required int anchorRow,
+    required int anchorCol,
+    required bool Function() tutorialShouldComplete,
+  }) {
+    game.placePiece(cells, color);
+    ref
+        .read(gameProvider(widget.mode).notifier)
+        .updateFill(game.gridManager.filledCells);
+
+    if (tutorialActive && tutorialShouldComplete()) {
+      tutorialActive = false;
+      tutorialStep = -1;
+      ref
+          .read(localRepositoryProvider.future)
+          .then((repo) => repo.setTutorialDone());
+    }
+
+    final feedbackCx = anchorCol + (shape.colCount - 1) / 2.0;
+    final feedbackCy = anchorRow + (shape.rowCount - 1) / 2.0;
+
+    setState(() {
+      hand[selectedSlot!] = null;
+      selectedSlot = null;
+      previewCells = {};
+      previewValid = false;
+      previewAnchor = null;
+      placeFeedback = (
+        cx: feedbackCx,
+        cy: feedbackCy,
+        count: cells.length,
+        color: color.displayColor,
+        key: ++feedbackKeyIndex,
+      );
+      recentlyPlacedCells = cells.toSet();
+      waveKey++;
+      if (hand.every((h) => h == null)) refillHand();
+    });
+
+    waveClearTimer?.cancel();
+    waveClearTimer = Timer(AnimationDurations.waveClear, () {
+      if (mounted) setState(() => recentlyPlacedCells = {});
+    });
+
+    game.checkGameOver(
+      hand.where((s) => s != null).map((s) => s!.$1).toList(),
+    );
+  }
+
   // ─── Drag-and-drop handler'ları ────────────────────────────────────────
 
   void onDragStarted(int index) {
@@ -267,48 +286,13 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       return;
     }
 
-    game.placePiece(cells, color);
-    ref
-        .read(gameProvider(widget.mode).notifier)
-        .updateFill(game.gridManager.filledCells);
-
-    // Complete tutorial on drag-and-drop placement
-    if (tutorialActive && tutorialStep >= 1) {
-      tutorialActive = false;
-      tutorialStep = -1;
-      ref
-          .read(localRepositoryProvider.future)
-          .then((repo) => repo.setTutorialDone());
-    }
-
-    final feedbackCx = ac + (shape.colCount - 1) / 2.0;
-    final feedbackCy = ar + (shape.rowCount - 1) / 2.0;
-
-    setState(() {
-      hand[selectedSlot!] = null;
-      selectedSlot = null;
-      previewCells = {};
-      previewValid = false;
-      previewAnchor = null;
-      placeFeedback = (
-        cx: feedbackCx,
-        cy: feedbackCy,
-        count: cells.length,
-        color: color.displayColor,
-        key: ++feedbackKeyIndex,
-      );
-      recentlyPlacedCells = cells.toSet();
-      waveKey++;
-      if (hand.every((h) => h == null)) refillHand();
-    });
-
-    waveClearTimer?.cancel();
-    waveClearTimer = Timer(AnimationDurations.waveClear, () {
-      if (mounted) setState(() => recentlyPlacedCells = {});
-    });
-
-    game.checkGameOver(
-      hand.where((s) => s != null).map((s) => s!.$1).toList(),
+    _executePlacement(
+      cells: cells,
+      color: color,
+      shape: shape,
+      anchorRow: ar,
+      anchorCol: ac,
+      tutorialShouldComplete: () => tutorialStep >= 1,
     );
   }
 

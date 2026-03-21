@@ -8,6 +8,7 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
@@ -112,6 +113,7 @@ class _DailyContent extends StatelessWidget {
     final completed = repo.isDailyCompleted();
     final score = repo.getDailyScore();
     final brightness = Theme.of(context).brightness;
+    final rm = shouldReduceMotion(context);
     final textSecondary = resolveColor(
       brightness,
       dark: Colors.white.withValues(alpha: 0.25),
@@ -152,7 +154,7 @@ class _DailyContent extends StatelessWidget {
                       ),
                     ],
                   ),
-                ).animate().fadeIn(duration: 400.ms),
+                ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 400.ms),
                 const SizedBox(height: 6),
                 Text(
                   '#$puzzleNumber',
@@ -162,12 +164,12 @@ class _DailyContent extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
                   ),
-                ).animate(delay: 100.ms).fadeIn(),
+                ).animateOrSkip(reduceMotion: rm, delay: 100.ms).fadeIn(),
                 const SizedBox(height: 40),
                 CalendarCard(
                   accent: accent,
                   dateLabel: dateLabel,
-                ).animate(delay: 150.ms).fadeIn(duration: 500.ms).scale(
+                ).animateOrSkip(reduceMotion: rm, delay: 150.ms).fadeIn(duration: 500.ms).scale(
                       begin: const Offset(0.88, 0.88),
                       duration: 500.ms,
                       curve: Curves.easeOutCubic,
@@ -179,7 +181,7 @@ class _DailyContent extends StatelessWidget {
                     score: score,
                     accent: accent,
                     dateLabel: dateLabel,
-                  ).animate(delay: 250.ms).fadeIn(duration: 400.ms).slideY(
+                  ).animateOrSkip(reduceMotion: rm, delay: 250.ms).fadeIn(duration: 400.ms).slideY(
                         begin: 0.1,
                         end: 0,
                         duration: 400.ms,
@@ -187,7 +189,7 @@ class _DailyContent extends StatelessWidget {
                       )
                 else
                   PlayState(l: l, accent: accent)
-                      .animate(delay: 250.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 250.ms)
                       .fadeIn(duration: 400.ms)
                       .slideY(
                         begin: 0.1,

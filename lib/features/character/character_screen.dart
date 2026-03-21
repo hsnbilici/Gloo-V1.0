@@ -8,7 +8,9 @@ import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../game/meta/resource_manager.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
 import 'character_background.dart';
@@ -101,7 +103,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                   child: Row(
                     children: [
                       Semantics(
-                        label: 'Geri',
+                        label: ref.read(stringsProvider).backLabel,
                         button: true,
                         child: GestureDetector(
                           onTap: () => context.go('/'),
@@ -166,10 +168,10 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                       ),
                     ],
                   ),
-                ).animate().fadeIn(duration: 300.ms),
+                ).animateOrSkip(reduceMotion: shouldReduceMotion(context)).fadeIn(duration: 300.ms),
                 const SizedBox(height: 20),
                 const GlooMascot()
-                    .animate(delay: 100.ms)
+                    .animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 100.ms)
                     .fadeIn(duration: 400.ms)
                     .scale(
                       begin: const Offset(0.85, 0.85),

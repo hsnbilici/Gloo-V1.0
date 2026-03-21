@@ -2,6 +2,60 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+/// [Animation<double>] degerini belirli adimlara kuantize ederek
+/// yalnizca gorsel fark esigini asan degisimlerde bildirim gonderen wrapper.
+///
+/// Ornegin `step = 0.05` ise 0→1 araliginda ~20 farkli deger uretilir.
+/// Bu, CustomPainter repaint sayisini ~3x azaltir (60fps → ~20fps nefes).
+///
+/// Ayni [Animation] icin tekrar tekrar wrapper olusturmak yerine,
+/// [getInstance] ile paylasilan tek bir instance kullanilir.
+class QuantizedBreathListenable extends ChangeNotifier {
+  QuantizedBreathListenable._(this._source, this._step)
+      : _lastQuantized = _quantize(_source.value, _step) {
+    _source.addListener(_onTick);
+  }
+
+  /// Ayni [source] animasyonu icin paylasilan instance dondurur.
+  /// Her [AnimationController] basina tek bir wrapper olusturulur.
+  static final _cache = Expando<QuantizedBreathListenable>();
+
+  static QuantizedBreathListenable getInstance(
+    Animation<double> source, {
+    double step = 0.05,
+  }) {
+    var instance = _cache[source];
+    if (instance == null) {
+      instance = QuantizedBreathListenable._(source, step);
+      _cache[source] = instance;
+    }
+    return instance;
+  }
+
+  final Animation<double> _source;
+  final double _step;
+  double _lastQuantized;
+
+  double get value => _source.value;
+
+  static double _quantize(double v, double step) =>
+      (v / step).roundToDouble() * step;
+
+  void _onTick() {
+    final q = _quantize(_source.value, _step);
+    if (q != _lastQuantized) {
+      _lastQuantized = q;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _source.removeListener(_onTick);
+    super.dispose();
+  }
+}
+
 /// Jel hucresini 3B derinlik hissiyle render eden CustomPainter.
 ///
 /// Render katmanlari (alttan uste):
@@ -17,7 +71,9 @@ class GelCellPainter extends CustomPainter {
     required Animation<double> breathAnimation,
     required this.breathPhase,
   })  : _breathAnim = breathAnimation,
-        super(repaint: breathAnimation);
+        super(
+          repaint: QuantizedBreathListenable.getInstance(breathAnimation),
+        );
 
   final Color color;
   final double borderRadius;

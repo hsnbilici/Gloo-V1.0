@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/utils/motion_utils.dart';
 
 /// Satir/sutun temizlendiginde her hucrenin uzerinde oynayan jel patlamasi.
 /// [delay] ile stagger uygulanir; efekt bitince [onDismiss] cagrilir.
@@ -59,6 +60,13 @@ class _CellBurstEffectState extends State<CellBurstEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
     final size = widget.cellSize * 4.0;
     return SizedBox(
       width: size,
@@ -293,6 +301,13 @@ class _IceBreakEffectState extends State<IceBreakEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
     final size = widget.cellSize * 3.0;
     return SizedBox(
       width: size,
@@ -428,6 +443,13 @@ class _ColorSynthesisBloomEffectState extends State<ColorSynthesisBloomEffect>
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
     final size = widget.cellSize * 5.0;
     return SizedBox(
       width: size,

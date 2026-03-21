@@ -122,6 +122,8 @@ class StringsRu extends AppStrings {
   @override
   String get settingsColorBlind => 'Режим дальтонизма';
   @override
+  String get settingsReduceMotion => 'Уменьшить движение';
+  @override
   String get settingsSectionAbout => 'О ПРИЛОЖЕНИИ';
   @override
   String get settingsVersion => 'Версия';
@@ -300,6 +302,8 @@ class StringsRu extends AppStrings {
   @override
   String get glooPlusMonthly => 'Ежемесячно';
   @override
+  String get glooPlusQuarter => '3 месяца';
+  @override
   String get glooPlusYearly => 'Ежегодно';
   @override
   String get glooPlusBadge => 'ЛУЧШЕЕ ПРЕДЛОЖЕНИЕ';
@@ -332,6 +336,8 @@ class StringsRu extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'Этот код уже был использован';
 
+  @override
+  String get backLabel => 'Назад';
   @override
   String get errorOccurred => 'Произошла ошибка';
 

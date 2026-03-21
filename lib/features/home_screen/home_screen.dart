@@ -9,6 +9,7 @@ import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/layout/responsive.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
 import '../../core/models/game_mode.dart';
 import '../../providers/audio_provider.dart';
@@ -180,6 +181,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
+    final rm = shouldReduceMotion(context);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -196,7 +198,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                   const SizedBox(height: 52),
                   GelLogo(subtitle: l.homeSubtitle)
-                      .animate()
+                      .animateOrSkip(reduceMotion: rm)
                       .fadeIn(duration: 500.ms)
                       .scale(
                         begin: const Offset(0.85, 0.85),
@@ -206,7 +208,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   if (streak >= 2) ...[
                     const SizedBox(height: 10),
                     StreakBadge(streak: streak, days: l.streakDays)
-                        .animate(delay: 200.ms)
+                        .animateOrSkip(reduceMotion: rm, delay: 200.ms)
                         .fadeIn(duration: 400.ms)
                         .scale(
                           begin: const Offset(0.7, 0.7),
@@ -216,7 +218,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                   const SizedBox(height: 14),
                   DailyBanner(label: l.dailyTitle)
-                      .animate(delay: 60.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 60.ms)
                       .fadeIn(duration: 350.ms)
                       .slideY(
                         begin: 0.08,
@@ -241,7 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onTap: () =>
                                 context.go('/game/${GameMode.classic.name}'),
                           )
-                              .animate(delay: 80.ms)
+                              .animateOrSkip(reduceMotion: rm, delay: 80.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -258,7 +260,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onTap: () =>
                                 context.go('/game/${GameMode.colorChef.name}'),
                           )
-                              .animate(delay: 160.ms)
+                              .animateOrSkip(reduceMotion: rm, delay: 160.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -275,7 +277,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onTap: () =>
                                 context.go('/game/${GameMode.timeTrial.name}'),
                           )
-                              .animate(delay: 240.ms)
+                              .animateOrSkip(reduceMotion: rm, delay: 240.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -290,7 +292,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             color: kColorZen,
                             icon: Icons.spa_rounded,
                             isLocked: !ref.watch(appSettingsProvider).glooPlus,
-                            lockLabel: 'GLOO+',
+                            lockLabel: l.glooPlusTitle,
                             onTap: () {
                               if (ref.read(appSettingsProvider).glooPlus) {
                                 context.go('/game/${GameMode.zen.name}');
@@ -299,7 +301,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               }
                             },
                           )
-                              .animate(delay: 320.ms)
+                              .animateOrSkip(reduceMotion: rm, delay: 320.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -308,34 +310,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 curve: Curves.easeOutCubic,
                               ),
                           const SizedBox(height: 10),
-                          // Faz 4: Seviye modu
-                          ModeCard(
-                            label: l.modeLevelName,
-                            subtitle: l.modeLevelDesc,
-                            color: kOrange,
-                            icon: Icons.map_rounded,
+                          // Faz 4: Seviye + Düello modları (yatay çift)
+                          _ModePairRow(
+                            levelLabel: l.modeLevelName,
+                            levelSubtitle: l.modeLevelDesc,
+                            duelLabel: l.modeDuelName,
+                            duelSubtitle: l.modeDuelDesc,
                             badgeLabel: l.newBadge,
-                            onTap: () => context.go('/levels'),
+                            onLevelTap: () => context.go('/levels'),
+                            onDuelTap: () => context.go('/pvp-lobby'),
                           )
-                              .animate(delay: 400.ms)
-                              .fadeIn(duration: 350.ms)
-                              .slideY(
-                                begin: 0.15,
-                                end: 0,
-                                duration: 350.ms,
-                                curve: Curves.easeOutCubic,
-                              ),
-                          const SizedBox(height: 10),
-                          // Faz 4: Düello modu
-                          ModeCard(
-                            label: l.modeDuelName,
-                            subtitle: l.modeDuelDesc,
-                            color: kColorClassic,
-                            icon: Icons.sports_mma_rounded,
-                            badgeLabel: l.newBadge,
-                            onTap: () => context.go('/pvp-lobby'),
-                          )
-                              .animate(delay: 480.ms)
+                              .animateOrSkip(reduceMotion: rm, delay: 400.ms)
                               .fadeIn(duration: 350.ms)
                               .slideY(
                                 begin: 0.15,
@@ -354,7 +339,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     characterLabel: l.characterLabel,
                     seasonLabel: l.seasonLabel,
                   )
-                      .animate(delay: 540.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 540.ms)
                       .fadeIn(duration: 350.ms)
                       .slideY(begin: 0.12, end: 0, duration: 350.ms),
                   const SizedBox(height: 8),
@@ -364,7 +349,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     settingsLabel: l.navSettings,
                     collectionLabel: l.collectionTitle,
                   )
-                      .animate(delay: 420.ms)
+                      .animateOrSkip(reduceMotion: rm, delay: 420.ms)
                       .fadeIn(duration: 400.ms)
                       .slideY(begin: 0.2, end: 0, duration: 400.ms),
                   const SizedBox(height: 28),
@@ -376,6 +361,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Isolated widget for Level+Duel pair — prevents hover rebuild from
+/// propagating to parent Column layout.
+class _ModePairRow extends StatelessWidget {
+  const _ModePairRow({
+    required this.levelLabel,
+    required this.levelSubtitle,
+    required this.duelLabel,
+    required this.duelSubtitle,
+    required this.badgeLabel,
+    required this.onLevelTap,
+    required this.onDuelTap,
+  });
+
+  final String levelLabel;
+  final String levelSubtitle;
+  final String duelLabel;
+  final String duelSubtitle;
+  final String badgeLabel;
+  final VoidCallback onLevelTap;
+  final VoidCallback onDuelTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: ModeCard(
+            label: levelLabel,
+            subtitle: levelSubtitle,
+            color: kOrange,
+            icon: Icons.map_rounded,
+            badgeLabel: badgeLabel,
+            onTap: onLevelTap,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: ModeCard(
+            label: duelLabel,
+            subtitle: duelSubtitle,
+            color: kColorClassic,
+            icon: Icons.sports_mma_rounded,
+            badgeLabel: badgeLabel,
+            onTap: onDuelTap,
+          ),
+        ),
+      ],
     );
   }
 }

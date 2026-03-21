@@ -122,6 +122,8 @@ class StringsZh extends AppStrings {
   @override
   String get settingsColorBlind => '色盲模式';
   @override
+  String get settingsReduceMotion => '减少动态效果';
+  @override
   String get settingsSectionAbout => '关于';
   @override
   String get settingsVersion => '版本';
@@ -291,6 +293,8 @@ class StringsZh extends AppStrings {
   @override
   String get glooPlusMonthly => '月付';
   @override
+  String get glooPlusQuarter => '季付';
+  @override
   String get glooPlusYearly => '年付';
   @override
   String get glooPlusBadge => '最佳价值';
@@ -322,6 +326,8 @@ class StringsZh extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => '此兑换码已被使用';
 
+  @override
+  String get backLabel => '返回';
   @override
   String get errorOccurred => '发生错误';
 

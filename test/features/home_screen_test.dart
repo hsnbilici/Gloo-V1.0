@@ -61,7 +61,7 @@ void main() {
       await tester.pumpWidget(buildApp(glooPlus: false));
       await tester.pumpAndSettle();
 
-      expect(find.text('GLOO+'), findsOneWidget);
+      expect(find.text('Gloo+'), findsOneWidget);
       expect(find.byIcon(Icons.lock_rounded), findsOneWidget);
     });
 
@@ -69,7 +69,7 @@ void main() {
       await tester.pumpWidget(buildApp(glooPlus: true));
       await tester.pumpAndSettle();
 
-      expect(find.text('GLOO+'), findsNothing);
+      expect(find.text('Gloo+'), findsNothing);
     });
   });
 

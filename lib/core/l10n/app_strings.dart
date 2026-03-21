@@ -92,6 +92,7 @@ abstract class AppStrings {
   String get settingsHaptics;
   String get settingsSectionAccessibility;
   String get settingsColorBlind;
+  String get settingsReduceMotion;
   String get settingsSectionAbout;
   String get settingsVersion;
   String get settingsDeveloper;
@@ -199,6 +200,7 @@ abstract class AppStrings {
   String get glooPlusTitle;
   String get glooPlusDesc;
   String get glooPlusMonthly;
+  String get glooPlusQuarter;
   String get glooPlusYearly;
   String get glooPlusBadge;
   String get premiumRequired;
@@ -217,6 +219,9 @@ abstract class AppStrings {
   String get redeemCodeSuccess;
   String get redeemCodeInvalid;
   String get redeemCodeAlreadyUsed;
+
+  // Erisilebilirlik
+  String get backLabel;
 
   // Genel hata
   String get errorOccurred;

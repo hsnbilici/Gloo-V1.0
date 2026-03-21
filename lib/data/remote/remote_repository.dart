@@ -262,21 +262,23 @@ class RemoteRepository implements IRemoteRepository {
     // Edge Function ile sunucu tarafinda hesaplama
     if (matchId != null && outcome != null) {
       try {
-        await _client.functions.invoke('update-elo', body: {
+        await _client.functions.invoke('calculate-elo', body: {
           'match_id': matchId,
           'outcome': outcome,
           'player_score': playerScore ?? 0,
           'opponent_score': opponentScore ?? 0,
         });
-        return;
       } catch (e) {
         if (kDebugMode) {
-          debugPrint('RemoteRepository.updateElo RPC error: $e — falling back');
+          debugPrint('RemoteRepository.updateElo RPC error: $e');
         }
+        // Guvenlik: RPC hatasi durumunda client-side ELO yazmiyoruz.
+        // ELO yalnizca sunucu tarafinda hesaplanmali.
       }
+      return;
     }
 
-    // Fallback: dogrudan profile guncelle (bot maclari veya RPC hatasi)
+    // Fallback: yalnizca bot maclari icin (matchId == null)
     try {
       await _client.from('profiles').update({'elo': newElo}).eq('id', uid);
     } catch (e) {

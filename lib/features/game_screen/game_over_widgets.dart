@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 
 // ─── Yeni rekor rozeti ───────────────────────────────────────────────────────
 
@@ -88,7 +89,7 @@ class ScoreCountUp extends StatelessWidget {
           ],
         ),
       ),
-    ).animate(delay: 300.ms).fadeIn(duration: 360.ms);
+    ).animateOrSkip(reduceMotion: shouldReduceMotion(context), delay: 300.ms).fadeIn(duration: 360.ms);
   }
 }
 

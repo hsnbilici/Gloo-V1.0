@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/color_constants_light.dart';
 import '../../../core/constants/ui_constants.dart';
 import '../../../core/layout/rtl_helpers.dart';
 import '../../../providers/user_provider.dart';
@@ -21,6 +22,18 @@ class DailyBanner extends ConsumerWidget {
     final repoAsync = ref.watch(localRepositoryProvider);
     final completed = repoAsync.valueOrNull?.isDailyCompleted() ?? false;
     final score = repoAsync.valueOrNull?.getDailyScore() ?? 0;
+
+    final brightness = Theme.of(context).brightness;
+    final titleColor = resolveColor(
+      brightness,
+      dark: Colors.white,
+      light: kTextPrimaryLight,
+    );
+    final subtitleColor = resolveColor(
+      brightness,
+      dark: Colors.white.withValues(alpha: 0.40),
+      light: kTextSecondaryLight,
+    );
 
     return Semantics(
       label: label,
@@ -70,8 +83,8 @@ class DailyBanner extends ConsumerWidget {
                     label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: titleColor,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -80,9 +93,7 @@ class DailyBanner extends ConsumerWidget {
                   Text(
                     completed ? fmt(score) : todayLabel(),
                     style: TextStyle(
-                      color: completed
-                          ? kColorChef
-                          : Colors.white.withValues(alpha: 0.40),
+                      color: completed ? kColorChef : subtitleColor,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,

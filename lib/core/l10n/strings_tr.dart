@@ -122,6 +122,8 @@ class StringsTr extends AppStrings {
   @override
   String get settingsColorBlind => 'Renk Körü Modu';
   @override
+  String get settingsReduceMotion => 'Hareketi Azalt';
+  @override
   String get settingsSectionAbout => 'HAKKINDA';
   @override
   String get settingsVersion => 'Versiyon';
@@ -295,6 +297,8 @@ class StringsTr extends AppStrings {
   @override
   String get glooPlusMonthly => 'Aylık';
   @override
+  String get glooPlusQuarter => '3 Aylık';
+  @override
   String get glooPlusYearly => 'Yıllık';
   @override
   String get glooPlusBadge => 'EN İYİ DEĞER';
@@ -326,6 +330,8 @@ class StringsTr extends AppStrings {
   @override
   String get redeemCodeAlreadyUsed => 'Bu kod zaten kullanılmış';
 
+  @override
+  String get backLabel => 'Geri';
   @override
   String get errorOccurred => 'Bir hata oluştu';
 

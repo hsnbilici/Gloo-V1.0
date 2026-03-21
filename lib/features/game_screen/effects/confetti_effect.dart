@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/ui_constants.dart';
+import '../../../core/utils/motion_utils.dart';
 
 /// Tam ekran konfeti patlama efekti — yeni yuksek skor kazanildiginda oynatilir.
 ///
@@ -47,18 +48,28 @@ class _ConfettiEffectState extends State<ConfettiEffect>
   }
 
   @override
-  Widget build(BuildContext context) => IgnorePointer(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, _) => CustomPaint(
-            painter: _ConfettiPainter(
-              particles: _particles,
-              progress: _controller.value,
-            ),
-            child: const SizedBox.expand(),
+  Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      // Animasyon atlanir, callback hemen cagirilir.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) => CustomPaint(
+          painter: _ConfettiPainter(
+            particles: _particles,
+            progress: _controller.value,
           ),
+          child: const SizedBox.expand(),
         ),
-      );
+      ),
+    );
+  }
 }
 
 // ─── Parcacik modeli ────────────────────────────────────────────────────────

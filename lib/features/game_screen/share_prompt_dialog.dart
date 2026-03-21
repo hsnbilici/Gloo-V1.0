@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../home_screen/widgets/dialogs.dart';
 
 class SharePromptDialog extends StatelessWidget {
@@ -25,6 +26,7 @@ class SharePromptDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -63,7 +65,7 @@ class SharePromptDialog extends StatelessWidget {
                 color: kCyan,
                 size: 26,
               ),
-            ).animate().scale(
+            ).animateOrSkip(reduceMotion: rm).scale(
                   begin: const Offset(0.4, 0.4),
                   end: const Offset(1.0, 1.0),
                   duration: 500.ms,
