@@ -171,6 +171,11 @@ jobs:
           PLIST
           fi
 
+      - name: Bump build number
+        run: |
+          chmod +x ./scripts/version_bump.sh
+          ./scripts/version_bump.sh
+
       - name: Build iOS release
         env:
           FIREBASE_API_KEY_IOS: ${{ secrets.FIREBASE_API_KEY_IOS }}
