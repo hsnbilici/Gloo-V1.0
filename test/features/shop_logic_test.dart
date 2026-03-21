@@ -140,11 +140,12 @@ void main() {
       expect(PurchaseService.kTexturePack, equals('gloo_texture_pack'));
       expect(PurchaseService.kStarterPack, equals('gloo_starter_pack'));
       expect(PurchaseService.kGlooPlusMonthly, equals('gloo_plus_monthly'));
+      expect(PurchaseService.kGlooPlusQuarter, equals('gloo_plus_quarter'));
       expect(PurchaseService.kGlooPlusYearly, equals('gloo_plus_yearly'));
     });
 
-    test('allProductIds contains all 7 products', () {
-      expect(PurchaseService.allProductIds.length, equals(7));
+    test('allProductIds contains all 8 products', () {
+      expect(PurchaseService.allProductIds.length, equals(8));
     });
   });
 }

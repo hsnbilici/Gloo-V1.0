@@ -8,10 +8,10 @@ import 'package:gloo/data/local/local_repository.dart';
 import '../data/local/fake_secure_storage.dart';
 
 void main() {
-  test('default theme mode is system', () {
+  test('default theme mode is dark', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    expect(container.read(themeModeProvider), ThemeMode.system);
+    expect(container.read(themeModeProvider), ThemeMode.dark);
   });
 
   test('setThemeMode updates state', () {
@@ -34,12 +34,12 @@ void main() {
       expect(await repo.getThemeMode(), ThemeMode.dark);
     });
 
-    test('returns system when no value persisted', () async {
+    test('returns dark when no value persisted', () async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
       final repo = LocalRepository(prefs, secureStorage: FakeSecureStorage());
 
-      expect(await repo.getThemeMode(), ThemeMode.system);
+      expect(await repo.getThemeMode(), ThemeMode.dark);
     });
   });
 }

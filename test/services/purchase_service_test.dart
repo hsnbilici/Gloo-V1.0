@@ -91,22 +91,23 @@ void main() {
     });
 
     // ── allProductIds ───────────────────────────────────────────────────────
-    test('allProductIds contains all 7 products', () {
+    test('allProductIds contains all 8 products', () {
       final all = PurchaseService.allProductIds;
-      expect(all.length, 7);
+      expect(all.length, 8);
       expect(all, contains(PurchaseService.kRemoveAds));
       expect(all, contains(PurchaseService.kSoundCrystal));
       expect(all, contains(PurchaseService.kSoundForest));
       expect(all, contains(PurchaseService.kTexturePack));
       expect(all, contains(PurchaseService.kStarterPack));
       expect(all, contains(PurchaseService.kGlooPlusMonthly));
+      expect(all, contains(PurchaseService.kGlooPlusQuarter));
       expect(all, contains(PurchaseService.kGlooPlusYearly));
     });
 
     test('allProductIds includes non-consumables and subscriptions', () {
       final all = PurchaseService.allProductIds;
-      // 5 non-consumable + 2 subscription = 7
-      expect(all.length, 7);
+      // 5 non-consumable + 3 subscription = 8
+      expect(all.length, 8);
     });
 
     // ── isPurchased ─────────────────────────────────────────────────────────
