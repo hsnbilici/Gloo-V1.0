@@ -80,7 +80,7 @@ jobs:
             --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
       - name: Upload iOS build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ios-build
           path: build/ios/iphonesimulator/Runner.app
@@ -201,7 +201,7 @@ jobs:
           api-private-key: ${{ secrets.APPSTORE_CONNECT_PRIVATE_KEY }}
 
       - name: Upload IPA artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: success()
         with:
           name: ios-release-ipa
