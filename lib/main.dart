@@ -115,12 +115,12 @@ Future<void> main() async {
     FlutterNativeSplash.remove();
 
     // Kalici tema modunu runApp oncesi yukle — sistem temasina geri donusu onler
-    ThemeMode savedThemeMode = ThemeMode.system;
+    ThemeMode savedThemeMode = ThemeMode.dark;
     try {
       final prefs = await SharedPreferences.getInstance();
       savedThemeMode = await LocalRepository(prefs).getThemeMode();
     } catch (_) {
-      // Okuma basarisiz — varsayilan sistem temasina devam et
+      // Okuma basarisiz — varsayilan karanlik temaya devam et
     }
 
     // Widget build hatalarinda kullanici dostu hata ekrani
