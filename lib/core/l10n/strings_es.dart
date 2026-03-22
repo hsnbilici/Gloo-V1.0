@@ -554,4 +554,17 @@ class StringsEs extends AppStrings {
   @override
   String gameOverRecordComparison(int current, int record) =>
       'This time: $current \u2014 Record: $record';
+
+  @override
+  String get gameOverWatchAdBomb => 'Free Bomb';
+  @override
+  String get gameOverShareScore => 'Share';
+  @override
+  String modeLockedGames(int remaining) => 'Play $remaining more games';
+  @override
+  String get leaderboardTabPvp => 'PvP';
+  @override
+  String get streakFreezeLabel => 'Streak Freeze';
+  @override
+  String get streakFreezeUsed => 'Streak freeze used!';
 }

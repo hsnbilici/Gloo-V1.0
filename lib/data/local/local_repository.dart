@@ -158,6 +158,12 @@ class LocalRepository {
 
   Future<int> checkAndUpdateStreak() => gameData.checkAndUpdateStreak();
 
+  // ─── Streak Freeze ──────────────────────────────────────────────────────
+
+  bool hasStreakFreeze() => gameData.hasStreakFreeze();
+
+  Future<void> setStreakFreeze(bool value) => gameData.setStreakFreeze(value);
+
   int getLastStreakRewardDay() => gameData.getLastStreakRewardDay();
 
   Future<void> setLastStreakRewardDay(int day) =>

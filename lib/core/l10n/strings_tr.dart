@@ -547,4 +547,17 @@ class StringsTr extends AppStrings {
   @override
   String gameOverRecordComparison(int current, int record) =>
       'Bu sefer: $current \u2014 Rekor: $record';
+
+  @override
+  String get gameOverWatchAdBomb => 'Bedava Bomba';
+  @override
+  String get gameOverShareScore => 'Paylas';
+  @override
+  String modeLockedGames(int remaining) => '$remaining oyun daha oyna';
+  @override
+  String get leaderboardTabPvp => 'PvP';
+  @override
+  String get streakFreezeLabel => 'Seri Dondurma';
+  @override
+  String get streakFreezeUsed => 'Seri dondurma kullanildi!';
 }

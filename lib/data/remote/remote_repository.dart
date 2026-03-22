@@ -127,6 +127,36 @@ class RemoteRepository implements IRemoteRepository {
     }
   }
 
+  // ── PvP ELO Sıralama ───────────────────────────────────────────────────
+  /// ELO bazli PvP sıralamasını döner.
+  Future<List<LeaderboardEntry>> getEloLeaderboard({int limit = 50}) async {
+    if (!isConfigured) return [];
+    try {
+      final data = await _client
+          .from('profiles')
+          .select('id, username, elo')
+          .gt('elo', 0)
+          .order('elo', ascending: false)
+          .limit(limit);
+
+      return (data as List).map((e) {
+        final map = Map<String, dynamic>.from(e as Map);
+        return LeaderboardEntry(
+          id: map['id'] as String? ?? '',
+          userId: map['id'] as String? ?? '',
+          mode: 'pvp',
+          score: map['elo'] as int? ?? 0,
+          username: map['username'] as String? ?? 'Player',
+          createdAt: DateTime.now(),
+        );
+      }).toList();
+    } catch (e) {
+      if (kDebugMode)
+        debugPrint('RemoteRepository.getEloLeaderboard error: $e');
+      return [];
+    }
+  }
+
   // ── Profil ──────────────────────────────────────────────────────────────
   Future<void> ensureProfile({String? username}) async {
     if (!isConfigured) return;

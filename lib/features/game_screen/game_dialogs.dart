@@ -58,6 +58,7 @@ void showGameOver({
   int linesCleared = 0,
   int synthesisCount = 0,
   int maxCombo = 0,
+  VoidCallback? onWatchAdBomb,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -80,6 +81,7 @@ void showGameOver({
         linesCleared: linesCleared,
         synthesisCount: synthesisCount,
         maxCombo: maxCombo,
+        onWatchAdBomb: onWatchAdBomb,
         onReplay: () {
           Navigator.of(ctx).pop();
           onReplay();

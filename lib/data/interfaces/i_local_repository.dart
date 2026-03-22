@@ -57,6 +57,12 @@ abstract class ILocalRepository {
 
   Future<int> checkAndUpdateStreak();
 
+  // ─── Streak Freeze ──────────────────────────────────────────────────────
+
+  bool hasStreakFreeze();
+
+  Future<void> setStreakFreeze(bool value);
+
   int getLastStreakRewardDay();
 
   Future<void> setLastStreakRewardDay(int day);

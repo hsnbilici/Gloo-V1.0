@@ -62,7 +62,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Gloo+'), findsOneWidget);
-      expect(find.byIcon(Icons.lock_rounded), findsOneWidget);
+      // 3 lock icons: Color Chef (< 3 games), Time Trial (< 5 games), Zen (no Gloo+)
+      expect(find.byIcon(Icons.lock_rounded), findsNWidgets(3));
     });
 
     testWidgets('Zen mode has no lock when subscribed', (tester) async {

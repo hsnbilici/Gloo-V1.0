@@ -171,6 +171,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   int confettiKey = 0;
   bool _secondChanceUsed = false;
+  bool _bombAdUsed = false;
 
   // ─── Epic combo tracking (share prompt) ───────────────────────────
   int _epicComboCount = 0;
@@ -196,8 +197,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
     super.initState();
 
     // Talent bonuslarını CharacterState'ten oku
-    final charMap = ref.read(localRepositoryProvider).valueOrNull
-        ?.getCharacterState();
+    final charMap =
+        ref.read(localRepositoryProvider).valueOrNull?.getCharacterState();
     final character = CharacterState();
     if (charMap != null && charMap.isNotEmpty) {
       character.loadFromMap(charMap);
@@ -211,8 +212,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
       fastHandsBonus: character.getFastHandsBonus(),
       zenGuruBonus: character.getZenGuruPassiveRate(),
     );
-    game.currencyManager.isGlooPlus =
-        ref.read(appSettingsProvider).glooPlus;
+    game.currencyManager.isGlooPlus = ref.read(appSettingsProvider).glooPlus;
 
     effectManager = GameEffectManager(this);
 
@@ -468,6 +468,16 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 );
               }
             : null,
+        onWatchAdBomb: !_bombAdUsed
+            ? () {
+                adManager.showNearMissRescue(
+                  onRewarded: () {
+                    game.powerUpSystem.grantFreePowerUp(PowerUpType.bomb);
+                    setState(() => _bombAdUsed = true);
+                  },
+                );
+              }
+            : null,
         onReplay: () {
           setState(() {
             game.startGame();
@@ -477,6 +487,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
             previewValid = false;
             activePowerUpMode = null;
             _secondChanceUsed = false;
+            _bombAdUsed = false;
             _epicComboCount = 0;
             confettiKey = 0;
             showConfetti = false;

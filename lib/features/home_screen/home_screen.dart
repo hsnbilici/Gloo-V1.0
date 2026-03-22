@@ -184,6 +184,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
     final rm = shouldReduceMotion(context);
+    final repo = ref.watch(localRepositoryProvider).valueOrNull;
+    final gamesPlayed = repo?.getTotalGamesPlayed() ?? 0;
+    final chefLocked = gamesPlayed < 3;
+    final timeTrialLocked = gamesPlayed < 5;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -264,8 +268,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 subtitle: l.modeColorChefDesc,
                                 color: kColorChef,
                                 icon: Icons.colorize_rounded,
-                                onTap: () => context
-                                    .go('/game/${GameMode.colorChef.name}'),
+                                isLocked: chefLocked,
+                                lockLabel: chefLocked
+                                    ? l.modeLockedGames(3 - gamesPlayed)
+                                    : null,
+                                onTap: () {
+                                  if (!chefLocked) {
+                                    context
+                                        .go('/game/${GameMode.colorChef.name}');
+                                  }
+                                },
                               )
                                   .animateOrSkip(
                                       reduceMotion: rm, delay: 160.ms)
@@ -282,8 +294,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 subtitle: l.modeTimeTrialDesc,
                                 color: kColorTimeTrial,
                                 icon: Icons.timer_rounded,
-                                onTap: () => context
-                                    .go('/game/${GameMode.timeTrial.name}'),
+                                isLocked: timeTrialLocked,
+                                lockLabel: timeTrialLocked
+                                    ? l.modeLockedGames(5 - gamesPlayed)
+                                    : null,
+                                onTap: () {
+                                  if (!timeTrialLocked) {
+                                    context
+                                        .go('/game/${GameMode.timeTrial.name}');
+                                  }
+                                },
                               )
                                   .animateOrSkip(
                                       reduceMotion: rm, delay: 240.ms)

@@ -157,7 +157,7 @@
 - [x] **GD.O2 — Cascade pacing:** `onCascadeStep` callback + 250ms delayed SFX (Dusuk efor) ✅ (T21)
 - [x] **GD.O3 — Komboyu hamle bazli yap:** 1500ms pencere → ardisik temizleme = combo (Dusuk efor) ✅
 - [ ] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
-- [ ] **GD.O5 — Siradaki 1 sekil silueti her zaman gorunsun:** Peek ile detay ac (Dusuk efor)
+- [x] **GD.O5 — Siradaki 1 sekil silueti her zaman gorunsun:** nextShapeSilhouette + muted 36x36 preview, Peek aktifken gizli (Dusuk efor) ✅ (T31)
 - [x] **GD.O6 — Talent → Core Loop baglantisi:** betterHand → ShapeGenerator, colorMaster → ScoreSystem (Dusuk efor) ✅
 
 ---
@@ -191,8 +191,8 @@
 ### Oneriler (Oncelik Sirasina Gore)
 
 - [x] **GD.MO1 — [BUG] `applyGlooPlusBonus` cagrisini ekle:** `_clearAndScore()` veya game-end callback'inde (Dusuk efor, HEMEN) ✅
-- [ ] **GD.MO2 — Rewarded reklam → power-up UI bagla:** Game Over'da "reklam izle = ucretsiz Bomb" butonu (Dusuk efor)
-- [ ] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu + enerji formulu (Dusuk efor)
+- [x] **GD.MO2 — Rewarded reklam → power-up UI bagla:** Game Over'da "reklam izle = ucretsiz Bomb" butonu (Dusuk efor)
+- [x] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu, Gloo+ bonus otomatik (Dusuk efor) ✅ (T32)
 - [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
 - [ ] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
 - [ ] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
@@ -296,13 +296,13 @@
 
 - [x] **GD.PO1 — Hardcoded Turkce stringleri l10n'e tasi:** `pvp_lobby_matchmaking.dart` + `duel_result_overlay.dart` (Dusuk efor, HEMEN) ✅
 - [ ] **GD.PO2 — Engel gelis animasyonu + SFX ekle:** 0.8sn golge → yerlesim, `SoundBank.onObstacleReceived()` (Dusuk-Orta efor)
-- [ ] **GD.PO3 — Tas engelini temizlenebilir yap veya kaldir:** "2 bitisik temizleme stone kirar" veya duel'den cikar (Dusuk efor)
-- [ ] **GD.PO4 — Bot'a engel simulasyonu ekle:** 15-20sn aralikla hafif engel gondersin (Dusuk efor)
-- [ ] **GD.PO5 — Skor broadcast'ini event-driven yap:** Her puan degisiminde 500ms debounce (Dusuk efor)
-- [ ] **GD.PO6 — PvP ELO Leaderboard ekle:** LeaderboardScreen'e 3. tab (Dusuk efor)
+- [x] **GD.PO3 — Tas engelini temizlenebilir yap:** Komsu satir/sutun temizlenince stone kiriliyor + onStoneBroken callback (Dusuk efor) ✅ (T34)
+- [x] **GD.PO4 — Bot'a engel simulasyonu ekle:** 17sn aralikla 1-2 buz engeli (Dusuk efor) ✅ (T35)
+- [x] **GD.PO5 — Skor broadcast'ini event-driven yap:** 5sn periodic → 500ms polling + score-change check (Dusuk efor) ✅ (T36)
+- [x] **GD.PO6 — PvP ELO Leaderboard ekle:** LeaderboardScreen'e 3. tab (Dusuk efor)
 - [x] **GD.PO7 — Epic kombo engelini 9→4-5 buza dusur:** Kombo duzeltmesiyle birlikte (Dusuk efor) ✅
 - [x] **GD.PO8 — Bot ELO kazanimini sinirla:** Bot win ELO %50 azaltma, kayip tam (Dusuk efor) ✅ (T22)
-- [ ] **GD.PO9 — K-Factor'u ELO segmentine gore dinamik yap:** Dusuk ELO K=40, yuksek K=24 (Dusuk efor)
+- [x] **GD.PO9 — K-Factor'u ELO segmentine gore dinamik yap:** <800:K=40, 800-1199:K=32, 1200-1599:K=28, 1600+:K=24 + Edge Function sync (Dusuk efor) ✅ (T30)
 - [ ] **GD.PO10 — Rematch secenegi ekle:** Ayni rakiple tekrar oynama (Orta efor)
 
 ---
@@ -368,14 +368,14 @@
 
 **P1 — Bu Sprint:**
 - [ ] **GD.RO6 — Push notification altyapisi kur:** firebase_messaging + D1/D2/D3 senaryolari (Orta efor)
-- [ ] **GD.RO7 — Progressive mod acilimi:** Classic → 3 oyun sonra Color Chef → 5 sonra Time Trial (Orta efor)
+- [x] **GD.RO7 — Progressive mod acilimi:** Classic → 3 oyun sonra Color Chef → 5 sonra Time Trial (Orta efor)
 - [x] **GD.RO8 — Game Over'da ozet ekle:** "4 satir, 1 sentez, %87 dolu" + ipucu (Kucuk efor) ✅
 - [ ] **GD.RO9 — Gunluk gorev sistemini UI'a bagla:** HomeScreen'de mini progress (Orta efor)
 - [x] **GD.RO10 — "Beat your score" karti Home'a ekle:** "Son skor: 450 | Rekor: 1200" (Kucuk efor) ✅
 
 **P2 — Gelecek Sprint:**
-- [ ] **GD.RO11 — Streak Freeze mekanigi:** 100 Jel Ozu ile satin alinabilir (Orta efor)
-- [ ] **GD.RO12 — Ilk oyunlarda share prompt'u ayarla:** Epic combo yerine ilk high score'da kucuk paylas butonu (Kucuk efor)
+- [x] **GD.RO11 — Streak Freeze mekanigi:** 100 Jel Ozu ile satin alinabilir (Orta efor)
+- [x] **GD.RO12 — Ilk oyunlarda share prompt'u ayarla:** Epic combo yerine ilk high score'da kucuk paylas butonu (Kucuk efor)
 
 ---
 
@@ -420,13 +420,13 @@
 
 **Bu Sprint (S-M):**
 - [ ] **GD.MGO4 — Gorev sistemi entegrasyonu:** GlooGame callback + HomeScreen widget + odul dagitim (M efor)
-- [ ] **GD.MGO5 — Season Pass XP kaynagi:** Gorev odulleri + skor bazli XP (S efor, gorevle birlikte)
-- [ ] **GD.MGO6 — Level tamamlama odulleri:** Her 10 seviyede Jel Ozu/Enerji paketi (S efor)
+- [x] **GD.MGO5 — Season Pass XP kaynagi:** Game Over'da score/100 XP (S efor) ✅ (T33)
+- [x] **GD.MGO6 — Level tamamlama odulleri:** levelId * 2 Jel Ozu (S efor) ✅ (T32)
 
 **Sonraki Sprint (M-L):**
 - [ ] **GD.MGO7 — Ada binalarini gating mekanigi yap:** arena→PvP, harbor→SeasonPass, factory→pasif uretim (M efor)
 - [ ] **GD.MGO8 — Koleksiyonu genislet:** 8→16+ renk, tamamlama odulleri (S efor)
-- [ ] **GD.MGO9 — inflatedCost entegrasyonu:** A/B test ile power-up maliyetlerine bagla (S efor)
+- [x] **GD.MGO9 — inflatedCost entegrasyonu:** T23 ile tamamlandi (power-up maliyetlerine baglandi) ✅
 - [ ] **GD.MGO10 — Ascension/Prestige sistemi:** Level 50 sonrasi zorluk katmanlari (L efor)
 
 ---
@@ -437,24 +437,24 @@
 
 ### T11 — Dialog Zinciri
 
-- [ ] **GD.BL1 — Ilk oyun sonrasi colorblind inline prompt:** Oyuncu grid'i deneyimledikten sonra tek satirlik "Renkleri ayirt etmekte zorlaniyor musun? [Renk Koru Modunu Ac]" prompt'u goster (Kucuk efor)
+- [x] **GD.BL1 — Ilk oyun sonrasi colorblind inline prompt:** Game Over overlay'de inline prompt + "Enable Color Assist" butonu (Kucuk efor) ✅ (T25)
 
 ### T12 — Yeni Oyuncu Zorlugu
 
 - [x] **GD.BL2 — Level modunu yeni oyuncu korumasindan muaf tut:** Level 1 zaten 6x6 grid ile kendi egrisine sahip (XS efor) ✅ (T18)
-- [ ] **GD.BL3 — ColorChef'e ayri agirlik tablosu:** Kucuk yerine orta sekilleri tercih et (%50 orta / %35 kucuk / %15 buyuk) — sentez firsatini korumak icin (S efor)
+- [x] **GD.BL3 — ColorChef'e ayri agirlik tablosu:** %35 kucuk / %50 orta / %15 buyuk, zorluktan bagimsiz (S efor) ✅ (T26)
 - [x] **GD.BL4 — Zorluk gecisini kademeli yap:** Oyun 3: %70/%20/%10, Oyun 4: %55/%30/%15, Oyun 5+: normal — keskin gecis yerine ramp (S efor) ✅ (T19)
 
 ### T13 — Game Over Ozeti
 
-- [ ] **GD.BL5 — Ipucu gosterim sayisini persist et:** 2 gosterim sonrasi rotasyona gir, ayni ipucu tekrarlamasin (S efor)
+- [x] **GD.BL5 — Ipucu gosterim sayisini persist et:** _selectTipKey() ile akilli rotasyon, max 2 gosterim/tip (S efor) ✅ (T27)
 - [x] **GD.BL6 — Grid doluluk metrigini gozden gecir:** Ham yuzde yerine baglamli yorum — 4 kademe (Clean Board / Well Managed / Getting Crowded / Very Full) ✅ (T24)
-- [ ] **GD.BL7 — Kisisel rekor karsilastirmasi:** "Bu sefer 5 satir — rekorun 12!" formati (S efor)
+- [x] **GD.BL7 — Kisisel rekor karsilastirmasi:** Stat rekor persistence + "New Record!" / "Record: X" gösterimi (S efor) ✅ (T28)
 
 ### T14 — Beat Your Score Karti
 
-- [ ] **GD.BL8 — "So close" vurgu state:** lastScore >= bestScore * 0.8 ise kucuk vurgu efekti + "Beat it?" metni (S efor)
-- [ ] **GD.BL9 — Per-mode progress metadata chip:** Level (ilerleme), Duel (ELO delta) icin ayri bilgi kartlari (M efor)
+- [x] **GD.BL8 — "So close" vurgu state:** lastScore >= highScore * 0.8 ise amber renk + "Beat it?" etiketi (S efor) ✅ (T29)
+- [x] **GD.BL9 — Per-mode progress metadata chip:** Level (ilerleme), Duel (ELO delta) icin ayri bilgi kartlari (M efor)
 
 ---
 
@@ -464,29 +464,88 @@
 
 ### T18+T19 — Yeni Oyuncu Korumasi
 
-- [ ] **GD.BL10 — Daily ve Duel modlarini yeni oyuncu korumasindan muaf tut:** Seeded modlarda koruma seed'i bozabilir. Kara liste yerine beyaz liste kullan (sadece classic, colorChef, timeTrial, zen'de aktif) (XS efor)
+- [x] **GD.BL10 — Daily ve Duel modlarini yeni oyuncu korumasindan muaf tut:** Seeded modlarda koruma seed'i bozabilir. Kara liste yerine beyaz liste kullan (sadece classic, colorChef, timeTrial, zen'de aktif) (XS efor)
 
 ### T20 — Neredeyse Dolu Satir
 
-- [ ] **GD.BL11 — Nearly-full esigini mutlak sayiya cevir:** %75 yerine "playable - filled <= 2" — farkli grid boyutlarinda tutarli (XS efor)
+- [x] **GD.BL11 — Nearly-full esigini mutlak sayiya cevir:** %75 yerine "playable - filled <= 2" — farkli grid boyutlarinda tutarli (XS efor)
 
 ### T21 — Cascade Pacing
 
-- [ ] **GD.BL12 — Cascade SFX icin artan pitch ekle:** `playSfx`'e opsiyonel `speed` parametresi, step basina +0.08 pitch (1.0 → max 1.3) (S efor)
-- [ ] **GD.BL13 — Cascade delay'i 250ms → 180ms'ye dusur:** Bulmaca oyunu ritmine daha uygun (XS efor)
-- [ ] **GD.BL14 — Reduce Motion acikken cascade delay'i 0'a dusur:** `shouldReduceMotion` guard ekle (XS efor)
+- [x] **GD.BL12 — Cascade SFX icin artan pitch ekle:** `playSfx`'e opsiyonel `speed` parametresi, step basina +0.08 pitch (1.0 → max 1.3) (S efor)
+- [x] **GD.BL13 — Cascade delay'i 250ms → 180ms'ye dusur:** Bulmaca oyunu ritmine daha uygun (XS efor)
+- [x] **GD.BL14 — Reduce Motion acikken cascade delay'i 0'a dusur:** `shouldReduceMotion` guard ekle (XS efor)
 
 ### T22 — Bot ELO
 
-- [ ] **GD.BL15 — Bot mac sikligi analytics event'i ekle:** `daily_bot_matches_count` metrigi. 4 hafta veri sonrasi diminishing returns karari (Dusuk efor)
+- [x] **GD.BL15 — Bot mac sikligi analytics event'i ekle:** `daily_bot_matches_count` metrigi. 4 hafta veri sonrasi diminishing returns karari (Dusuk efor)
 
 ### T23 — Enflasyon
 
 - [x] **GD.BL16 — inflatedCost formulunu yumusat:** 500/3x → 1000/2x. Rainbow max 20 (30 yerine) ✅ (hemen uygulandı)
-- [ ] **GD.BL17 — Power-up toolbar'da enflasyon gorsel ipucu:** Ustu cizgili baz maliyet veya ilk enflasyonda tek seferlik tooltip (Orta efor)
-- [ ] **GD.BL18 — Gloo+ icin enflasyon cap'ini 1.5x'e sinirla:** Premium deger hissi, tam muafiyet degil (Dusuk efor)
+- [x] **GD.BL17 — Power-up toolbar'da enflasyon gorsel ipucu:** Ustu cizgili baz maliyet veya ilk enflasyonda tek seferlik tooltip (Orta efor)
+- [x] **GD.BL18 — Gloo+ icin enflasyon cap'ini 1.5x'e sinirla:** Premium deger hissi, tam muafiyet degil (Dusuk efor)
 
 ### T24 — Grid Doluluk Metrigi
 
-- [ ] **GD.BL19 — "Clean Board" → "Room to Grow" etiket degisikligi:** Dusuk doluluk + dusuk skor kombinasyonunda negatif algi riski (XS efor)
-- [ ] **GD.BL20 — Alt esigi %30 → %20'ye cek:** Gercek "temiz" oyunu dogru yakalamak icin (XS efor)
+- [x] **GD.BL19 — "Clean Board" → "Room to Grow" etiket degisikligi:** Dusuk doluluk + dusuk skor kombinasyonunda negatif algi riski (XS efor)
+- [x] **GD.BL20 — Alt esigi %30 → %20'ye cek:** Gercek "temiz" oyunu dogru yakalamak icin (XS efor)
+
+---
+
+## Game Designer Review Backlog — Sprint 5 (2026-03-22)
+
+> Sprint 5 task'larinin game-designer review'indan cikan ek oneriler.
+
+### T25 — Colorblind Prompt
+
+- [x] **GD.BL21 — Colorblind prompt'u ilk oyun yerine 2-5. oyun arasina ertele:** Ilk Game Over'da cognitif yuk cok yuksek (Dusuk efor)
+- [x] **GD.BL22 — Colorblind prompt TextButton tap target 44dp dogrulamasi:** a11y test'e dahil et (XS efor)
+
+### T26 — ColorChef Agirliklari
+
+- [x] **GD.BL23 — gamesPlayed mod-bazli mi global mi dogrula:** Mod-bazli ise ColorChef'te koruma esigini 5→2'ye dusur (XS efor)
+
+### T27 — Tip Rotasyonu
+
+- [x] **GD.BL24 — Tip rotasyon bloguna toplam gosterim tavani ekle:** synthCount + comboCount >= 6 ise null don ✅ (T37)
+
+### T28 — Rekor Karsilastirmasi
+
+- [x] **GD.BL25 — "This time: X — Record: Y" subtitle'ini kaldir:** Sadece "New Record!" goster, gorsel karisikligi azalt (Orta efor)
+
+### T29 — "So close" State
+
+- [x] **GD.BL26 — Game Over'da rekor kirildiginda HomeScreen'de "New personal best!" goster:** Pozitif durum kutlamasi (Dusuk efor)
+
+### T30 — Dinamik K-Factor
+
+- [x] **GD.BL27 — Bot maclarinda K-Factor azaltmasi:** Bot farming onlemi — T22 ile birlikte degerlendir (Orta efor)
+- [x] **GD.BL28 — K-Factor tier sync yorumu:** matchmaking.dart ve calculate-elo/index.ts basina sync uyarisi ekle (XS efor)
+
+### T31 — Siluet Preview
+
+- [x] **GD.BL29 — Silueti gamesPlayed < 5 ise gizle:** Yeni oyuncu icin bilissel yuk azaltma (XS efor)
+- [ ] **GD.BL30 — Preview-time line completion hint:** Sekil preview'i satiri tamamlayacaksa "temizlenecek" sinyali goster (M efor)
+
+---
+
+## Game Designer Review Backlog — Sprint 6 (2026-03-22)
+
+> Sprint 6 task'larinin game-designer review'indan cikan ek oneriler.
+
+### T32 — Level Odulleri
+
+- [x] **GD.BL31 — Level odul tavani (cap: 30) + ayri earnFromLevelComplete:** Lineer formul Level 50'de 100 Jel Ozu — ekonomi kirilma noktasi. `min(levelId * 2, 30)` veya tiered yaklasim (Yuksek efor)
+
+### T33 — Season Pass XP
+
+- [x] **GD.BL32 — Season Pass XP minimum floor (10) + Level modu bonus XP:** `max(10, score ~/ 100)` formulu — dusuk skorlu modlarda XP ihmal edilebilir durumda (Yuksek efor)
+
+### T35 — Bot Engelleri
+
+- [x] **GD.BL33 — Bot engel agresifligini difficulty parametresine bagla:** Dusuk ELO bot: 20sn/1 buz, Yuksek ELO bot: 12sn/3-4 buz (Orta efor)
+
+### T36 — Skor Broadcast
+
+- [x] **GD.BL34 — Score broadcast event-driven refactor:** 500ms polling yerine onScoreGained + 300ms debounce (Dusuk efor, teknik borc)

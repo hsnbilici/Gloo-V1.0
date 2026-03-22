@@ -34,7 +34,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) _fetchData();
     });
@@ -47,25 +47,41 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     super.dispose();
   }
 
-  String get _currentMode =>
-      _tabController.index == 0 ? 'classic' : 'timetrial';
+  bool get _isPvpTab => _tabController.index == 2;
+
+  String get _currentMode => switch (_tabController.index) {
+        0 => 'classic',
+        1 => 'timetrial',
+        _ => 'pvp',
+      };
 
   Future<void> _fetchData() async {
     setState(() => _loading = true);
-    final results = await Future.wait([
-      ref
-          .read(remoteRepositoryProvider)
-          .getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
-      ref
-          .read(remoteRepositoryProvider)
-          .getUserRank(mode: _currentMode, weekly: _weekly),
-    ]);
-    if (!mounted) return;
-    setState(() {
-      _scores = results[0] as List<LeaderboardEntry>;
-      _userRank = results[1] as int?;
-      _loading = false;
-    });
+    if (_isPvpTab) {
+      final scores =
+          await ref.read(remoteRepositoryProvider).getEloLeaderboard();
+      if (!mounted) return;
+      setState(() {
+        _scores = scores;
+        _userRank = null;
+        _loading = false;
+      });
+    } else {
+      final results = await Future.wait([
+        ref
+            .read(remoteRepositoryProvider)
+            .getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
+        ref
+            .read(remoteRepositoryProvider)
+            .getUserRank(mode: _currentMode, weekly: _weekly),
+      ]);
+      if (!mounted) return;
+      setState(() {
+        _scores = results[0] as List<LeaderboardEntry>;
+        _userRank = results[1] as int?;
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -131,21 +147,23 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   controller: _tabController,
                   classicLabel: l.leaderboardTabClassic,
                   timeTrialLabel: l.leaderboardTabTimeTrial,
+                  pvpLabel: l.leaderboardTabPvp,
                 ),
               ),
               const SizedBox(height: 12),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: hPadding),
-                child: FilterRow(
-                  weeklyLabel: l.leaderboardFilterWeekly,
-                  allTimeLabel: l.leaderboardFilterAllTime,
-                  isWeekly: _weekly,
-                  onChanged: (weekly) {
-                    setState(() => _weekly = weekly);
-                    _fetchData();
-                  },
+              if (!_isPvpTab)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: FilterRow(
+                    weeklyLabel: l.leaderboardFilterWeekly,
+                    allTimeLabel: l.leaderboardFilterAllTime,
+                    isWeekly: _weekly,
+                    onChanged: (weekly) {
+                      setState(() => _weekly = weekly);
+                      _fetchData();
+                    },
+                  ),
                 ),
-              ),
               const SizedBox(height: 12),
               if (_userRank != null)
                 Padding(

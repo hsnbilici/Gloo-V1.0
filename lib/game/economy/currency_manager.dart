@@ -63,8 +63,7 @@ class CurrencyManager {
   }
 
   void _earn(int amount) {
-    final total =
-        isGlooPlus ? amount + (amount * 0.5).round() : amount;
+    final total = isGlooPlus ? amount + (amount * 0.5).round() : amount;
     _balance += total;
     _earnedThisGame += total;
     _lifetimeEarnings += total;
@@ -134,4 +133,7 @@ abstract final class CurrencyCosts {
   /// PvP savunma power-up'ları.
   static const int shield = 3;
   static const int reflect = 8;
+
+  /// Streak freeze: Seriyi bir gün korur.
+  static const int streakFreeze = 100;
 }

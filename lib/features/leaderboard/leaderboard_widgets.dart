@@ -9,11 +9,13 @@ class ModeTabs extends StatelessWidget {
     required this.controller,
     required this.classicLabel,
     required this.timeTrialLabel,
+    this.pvpLabel,
   });
 
   final TabController controller;
   final String classicLabel;
   final String timeTrialLabel;
+  final String? pvpLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class ModeTabs extends StatelessWidget {
         tabs: [
           Tab(text: classicLabel),
           Tab(text: timeTrialLabel),
+          if (pvpLabel != null) Tab(text: pvpLabel!),
         ],
       ),
     );

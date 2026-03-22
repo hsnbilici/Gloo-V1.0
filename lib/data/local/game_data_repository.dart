@@ -59,10 +59,27 @@ class GameDataRepository {
       return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
     }();
 
-    final streak = (lastDate == yesterday) ? getStreak() + 1 : 1;
+    int streak;
+    if (lastDate == yesterday) {
+      streak = getStreak() + 1;
+    } else if (hasStreakFreeze()) {
+      // Streak freeze: consume freeze, keep current streak
+      await setStreakFreeze(false);
+      streak = getStreak();
+    } else {
+      streak = 1;
+    }
     await _prefs.setInt('streak_count', streak);
     await _prefs.setString('streak_last_date', today);
     return streak;
+  }
+
+  // ─── Streak Freeze ──────────────────────────────────────────────────────
+
+  bool hasStreakFreeze() => _prefs.getBool('streak_freeze') ?? false;
+
+  Future<void> setStreakFreeze(bool value) async {
+    await _prefs.setBool('streak_freeze', value);
   }
 
   int getLastStreakRewardDay() => _prefs.getInt('streak_last_reward_day') ?? 0;

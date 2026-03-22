@@ -341,6 +341,22 @@ abstract class AppStrings {
   String get gameOverNewStatRecord;
   String gameOverRecordComparison(int current, int record);
 
+  // GD.MO2: Watch Ad → Free Bomb (Game Over)
+  String get gameOverWatchAdBomb;
+
+  // GD.RO12: Share high score button
+  String get gameOverShareScore;
+
+  // GD.RO7: Progressive mode unlock
+  String modeLockedGames(int remaining);
+
+  // GD.PO6: PvP Leaderboard tab
+  String get leaderboardTabPvp;
+
+  // GD.RO11: Streak Freeze
+  String get streakFreezeLabel;
+  String get streakFreezeUsed;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,
