@@ -294,11 +294,14 @@ class GlooGame {
     );
 
     // Sıradaki elin ilk şeklini siluet olarak ön-üret
-    _nextShapeSilhouette = _shapeGenerator.generateSingleShape(
-      difficulty: difficulty,
-      gamesPlayed: _totalGamesPlayed,
-      mode: mode,
-    );
+    // Yeni oyuncular için bilişsel yük azaltma: ilk 5 oyunda gizle
+    _nextShapeSilhouette = _totalGamesPlayed < 5
+        ? null
+        : _shapeGenerator.generateSingleShape(
+            difficulty: difficulty,
+            gamesPlayed: _totalGamesPlayed,
+            mode: mode,
+          );
 
     return result;
   }

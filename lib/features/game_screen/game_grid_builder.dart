@@ -95,7 +95,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
           if (!cell.isEmpty) filled++;
         }
       }
-      if (playable > 0 && filled < playable && filled / playable >= 0.75) {
+      if (playable > 0 && filled < playable && (playable - filled) <= 2) {
         for (int c = 0; c < cols; c++) {
           final key = (r, c);
           final existing = cells[key];

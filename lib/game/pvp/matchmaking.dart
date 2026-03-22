@@ -61,6 +61,8 @@ class DuelResult {
 }
 
 /// ELO hesaplama sistemi.
+/// SYNC: Bu formül client (matchmaking.dart) ve server (calculate-elo/index.ts)
+/// ile senkron tutulmalıdır. Değişiklik yapılırsa her iki taraf da güncellenmelidir.
 class EloSystem {
   static const int initialElo = 1000;
 

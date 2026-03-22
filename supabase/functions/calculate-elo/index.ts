@@ -15,7 +15,9 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-/** Dynamic K-Factor: lower ELO = faster movement, higher = more stable. */
+/** Dynamic K-Factor: lower ELO = faster movement, higher = more stable.
+ *  SYNC: This formula must stay in sync with client (matchmaking.dart).
+ *  If you change tiers here, update the Dart version too. */
 function getKFactor(playerElo: number): number {
   if (playerElo < 800) return 40
   if (playerElo < 1200) return 32

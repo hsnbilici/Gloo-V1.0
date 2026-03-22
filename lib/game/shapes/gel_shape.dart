@@ -180,7 +180,10 @@ class ShapeGenerator {
     final roll = _rng.nextDouble();
 
     // Yeni oyuncu koruması — Level modu muaf (kendi zorluk eğrisi var)
-    if (gamesPlayed < 5 && mode != GameMode.level) {
+    if (gamesPlayed < 5 &&
+        mode != GameMode.level &&
+        mode != GameMode.daily &&
+        mode != GameMode.duel) {
       final (smallW, mediumW) = switch (gamesPlayed) {
         < 3 => (0.80, 0.15),
         3 => (0.70, 0.20),

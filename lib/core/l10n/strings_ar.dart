@@ -36,7 +36,7 @@ class StringsAr extends AppStrings {
   @override
   String get gameOverMaxCombo => 'Max Combo';
   @override
-  String get gridFillClean => 'Clean Board';
+  String get gridFillClean => 'Room to Grow';
   @override
   String get gridFillGood => 'Well Managed';
   @override

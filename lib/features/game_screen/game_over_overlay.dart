@@ -262,9 +262,9 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                       // İstatistikler
                       GameOverStatRow(
                         label: l.gameOverGridFill,
-                        value: fillPct < 30
+                        value: fillPct < 20
                             ? l.gridFillClean
-                            : fillPct < 60
+                            : fillPct < 55
                                 ? l.gridFillGood
                                 : fillPct < 80
                                     ? l.gridFillCrowded
@@ -416,7 +416,7 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                                 ),
                                 minimumSize: Size.zero,
                                 tapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
+                                    MaterialTapTargetSize.padded,
                               ),
                               child: Text(
                                 l.colorblindPromptAction,

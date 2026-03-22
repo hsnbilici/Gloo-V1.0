@@ -299,7 +299,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     };
 
     game.onCascadeStep = (step, linesCleared) {
-      Future.delayed(Duration(milliseconds: step * 250), () {
+      final rm = mounted ? MediaQuery.disableAnimationsOf(context) : false;
+      final delay = rm ? 0 : step * 180;
+      Future.delayed(Duration(milliseconds: delay), () {
         if (!mounted) return;
         soundBank.onLineClear(lines: linesCleared);
       });

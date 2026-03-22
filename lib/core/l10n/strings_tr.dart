@@ -36,7 +36,7 @@ class StringsTr extends AppStrings {
   @override
   String get gameOverMaxCombo => 'Maks Kombo';
   @override
-  String get gridFillClean => 'Temiz Oyun';
+  String get gridFillClean => 'Daha Çok Yer Vardı';
   @override
   String get gridFillGood => 'İyi Yönetim';
   @override
