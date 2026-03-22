@@ -36,6 +36,7 @@ class ModeCard extends StatefulWidget {
 class _ModeCardState extends State<ModeCard> {
   bool _pressed = false;
   bool _hovered = false;
+  bool _focused = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,53 +75,61 @@ class _ModeCardState extends State<ModeCard> {
     return Semantics(
       label: widget.label,
       button: true,
-      child: MouseRegion(
-        onEnter: (_) {
-          if (!_hovered) setState(() => _hovered = true);
+      child: FocusableActionDetector(
+        onShowFocusHighlight: (focused) {
+          if (_focused != focused) setState(() => _focused = focused);
         },
-        onExit: (_) {
-          if (_hovered) setState(() => _hovered = false);
-        },
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: widget.onTap,
-          onTapDown: (_) => setState(() => _pressed = true),
-          onTapUp: (_) => setState(() => _pressed = false),
-          onTapCancel: () => setState(() => _pressed = false),
-          child: AnimatedScale(
-            scale: _pressed ? 0.97 : 1.0,
-            duration: const Duration(milliseconds: 80),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: widget.isFeatured ? 18 : 13,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(UIConstants.radiusLg),
-                gradient: LinearGradient(
-                  begin: gradBegin,
-                  end: gradEnd,
-                  colors: [
-                    widget.color.withValues(alpha: gradAlpha1),
-                    widget.color.withValues(alpha: gradAlpha2),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.35, 1.0],
+        child: MouseRegion(
+          onEnter: (_) {
+            if (!_hovered) setState(() => _hovered = true);
+          },
+          onExit: (_) {
+            if (_hovered) setState(() => _hovered = false);
+          },
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: widget.onTap,
+            onTapDown: (_) => setState(() => _pressed = true),
+            onTapUp: (_) => setState(() => _pressed = false),
+            onTapCancel: () => setState(() => _pressed = false),
+            child: AnimatedScale(
+              scale: _pressed ? 0.96 : 1.0,
+              duration: const Duration(milliseconds: 80),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: widget.isFeatured ? 18 : 13,
                 ),
-                border: Border.all(
-                  color: widget.color.withValues(alpha: borderAlpha),
-                  width: widget.isFeatured ? 1.5 : 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.color
-                        .withValues(alpha: widget.isFeatured ? 0.18 : 0.07),
-                    blurRadius: widget.isFeatured ? 24 : 16,
-                    offset: const Offset(0, 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(UIConstants.radiusLg),
+                  gradient: LinearGradient(
+                    begin: gradBegin,
+                    end: gradEnd,
+                    colors: [
+                      widget.color.withValues(alpha: gradAlpha1),
+                      widget.color.withValues(alpha: gradAlpha2),
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.35, 1.0],
                   ),
-                ],
-              ),
+                  border: Border.all(
+                    color: _focused
+                        ? kCyan.withValues(alpha: 0.6)
+                        : widget.color.withValues(alpha: borderAlpha),
+                    width: _focused
+                        ? 2
+                        : widget.isFeatured ? 1.5 : 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.color
+                          .withValues(alpha: widget.isFeatured ? 0.18 : 0.07),
+                      blurRadius: widget.isFeatured ? 24 : 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
               child: Row(
                 children: [
                   Container(
@@ -256,6 +265,7 @@ class _ModeCardState extends State<ModeCard> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

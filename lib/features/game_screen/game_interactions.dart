@@ -45,7 +45,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   int get tutorialStep;
   set tutorialStep(int value);
   void refillHand();
-  void showToast(String msg);
+  void showToast(String msg, {String? a11yAnnouncement});
 
   void onSlotTap(int index) {
     if (activePowerUpMode != null) {

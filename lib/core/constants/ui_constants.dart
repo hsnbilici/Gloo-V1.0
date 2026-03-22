@@ -87,11 +87,12 @@ abstract final class Spacing {
 /// Kullanim: `style: AppTextStyles.heading` veya
 /// `style: AppTextStyles.body.copyWith(color: kCyan)`
 abstract final class AppTextStyles {
-  // ─── Headings ──────────────────────────────────────────────────────────
+  // ─── Headings — Syne (kimlik fontu) ────────────────────────────────────
   /// Ekran basligi (32px): overlay title, game over.
   static const TextStyle displayLarge = TextStyle(
     fontSize: 32,
     fontWeight: FontWeight.w900,
+    fontFamily: 'Syne',
     height: 1.1,
   );
 
@@ -99,6 +100,7 @@ abstract final class AppTextStyles {
   static const TextStyle heading = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w800,
+    fontFamily: 'Syne',
     height: 1.2,
   );
 
@@ -106,14 +108,16 @@ abstract final class AppTextStyles {
   static const TextStyle subheading = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
+    fontFamily: 'Syne',
     height: 1.2,
   );
 
-  // ─── Body ──────────────────────────────────────────────────────────────
+  // ─── Body — Platform default (okunabilirlik) ────────────────────────────
   /// Ana govde metni (14px): aciklamalar, liste ogeleri.
   static const TextStyle body = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
+    fontFamily: null,
     height: 1.4,
   );
 
@@ -121,14 +125,16 @@ abstract final class AppTextStyles {
   static const TextStyle bodySecondary = TextStyle(
     fontSize: 13,
     fontWeight: FontWeight.w500,
+    fontFamily: null,
     height: 1.4,
   );
 
-  // ─── Labels & Captions ─────────────────────────────────────────────────
+  // ─── Labels & Captions — Platform default (okunabilirlik) ──────────────
   /// Etiket (11px): badge, meta bilgi, kucuk label.
   static const TextStyle label = TextStyle(
     fontSize: 11,
     fontWeight: FontWeight.w700,
+    fontFamily: null,
     height: 1.2,
   );
 
@@ -136,6 +142,7 @@ abstract final class AppTextStyles {
   static const TextStyle caption = TextStyle(
     fontSize: 10,
     fontWeight: FontWeight.w500,
+    fontFamily: null,
     height: 1.2,
   );
 
@@ -143,6 +150,7 @@ abstract final class AppTextStyles {
   static const TextStyle micro = TextStyle(
     fontSize: 9,
     fontWeight: FontWeight.w800,
+    fontFamily: null,
     height: 1.0,
   );
 }

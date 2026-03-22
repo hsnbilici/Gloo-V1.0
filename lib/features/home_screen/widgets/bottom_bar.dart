@@ -93,6 +93,7 @@ class BottomItem extends StatefulWidget {
 class _BottomItemState extends State<BottomItem> {
   bool _pressed = false;
   bool _hovered = false;
+  bool _focused = false;
   final _soundBank = SoundBank();
 
   void _updateState({bool? pressed, bool? hovered}) {
@@ -123,50 +124,63 @@ class _BottomItemState extends State<BottomItem> {
     return Semantics(
       label: widget.label,
       button: true,
-      child: MouseRegion(
-        onEnter: (_) => _updateState(hovered: true),
-        onExit: (_) => _updateState(hovered: false),
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTapDown: (_) => _updateState(pressed: true),
-          onTapUp: (_) {
-            _updateState(pressed: false);
-            _soundBank.onButtonTap();
-            widget.onTap();
-          },
-          onTapCancel: () => _updateState(pressed: false),
-          child: AnimatedScale(
-            scale: _pressed ? 0.92 : 1.0,
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.easeOut,
-            child: Container(
-              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _hovered && !_pressed
-                    ? resolveColor(brightness,
-                        dark: Colors.white.withValues(alpha: 0.06),
-                        light: Colors.black.withValues(alpha: 0.04))
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(widget.icon, color: iconColor, size: 22),
-                  const SizedBox(height: 3),
-                  Text(
-                    widget.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
+      child: FocusableActionDetector(
+        onShowFocusHighlight: (focused) {
+          if (_focused != focused) setState(() => _focused = focused);
+        },
+        child: MouseRegion(
+          onEnter: (_) => _updateState(hovered: true),
+          onExit: (_) => _updateState(hovered: false),
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapDown: (_) => _updateState(pressed: true),
+            onTapUp: (_) {
+              _updateState(pressed: false);
+              _soundBank.onButtonTap();
+              widget.onTap();
+            },
+            onTapCancel: () => _updateState(pressed: false),
+            child: AnimatedScale(
+              scale: _pressed ? 0.96 : 1.0,
+              duration: const Duration(milliseconds: 80),
+              child: Container(
+                constraints:
+                    const BoxConstraints(minWidth: 44, minHeight: 44),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: _hovered && !_pressed
+                      ? resolveColor(brightness,
+                          dark: Colors.white.withValues(alpha: 0.06),
+                          light: Colors.black.withValues(alpha: 0.04))
+                      : Colors.transparent,
+                  borderRadius:
+                      BorderRadius.circular(UIConstants.radiusMd),
+                  border: _focused
+                      ? Border.all(
+                          color: kCyan.withValues(alpha: 0.6),
+                          width: 2,
+                        )
+                      : null,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(widget.icon, color: iconColor, size: 22),
+                    const SizedBox(height: 3),
+                    Text(
+                      widget.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

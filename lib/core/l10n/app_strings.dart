@@ -139,6 +139,8 @@ abstract class AppStrings {
   String get onboardingStep2Desc;
   String get onboardingStep3Title;
   String get onboardingStep3Desc;
+  String get onboardingTapToPlace;
+  String get onboardingGreat;
 
   // Streak
   String get streakDays;
@@ -289,6 +291,7 @@ abstract class AppStrings {
   String get seasonLabel;
 
   // Level complete & second chance
+  String get levelCompleteAnnounce;
   String get completedLabel;
   String get secondChanceMoves;
 
@@ -378,6 +381,7 @@ abstract class AppStrings {
   String get levelMicroTask8;
   String get levelMicroTask9;
   String get levelMicroTask10;
+  String get levelSelectTitle;
 
   // GD.PO10: Rematch
   String get duelRematch;
@@ -385,6 +389,29 @@ abstract class AppStrings {
   // GD.MO4: Daily Quests
   String get questsTitle;
   String get questsCompleted;
+
+  // UX-03: Grid hücre semantics label'ları
+  String get semanticsCellEmpty;
+  String get semanticsCellPreview;
+  String get semanticsCellStone;
+  String get semanticsCellIce;
+  String get semanticsCellLocked;
+  String get semanticsCellGravity;
+  String get semanticsCellRainbow;
+
+  // UX-05: Shop tab labels
+  String get shopTabCurrency;
+  String get shopTabPromo;
+
+  // UX-03: Power-up semantics label'ları
+  String get semanticsPowerUpRotate;
+  String get semanticsPowerUpBomb;
+  String get semanticsPowerUpUndo;
+  String get semanticsPowerUpFreeze;
+  String get semanticsPowerUpPeek;
+
+  // UX-07: Quick Play
+  String get quickPlayLabel;
 
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {

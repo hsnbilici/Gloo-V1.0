@@ -38,7 +38,7 @@ class ShopBackground extends StatelessWidget {
 
 // ─── Ürün kartı ───────────────────────────────────────────────────────────────
 
-class ProductTile extends StatelessWidget {
+class ProductTile extends StatefulWidget {
   const ProductTile({
     super.key,
     required this.icon,
@@ -61,11 +61,18 @@ class ProductTile extends StatelessWidget {
   final bool isFeatured;
 
   @override
+  State<ProductTile> createState() => _ProductTileState();
+}
+
+class _ProductTileState extends State<ProductTile> {
+  bool _buyHovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final dir = Directionality.of(context);
     final (gradBegin, gradEnd) = directionalGradientAlignment(dir);
     return Semantics(
-      label: label,
+      label: widget.label,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
@@ -74,21 +81,23 @@ class ProductTile extends StatelessWidget {
             begin: gradBegin,
             end: gradEnd,
             colors: [
-              color.withValues(alpha: isFeatured ? 0.14 : 0.08),
-              color.withValues(alpha: 0.02),
+              widget.color
+                  .withValues(alpha: widget.isFeatured ? 0.14 : 0.08),
+              widget.color.withValues(alpha: 0.02),
               Colors.transparent,
             ],
             stops: const [0.0, 0.35, 1.0],
           ),
           borderRadius: BorderRadius.circular(UIConstants.radiusTile),
           border: Border.all(
-            color: color.withValues(alpha: isFeatured ? 0.45 : 0.22),
-            width: isFeatured ? 1.5 : 1,
+            color: widget.color
+                .withValues(alpha: widget.isFeatured ? 0.45 : 0.22),
+            width: widget.isFeatured ? 1.5 : 1,
           ),
-          boxShadow: isFeatured
+          boxShadow: widget.isFeatured
               ? [
                   BoxShadow(
-                      color: color.withValues(alpha: 0.12),
+                      color: widget.color.withValues(alpha: 0.12),
                       blurRadius: 16,
                       offset: const Offset(0, 4))
                 ]
@@ -100,11 +109,12 @@ class ProductTile extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
+                color: widget.color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                border: Border.all(color: color.withValues(alpha: 0.30)),
+                border:
+                    Border.all(color: widget.color.withValues(alpha: 0.30)),
               ),
-              child: Icon(icon, color: color, size: 20),
+              child: Icon(widget.icon, color: widget.color, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -112,17 +122,18 @@ class ProductTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    label,
+                    widget.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: MediaQuery.textScalerOf(context).scale(14),
                       fontWeight: FontWeight.w700,
-                      shadows: isFeatured
+                      shadows: widget.isFeatured
                           ? [
                               Shadow(
-                                  color: color.withValues(alpha: 0.35),
+                                  color:
+                                      widget.color.withValues(alpha: 0.35),
                                   blurRadius: 8)
                             ]
                           : null,
@@ -130,7 +141,7 @@ class ProductTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    desc,
+                    widget.desc,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -142,38 +153,47 @@ class ProductTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            purchased
+            widget.purchased
                 ? Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                      border: Border.all(color: color.withValues(alpha: 0.35)),
+                      color: widget.color.withValues(alpha: 0.12),
+                      borderRadius:
+                          BorderRadius.circular(UIConstants.radiusSm),
+                      border: Border.all(
+                          color: widget.color.withValues(alpha: 0.35)),
                     ),
-                    child: Icon(Icons.check_rounded, color: color, size: 16),
+                    child:
+                        Icon(Icons.check_rounded, color: widget.color, size: 16),
                   )
                 : Semantics(
-                    label: '$label $price',
+                    label: '${widget.label} ${widget.price}',
                     button: true,
-                    child: GestureDetector(
-                      onTap: onBuy,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.15),
-                          borderRadius:
-                              BorderRadius.circular(UIConstants.radiusSm),
-                          border:
-                              Border.all(color: color.withValues(alpha: 0.50)),
-                        ),
-                        child: Text(
-                          price,
-                          style: TextStyle(
-                            color: color,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
+                    child: MouseRegion(
+                      onEnter: (_) => setState(() => _buyHovered = true),
+                      onExit: (_) => setState(() => _buyHovered = false),
+                      child: GestureDetector(
+                        onTap: widget.onBuy,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: widget.color.withValues(
+                                alpha: _buyHovered ? 0.22 : 0.15),
+                            borderRadius:
+                                BorderRadius.circular(UIConstants.radiusSm),
+                            border: Border.all(
+                                color: widget.color.withValues(
+                                    alpha: _buyHovered ? 0.70 : 0.50)),
+                          ),
+                          child: Text(
+                            widget.price,
+                            style: TextStyle(
+                              color: widget.color,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
@@ -368,7 +388,7 @@ class GlooPlusCard extends StatelessWidget {
   }
 }
 
-class _SubscriptionOption extends StatelessWidget {
+class _SubscriptionOption extends StatefulWidget {
   const _SubscriptionOption({
     required this.label,
     required this.price,
@@ -384,75 +404,89 @@ class _SubscriptionOption extends StatelessWidget {
   final bool isHighlighted;
 
   @override
+  State<_SubscriptionOption> createState() => _SubscriptionOptionState();
+}
+
+class _SubscriptionOptionState extends State<_SubscriptionOption> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: '$label $price',
+      label: '${widget.label} ${widget.price}',
       button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isHighlighted
-                ? kGold.withValues(alpha: 0.12)
-                : Colors.white.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-            border: Border.all(
-              color: isHighlighted
-                  ? kGold.withValues(alpha: 0.50)
-                  : Colors.white.withValues(alpha: 0.12),
-              width: isHighlighted ? 1.5 : 1,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: widget.isHighlighted
+                  ? kGold.withValues(alpha: _hovered ? 0.18 : 0.12)
+                  : Colors.white.withValues(alpha: _hovered ? 0.08 : 0.04),
+              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+              border: Border.all(
+                color: widget.isHighlighted
+                    ? kGold.withValues(alpha: _hovered ? 0.65 : 0.50)
+                    : Colors.white.withValues(alpha: _hovered ? 0.20 : 0.12),
+                width: widget.isHighlighted ? 1.5 : 1,
+              ),
+              boxShadow: widget.isHighlighted
+                  ? [
+                      BoxShadow(
+                          color: kGold.withValues(
+                              alpha: _hovered ? 0.22 : 0.14),
+                          blurRadius: 10),
+                    ]
+                  : null,
             ),
-            boxShadow: isHighlighted
-                ? [
-                    BoxShadow(
-                        color: kGold.withValues(alpha: 0.14), blurRadius: 10),
-                  ]
-                : null,
-          ),
-          child: Column(
-            children: [
-              if (badgeLabel != null) ...[
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: kGold.withValues(alpha: 0.20),
-                    borderRadius: BorderRadius.circular(UIConstants.radiusXs),
-                  ),
-                  child: Text(
-                    badgeLabel!,
-                    style: const TextStyle(
-                      color: kGold,
-                      fontSize: 7,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1,
+            child: Column(
+              children: [
+                if (widget.badgeLabel != null) ...[
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: kGold.withValues(alpha: 0.20),
+                      borderRadius:
+                          BorderRadius.circular(UIConstants.radiusXs),
                     ),
+                    child: Text(
+                      widget.badgeLabel!,
+                      style: const TextStyle(
+                        color: kGold,
+                        fontSize: 7,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                ],
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    color: widget.isHighlighted
+                        ? kGold.withValues(alpha: 0.80)
+                        : Colors.white.withValues(alpha: 0.60),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.8,
                   ),
                 ),
                 const SizedBox(height: 3),
+                Text(
+                  widget.price,
+                  style: TextStyle(
+                    color: widget.isHighlighted ? kGold : Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
               ],
-              Text(
-                label,
-                style: TextStyle(
-                  color: isHighlighted
-                      ? kGold.withValues(alpha: 0.80)
-                      : Colors.white.withValues(alpha: 0.60),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.8,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                price,
-                style: TextStyle(
-                  color: isHighlighted ? kGold : Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

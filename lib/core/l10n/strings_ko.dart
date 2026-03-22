@@ -165,6 +165,8 @@ class StringsKo extends AppStrings {
   @override
   String get chefLevelComplete => '레벨 완료';
   @override
+  String get levelCompleteAnnounce => '레벨 완료';
+  @override
   String get chefAllComplete => '모든 레벨 완료';
   @override
   String get chefContinue => '계속';
@@ -198,6 +200,10 @@ class StringsKo extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       '인접한 원색이 자동으로 융합되어 새로운 색상을 만들어냅니다. 희귀한 조합을 발견하세요!';
+  @override
+  String get onboardingTapToPlace => '탭하여 배치';
+  @override
+  String get onboardingGreat => '훌륭해요!';
 
   @override
   String get streakDays => '일';
@@ -593,7 +599,8 @@ class StringsKo extends AppStrings {
   String get levelMicroTask9 => '\uc0c8 \uc0c9 \ud569\uc131';
   @override
   String get levelMicroTask10 => '\ucd1d 3\uc904 \uc9c0\uc6b0\uae30';
-
+  @override
+  String get levelSelectTitle => '레벨';
   @override
   String get duelRematch => '\uc7ac\uacbd\uae30';
 
@@ -602,4 +609,42 @@ class StringsKo extends AppStrings {
   String get questsTitle => '일일 퀘스트';
   @override
   String get questsCompleted => '완료';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => '빈칸';
+  @override
+  String get semanticsCellPreview => '미리보기';
+  @override
+  String get semanticsCellStone => '돌';
+  @override
+  String get semanticsCellIce => '얼음';
+  @override
+  String get semanticsCellLocked => '잠김';
+  @override
+  String get semanticsCellGravity => '중력';
+  @override
+  String get semanticsCellRainbow => '무지개';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => '회전';
+  @override
+  String get semanticsPowerUpBomb => '폭탄';
+  @override
+  String get semanticsPowerUpUndo => '실행취소';
+  @override
+  String get semanticsPowerUpFreeze => '동결';
+  @override
+  String get semanticsPowerUpPeek => '미리보기';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => '젤 드랍';
+  @override
+  String get shopTabPromo => '프로모 코드';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => '빠른 플레이';
 }

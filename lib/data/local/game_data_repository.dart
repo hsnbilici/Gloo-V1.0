@@ -31,6 +31,14 @@ class GameDataRepository {
     await _prefs.setInt('lastscore_$mode', value);
   }
 
+  // ─── Son Oynanan Mod ─────────────────────────────────────────────────────
+
+  String? getLastPlayedMode() => _prefs.getString('last_played_mode');
+
+  Future<void> saveLastPlayedMode(String modeName) async {
+    await _prefs.setString('last_played_mode', modeName);
+  }
+
   // ─── Tutorial ────────────────────────────────────────────────────────────
 
   bool getTutorialDone() => _prefs.getBool('tutorial_done') ?? false;

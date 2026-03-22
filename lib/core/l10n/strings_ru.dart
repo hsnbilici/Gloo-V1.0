@@ -165,6 +165,8 @@ class StringsRu extends AppStrings {
   @override
   String get chefLevelComplete => 'УРОВЕНЬ ЗАВЕРШЁН';
   @override
+  String get levelCompleteAnnounce => 'УРОВЕНЬ ПРОЙДЕН';
+  @override
   String get chefAllComplete => 'ВСЕ УРОВНИ ПРОЙДЕНЫ';
   @override
   String get chefContinue => 'Продолжить';
@@ -200,6 +202,10 @@ class StringsRu extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'Соседние основные цвета автоматически сливаются в новые оттенки. Открывай редкие цветовые комбинации!';
+  @override
+  String get onboardingTapToPlace => 'Нажмите для размещения';
+  @override
+  String get onboardingGreat => 'Отлично!';
 
   @override
   String get streakDays => 'ДНЕЙ';
@@ -603,7 +609,8 @@ class StringsRu extends AppStrings {
   String get levelMicroTask9 => '\u0421\u0438\u043d\u0442\u0435\u0437\u0438\u0440\u0443\u0439 \u043d\u043e\u0432\u044b\u0439 \u0446\u0432\u0435\u0442';
   @override
   String get levelMicroTask10 => '\u041e\u0447\u0438\u0441\u0442\u0438 3 \u043b\u0438\u043d\u0438\u0438 \u0432\u0441\u0435\u0433\u043e';
-
+  @override
+  String get levelSelectTitle => 'УРОВНИ';
   @override
   String get duelRematch => '\u0420\u0435\u0432\u0430\u043d\u0448';
 
@@ -612,4 +619,42 @@ class StringsRu extends AppStrings {
   String get questsTitle => 'Ежедневные задания';
   @override
   String get questsCompleted => 'Выполнено';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'Пусто';
+  @override
+  String get semanticsCellPreview => 'Превью';
+  @override
+  String get semanticsCellStone => 'Камень';
+  @override
+  String get semanticsCellIce => 'Лёд';
+  @override
+  String get semanticsCellLocked => 'Заблокировано';
+  @override
+  String get semanticsCellGravity => 'Гравитация';
+  @override
+  String get semanticsCellRainbow => 'Радуга';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'Вращение';
+  @override
+  String get semanticsPowerUpBomb => 'Бомба';
+  @override
+  String get semanticsPowerUpUndo => 'Отмена';
+  @override
+  String get semanticsPowerUpFreeze => 'Заморозка';
+  @override
+  String get semanticsPowerUpPeek => 'Подсмотреть';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'Капли геля';
+  @override
+  String get shopTabPromo => 'Промокод';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'Быстрая игра';
 }

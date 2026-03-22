@@ -165,6 +165,8 @@ class StringsFr extends AppStrings {
   @override
   String get chefLevelComplete => 'NIVEAU TERMINÉ';
   @override
+  String get levelCompleteAnnounce => 'NIVEAU TERMINÉ';
+  @override
   String get chefAllComplete => 'TOUS LES NIVEAUX TERMINÉS';
   @override
   String get chefContinue => 'Continuer';
@@ -200,6 +202,10 @@ class StringsFr extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'Les couleurs primaires adjacentes fusionnent automatiquement pour en créer de nouvelles. Découvrez des combinaisons rares !';
+  @override
+  String get onboardingTapToPlace => 'Appuyez pour placer';
+  @override
+  String get onboardingGreat => 'Super !';
 
   @override
   String get streakDays => 'JOURS';
@@ -599,6 +605,8 @@ class StringsFr extends AppStrings {
   String get levelMicroTask9 => 'Synthetise une nouvelle couleur';
   @override
   String get levelMicroTask10 => 'Efface 3 lignes au total';
+  @override
+  String get levelSelectTitle => 'NIVEAUX';
 
   @override
   String get duelRematch => 'Revanche';
@@ -608,4 +616,42 @@ class StringsFr extends AppStrings {
   String get questsTitle => 'Quetes quotidiennes';
   @override
   String get questsCompleted => 'Termine';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'Vide';
+  @override
+  String get semanticsCellPreview => 'Apercu';
+  @override
+  String get semanticsCellStone => 'Pierre';
+  @override
+  String get semanticsCellIce => 'Glace';
+  @override
+  String get semanticsCellLocked => 'Verrouille';
+  @override
+  String get semanticsCellGravity => 'Gravite';
+  @override
+  String get semanticsCellRainbow => 'Arc-en-ciel';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'Rotation';
+  @override
+  String get semanticsPowerUpBomb => 'Bombe';
+  @override
+  String get semanticsPowerUpUndo => 'Annuler';
+  @override
+  String get semanticsPowerUpFreeze => 'Geler';
+  @override
+  String get semanticsPowerUpPeek => 'Apercu';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'Gouttes de Gel';
+  @override
+  String get shopTabPromo => 'Code Promo';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'Partie rapide';
 }

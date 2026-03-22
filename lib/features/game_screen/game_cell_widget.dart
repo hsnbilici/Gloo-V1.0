@@ -9,6 +9,7 @@ import '../../core/constants/ui_constants.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../game/world/cell_type.dart';
 import '../../providers/grid_state_provider.dart';
+import '../../providers/locale_provider.dart';
 import 'gel_cell_painter.dart';
 
 /// Tek bir izgara hucresini render eden widget.
@@ -223,15 +224,24 @@ class GameCellWidget extends ConsumerWidget {
     }
 
     // Semantics label: hücre durumunu ekran okuyuculara bildirir
+    final l = ref.watch(stringsProvider);
     final String semanticLabel;
     if (data.color != null) {
-      semanticLabel = '${data.color!.shortLabel} ${row + 1}, ${col + 1}';
+      semanticLabel = '${l.colorName(data.color!)} ${row + 1}, ${col + 1}';
     } else if (data.isPreview) {
-      semanticLabel = 'Preview ${row + 1}, ${col + 1}';
+      semanticLabel = '${l.semanticsCellPreview} ${row + 1}, ${col + 1}';
     } else if (data.type == CellType.stone) {
-      semanticLabel = 'Stone ${row + 1}, ${col + 1}';
+      semanticLabel = '${l.semanticsCellStone} ${row + 1}, ${col + 1}';
+    } else if (data.type == CellType.ice) {
+      semanticLabel = '${l.semanticsCellIce} ${data.iceLayer} ${row + 1}, ${col + 1}';
+    } else if (data.type == CellType.locked) {
+      semanticLabel = '${l.semanticsCellLocked} ${row + 1}, ${col + 1}';
+    } else if (data.type == CellType.gravity) {
+      semanticLabel = '${l.semanticsCellGravity} ${row + 1}, ${col + 1}';
+    } else if (data.type == CellType.rainbow) {
+      semanticLabel = '${l.semanticsCellRainbow} ${row + 1}, ${col + 1}';
     } else {
-      semanticLabel = 'Empty ${row + 1}, ${col + 1}';
+      semanticLabel = '${l.semanticsCellEmpty} ${row + 1}, ${col + 1}';
     }
 
     return Semantics(
@@ -254,10 +264,10 @@ class GameCellWidget extends ConsumerWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(UIConstants.radiusXs),
                       border: Border.all(
-                        color: kGreen.withValues(alpha: 0.55),
-                        width: 1.5,
+                        color: kGreen.withValues(alpha: 0.40),
+                        width: 1,
                       ),
-                      color: kGreen.withValues(alpha: 0.10),
+                      color: kGreen.withValues(alpha: 0.06),
                     ),
                   ),
                 ),

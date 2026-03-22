@@ -63,39 +63,74 @@ class RedeemCodeField extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Semantics(
+          _RedeemButton(
             label: buttonLabel,
-            button: true,
             enabled: enabled,
-            child: GestureDetector(
-              onTap: enabled ? onRedeem : null,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: enabled
-                      ? kCyan.withValues(alpha: 0.15)
-                      : kCyan.withValues(alpha: 0.06),
-                  borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border: Border.all(
-                    color: enabled
-                        ? kCyan.withValues(alpha: 0.50)
-                        : kCyan.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Text(
-                  buttonLabel,
-                  style: TextStyle(
-                    color: enabled ? kCyan : kCyan.withValues(alpha: 0.35),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
-                  ),
-                ),
+            onTap: onRedeem,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Redeem butonu (hover destekli) ─────────────────────────────────────────
+
+class _RedeemButton extends StatefulWidget {
+  const _RedeemButton({
+    required this.label,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  State<_RedeemButton> createState() => _RedeemButtonState();
+}
+
+class _RedeemButtonState extends State<_RedeemButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveHover = _hovered && widget.enabled;
+    return Semantics(
+      label: widget.label,
+      button: true,
+      enabled: widget.enabled,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.enabled ? widget.onTap : null,
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: widget.enabled
+                  ? kCyan.withValues(alpha: effectiveHover ? 0.22 : 0.15)
+                  : kCyan.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+              border: Border.all(
+                color: widget.enabled
+                    ? kCyan.withValues(alpha: effectiveHover ? 0.70 : 0.50)
+                    : kCyan.withValues(alpha: 0.15),
+              ),
+            ),
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                color: widget.enabled ? kCyan : kCyan.withValues(alpha: 0.35),
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

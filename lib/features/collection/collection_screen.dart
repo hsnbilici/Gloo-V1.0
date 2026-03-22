@@ -247,20 +247,22 @@ class _CollectionBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    return Stack(
-      children: [
-        Container(color: bgColor),
-        const Positioned(
-          top: -80,
-          right: -60,
-          child: GlowOrb(size: 260, color: kColorChef, opacity: 0.06),
-        ),
-        const Positioned(
-          bottom: -100,
-          left: -50,
-          child: GlowOrb(size: 300, color: kColorClassic, opacity: 0.05),
-        ),
-      ],
+    return ExcludeSemantics(
+      child: Stack(
+        children: [
+          Container(color: bgColor),
+          const Positioned(
+            top: -80,
+            right: -60,
+            child: GlowOrb(size: 260, color: kColorChef, opacity: 0.06),
+          ),
+          const Positioned(
+            bottom: -100,
+            left: -50,
+            child: GlowOrb(size: 300, color: kColorClassic, opacity: 0.05),
+          ),
+        ],
+      ),
     );
   }
 }

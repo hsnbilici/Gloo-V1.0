@@ -165,6 +165,8 @@ class StringsJa extends AppStrings {
   @override
   String get chefLevelComplete => 'レベルクリア';
   @override
+  String get levelCompleteAnnounce => 'レベルクリア';
+  @override
   String get chefAllComplete => '全レベルクリア';
   @override
   String get chefContinue => '続ける';
@@ -197,6 +199,10 @@ class StringsJa extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       '隣り合う原色が自動的に融合して新しい色を生み出します。レアな色の組み合わせを発見しよう！';
+  @override
+  String get onboardingTapToPlace => 'タップして配置';
+  @override
+  String get onboardingGreat => 'すごい！';
 
   @override
   String get streakDays => '日';
@@ -592,7 +598,8 @@ class StringsJa extends AppStrings {
   String get levelMicroTask9 => '\u65b0\u3057\u3044\u8272\u3092\u5408\u6210';
   @override
   String get levelMicroTask10 => '\u5408\u8a083\u884c\u6d88\u305d\u3046';
-
+  @override
+  String get levelSelectTitle => 'レベル';
   @override
   String get duelRematch => '\u518d\u6226';
 
@@ -601,4 +608,42 @@ class StringsJa extends AppStrings {
   String get questsTitle => 'デイリークエスト';
   @override
   String get questsCompleted => '完了';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => '空';
+  @override
+  String get semanticsCellPreview => 'プレビュー';
+  @override
+  String get semanticsCellStone => '石';
+  @override
+  String get semanticsCellIce => '氷';
+  @override
+  String get semanticsCellLocked => 'ロック';
+  @override
+  String get semanticsCellGravity => '重力';
+  @override
+  String get semanticsCellRainbow => 'レインボー';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => '回転';
+  @override
+  String get semanticsPowerUpBomb => 'ボム';
+  @override
+  String get semanticsPowerUpUndo => '元に戻す';
+  @override
+  String get semanticsPowerUpFreeze => 'フリーズ';
+  @override
+  String get semanticsPowerUpPeek => '先読み';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'ジェルドロップ';
+  @override
+  String get shopTabPromo => 'プロモコード';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'クイックプレイ';
 }

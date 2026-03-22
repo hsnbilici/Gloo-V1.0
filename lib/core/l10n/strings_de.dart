@@ -165,6 +165,8 @@ class StringsDe extends AppStrings {
   @override
   String get chefLevelComplete => 'LEVEL GESCHAFFT';
   @override
+  String get levelCompleteAnnounce => 'LEVEL ABGESCHLOSSEN';
+  @override
   String get chefAllComplete => 'ALLE LEVEL FERTIG';
   @override
   String get chefContinue => 'Weiter';
@@ -200,6 +202,10 @@ class StringsDe extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'Benachbarte Primärfarben verschmelzen automatisch zu neuen Farben. Entdecke seltene Farbkombinationen!';
+  @override
+  String get onboardingTapToPlace => 'Tippe zum Platzieren';
+  @override
+  String get onboardingGreat => 'Super!';
 
   @override
   String get streakDays => 'TAGE';
@@ -601,6 +607,8 @@ class StringsDe extends AppStrings {
   String get levelMicroTask9 => 'Neue Farbe synthetisieren';
   @override
   String get levelMicroTask10 => 'Insgesamt 3 Reihen leeren';
+  @override
+  String get levelSelectTitle => 'LEVEL';
 
   @override
   String get duelRematch => 'Revanche';
@@ -610,4 +618,42 @@ class StringsDe extends AppStrings {
   String get questsTitle => 'Tagliche Aufgaben';
   @override
   String get questsCompleted => 'Abgeschlossen';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'Leer';
+  @override
+  String get semanticsCellPreview => 'Vorschau';
+  @override
+  String get semanticsCellStone => 'Stein';
+  @override
+  String get semanticsCellIce => 'Eis';
+  @override
+  String get semanticsCellLocked => 'Gesperrt';
+  @override
+  String get semanticsCellGravity => 'Schwerkraft';
+  @override
+  String get semanticsCellRainbow => 'Regenbogen';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'Drehen';
+  @override
+  String get semanticsPowerUpBomb => 'Bombe';
+  @override
+  String get semanticsPowerUpUndo => 'Ruckgangig';
+  @override
+  String get semanticsPowerUpFreeze => 'Einfrieren';
+  @override
+  String get semanticsPowerUpPeek => 'Vorschau';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'Gel-Tropfen';
+  @override
+  String get shopTabPromo => 'Promo-Code';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'Schnellspiel';
 }

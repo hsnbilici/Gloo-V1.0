@@ -221,7 +221,7 @@ class ConsentDialog extends StatelessWidget {
   }
 }
 
-class DialogBtn extends StatelessWidget {
+class DialogBtn extends StatefulWidget {
   const DialogBtn({
     super.key,
     required this.label,
@@ -236,34 +236,47 @@ class DialogBtn extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<DialogBtn> createState() => _DialogBtnState();
+}
+
+class _DialogBtnState extends State<DialogBtn> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: label,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: filled ? color.withValues(alpha: 0.13) : Colors.transparent,
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(
-              color: filled
-                  ? color.withValues(alpha: 0.50)
-                  : Colors.white.withValues(alpha: 0.08),
-              width: filled ? 1.5 : 1,
+      label: widget.label,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: widget.filled
+                  ? widget.color.withValues(alpha: _hovered ? 0.18 : 0.13)
+                  : Colors.white.withValues(alpha: _hovered ? 0.05 : 0.0),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                color: widget.filled
+                    ? widget.color.withValues(alpha: _hovered ? 0.65 : 0.50)
+                    : Colors.white.withValues(alpha: _hovered ? 0.14 : 0.08),
+                width: widget.filled ? 1.5 : 1,
+              ),
             ),
-          ),
-          child: ExcludeSemantics(
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: filled ? color : color,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+            child: ExcludeSemantics(
+              child: Text(
+                widget.label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: widget.color,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
               ),
             ),
           ),

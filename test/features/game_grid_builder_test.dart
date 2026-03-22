@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gloo/core/constants/color_constants.dart';
 import 'package:gloo/core/constants/game_constants.dart';
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/data/local/local_repository.dart';
 import 'package:gloo/features/game_screen/game_cell_widget.dart';
 import 'package:gloo/features/game_screen/game_screen.dart';
@@ -146,7 +147,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
 
       // Empty cells should have 'Empty R, C' semantics
-      final semantics = find.bySemanticsLabel(RegExp(r'^Empty \d+, \d+$'));
+      final emptyLabel = StringsEn().semanticsCellEmpty;
+      final semantics = find.bySemanticsLabel(RegExp(r'^' + emptyLabel + r' \d+, \d+$'));
       expect(semantics, findsWidgets);
     });
   });

@@ -165,6 +165,8 @@ class StringsHi extends AppStrings {
   @override
   String get chefLevelComplete => 'लेवल पूरा';
   @override
+  String get levelCompleteAnnounce => 'लेवल पूरा';
+  @override
   String get chefAllComplete => 'सभी लेवल पूरे';
   @override
   String get chefContinue => 'जारी रखें';
@@ -200,6 +202,10 @@ class StringsHi extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'पास के प्राथमिक रंग स्वचालित रूप से मिलकर नए रंग बनाते हैं। दुर्लभ रंग संयोजन खोजें!';
+  @override
+  String get onboardingTapToPlace => 'रखने के लिए टैप करें';
+  @override
+  String get onboardingGreat => 'बहुत बढ़िया!';
 
   @override
   String get streakDays => 'दिन';
@@ -597,7 +603,8 @@ class StringsHi extends AppStrings {
   String get levelMicroTask9 => '\u0928\u092f\u093e \u0930\u0902\u0917 \u092c\u0928\u093e\u090f\u0902';
   @override
   String get levelMicroTask10 => '\u0915\u0941\u0932 3 \u0932\u093e\u0907\u0928\u0947\u0902 \u0938\u093e\u092b \u0915\u0930\u0947\u0902';
-
+  @override
+  String get levelSelectTitle => 'स्तर';
   @override
   String get duelRematch => '\u092b\u093f\u0930 \u0938\u0947 \u0916\u0947\u0932\u0947\u0902';
 
@@ -606,4 +613,42 @@ class StringsHi extends AppStrings {
   String get questsTitle => 'दैनिक क्वेस्ट';
   @override
   String get questsCompleted => 'पूर्ण';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'खाली';
+  @override
+  String get semanticsCellPreview => 'पूर्वावलोकन';
+  @override
+  String get semanticsCellStone => 'पत्थर';
+  @override
+  String get semanticsCellIce => 'बर्फ';
+  @override
+  String get semanticsCellLocked => 'लॉक';
+  @override
+  String get semanticsCellGravity => 'गुरुत्वाकर्षण';
+  @override
+  String get semanticsCellRainbow => 'इंद्रधनुष';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'घुमाएँ';
+  @override
+  String get semanticsPowerUpBomb => 'बम';
+  @override
+  String get semanticsPowerUpUndo => 'पूर्ववत';
+  @override
+  String get semanticsPowerUpFreeze => 'फ्रीज़';
+  @override
+  String get semanticsPowerUpPeek => 'झाँकना';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'जेल ड्रॉप्स';
+  @override
+  String get shopTabPromo => 'प्रोमो कोड';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'त्वरित खेल';
 }

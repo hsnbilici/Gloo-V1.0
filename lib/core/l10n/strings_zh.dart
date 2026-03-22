@@ -165,6 +165,8 @@ class StringsZh extends AppStrings {
   @override
   String get chefLevelComplete => '关卡完成';
   @override
+  String get levelCompleteAnnounce => '关卡完成';
+  @override
   String get chefAllComplete => '所有关卡完成';
   @override
   String get chefContinue => '继续';
@@ -196,6 +198,10 @@ class StringsZh extends AppStrings {
   String get onboardingStep3Title => '合成颜色';
   @override
   String get onboardingStep3Desc => '相邻的原色自动融合生成新颜色，发现稀有颜色组合！';
+  @override
+  String get onboardingTapToPlace => '点击放置';
+  @override
+  String get onboardingGreat => '太棒了！';
 
   @override
   String get streakDays => '天';
@@ -589,7 +595,8 @@ class StringsZh extends AppStrings {
   String get levelMicroTask9 => '\u5408\u6210\u65b0\u989c\u8272';
   @override
   String get levelMicroTask10 => '\u603b\u5171\u6d88\u96643\u884c';
-
+  @override
+  String get levelSelectTitle => '关卡';
   @override
   String get duelRematch => '\u518d\u6765\u4e00\u5c40';
 
@@ -598,4 +605,42 @@ class StringsZh extends AppStrings {
   String get questsTitle => '每日任务';
   @override
   String get questsCompleted => '已完成';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => '空';
+  @override
+  String get semanticsCellPreview => '预览';
+  @override
+  String get semanticsCellStone => '石块';
+  @override
+  String get semanticsCellIce => '冰';
+  @override
+  String get semanticsCellLocked => '锁定';
+  @override
+  String get semanticsCellGravity => '重力';
+  @override
+  String get semanticsCellRainbow => '彩虹';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => '旋转';
+  @override
+  String get semanticsPowerUpBomb => '炸弹';
+  @override
+  String get semanticsPowerUpUndo => '撤销';
+  @override
+  String get semanticsPowerUpFreeze => '冻结';
+  @override
+  String get semanticsPowerUpPeek => '预览';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => '凝胶精华';
+  @override
+  String get shopTabPromo => '兑换码';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => '快速开始';
 }

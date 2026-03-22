@@ -58,6 +58,13 @@ class LocalRepository {
 
   Future<void> setOnboardingDone() => settings.setOnboardingDone();
 
+  // ─── Son Oynanan Mod ─────────────────────────────────────────────────────
+
+  String? getLastPlayedMode() => gameData.getLastPlayedMode();
+
+  Future<void> saveLastPlayedMode(String modeName) =>
+      gameData.saveLastPlayedMode(modeName);
+
   // ─── Tutorial ────────────────────────────────────────────────────────────
 
   bool getTutorialDone() => gameData.getTutorialDone();

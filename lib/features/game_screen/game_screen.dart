@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -302,7 +303,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
               ? gameContent
               : Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
+                    constraints: BoxConstraints(
+                      maxWidth: responsiveMaxWidth(screenWidth),
+                    ),
                     child: gameContent,
                   ),
                 ),
@@ -333,9 +336,11 @@ class _GameScreenState extends ConsumerState<GameScreen>
           if (tutorialActive && tutorialStep >= 0) ...[
             // Semi-transparent overlay
             Positioned.fill(
-              child: IgnorePointer(
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.3),
+              child: ExcludeSemantics(
+                child: IgnorePointer(
+                  child: Container(
+                    color: Colors.black.withValues(alpha: 0.3),
+                  ),
                 ),
               ),
             ),
@@ -427,9 +432,11 @@ class _GameScreenState extends ConsumerState<GameScreen>
   // ─── Yardımcılar ──────────────────────────────────────────────────
 
   @override
-  void showToast(String msg) {
+  void showToast(String msg, {String? a11yAnnouncement}) {
     _toastTimer?.cancel();
     setState(() => _toastMsg = msg);
+    final announcement = a11yAnnouncement ?? msg;
+    SemanticsService.sendAnnouncement(View.of(context), announcement, Directionality.of(context));
     _toastTimer = Timer(AnimationDurations.toast, () {
       if (mounted) setState(() => _toastMsg = null);
     });

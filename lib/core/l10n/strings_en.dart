@@ -200,6 +200,10 @@ class StringsEn extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'Adjacent primary colors fuse automatically to create new ones. Discover rare color combinations!';
+  @override
+  String get onboardingTapToPlace => 'Tap to place';
+  @override
+  String get onboardingGreat => 'Great!';
 
   @override
   String get streakDays => 'DAYS';
@@ -448,6 +452,8 @@ class StringsEn extends AppStrings {
   String get seasonLabel => 'Season';
 
   @override
+  String get levelCompleteAnnounce => 'LEVEL COMPLETE';
+  @override
   String get completedLabel => 'COMPLETED!';
   @override
   String get secondChanceMoves => '+3 Moves';
@@ -596,6 +602,8 @@ class StringsEn extends AppStrings {
   String get levelMicroTask9 => 'Synthesize a new color';
   @override
   String get levelMicroTask10 => 'Clear 3 lines total';
+  @override
+  String get levelSelectTitle => 'LEVELS';
 
   // GD.PO10: Rematch
   @override
@@ -606,4 +614,42 @@ class StringsEn extends AppStrings {
   String get questsTitle => 'Daily Quests';
   @override
   String get questsCompleted => 'Completed';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'Empty';
+  @override
+  String get semanticsCellPreview => 'Preview';
+  @override
+  String get semanticsCellStone => 'Stone';
+  @override
+  String get semanticsCellIce => 'Ice';
+  @override
+  String get semanticsCellLocked => 'Locked';
+  @override
+  String get semanticsCellGravity => 'Gravity';
+  @override
+  String get semanticsCellRainbow => 'Rainbow';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'Rotate';
+  @override
+  String get semanticsPowerUpBomb => 'Bomb';
+  @override
+  String get semanticsPowerUpUndo => 'Undo';
+  @override
+  String get semanticsPowerUpFreeze => 'Freeze';
+  @override
+  String get semanticsPowerUpPeek => 'Peek';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'Gel Drops';
+  @override
+  String get shopTabPromo => 'Promo Code';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'Quick Play';
 }

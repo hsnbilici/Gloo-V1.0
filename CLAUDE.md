@@ -129,7 +129,7 @@ Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10
 
 Renk adlari l10n uzerinden: `AppStrings.colorName(GelColor)`. `GelColor` uzerinde `displayName` getter'i yoktur.
 
-UI palet sabitleri `color_constants.dart`'ta (75+ sabit): `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors`, `kSurfaceDark`, `kIceBlue`, `kAmber`, `kPowerUp*`, `kGreen`, `kGold`, `kPink` vb. Ekranlarda `Color(0x...)` literal kullanma — `color_constants.dart`'a sabit ekle ve import et.
+UI palet sabitleri `color_constants.dart`'ta (75+ sabit): `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors`, `kSurfaceDark`, `kIceBlue`, `kAmber`, `kPowerUp*`, `kGreen`, `kGold`, `kPink`, `kColorDuel` vb. Ekranlarda `Color(0x...)` literal kullanma — `color_constants.dart`'a sabit ekle ve import et. Dosya basinda WCAG AA kontrast matrisi mevcut (53+ renk cifti audit); yeni renk eklerken matrisi guncelle.
 
 Aydinlik tema sabitleri `color_constants_light.dart`'ta: `kBgLight`, `kSurfaceLight`, `kTextPrimaryLight`, `kTextSecondaryLight`, `kCardBgLight`, `kCardBorderLight`, `kMutedLight`, mod renkleri (`kColorClassicLight` vb.).
 
@@ -144,7 +144,7 @@ Aydinlik tema sabitleri `color_constants_light.dart`'ta: `kBgLight`, `kSurfaceLi
 - `responsiveColumns(width, phone:, tablet:, desktop:)` → grid sutun sayisi
 - `ResponsiveScaffold` widget — tablet/desktop'ta icerik genisligini kisitlar
 
-Tum ekranlar responsive padding ve `Center` + `ConstrainedBox` kullaniyor. GameScreen 600px max ile sinirli.
+Tum ekranlar responsive padding ve `Center` + `ConstrainedBox` kullaniyor. GameScreen breakpoint-bazli: phone → mevcut, tablet → 720px, desktop → 960px. HomeScreen ModeCard'lar tablet'te 2-sutun grid (`responsiveColumns(phone: 1, tablet: 2, desktop: 2)` + `IntrinsicHeight` + `Row` + `Expanded`).
 
 ### RTL (Sag-Sola) Destegi
 
@@ -165,12 +165,12 @@ Tum 13 ekran + 2 widget dosyasi RTL-safe. Dekoratif arkaplan elementleri (`Posit
 
 ### Routing
 
-GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
+GoRouter (`lib/app/router.dart`). **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
 1. `/game/level/:levelId`
 2. `/game/duel`
 3. `/game/:mode` (generic)
 
-`GameMode.fromString()` gecersiz degerleri `classic`'e dusurur.
+`GameMode.fromString()` gecersiz degerleri `classic`'e dusurur. `_SoundNavigatorObserver` ile ekran gecislerinde ses caliniyor.
 
 ### Dialog Gecisleri
 
@@ -180,7 +180,7 @@ GoRouter. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali
 
 - `AnimationDurations` abstract final class — 16 named duration sabiti (80ms→2500ms). Magic number yerine bunu kullan: `AnimationDurations.quick`, `.dialog`, `.waveClear`, `.toast`, `.breathCycle` vb.
 - `Spacing` abstract final class — 8 dikey bosluk sabiti (xxs=2 → xxxl=32). `SizedBox(height: 16)` yerine `SizedBox(height: Spacing.lg)` kullan.
-- `AppTextStyles` abstract final class — 8 semantik text style (displayLarge 32px → micro 9px). Inline `TextStyle(fontSize: 18, fontWeight: FontWeight.w800)` yerine `AppTextStyles.heading` kullan.
+- `AppTextStyles` abstract final class — 8 semantik text style (displayLarge 32px → micro 9px). Display/heading tier (displayLarge, heading, subheading) `fontFamily: 'Syne'` (marka fontu). Body/label tier (body, bodySecondary, label, caption, micro) platform default font (CJK/Kiril/Arapca uyumu). Inline `TextStyle(fontSize: 18, fontWeight: FontWeight.w800)` yerine `AppTextStyles.heading` kullan.
 - `kAppName` (`app_constants.dart`) — Marka adi sabiti. Hardcoded `'GLOO'` yerine bunu kullan.
 
 ### GameEffectManager
@@ -240,7 +240,10 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 - Pin sabitleri `kCertificatePins` — Supabase leaf+CA, Google leaf+CA. Sertifika yenilendiginde guncellenmelidir.
 
 ### Erisilebilirlik (a11y)
-- 33 dosyada Semantics widget'lari mevcut. Yeni ekran eklerken her interaktif elemana `Semantics(label:, button: true)` ekle.
+- 33+ dosyada Semantics widget'lari mevcut. Yeni ekran eklerken her interaktif elemana `Semantics(label:, button: true)` ekle.
+- `SemanticsService.sendAnnouncement(View.of(context), msg, dir)` ile kritik geri bildirimler (toast, combo medium+, near-miss, game over, level complete) ekran okuyucuya duyurulur. `showToast(msg, {a11yAnnouncement})` opsiyonel ayri a11y metni destekler.
+- Dekoratif elemanlar (GlowOrb, gradient overlay, efektler) `ExcludeSemantics` ile sarilir. `GlowOrb` widget'i kaynaginda sarili — tum kullanim noktalari otomatik kapsanir.
+- Grid hucre semantics label'lari lokalize: `l.semanticsCellEmpty`, `l.semanticsCellIce` (+ layer sayisi), `l.semanticsCellStone` vb. Dolu hucreler `l.colorName(color)` ile lokalize renk adi kullanir. Power-up label'lari: `l.semanticsPowerUpRotate` vb.
 - 44dp minimum tap target testi `semantics_coverage_test.dart`'ta dogrulanir.
 - `MediaQuery.textScalerOf(context).scale(fontSize)` ile dinamik font boyutlama — 9 lokasyonda aktif. Oyun grid cell'leri muaf.
 
@@ -270,10 +273,18 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 - FlutterFire Crashlytics symbol upload build phase: `flutterfire` yoksa sessizce atlar (CI uyumlu)
 
 ### Ses ve Haptik
-- `AudioManager`: `assets/audio/sfx/` ve `assets/audio/music/`. Dosya bulunamazsa sessizce atlar.
+- `AudioManager` (`lib/audio/audio_manager.dart`): Singleton. `assets/audio/sfx/` (32 dosya) ve `assets/audio/music/` (4 dosya). 8 kanal SFX havuzu (round-robin), pitch varyasyonu (0.92-1.08x). `main.dart`'ta `Future.wait` icinde `initialize()` cagriliyor (iOS audio session). Dosya bulunamazsa sessizce atlar.
+- `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format. Web'de `kIsWeb` guard ile `.m4a` fallback (Safari .ogg desteklemez).
 - `HapticManager`: 14 haptic profil, tam implementasyon.
-- `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format kullanilmali.
-- `SoundBank`: Tam pipeline (L.9). Mevcut event'ler: `onGelPlaced` (SFX+haptic), `onGelMerge` (SFX tier-based+haptic), `onLineClear` (SFX+haptic), `onCombo` (SFX all tiers — small@0.5 vol, medium, large+haptic, epic+haptic), `onGameOver` (SFX only), `onLevelComplete` (SFX+haptic). Yeni event'ler: `onSynthesis`, `onIceBreak`, `onPowerUpActivate`, `onGravityDrop`, `onButtonTap`, `onGelOzuEarn`, `onNearMiss(survived:)`.
+- **SoundBank** (`lib/audio/sound_bank.dart`): 19 metod, %100 tetikleniyor. Tum game callback'leri `game_callbacks.dart`'ta, power-up'lar `game_interactions.dart`'ta, PvP `game_duel_controller.dart`'ta baglanmis.
+  - Oyun: `onGelPlaced`, `onGelMerge(mergeCount:)`, `onLineClear(lines:, pitch:)`, `onCombo(combo)`, `onSynthesis`, `onNearMiss(survived:)`, `onGameOver`, `onLevelComplete`, `onGelOzuEarn`
+  - Power-up: `onPowerUpActivate`, `onBombExplosion`, `onRotate`, `onUndo`, `onFreeze`
+  - PvP: `onPvpVictory`, `onPvpDefeat`, `onPvpObstacleSent`, `onPvpObstacleReceived`
+  - Ozel: `onIceBreak`, `onGravityDrop`, `onStoneBroken`, `onButtonTap`
+- **Muzik**: Mod bazli — HomeScreen: `menu_lofi`, Zen: `zen_ambient`, TimeTrial/Duel: `game_tension`, diger: `game_relax`. Game Over'da `fadeOutMusic(800ms)`. Replay'de `resumeMusic()`.
+- **Adaptif muzik**: (1) Grid %70+ doluyken `crossfadeMusic()` ile relax→tension gecisi (hysteresis %60 geri), (2) Duel son 30sn / TimeTrial son 15sn muzik tempo 1.15x, (3) Epic/large kombo muzik volume swell (0.4→0.6, 800ms), (4) Epic/large kombo + bomba ducking (%50 volume, 500ms).
+- **Debounce/Guard**: GelOzu SFX (300ms Timer), ice/gravity (50ms timestamp), combo swell (iptal edilebilir Timer), fade (`_isFading` flag + `finally`).
+- **UI sesleri**: HomeScreen (6 ModeCard), Settings (6 toggle), Shop (buy), LevelSelect (level cell). Ekran gecislerinde GoRouter `_SoundNavigatorObserver` ile `undo_whoosh` (%40 vol).
 
 ## l10n
 
@@ -298,6 +309,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 - **AdManager**: Interstitial (4 oyunda 1), rewarded (ikinci sans), banner. Anti-frustration: 5dk'da 2 kayip → reklam yok. Test ID'ler aktif.
 - **PurchaseService**: 10 IAP urunu (5 non-consumable + 3 subscription + 2 consumable: `jel_ozu_100`, `jel_ozu_500`). Sunucu tarafinda receipt dogrulama (Supabase Edge Function). `_pendingVerification` `Map<String, String>` (productId → receipt) olarak JSON formatinda SharedPreferences'a persist ediliyor; app restart'ta gercek receipt ile otomatik retry. Abonelik expiry kontrolu `restorePurchases()` + `syncLocalProducts()` ile yapilir.
 - **Redeem Code**: `ShopScreen` → `RemoteRepository.redeemCode()` → Supabase Edge Function → `PurchaseService.unlockProducts()`
+- **Shop mimarisi**: 4-tab `TabBar` + `TabBarView`: Gloo+ (kGold), Jel Ozu (kCyan), Premium (kColorZen), Promo Kodu (kGreen). `_ColoredUnderlineIndicator` ile tab-bazli accent renk + swipe'ta `Color.lerp` interpolasyonu. Restore Purchases persistent footer (tab-bagimsiz).
 - **Ekonomi inflasyonu:** `CurrencyManager.inflatedCost(baseCost)` — `(1 + lifetimeEarnings / 1000).clamp(1.0, cap)`. Normal oyuncular 2.0x cap, Gloo+ aboneleri 1.5x cap. `PowerUpSystem.getEffectiveCost(type)` ve `canUse()`/`_activate()` inflated cost kullanir. Toolbar'da baz maliyet ustu cizgili + amber enflasyonlu maliyet gosterilir.
 - **Gloo+ bonus:** `CurrencyManager.isGlooPlus` flag'i `true` ise tum `_earn()` cagrilarinda %50 bonus uygulanir + Season Pass XP 2x. `GameScreen.initState`'te `appSettingsProvider.glooPlus`'tan okunur.
 - **Level odulleri:** Level tamamlamada `min(levelId * 2, 30)` Jel Ozu (Gloo+ bonus otomatik).
@@ -335,7 +347,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 ### Ilk Acilis Akisi
 
-Onboarding (4 sayfa: 3 tanitim + 1 tercihler) → HomeScreen. Interaktif mini-grid demo'lar: sekil yerlestirme, kombo, sentez animasyonu. GDPR uyumlu: analytics consent + renk koru modu toggle yalnizca kullanici 4. sayfaya ulasirsa kaydedilir (`_kTotalPages = 4`). Skip edilirse HomeScreen'deki dialog akisi: (1) ConsentDialog, (2) ATT (iOS). Colorblind prompt Game Over'da oyun 2-5 arasinda gosterilir (inline, tek seferlik). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder.
+Onboarding (4 sayfa: 3 tanitim + 1 tercihler) → HomeScreen. Sayfa 1'de `_InteractivePlaceDemo`: 5x5 mini grid, L-shape ghost cell'ler pulse animasyonuyla davet eder, tap → yerlesme → satir glow → "Harika!" + replay. `FractionallySizedBox(0.45)` + `AspectRatio(1.0)` ile responsive. Reduce motion'da pulse durur, sabit alpha. GDPR uyumlu: analytics consent + renk koru modu toggle yalnizca kullanici 4. sayfaya ulasirsa kaydedilir (`_kTotalPages = 4`). Skip edilirse HomeScreen'deki dialog akisi: (1) ConsentDialog, (2) ATT (iOS). Colorblind prompt Game Over'da oyun 2-5 arasinda gosterilir (inline, tek seferlik). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder.
 
 ### Viral Pipeline
 
@@ -351,6 +363,10 @@ Classic ModeCard altinda `_ClassicScoreChip` — son skor ve rekor gosterir ("La
 
 Level ModeCard altinda `_LevelProgressChip` ("Level X/50"), Duel altinda `_DuelEloChip` ("X ELO"). Deger 0 ise gizli.
 
+### Quick Play
+
+`_QuickPlayBanner`: HomeScreen'de QuestBar altinda, son oynanan modu hatirlayip hizli erisim saglar. `LocalRepository.getLastPlayedMode()`/`saveLastPlayedMode()` ile persist. `gamesPlayed < 3` ise gizli. Kilitli modlar filtrelenir. Level → `/levels`, Duel → `/pvp-lobby`, diger → `/game/:mode`. Mod accent rengi + `directionalChevronIcon` (RTL-safe).
+
 ### Progressive Mod Acilimi
 
 ColorChef 3 oyun sonra, TimeTrial 5 oyun sonra acilir. `getTotalGamesPlayed()` ile kontrol. Kilitli ModeCard'da "X oyun daha oyna" etiketi gosterilir.
@@ -363,9 +379,15 @@ ColorChef 3 oyun sonra, TimeTrial 5 oyun sonra acilir. `getTotalGamesPlayed()` i
 
 `meta_game_bar.dart` widget dosyasi mevcut ama `home_screen.dart`'tan cagrisi kaldirildi. Ada/Karakter/SeasonPass sistemleri core loop'a entegre edilene kadar gizli tutuluyor. Route'lar (`/island`, `/character`, `/season-pass`) hala aktif.
 
-### Hover/Focus Destegi (Web/Desktop)
+### Hover/Focus/Press Destegi (Web/Desktop)
 
-`ModeCard` ve `BottomItem` widget'lari `MouseRegion` ile hover state destekler: gradient/border parlaklik artisi (ModeCard), arka plan vurgusu (BottomItem). Hover state `AnimatedContainer` kullanMAZ — performans icin plain `Container` + `AnimatedScale` (sadece press) kullanilir.
+Tum interaktif widget'lar `MouseRegion` + `_hovered` state ile hover destekler: ModeCard, BottomItem, ActionButton, PowerUpButton, DialogBtn, ProductTile, SettingsTile, PauseBtn, ShareButton, BackButton vb. Hover state `AnimatedContainer` kullanMAZ — performans icin plain `Container` + `AnimatedScale` (sadece press) kullanilir.
+
+**Press standardı:** Tüm butonlar `AnimatedScale(scale: _pressed ? 0.96 : 1.0, duration: 80ms)` kullanır.
+
+**Keyboard focus:** ModeCard, BottomItem, ActionButton `FocusableActionDetector` ile keyboard/tab navigasyonu destekler. Focus ring: `kCyan.withValues(alpha: 0.6)`, 2px border. ThemeData `focusColor: kCyan.withValues(alpha: 0.3)`.
+
+**Portrait kilitleme:** `main.dart`'ta `SystemChrome.setPreferredOrientations([portraitUp, portraitDown])` — `kIsWeb` guard ile (web'de serbest).
 
 ### Reduce Motion
 

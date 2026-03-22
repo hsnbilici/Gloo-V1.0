@@ -205,6 +205,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                   title: stepTitles[i],
                                   desc: stepDescs[i],
                                 ),
+                                tapToPlaceLabel: l.onboardingTapToPlace,
+                                greatLabel: l.onboardingGreat,
                               );
                             }
                             return _PrefsPage(
@@ -569,10 +571,17 @@ class _PrefToggle extends StatelessWidget {
 // ─── Tek adım sayfası ─────────────────────────────────────────────────────────
 
 class _StepPage extends StatelessWidget {
-  const _StepPage({required this.step, required this.stepIndex});
+  const _StepPage({
+    required this.step,
+    required this.stepIndex,
+    this.tapToPlaceLabel,
+    this.greatLabel,
+  });
 
   final _StepData step;
   final int stepIndex;
+  final String? tapToPlaceLabel;
+  final String? greatLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -583,6 +592,15 @@ class _StepPage extends StatelessWidget {
     final textSecondary = resolveColor(brightness,
         dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
     final rm = shouldReduceMotion(context);
+
+    final Widget demoWidget = stepIndex == 0
+        ? _InteractivePlaceDemo(
+            color: step.color,
+            tapToPlaceLabel: tapToPlaceLabel ?? 'Tap to place',
+            greatLabel: greatLabel ?? 'Great!',
+          )
+        : _MiniGridDemo(stepIndex: stepIndex, color: step.color);
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: hPadding),
       child: Column(
@@ -590,7 +608,7 @@ class _StepPage extends StatelessWidget {
         children: [
           const SizedBox(height: 24),
           // Mini animated demo
-          _MiniGridDemo(stepIndex: stepIndex, color: step.color)
+          demoWidget
               .animateOrSkip(reduceMotion: rm)
               .fadeIn(duration: 400.ms)
               .scale(
@@ -645,6 +663,292 @@ class _StepPage extends StatelessWidget {
                   curve: Curves.easeOutCubic),
           const SizedBox(height: 24),
         ],
+      ),
+    );
+  }
+}
+
+// ─── Interactive placement demo for step 0 ───────────────────────────────────
+
+enum _PlaceDemoPhase { waiting, placed, cleared }
+
+class _InteractivePlaceDemo extends StatefulWidget {
+  const _InteractivePlaceDemo({
+    required this.color,
+    required this.tapToPlaceLabel,
+    required this.greatLabel,
+  });
+
+  final Color color;
+  final String tapToPlaceLabel;
+  final String greatLabel;
+
+  @override
+  State<_InteractivePlaceDemo> createState() => _InteractivePlaceDemoState();
+}
+
+class _InteractivePlaceDemoState extends State<_InteractivePlaceDemo>
+    with SingleTickerProviderStateMixin {
+  static const _rows = 5;
+  static const _cols = 5;
+
+  _PlaceDemoPhase _phase = _PlaceDemoPhase.waiting;
+  late final AnimationController _pulseCtrl;
+  bool _reduceMotion = false;
+
+  // Pre-filled cells (context): row 4 has 3 filled, leaving 2 gaps at col 3,4
+  // The L-shape fills (4,3) and (4,4) + (3,4) — completing row 4
+  static const _preFilledCells = {
+    (4, 0),
+    (4, 1),
+    (4, 2),
+    (2, 1),
+    (3, 0),
+    (3, 3),
+  };
+
+  // L-shape: fills the remaining gaps to complete row 4, plus one above
+  static const _shapeCells = {(4, 3), (4, 4), (3, 4)};
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final rm = shouldReduceMotion(context);
+    if (rm != _reduceMotion) {
+      _reduceMotion = rm;
+      if (rm) {
+        _pulseCtrl.stop();
+        _pulseCtrl.value = 0.5;
+      } else {
+        _pulseCtrl.repeat(reverse: true);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulseCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onTap() {
+    if (_phase != _PlaceDemoPhase.waiting) return;
+    setState(() => _phase = _PlaceDemoPhase.placed);
+    // After placement animation, show row clear
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _phase = _PlaceDemoPhase.cleared);
+    });
+  }
+
+  void _reset() {
+    setState(() => _phase = _PlaceDemoPhase.waiting);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Grid
+        GestureDetector(
+          onTap: _onTap,
+          child: Semantics(
+            button: _phase == _PlaceDemoPhase.waiting,
+            label: _phase == _PlaceDemoPhase.waiting
+                ? widget.tapToPlaceLabel
+                : null,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.25),
+                borderRadius:
+                    BorderRadius.circular(UIConstants.radiusMd),
+                border: Border.all(
+                  color: widget.color.withValues(alpha: 0.20),
+                ),
+              ),
+              child: FractionallySizedBox(
+                widthFactor: 0.45,
+                child: AspectRatio(
+                  aspectRatio: 1.0,
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _cols,
+                      crossAxisSpacing: 3,
+                      mainAxisSpacing: 3,
+                    ),
+                    itemCount: _rows * _cols,
+                    itemBuilder: (context, index) {
+                      final r = index ~/ _cols;
+                      final c = index % _cols;
+                      return _buildCell(r, c);
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Hint label or success label
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 280),
+          child: _phase == _PlaceDemoPhase.waiting
+              ? AnimatedBuilder(
+                  key: const ValueKey('hint'),
+                  animation: _pulseCtrl,
+                  builder: (context, _) {
+                    final opacity = rm
+                        ? 0.7
+                        : 0.5 + 0.3 * _pulseCtrl.value;
+                    return Text(
+                      widget.tapToPlaceLabel,
+                      style: TextStyle(
+                        color: widget.color
+                            .withValues(alpha: opacity),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                )
+              : _phase == _PlaceDemoPhase.cleared
+                  ? Row(
+                      key: const ValueKey('great'),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.greatLabel,
+                          style: TextStyle(
+                            color: widget.color,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Semantics(
+                          button: true,
+                          label: 'Replay',
+                          child: GestureDetector(
+                            onTap: _reset,
+                            child: SizedBox(
+                              width: 44,
+                              height: 44,
+                              child: Center(
+                                child: Icon(
+                                  Icons.replay_rounded,
+                                  color: widget.color
+                                      .withValues(alpha: 0.6),
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(
+                      key: ValueKey('placing'),
+                    ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCell(int r, int c) {
+    final isPreFilled = _preFilledCells.contains((r, c));
+    final isShape = _shapeCells.contains((r, c));
+    final isRow4 = r == 4;
+
+    // Determine cell state
+    Color? cellColor;
+    bool isGlowing = false;
+    bool isGhost = false;
+
+    if (isPreFilled) {
+      cellColor = widget.color.withValues(alpha: 0.6);
+    }
+
+    if (isShape) {
+      switch (_phase) {
+        case _PlaceDemoPhase.waiting:
+          // Show ghost preview (pulsing outline)
+          isGhost = true;
+        case _PlaceDemoPhase.placed:
+          cellColor = widget.color;
+        case _PlaceDemoPhase.cleared:
+          if (isRow4) {
+            // Row 4 cleared — glow + fade handled below
+          } else {
+            cellColor = widget.color;
+          }
+      }
+    }
+
+    // Row 4 clear glow for all cells in that row, then fade to transparent
+    if (_phase == _PlaceDemoPhase.cleared && isRow4 && (isPreFilled || isShape)) {
+      isGlowing = true;
+      cellColor = null;
+    }
+
+    if (isGhost) {
+      return AnimatedBuilder(
+        animation: _pulseCtrl,
+        builder: (context, _) {
+          final ghostAlpha = _reduceMotion ? 0.22 : 0.15 + 0.15 * _pulseCtrl.value;
+          final borderAlpha = _reduceMotion ? 0.4 : 0.4 + 0.2 * _pulseCtrl.value;
+          return Container(
+            decoration: BoxDecoration(
+              color: widget.color.withValues(alpha: ghostAlpha),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: widget.color.withValues(alpha: borderAlpha),
+                width: 1.2,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+      decoration: BoxDecoration(
+        color: cellColor ?? Colors.white.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(4),
+        border: isGlowing
+            ? Border.all(
+                color: Colors.white.withValues(alpha: 0.7),
+                width: 1.5,
+              )
+            : Border.all(
+                color: Colors.white.withValues(alpha: 0.08),
+                width: 0.5,
+              ),
+        boxShadow: isGlowing
+            ? [
+                BoxShadow(
+                  color: (cellColor ?? Colors.white)
+                      .withValues(alpha: 0.5),
+                  blurRadius: 8,
+                ),
+              ]
+            : null,
       ),
     );
   }

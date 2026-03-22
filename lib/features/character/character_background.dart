@@ -14,20 +14,23 @@ class CharBackground extends StatelessWidget {
     final isDark = brightness == Brightness.dark;
     final orbAlpha = isDark ? 1.0 : 0.45;
 
-    return Stack(
-      children: [
-        Container(color: bgColor),
-        Positioned(
-          top: -100,
-          right: -50,
-          child: GlowOrb(size: 320, color: kLavender, opacity: 0.07 * orbAlpha),
-        ),
-        Positioned(
-          bottom: -80,
-          left: -60,
-          child: GlowOrb(size: 260, color: kGreen, opacity: 0.05 * orbAlpha),
-        ),
-      ],
+    return ExcludeSemantics(
+      child: Stack(
+        children: [
+          Container(color: bgColor),
+          Positioned(
+            top: -100,
+            right: -50,
+            child:
+                GlowOrb(size: 320, color: kLavender, opacity: 0.07 * orbAlpha),
+          ),
+          Positioned(
+            bottom: -80,
+            left: -60,
+            child: GlowOrb(size: 260, color: kGreen, opacity: 0.05 * orbAlpha),
+          ),
+        ],
+      ),
     );
   }
 }

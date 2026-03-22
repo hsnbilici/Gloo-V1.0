@@ -163,7 +163,7 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                             label: ref.read(stringsProvider).backLabel,
                             button: true,
                             child: GestureDetector(
-                              onTap: () => context.go('/'),
+                              onTap: () => context.canPop() ? context.pop() : context.go('/'),
                               child: Container(
                                 width: 44,
                                 height: 44,

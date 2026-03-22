@@ -139,10 +139,12 @@ class _AmbientGelDropletsState extends State<AmbientGelDroplets>
   Widget build(BuildContext context) {
     if (shouldReduceMotion(context)) return const SizedBox.shrink();
 
-    return IgnorePointer(
-      child: CustomPaint(
-        painter: _painter,
-        child: const SizedBox.expand(),
+    return ExcludeSemantics(
+      child: IgnorePointer(
+        child: CustomPaint(
+          painter: _painter,
+          child: const SizedBox.expand(),
+        ),
       ),
     );
   }

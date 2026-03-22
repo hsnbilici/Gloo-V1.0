@@ -253,33 +253,38 @@ class _NearMissEffectState extends ConsumerState<NearMissEffect>
         children: [
           // Faz F: Radyal vignette overlay
           if (!reduceMotion)
-            AnimatedBuilder(
-              animation: _pulseAnim,
-              builder: (context, _) {
-                final v = _pulseAnim.value;
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: color.withValues(alpha: 0.35 + 0.65 * v),
-                      width: isCritical ? 4 : 3,
+            ExcludeSemantics(
+              child: AnimatedBuilder(
+                animation: _pulseAnim,
+                builder: (context, _) {
+                  final v = _pulseAnim.value;
+                  return Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: color.withValues(alpha: 0.35 + 0.65 * v),
+                        width: isCritical ? 4 : 3,
+                      ),
                     ),
-                  ),
-                  child: CustomPaint(
-                    painter: _VignettePainter(
-                      color: color,
-                      intensity: isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
+                    child: CustomPaint(
+                      painter: _VignettePainter(
+                        color: color,
+                        intensity:
+                            isCritical ? 0.40 + 0.30 * v : 0.25 + 0.20 * v,
+                      ),
+                      child: const SizedBox.expand(),
                     ),
-                    child: const SizedBox.expand(),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             )
           else
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: color.withValues(alpha: 0.5),
-                  width: isCritical ? 4 : 3,
+            ExcludeSemantics(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: color.withValues(alpha: 0.5),
+                    width: isCritical ? 4 : 3,
+                  ),
                 ),
               ),
             ),

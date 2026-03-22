@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gloo/core/constants/color_constants.dart';
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/data/local/local_repository.dart';
 import 'package:gloo/features/game_screen/game_cell_widget.dart';
 import 'package:gloo/features/game_screen/game_overlay.dart';
@@ -518,6 +519,7 @@ void main() {
               activePowerUpMode: null,
               showFreeze: false,
               onPowerUpTap: (_) {},
+              strings: StringsEn(),
             ),
           ),
         ),
@@ -537,6 +539,7 @@ void main() {
               activePowerUpMode: null,
               showFreeze: false,
               onPowerUpTap: (_) {},
+              strings: StringsEn(),
             ),
           ),
         ),
@@ -557,6 +560,7 @@ void main() {
               activePowerUpMode: null,
               showFreeze: false,
               onPowerUpTap: (_) {},
+              strings: StringsEn(),
             ),
           ),
         ),
@@ -579,6 +583,7 @@ void main() {
               activePowerUpMode: null,
               showFreeze: true,
               onPowerUpTap: (_) {},
+              strings: StringsEn(),
             ),
           ),
         ),

@@ -57,15 +57,17 @@ class _ConfettiEffectState extends State<ConfettiEffect>
       return const SizedBox.shrink();
     }
 
-    return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, _) => CustomPaint(
-          painter: _ConfettiPainter(
-            particles: _particles,
-            progress: _controller.value,
+    return ExcludeSemantics(
+      child: IgnorePointer(
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, _) => CustomPaint(
+            painter: _ConfettiPainter(
+              particles: _particles,
+              progress: _controller.value,
+            ),
+            child: const SizedBox.expand(),
           ),
-          child: const SizedBox.expand(),
         ),
       ),
     );

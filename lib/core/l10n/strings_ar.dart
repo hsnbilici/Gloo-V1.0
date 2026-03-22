@@ -165,6 +165,8 @@ class StringsAr extends AppStrings {
   @override
   String get chefLevelComplete => 'اكتمل المستوى';
   @override
+  String get levelCompleteAnnounce => 'اكتمل المستوى';
+  @override
   String get chefAllComplete => 'اكتملت جميع المستويات';
   @override
   String get chefContinue => 'متابعة';
@@ -200,6 +202,10 @@ class StringsAr extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'تندمج الألوان الأساسية المتجاورة تلقائياً لإنتاج ألوان جديدة. اكتشف تركيبات الألوان النادرة!';
+  @override
+  String get onboardingTapToPlace => 'انقر للوضع';
+  @override
+  String get onboardingGreat => 'رائع!';
 
   @override
   String get streakDays => 'أيام';
@@ -601,7 +607,8 @@ class StringsAr extends AppStrings {
   String get levelMicroTask9 => '\u0627\u0635\u0646\u0639 \u0644\u0648\u0646\u0627\u064b \u062c\u062f\u064a\u062f\u0627\u064b';
   @override
   String get levelMicroTask10 => '\u0627\u0645\u0633\u062d 3 \u0635\u0641\u0648\u0641';
-
+  @override
+  String get levelSelectTitle => 'المراحل';
   @override
   String get duelRematch => '\u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u0628\u0627\u0631\u0627\u0629';
 
@@ -610,4 +617,42 @@ class StringsAr extends AppStrings {
   String get questsTitle => 'المهام اليومية';
   @override
   String get questsCompleted => 'مكتمل';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'فارغ';
+  @override
+  String get semanticsCellPreview => 'معاينة';
+  @override
+  String get semanticsCellStone => 'حجر';
+  @override
+  String get semanticsCellIce => 'جليد';
+  @override
+  String get semanticsCellLocked => 'مقفل';
+  @override
+  String get semanticsCellGravity => 'جاذبية';
+  @override
+  String get semanticsCellRainbow => 'قوس قزح';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'تدوير';
+  @override
+  String get semanticsPowerUpBomb => 'قنبلة';
+  @override
+  String get semanticsPowerUpUndo => 'تراجع';
+  @override
+  String get semanticsPowerUpFreeze => 'تجميد';
+  @override
+  String get semanticsPowerUpPeek => 'نظرة خاطفة';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'قطرات الجل';
+  @override
+  String get shopTabPromo => 'رمز ترويجي';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'لعب سريع';
 }

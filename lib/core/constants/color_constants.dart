@@ -68,6 +68,96 @@ const List<GelColor> kPrimaryColors = [
   GelColor.white,
 ];
 
+// ────────────────────────────────────────────────────────────────────────────
+// WCAG AA Contrast Ratio Matrix — Dark Theme (last audit: 2026-03-22)
+//
+// Formula: relative luminance L = 0.2126·R + 0.7152·G + 0.0722·B
+//          (channels linearised via sRGB gamma; c <= 0.04045 → c/12.92,
+//           else → ((c + 0.055) / 1.055) ^ 2.4)
+// Ratio:   (L_lighter + 0.05) / (L_darker + 0.05)
+// Thresholds: normal text >= 4.5:1 | large text / graphics >= 3:1
+//
+// Luminance reference values used below:
+//   kBgDark       (0xFF010C14)  L = 0.0032
+//   kSurfaceDark  (0xFF0F1420)  L = 0.0070
+//   kMuted        (0xFF6B8FA8)  L = 0.2523
+//   kCyan         (0xFF00E5FF)  L = 0.6326
+//   kGold         (0xFFFFD700)  L = 0.6988
+//   kAmber        (0xFFFFD740)  L = 0.7025
+//   kGreen        (0xFF3CFF8B)  L = 0.7435
+//   kYellow       (0xFFFFE03C)  L = 0.7489
+//   kOrange       (0xFFFF8C42)  L = 0.4041
+//   kRed          (0xFFFF3B3B)  L = 0.2470
+//   kPink         (0xFFFF69B4)  L = 0.3466
+//   kLavender     (0xFFB080FF)  L = 0.3189
+//   kCoral        (0xFFFF6B6B)  L = 0.3143
+//   kColorClassic (0xFFFF4D6D)  L = 0.2766
+//   kColorChef    (0xFF00FF9D)  L = 0.7395
+//   kColorTimeTrial(0xFFFFD60A) L = 0.6939
+//   kColorZen     (0xFF9D5CFF)  L = 0.2201
+//   kBronze       (0xFFCD7F32)  L = 0.2839
+//   kSilver       (0xFFC0C0C0)  L = 0.5270
+//   kDiamondBlue  (0xFF00BFFF)  L = 0.4447
+//   kGlooMaster   (0xFFFF3CFF)  L = 0.3171
+//   kSuccessGreen (0xFF2E7D32)  L = 0.1554
+//   white         (0xFFFFFFFF)  L = 1.0000
+//   kPowerUpBombFg(0xFFFFB080)  L = 0.5430
+//   kPowerUpBombBg(0xFF8B2500)  L = 0.0681
+//   kPowerUpFreezeFg(0xFF80D8FF)L = 0.6091
+//   kPowerUpFreezeBg(0xFF01579B)L = 0.0918
+//   kPowerUpRotateBg(0xFF006978)L = 0.1147
+//   kPowerUpUndoBg(0xFF8B6914)  L = 0.1570
+//
+// ── Pair ───────────────────────────────────── Ratio   AA(text) AA(large)
+// kBgDark     + kMuted                          5.68:1  PASS     PASS
+// kBgDark     + kCyan                          12.82:1  PASS     PASS
+// kBgDark     + kGold                          14.07:1  PASS     PASS
+// kBgDark     + kAmber                         14.13:1  PASS     PASS
+// kBgDark     + kGreen                         14.90:1  PASS     PASS
+// kBgDark     + kYellow                        15.01:1  PASS     PASS
+// kBgDark     + kOrange                         8.53:1  PASS     PASS
+// kBgDark     + kRed                            5.58:1  PASS     PASS
+// kBgDark     + kPink                           7.45:1  PASS     PASS
+// kBgDark     + kLavender                       6.93:1  PASS     PASS
+// kBgDark     + kCoral                          6.85:1  PASS     PASS
+// kBgDark     + kColorClassic                   6.14:1  PASS     PASS
+// kBgDark     + kColorChef                     14.83:1  PASS     PASS
+// kBgDark     + kColorTimeTrial                13.98:1  PASS     PASS
+// kBgDark     + kColorZen                       5.08:1  PASS     PASS
+// kBgDark     + kBronze                         6.28:1  PASS     PASS
+// kBgDark     + kSilver                        10.84:1  PASS     PASS
+// kBgDark     + kDiamondBlue                    9.29:1  PASS     PASS
+// kBgDark     + kGlooMaster                     6.90:1  PASS     PASS
+// kSurfaceDark + kMuted                          5.30:1  PASS     PASS
+// kSurfaceDark + kCyan                          11.97:1  PASS     PASS
+// kSurfaceDark + kGold                          13.13:1  PASS     PASS
+// kSurfaceDark + kGreen                         13.91:1  PASS     PASS
+// kSurfaceDark + kOrange                         7.96:1  PASS     PASS
+// kSurfaceDark + kColorClassic                   5.73:1  PASS     PASS
+// kSurfaceDark + kColorZen                       4.74:1  PASS     PASS
+// kSurfaceDark + kYellow                        14.00:1  PASS     PASS
+// kSurfaceDark + kAmber                         13.06:1  PASS     PASS
+// kSurfaceDark + kPink                           6.95:1  PASS     PASS
+// kSurfaceDark + kLavender                       6.45:1  PASS     PASS
+// kSurfaceDark + kCoral                          6.39:1  PASS     PASS
+// kSurfaceDark + kRed                            5.21:1  PASS     PASS
+// kSuccessGreen + white                          5.11:1  PASS     PASS
+// kPowerUpBombBg + kPowerUpBombFg                5.02:1  PASS     PASS
+// kPowerUpFreezeBg + kPowerUpFreezeFg            4.65:1  PASS     PASS
+// kPowerUpRotateBg + white                       6.38:1  PASS     PASS
+// kPowerUpUndoBg   + kAmber                      3.63:1  FAIL(!)  PASS
+//
+// WARNINGS:
+// ! kPowerUpUndoBg + kAmber — 3.63:1
+//     FAILS normal-text AA. Same caveat — icon/large-badge use only.
+// NOTE: kAmber.withValues(alpha: 0.08) on kBgDark (~21,28,24 composited)
+//     produces an effectively invisible tint; used purely as a decorative
+//     hint overlay, NOT for text. No text contrast requirement applies.
+// NOTE: kCyanGlow (0x4400E5FF, alpha 27%) is decorative glow only — no text.
+// NOTE: kColorZen (5.08:1 on kBgDark, 4.74:1 on kSurfaceDark) passes AA
+//     with moderate margin; still avoid pairing with small text below 14px.
+// ────────────────────────────────────────────────────────────────────────────
+
 // ─── UI Palette — tüm ekranlar bu sabitleri kullanır ─────────────────────────
 
 /// Ana arka plan rengi — tüm scaffold ve container'lar için.
@@ -184,7 +274,7 @@ const Color kAmberGlow = Color(0xFFFFA000);
 const Color kPowerUpRotateBg = Color(0xFF006978);
 
 /// Bomb power-up ön rengi.
-const Color kPowerUpBombFg = Color(0xFFFF6B35);
+const Color kPowerUpBombFg = Color(0xFFFFB080);
 
 /// Bomb power-up arka plan tonu.
 const Color kPowerUpBombBg = Color(0xFF8B2500);
@@ -242,6 +332,7 @@ const Color kColorClassic = Color(0xFFFF4D6D);
 const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
 const Color kColorZen = Color(0xFF9D5CFF);
+const Color kColorDuel = kCoral;
 
 // ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
 const Map<GameMode, Color> kModeColors = {
@@ -251,7 +342,7 @@ const Map<GameMode, Color> kModeColors = {
   GameMode.zen: kColorZen,
   GameMode.daily: kCyan,
   GameMode.level: kColorChef,
-  GameMode.duel: kColorClassic,
+  GameMode.duel: kColorDuel,
 };
 
 // ─── Konfeti efekti renkleri ─────────────────────────────────────────────────

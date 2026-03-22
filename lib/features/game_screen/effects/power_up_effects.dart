@@ -44,30 +44,32 @@ class _PowerUpActivateEffectState extends State<PowerUpActivateEffect> {
   Widget build(BuildContext context) {
     if (shouldReduceMotion(context)) return const SizedBox.shrink();
 
-    return IgnorePointer(
-      child: Center(
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                widget.color.withValues(alpha: 0.0),
-                widget.color.withValues(alpha: 0.3),
-                widget.color.withValues(alpha: 0.0),
-              ],
+    return ExcludeSemantics(
+      child: IgnorePointer(
+        child: Center(
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  widget.color.withValues(alpha: 0.0),
+                  widget.color.withValues(alpha: 0.3),
+                  widget.color.withValues(alpha: 0.0),
+                ],
+              ),
             ),
-          ),
-        )
-            .animate()
-            .scale(
-              begin: const Offset(0.3, 0.3),
-              end: const Offset(3.0, 3.0),
-              duration: 600.ms,
-              curve: Curves.easeOut,
-            )
-            .fadeOut(delay: 400.ms, duration: 400.ms),
+          )
+              .animate()
+              .scale(
+                begin: const Offset(0.3, 0.3),
+                end: const Offset(3.0, 3.0),
+                duration: 600.ms,
+                curve: Curves.easeOut,
+              )
+              .fadeOut(delay: 400.ms, duration: 400.ms),
+        ),
       ),
     );
   }
@@ -125,15 +127,17 @@ class _BombExplosionEffectState extends State<BombExplosionEffect>
     }
 
     final size = widget.cellSize * 6.0;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => CustomPaint(
-          painter: _BombPainter(
-            progress: _ctrl.value,
-            cellSize: widget.cellSize,
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _BombPainter(
+              progress: _ctrl.value,
+              cellSize: widget.cellSize,
+            ),
           ),
         ),
       ),
@@ -267,17 +271,19 @@ class _UndoRewindEffectState extends State<UndoRewindEffect>
       return const SizedBox.shrink();
     }
 
-    return IgnorePointer(
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => CustomPaint(
-          painter: _UndoRewindPainter(
-            progress: _ctrl.value,
-            cells: widget.cells,
-            cellSize: widget.cellSize,
-            gridGap: widget.gridGap,
+    return ExcludeSemantics(
+      child: IgnorePointer(
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _UndoRewindPainter(
+              progress: _ctrl.value,
+              cells: widget.cells,
+              cellSize: widget.cellSize,
+              gridGap: widget.gridGap,
+            ),
+            child: const SizedBox.expand(),
           ),
-          child: const SizedBox.expand(),
         ),
       ),
     );

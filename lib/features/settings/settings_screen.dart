@@ -53,29 +53,13 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Semantics(
+        leading: _SettingsBackButton(
           label: l.backLabel,
-          button: true,
-          child: GestureDetector(
-            onTap: () => context.pop(),
-            child: Center(
-              child: Container(
-                width: 44,
-                height: 44,
-                margin: const EdgeInsetsDirectional.only(start: 12),
-                decoration: BoxDecoration(
-                  color: surfaceColor,
-                  borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-                  border: Border.all(color: borderColor),
-                ),
-                child: Icon(
-                  directionalBackIcon(dir),
-                  color: textColor,
-                  size: 18,
-                ),
-              ),
-            ),
-          ),
+          icon: directionalBackIcon(dir),
+          iconColor: textColor,
+          surfaceColor: surfaceColor,
+          borderColor: borderColor,
+          onTap: () => context.pop(),
         ),
         title: Text(
           l.settingsTitle,
@@ -324,6 +308,72 @@ class SettingsScreen extends ConsumerWidget {
 
 // ─── Arkaplan ────────────────────────────────────────────────────────────────
 
+// ─── AppBar geri butonu (hover destekli) ─────────────────────────────────────
+
+class _SettingsBackButton extends StatefulWidget {
+  const _SettingsBackButton({
+    required this.label,
+    required this.icon,
+    required this.iconColor,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color iconColor;
+  final Color surfaceColor;
+  final Color borderColor;
+  final VoidCallback onTap;
+
+  @override
+  State<_SettingsBackButton> createState() => _SettingsBackButtonState();
+}
+
+class _SettingsBackButtonState extends State<_SettingsBackButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: widget.label,
+      button: true,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Center(
+            child: Container(
+              width: 44,
+              height: 44,
+              margin: const EdgeInsetsDirectional.only(start: 12),
+              decoration: BoxDecoration(
+                color: _hovered
+                    ? widget.surfaceColor
+                        .withValues(alpha: widget.surfaceColor.a + 0.05)
+                    : widget.surfaceColor,
+                borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+                border: Border.all(
+                  color: _hovered
+                      ? widget.borderColor
+                          .withValues(alpha: widget.borderColor.a + 0.08)
+                      : widget.borderColor,
+                ),
+              ),
+              child:
+                  Icon(widget.icon, color: widget.iconColor, size: 18),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Arkaplan ────────────────────────────────────────────────────────────────
+
 class _SettingsBackground extends StatelessWidget {
   const _SettingsBackground();
 
@@ -331,44 +381,46 @@ class _SettingsBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    return Stack(
-      children: [
-        Container(color: bgColor),
-        Positioned(
-          top: -100,
-          right: -80,
-          child: Container(
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  kCyan.withValues(alpha: 0.07),
-                  Colors.transparent,
-                ],
+    return ExcludeSemantics(
+      child: Stack(
+        children: [
+          Container(color: bgColor),
+          Positioned(
+            top: -100,
+            right: -80,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    kCyan.withValues(alpha: 0.07),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Positioned(
-          bottom: -80,
-          left: -40,
-          child: Container(
-            width: 240,
-            height: 240,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  kColorZen.withValues(alpha: 0.07),
-                  Colors.transparent,
-                ],
+          Positioned(
+            bottom: -80,
+            left: -40,
+            child: Container(
+              width: 240,
+              height: 240,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    kColorZen.withValues(alpha: 0.07),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -60,29 +60,19 @@ class LevelSelectScreen extends ConsumerWidget {
                       padding: EdgeInsets.symmetric(horizontal: hPadding),
                       child: Row(
                         children: [
-                          Semantics(
+                          _LevelSelectBackButton(
                             label: ref.read(stringsProvider).backLabel,
-                            button: true,
-                            child: GestureDetector(
-                              onTap: () => context.go('/'),
-                              child: Container(
-                                width: 44,
-                                height: 44,
-                                decoration: BoxDecoration(
-                                  color: surfaceColor,
-                                  borderRadius: BorderRadius.circular(
-                                      UIConstants.radiusMd),
-                                  border: Border.all(color: borderColor),
-                                ),
-                                child: Icon(directionalBackIcon(dir),
-                                    color: kOrange, size: 20),
-                              ),
-                            ),
+                            icon: directionalBackIcon(dir),
+                            surfaceColor: surfaceColor,
+                            borderColor: borderColor,
+                            onTap: () => context.canPop()
+                                ? context.pop()
+                                : context.go('/'),
                           ),
                           const SizedBox(width: 14),
                           Expanded(
                             child: Text(
-                              'SEVIYELER',
+                              l.levelSelectTitle,
                               style: TextStyle(
                                 color: kOrange,
                                 fontSize: 18,
@@ -400,6 +390,65 @@ class _LevelCellState extends State<_LevelCell> {
   }
 }
 
+// ─── Geri butonu (hover destekli) ───────────────────────────────────────────
+
+class _LevelSelectBackButton extends StatefulWidget {
+  const _LevelSelectBackButton({
+    required this.label,
+    required this.icon,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final Color surfaceColor;
+  final Color borderColor;
+  final VoidCallback onTap;
+
+  @override
+  State<_LevelSelectBackButton> createState() =>
+      _LevelSelectBackButtonState();
+}
+
+class _LevelSelectBackButtonState extends State<_LevelSelectBackButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: widget.label,
+      button: true,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: _hovered
+                  ? widget.surfaceColor.withValues(
+                      alpha: widget.surfaceColor.a + 0.05)
+                  : widget.surfaceColor,
+              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+              border: Border.all(
+                color: _hovered
+                    ? widget.borderColor.withValues(
+                        alpha: widget.borderColor.a + 0.08)
+                    : widget.borderColor,
+              ),
+            ),
+            child: Icon(widget.icon, color: kOrange, size: 20),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // ─── Arkaplan ───────────────────────────────────────────────────────────────
 
 class _LevelSelectBackground extends StatelessWidget {
@@ -409,20 +458,22 @@ class _LevelSelectBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final bgColor = resolveColor(brightness, dark: kBgDark, light: kBgLight);
-    return Stack(
-      children: [
-        Container(color: bgColor),
-        const Positioned(
-          top: -100,
-          right: -60,
-          child: GlowOrb(size: 340, color: kOrange, opacity: 0.08),
-        ),
-        const Positioned(
-          bottom: -80,
-          left: -40,
-          child: GlowOrb(size: 260, color: kGreen, opacity: 0.06),
-        ),
-      ],
+    return ExcludeSemantics(
+      child: Stack(
+        children: [
+          Container(color: bgColor),
+          const Positioned(
+            top: -100,
+            right: -60,
+            child: GlowOrb(size: 340, color: kOrange, opacity: 0.08),
+          ),
+          const Positioned(
+            bottom: -80,
+            left: -40,
+            child: GlowOrb(size: 260, color: kGreen, opacity: 0.06),
+          ),
+        ],
+      ),
     );
   }
 }

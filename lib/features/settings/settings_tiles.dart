@@ -89,7 +89,7 @@ class SettingsToggleTile extends StatelessWidget {
 
 // ─── Tema seçim satırı ───────────────────────────────────────────────────────
 
-class ThemeSelectorTile extends StatelessWidget {
+class ThemeSelectorTile extends StatefulWidget {
   const ThemeSelectorTile({
     super.key,
     required this.currentMode,
@@ -107,11 +107,18 @@ class ThemeSelectorTile extends StatelessWidget {
   final Color accentColor;
   final VoidCallback onTap;
 
+  @override
+  State<ThemeSelectorTile> createState() => _ThemeSelectorTileState();
+}
+
+class _ThemeSelectorTileState extends State<ThemeSelectorTile> {
+  bool _hovered = false;
+
   String _modeLabel(ThemeMode mode) {
     return switch (mode) {
-      ThemeMode.system => systemLabel,
-      ThemeMode.light => lightLabel,
-      ThemeMode.dark => darkLabel,
+      ThemeMode.system => widget.systemLabel,
+      ThemeMode.light => widget.lightLabel,
+      ThemeMode.dark => widget.darkLabel,
     };
   }
 
@@ -121,40 +128,48 @@ class ThemeSelectorTile extends StatelessWidget {
     final textColor =
         resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
-      label: _modeLabel(currentMode),
+      label: _modeLabel(widget.currentMode),
       button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: accentColor.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(color: accentColor.withValues(alpha: 0.22)),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.brightness_6_rounded, color: accentColor, size: 18),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  _modeLabel(currentMode),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: widget.accentColor
+                  .withValues(alpha: _hovered ? 0.09 : 0.05),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                  color: widget.accentColor
+                      .withValues(alpha: _hovered ? 0.35 : 0.22)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.brightness_6_rounded,
+                    color: widget.accentColor, size: 18),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _modeLabel(widget.currentMode),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              Icon(
-                directionalChevronIcon(Directionality.of(context)),
-                color: accentColor.withValues(alpha: 0.70),
-                size: 18,
-              ),
-            ],
+                Icon(
+                  directionalChevronIcon(Directionality.of(context)),
+                  color: widget.accentColor.withValues(alpha: 0.70),
+                  size: 18,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -243,7 +258,7 @@ class ThemeSheet extends StatelessWidget {
 
 // ─── Tema seçenek chip'i ──────────────────────────────────────────────────────
 
-class _ThemeModeChip extends StatelessWidget {
+class _ThemeModeChip extends StatefulWidget {
   const _ThemeModeChip({
     required this.icon,
     required this.label,
@@ -257,65 +272,82 @@ class _ThemeModeChip extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_ThemeModeChip> createState() => _ThemeModeChipState();
+}
+
+class _ThemeModeChipState extends State<_ThemeModeChip> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final unselectedBg = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.04),
+      dark: Colors.white.withValues(alpha: _hovered ? 0.07 : 0.04),
       light: kCardBgLight,
     );
     final unselectedBorder = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.09),
+      dark: Colors.white.withValues(alpha: _hovered ? 0.15 : 0.09),
       light: kCardBorderLight,
     );
     final unselectedText =
         resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
-      label: label,
+      label: widget.label,
       button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? kThemeTertiary.withValues(alpha: 0.14)
-                : unselectedBg,
-            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-            border: Border.all(
-              color: isSelected
-                  ? kThemeTertiary.withValues(alpha: 0.55)
-                  : unselectedBorder,
-              width: isSelected ? 1.5 : 1,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          // AnimatedContainer kept intentionally: animates isSelected (selection
+          // state transition), not just hover. Hover changes are blended within
+          // the same 180ms transition.
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: widget.isSelected
+                  ? kThemeTertiary.withValues(alpha: 0.14)
+                  : unselectedBg,
+              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+              border: Border.all(
+                color: widget.isSelected
+                    ? kThemeTertiary.withValues(alpha: 0.55)
+                    : unselectedBorder,
+                width: widget.isSelected ? 1.5 : 1,
+              ),
+              boxShadow: widget.isSelected
+                  ? [
+                      BoxShadow(
+                        color: kThemeTertiary.withValues(alpha: 0.18),
+                        blurRadius: 10,
+                      ),
+                    ]
+                  : null,
             ),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: kThemeTertiary.withValues(alpha: 0.18),
-                      blurRadius: 10,
-                    ),
-                  ]
-                : null,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? kThemeTertiary : kMuted,
-                size: 18,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? kThemeTertiary : unselectedText,
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            child: Row(
+              children: [
+                Icon(
+                  widget.icon,
+                  color: widget.isSelected ? kThemeTertiary : kMuted,
+                  size: 18,
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    color:
+                        widget.isSelected ? kThemeTertiary : unselectedText,
+                    fontSize: 14,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

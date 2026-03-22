@@ -48,7 +48,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   set epicComboCount(int value);
   void refillHand();
   void handleGameOverDialog();
-  void showToast(String msg);
+  void showToast(String msg, {String? a11yAnnouncement});
 
   /// initState'te resolve edilen LocalRepository cache'i.
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
@@ -171,6 +171,23 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       }
 
       if (mounted) {
+        // A11y: announce combo tier to screen readers (medium+ only)
+        if (combo.tier.index >= ComboTier.medium.index) {
+          final l = ref.read(stringsProvider);
+          final comboLabel = switch (combo.tier) {
+            ComboTier.medium => l.comboMedium,
+            ComboTier.large => l.comboLarge,
+            ComboTier.epic => l.comboEpic,
+            _ => null,
+          };
+          if (comboLabel != null) {
+            SemanticsService.sendAnnouncement(
+              View.of(context),
+              '$comboLabel x${combo.multiplier.toStringAsFixed(1)}',
+              Directionality.of(context),
+            );
+          }
+        }
         setState(() {
           activeCombo = combo;
           comboKeyIndex++;
@@ -226,6 +243,18 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       clipRecorder.onNearMiss(event);
       soundBank.onNearMiss(survived: !event.isCritical);
       if (mounted) {
+        // A11y: announce near-miss to screen readers
+        final l = ref.read(stringsProvider);
+        final baseLabel =
+            event.isCritical ? l.nearMissCritical : l.nearMissStandard;
+        // survived mirrors the SFX logic: critical = did not survive
+        final survivedSuffix =
+            event.isCritical ? ' Game Over!' : ' Survived!';
+        SemanticsService.sendAnnouncement(
+          View.of(context),
+          '$baseLabel$survivedSuffix',
+          Directionality.of(context),
+        );
         setState(() {
           activeNearMiss = event;
           nearMissKeyIndex++;
@@ -322,6 +351,12 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       final score = game.score;
       _cachedRepo?.setLevelCompleted(levelId, score);
       final l = ref.read(stringsProvider);
+      // A11y: announce level complete to screen readers
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        '${l.levelCompleteAnnounce}. ${l.levelLabel} $levelId. ${l.gameOverScoreLabel}: $score',
+        Directionality.of(context),
+      );
       // Level completion reward: levelId * 2 Jel Özü
       final rewardAmount = min(levelId * 2, 30);
       if (rewardAmount > 0) {
@@ -421,6 +456,13 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (!mounted) return;
       soundBank.onGameOver();
       AudioManager().fadeOutMusic(const Duration(milliseconds: 800));
+      // A11y: announce game over with final score to screen readers
+      final goL = ref.read(stringsProvider);
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        '${goL.gameOverTitle}. ${goL.gameOverScoreLabel}: ${game.score}',
+        Directionality.of(context),
+      );
       final score = game.score;
       // Quest tracking: play games + reach score
       _trackQuest(QuestType.playGames);
@@ -435,6 +477,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (repo != null) {
         repo.saveScore(mode: widget.mode.name, value: score);
         repo.saveLastScore(mode: widget.mode.name, value: score);
+        repo.saveLastPlayedMode(widget.mode.name);
         repo.incrementGamesPlayed();
         repo.updateAverageScore(score);
         if (widget.mode == GameMode.daily) {

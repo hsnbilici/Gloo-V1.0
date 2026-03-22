@@ -119,48 +119,59 @@ class PauseBtn extends StatefulWidget {
 
 class _PauseBtnState extends State<PauseBtn> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 80),
-        transformAlignment: Alignment.center,
-        transform: Matrix4.diagonal3Values(
-            _pressed ? 0.97 : 1.0, _pressed ? 0.97 : 1.0, 1.0),
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: widget.filled
-              ? widget.color.withValues(alpha: _pressed ? 0.20 : 0.13)
-              : Colors.white.withValues(alpha: _pressed ? 0.07 : 0.03),
-          borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: widget.filled
-                ? widget.color.withValues(alpha: _pressed ? 0.70 : 0.50)
-                : Colors.white.withValues(alpha: _pressed ? 0.16 : 0.09),
-            width: widget.filled ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(widget.icon, color: widget.color, size: 18),
-            const SizedBox(width: 10),
-            Text(
-              widget.label,
-              style: TextStyle(
-                color: widget.color,
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.3,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedScale(
+          scale: _pressed ? 0.96 : 1.0,
+          duration: const Duration(milliseconds: 80),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 80),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: widget.filled
+                  ? widget.color.withValues(
+                      alpha: _pressed ? 0.20 : _hovered ? 0.17 : 0.13)
+                  : Colors.white.withValues(
+                      alpha: _pressed ? 0.07 : _hovered ? 0.05 : 0.03),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                color: widget.filled
+                    ? widget.color.withValues(
+                        alpha: _pressed ? 0.70 : _hovered ? 0.60 : 0.50)
+                    : Colors.white.withValues(
+                        alpha: _pressed ? 0.16 : _hovered ? 0.13 : 0.09),
+                width: widget.filled ? 1.5 : 1,
               ),
             ),
-          ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(widget.icon, color: widget.color, size: 18),
+                const SizedBox(width: 10),
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    color: widget.color,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

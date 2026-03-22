@@ -121,7 +121,7 @@ class _IslandScreenState extends ConsumerState<IslandScreen> {
                             label: ref.read(stringsProvider).backLabel,
                             button: true,
                             child: GestureDetector(
-                              onTap: () => context.go('/'),
+                              onTap: () => context.canPop() ? context.pop() : context.go('/'),
                               child: Container(
                                 width: 40,
                                 height: 40,

@@ -8,7 +8,7 @@ import '../../data/local/data_models.dart';
 
 // ─── Kullanıcı adı satırı ─────────────────────────────────────────────────────
 
-class UsernameTile extends StatelessWidget {
+class UsernameTile extends StatefulWidget {
   const UsernameTile({
     super.key,
     required this.label,
@@ -33,16 +33,23 @@ class UsernameTile extends StatelessWidget {
   final Future<void> Function(String username) onSave;
 
   @override
+  State<UsernameTile> createState() => _UsernameTileState();
+}
+
+class _UsernameTileState extends State<UsernameTile> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final surfaceBg = resolveColor(
       brightness,
-      dark: kCyan.withValues(alpha: 0.05),
+      dark: kCyan.withValues(alpha: _hovered ? 0.09 : 0.05),
       light: kCardBgLight,
     );
     final borderColor = resolveColor(
       brightness,
-      dark: kCyan.withValues(alpha: 0.22),
+      dark: kCyan.withValues(alpha: _hovered ? 0.35 : 0.22),
       light: kCardBorderLight,
     );
     final labelColor =
@@ -50,40 +57,47 @@ class UsernameTile extends StatelessWidget {
     final valueColor =
         resolveColor(brightness, dark: kMuted, light: kTextSecondaryLight);
     return Semantics(
-      label: label,
+      label: widget.label,
       button: true,
-      child: GestureDetector(
-        onTap: () => _showEditDialog(context),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: surfaceBg,
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(color: borderColor),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.person_outline_rounded, color: kCyan, size: 18),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    color: labelColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: () => _showEditDialog(context),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: surfaceBg,
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(color: borderColor),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.person_outline_rounded,
+                    color: kCyan, size: 18),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                currentUsername.isEmpty ? '—' : currentUsername,
-                style: TextStyle(color: valueColor, fontSize: 13),
-              ),
-              const SizedBox(width: 6),
-              Icon(Icons.edit_rounded,
-                  color: kCyan.withValues(alpha: 0.70), size: 15),
-            ],
+                Text(
+                  widget.currentUsername.isEmpty
+                      ? '—'
+                      : widget.currentUsername,
+                  style: TextStyle(color: valueColor, fontSize: 13),
+                ),
+                const SizedBox(width: 6),
+                Icon(Icons.edit_rounded,
+                    color: kCyan.withValues(alpha: 0.70), size: 15),
+              ],
+            ),
           ),
         ),
       ),
@@ -95,14 +109,14 @@ class UsernameTile extends StatelessWidget {
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.70),
       builder: (_) => _UsernameEditDialog(
-        dialogTitle: dialogTitle,
-        dialogHint: dialogHint,
-        saveLabel: saveLabel,
-        initialValue: currentUsername,
-        errorEmpty: errorEmpty,
-        errorTooLong: errorTooLong,
-        errorInvalidChars: errorInvalidChars,
-        onSave: onSave,
+        dialogTitle: widget.dialogTitle,
+        dialogHint: widget.dialogHint,
+        saveLabel: widget.saveLabel,
+        initialValue: widget.currentUsername,
+        errorEmpty: widget.errorEmpty,
+        errorTooLong: widget.errorTooLong,
+        errorInvalidChars: widget.errorInvalidChars,
+        onSave: widget.onSave,
       ),
     );
   }
@@ -255,27 +269,53 @@ class _UsernameEditDialogState extends State<_UsernameEditDialog> {
               ),
             ),
             const SizedBox(height: 16),
-            GestureDetector(
-              onTap: _submit,
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 13),
-                decoration: BoxDecoration(
-                  color: kCyan.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                  border: Border.all(color: kCyan.withValues(alpha: 0.55)),
-                ),
-                child: Text(
-                  widget.saveLabel,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: kCyan,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+            _SaveButton(label: widget.saveLabel, onTap: _submit),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Kaydet butonu (dialog içi, hover destekli) ────────────────────────────
+
+class _SaveButton extends StatefulWidget {
+  const _SaveButton({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  State<_SaveButton> createState() => _SaveButtonState();
+}
+
+class _SaveButtonState extends State<_SaveButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 13),
+          decoration: BoxDecoration(
+            color: kCyan.withValues(alpha: _hovered ? 0.22 : 0.15),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(
+                color: kCyan.withValues(alpha: _hovered ? 0.75 : 0.55)),
+          ),
+          child: Text(
+            widget.label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: kCyan,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       ),
     );
@@ -284,7 +324,7 @@ class _UsernameEditDialogState extends State<_UsernameEditDialog> {
 
 // ─── Veri silme satırı ───────────────────────────────────────────────────────
 
-class ExportDataTile extends StatelessWidget {
+class ExportDataTile extends StatefulWidget {
   const ExportDataTile({
     super.key,
     required this.label,
@@ -295,33 +335,45 @@ class ExportDataTile extends StatelessWidget {
   final Future<void> Function() onExport;
 
   @override
+  State<ExportDataTile> createState() => _ExportDataTileState();
+}
+
+class _ExportDataTileState extends State<ExportDataTile> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: label,
+      label: widget.label,
       button: true,
-      child: GestureDetector(
-        onTap: onExport,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: kCyan.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(color: kCyan.withValues(alpha: 0.28)),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.download_rounded, color: kCyan, size: 18),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: kCyan,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onExport,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: kCyan.withValues(alpha: _hovered ? 0.12 : 0.07),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                  color: kCyan.withValues(alpha: _hovered ? 0.42 : 0.28)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.download_rounded, color: kCyan, size: 18),
+                const SizedBox(width: 12),
+                Text(
+                  widget.label,
+                  style: const TextStyle(
+                    color: kCyan,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -329,7 +381,7 @@ class ExportDataTile extends StatelessWidget {
   }
 }
 
-class DeleteDataTile extends StatelessWidget {
+class DeleteDataTile extends StatefulWidget {
   const DeleteDataTile({
     super.key,
     required this.label,
@@ -348,34 +400,47 @@ class DeleteDataTile extends StatelessWidget {
   final Future<void> Function() onDelete;
 
   @override
+  State<DeleteDataTile> createState() => _DeleteDataTileState();
+}
+
+class _DeleteDataTileState extends State<DeleteDataTile> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: label,
+      label: widget.label,
       button: true,
-      child: GestureDetector(
-        onTap: () => _showConfirm(context),
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: kColorClassic.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(color: kColorClassic.withValues(alpha: 0.28)),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.delete_outline_rounded,
-                  color: kColorClassic, size: 18),
-              const SizedBox(width: 12),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: kColorClassic,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: () => _showConfirm(context),
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: kColorClassic.withValues(alpha: _hovered ? 0.12 : 0.07),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                  color:
+                      kColorClassic.withValues(alpha: _hovered ? 0.42 : 0.28)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.delete_outline_rounded,
+                    color: kColorClassic, size: 18),
+                const SizedBox(width: 12),
+                Text(
+                  widget.label,
+                  style: const TextStyle(
+                    color: kColorClassic,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -387,21 +452,21 @@ class DeleteDataTile extends StatelessWidget {
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.70),
       builder: (_) => _DeleteConfirmDialog(
-        title: confirmTitle,
-        message: confirmMessage,
-        confirmAction: confirmAction,
-        cancelLabel: cancelLabel,
+        title: widget.confirmTitle,
+        message: widget.confirmMessage,
+        confirmAction: widget.confirmAction,
+        cancelLabel: widget.cancelLabel,
       ),
     );
     if (confirmed == true && context.mounted) {
-      await onDelete();
+      await widget.onDelete();
     }
   }
 }
 
 // ─── Veri silme onay diyalogu ────────────────────────────────────────────────
 
-class _DeleteConfirmDialog extends StatelessWidget {
+class _DeleteConfirmDialog extends StatefulWidget {
   const _DeleteConfirmDialog({
     required this.title,
     required this.message,
@@ -413,6 +478,14 @@ class _DeleteConfirmDialog extends StatelessWidget {
   final String message;
   final String confirmAction;
   final String cancelLabel;
+
+  @override
+  State<_DeleteConfirmDialog> createState() => _DeleteConfirmDialogState();
+}
+
+class _DeleteConfirmDialogState extends State<_DeleteConfirmDialog> {
+  bool _cancelHovered = false;
+  bool _confirmHovered = false;
 
   @override
   Widget build(BuildContext context) {
@@ -428,12 +501,12 @@ class _DeleteConfirmDialog extends StatelessWidget {
     );
     final cancelBg = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.07),
+      dark: Colors.white.withValues(alpha: _cancelHovered ? 0.11 : 0.07),
       light: kCardBgLight,
     );
     final cancelBorder = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.12),
+      dark: Colors.white.withValues(alpha: _cancelHovered ? 0.20 : 0.12),
       light: kCardBorderLight,
     );
     final cancelText =
@@ -454,7 +527,7 @@ class _DeleteConfirmDialog extends StatelessWidget {
                 color: kColorClassic, size: 36),
             const SizedBox(height: 16),
             Text(
-              title,
+              widget.title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: titleColor,
@@ -464,7 +537,7 @@ class _DeleteConfirmDialog extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              message,
+              widget.message,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: messageColor,
@@ -476,23 +549,27 @@ class _DeleteConfirmDialog extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(false),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: cancelBg,
-                        borderRadius:
-                            BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(color: cancelBorder),
-                      ),
-                      child: Text(
-                        cancelLabel,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: cancelText,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                  child: MouseRegion(
+                    onEnter: (_) => setState(() => _cancelHovered = true),
+                    onExit: (_) => setState(() => _cancelHovered = false),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(false),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: cancelBg,
+                          borderRadius:
+                              BorderRadius.circular(UIConstants.radiusMd),
+                          border: Border.all(color: cancelBorder),
+                        ),
+                        child: Text(
+                          widget.cancelLabel,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: cancelText,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
@@ -500,24 +577,30 @@ class _DeleteConfirmDialog extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(true),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: kColorClassic.withValues(alpha: 0.15),
-                        borderRadius:
-                            BorderRadius.circular(UIConstants.radiusMd),
-                        border: Border.all(
-                            color: kColorClassic.withValues(alpha: 0.55)),
-                      ),
-                      child: Text(
-                        confirmAction,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: kColorClassic,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                  child: MouseRegion(
+                    onEnter: (_) => setState(() => _confirmHovered = true),
+                    onExit: (_) => setState(() => _confirmHovered = false),
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: kColorClassic.withValues(
+                              alpha: _confirmHovered ? 0.22 : 0.15),
+                          borderRadius:
+                              BorderRadius.circular(UIConstants.radiusMd),
+                          border: Border.all(
+                              color: kColorClassic.withValues(
+                                  alpha: _confirmHovered ? 0.75 : 0.55)),
+                        ),
+                        child: Text(
+                          widget.confirmAction,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: kColorClassic,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),

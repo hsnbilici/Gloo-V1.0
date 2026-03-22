@@ -8,6 +8,18 @@ import '../providers/locale_provider.dart';
 import '../providers/theme_provider.dart';
 import 'router.dart';
 
+/// Body text stillerinde platform default fontunu kullanan TextTheme.
+/// Display/heading stilleri ThemeData.fontFamily = 'Syne' üzerinden kalır.
+/// bodyLarge / bodyMedium / bodySmall → fontFamily temizlenir → sistem fontu.
+TextTheme _bodySystemFontTextTheme(Brightness brightness) {
+  const bodyOverride = TextStyle(fontFamily: '');
+  return ThemeData(brightness: brightness).textTheme.copyWith(
+        bodyLarge: bodyOverride,
+        bodyMedium: bodyOverride,
+        bodySmall: bodyOverride,
+      );
+}
+
 class GlooApp extends ConsumerWidget {
   const GlooApp({super.key});
 
@@ -51,6 +63,8 @@ class GlooApp extends ConsumerWidget {
           surface: kSurfaceLight,
         ),
         fontFamily: 'Syne',
+        textTheme: _bodySystemFontTextTheme(Brightness.light),
+        focusColor: kCyan.withValues(alpha: 0.3),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
@@ -62,6 +76,8 @@ class GlooApp extends ConsumerWidget {
           surface: kSurfaceBlack,
         ),
         fontFamily: 'Syne',
+        textTheme: _bodySystemFontTextTheme(Brightness.dark),
+        focusColor: kCyan.withValues(alpha: 0.3),
       ),
       routerConfig: router,
     );

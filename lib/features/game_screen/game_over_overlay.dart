@@ -262,43 +262,17 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                                 NewRecordBadge(
                                     label: l.gameOverNewRecord, color: color),
                                 const SizedBox(width: 10),
-                                Semantics(
+                                _ShareButton(
                                   label: l.gameOverShareScore,
-                                  button: true,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Share.share(
-                                        l.shareScoreCaption(
-                                          modeLabel,
-                                          '${widget.score}',
-                                        ),
-                                      );
-                                    },
-                                    child: SizedBox(
-                                      width: 44,
-                                      height: 44,
-                                      child: Center(
-                                        child: Container(
-                                          width: 32,
-                                          height: 32,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                color.withValues(alpha: 0.12),
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color:
-                                                  color.withValues(alpha: 0.30),
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            Icons.share_rounded,
-                                            color: color,
-                                            size: 14,
-                                          ),
-                                        ),
+                                  color: color,
+                                  onTap: () {
+                                    Share.share(
+                                      l.shareScoreCaption(
+                                        modeLabel,
+                                        '${widget.score}',
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
                               ],
                             )
@@ -557,6 +531,66 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── Paylaşım butonu (hover destekli) ─────────────────────────────────────────
+
+class _ShareButton extends StatefulWidget {
+  const _ShareButton({
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  State<_ShareButton> createState() => _ShareButtonState();
+}
+
+class _ShareButtonState extends State<_ShareButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: widget.label,
+      button: true,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: SizedBox(
+            width: 44,
+            height: 44,
+            child: Center(
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: widget.color.withValues(
+                      alpha: _hovered ? 0.22 : 0.12),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: widget.color.withValues(
+                        alpha: _hovered ? 0.55 : 0.30),
+                  ),
+                ),
+                child: Icon(
+                  Icons.share_rounded,
+                  color: widget.color,
+                  size: 14,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

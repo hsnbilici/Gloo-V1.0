@@ -133,7 +133,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
           if (!cell.isEmpty) filled++;
         }
       }
-      if (playable > 0 && filled < playable && (playable - filled) <= 2) {
+      if (playable > 0 && filled < playable && (playable - filled) == 1) {
         for (int c = 0; c < cols; c++) {
           final key = (r, c);
           final existing = cells[key];
@@ -364,6 +364,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               showFreeze: widget.mode == GameMode.timeTrial ||
                   widget.mode == GameMode.duel,
               onPowerUpTap: onPowerUpTap,
+              strings: ref.watch(stringsProvider),
             ),
             const SizedBox(height: 8),
             ShapeHand(

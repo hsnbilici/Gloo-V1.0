@@ -11,6 +11,7 @@ import '../../core/constants/game_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/layout/responsive.dart';
+import '../../core/layout/rtl_helpers.dart';
 import '../../core/models/game_mode.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
@@ -197,6 +198,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final gamesPlayed = repo?.getTotalGamesPlayed() ?? 0;
     final chefLocked = gamesPlayed < 3;
     final timeTrialLocked = gamesPlayed < 5;
+    final glooPlus = ref.watch(appSettingsProvider).glooPlus;
+
+    // Quick Play: son oynanan mod, gamesPlayed >= 3, kilitli değil
+    GameMode? quickPlayMode;
+    if (gamesPlayed >= 3 && repo != null) {
+      final lastModeStr = repo.getLastPlayedMode();
+      if (lastModeStr != null) {
+        final candidate = GameMode.fromString(lastModeStr);
+        final isLocked = switch (candidate) {
+          GameMode.colorChef => chefLocked,
+          GameMode.timeTrial => timeTrialLocked,
+          GameMode.zen => !glooPlus,
+          _ => false,
+        };
+        if (!isLocked) quickPlayMode = candidate;
+      }
+    }
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -277,159 +295,49 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     duration: 350.ms,
                                     curve: Curves.easeOutCubic,
                                   ),
+                              if (quickPlayMode != null) ...[
+                                const SizedBox(height: 8),
+                                Builder(builder: (context) {
+                                  final qpMode = quickPlayMode!;
+                                  return _QuickPlayBanner(
+                                    mode: qpMode,
+                                    l: l,
+                                    brightness: brightness,
+                                    onTap: () {
+                                      _soundBank.onButtonTap();
+                                      switch (qpMode) {
+                                        case GameMode.level:
+                                          context.go('/levels');
+                                        case GameMode.duel:
+                                          context.go('/pvp-lobby');
+                                        default:
+                                          context.go('/game/${qpMode.name}');
+                                      }
+                                    },
+                                  );
+                                })
+                                    .animateOrSkip(
+                                        reduceMotion: rm, delay: 80.ms)
+                                    .fadeIn(duration: 350.ms)
+                                    .slideY(
+                                      begin: 0.08,
+                                      end: 0,
+                                      duration: 350.ms,
+                                      curve: Curves.easeOutCubic,
+                                    ),
+                              ],
                               const SizedBox(height: 8),
-                              ModeCard(
-                                label: l.modeClassicName,
-                                subtitle: l.modeClassicDesc,
-                                color: kColorClassic,
-                                icon: Icons.grid_view_rounded,
-                                isFeatured: true,
-                                badgeLabel: l.homeBadgeBeginning,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  context.go('/game/${GameMode.classic.name}');
-                                },
-                              )
-                                  .animateOrSkip(reduceMotion: rm, delay: 80.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              _ClassicScoreChip(l: l, brightness: brightness)
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 100.ms)
-                                  .fadeIn(duration: 300.ms),
-                              const SizedBox(height: 10),
-                              ModeCard(
-                                label: l.modeColorChefName,
-                                subtitle: l.modeColorChefDesc,
-                                color: kColorChef,
-                                icon: Icons.colorize_rounded,
-                                isLocked: chefLocked,
-                                lockLabel: chefLocked
-                                    ? l.modeLockedGames(3 - gamesPlayed)
-                                    : null,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  if (!chefLocked) {
-                                    context
-                                        .go('/game/${GameMode.colorChef.name}');
-                                  }
-                                },
-                              )
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 160.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              const SizedBox(height: 10),
-                              ModeCard(
-                                label: l.modeTimeTrialName,
-                                subtitle: l.modeTimeTrialDesc,
-                                color: kColorTimeTrial,
-                                icon: Icons.timer_rounded,
-                                isLocked: timeTrialLocked,
-                                lockLabel: timeTrialLocked
-                                    ? l.modeLockedGames(5 - gamesPlayed)
-                                    : null,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  if (!timeTrialLocked) {
-                                    context
-                                        .go('/game/${GameMode.timeTrial.name}');
-                                  }
-                                },
-                              )
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 240.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              const SizedBox(height: 10),
-                              ModeCard(
-                                label: l.modeZenName,
-                                subtitle: l.modeZenDesc,
-                                color: kColorZen,
-                                icon: Icons.spa_rounded,
-                                isLocked:
-                                    !ref.watch(appSettingsProvider).glooPlus,
-                                lockLabel: l.glooPlusTitle,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  if (ref.read(appSettingsProvider).glooPlus) {
-                                    context.go('/game/${GameMode.zen.name}');
-                                  } else {
-                                    context.push('/shop');
-                                  }
-                                },
-                              )
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 320.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              const SizedBox(height: 10),
-                              ModeCard(
-                                label: l.modeLevelName,
-                                subtitle: l.modeLevelDesc,
-                                color: kOrange,
-                                icon: Icons.map_rounded,
-                                badgeLabel: l.newBadge,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  context.go('/levels');
-                                },
-                              )
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 400.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              _LevelProgressChip(
+                              _buildModeCardGrid(
+                                context: context,
                                 l: l,
                                 brightness: brightness,
+                                rm: rm,
+                                screenWidth: screenWidth,
+                                chefLocked: chefLocked,
+                                timeTrialLocked: timeTrialLocked,
+                                gamesPlayed: gamesPlayed,
+                                glooPlus: glooPlus,
                               ),
-                              const SizedBox(height: 10),
-                              ModeCard(
-                                label: l.modeDuelName,
-                                subtitle: l.modeDuelDesc,
-                                color: kColorClassic,
-                                icon: Icons.sports_mma_rounded,
-                                badgeLabel: l.newBadge,
-                                onTap: () {
-                                  _soundBank.onButtonTap();
-                                  context.go('/pvp-lobby');
-                                },
-                              )
-                                  .animateOrSkip(
-                                      reduceMotion: rm, delay: 480.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.15,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              _DuelEloChip(brightness: brightness),
                               const SizedBox(height: 8),
                             ],
                           ),
@@ -454,6 +362,232 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildModeCardGrid({
+    required BuildContext context,
+    required AppStrings l,
+    required Brightness brightness,
+    required bool rm,
+    required double screenWidth,
+    required bool chefLocked,
+    required bool timeTrialLocked,
+    required int gamesPlayed,
+    required bool glooPlus,
+  }) {
+    final columns = responsiveColumns(
+      screenWidth,
+      phone: 1,
+      tablet: 2,
+      desktop: 2,
+    );
+
+    // Each entry: the ModeCard widget + optional chip widget below it
+    final cardItems = <Widget>[
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeClassicName,
+          subtitle: l.modeClassicDesc,
+          color: kColorClassic,
+          icon: Icons.grid_view_rounded,
+          isFeatured: true,
+          badgeLabel: l.homeBadgeBeginning,
+          onTap: () {
+            _soundBank.onButtonTap();
+            context.go('/game/${GameMode.classic.name}');
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 80.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+        chip: _ClassicScoreChip(l: l, brightness: brightness)
+            .animateOrSkip(reduceMotion: rm, delay: 100.ms)
+            .fadeIn(duration: 300.ms),
+      ),
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeColorChefName,
+          subtitle: l.modeColorChefDesc,
+          color: kColorChef,
+          icon: Icons.colorize_rounded,
+          isLocked: chefLocked,
+          lockLabel:
+              chefLocked ? l.modeLockedGames(3 - gamesPlayed) : null,
+          onTap: () {
+            _soundBank.onButtonTap();
+            if (!chefLocked) {
+              context.go('/game/${GameMode.colorChef.name}');
+            }
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 160.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+      ),
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeTimeTrialName,
+          subtitle: l.modeTimeTrialDesc,
+          color: kColorTimeTrial,
+          icon: Icons.timer_rounded,
+          isLocked: timeTrialLocked,
+          lockLabel: timeTrialLocked
+              ? l.modeLockedGames(5 - gamesPlayed)
+              : null,
+          onTap: () {
+            _soundBank.onButtonTap();
+            if (!timeTrialLocked) {
+              context.go('/game/${GameMode.timeTrial.name}');
+            }
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 240.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+      ),
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeZenName,
+          subtitle: l.modeZenDesc,
+          color: kColorZen,
+          icon: Icons.spa_rounded,
+          isLocked: !glooPlus,
+          lockLabel: l.glooPlusTitle,
+          onTap: () {
+            _soundBank.onButtonTap();
+            if (ref.read(appSettingsProvider).glooPlus) {
+              context.go('/game/${GameMode.zen.name}');
+            } else {
+              context.push('/shop');
+            }
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 320.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+      ),
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeLevelName,
+          subtitle: l.modeLevelDesc,
+          color: kOrange,
+          icon: Icons.map_rounded,
+          badgeLabel: l.newBadge,
+          onTap: () {
+            _soundBank.onButtonTap();
+            context.go('/levels');
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 400.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+        chip: _LevelProgressChip(l: l, brightness: brightness),
+      ),
+      _ModeCardWithChip(
+        card: ModeCard(
+          label: l.modeDuelName,
+          subtitle: l.modeDuelDesc,
+          color: kColorClassic,
+          icon: Icons.sports_mma_rounded,
+          badgeLabel: l.newBadge,
+          onTap: () {
+            _soundBank.onButtonTap();
+            context.go('/pvp-lobby');
+          },
+        )
+            .animateOrSkip(reduceMotion: rm, delay: 480.ms)
+            .fadeIn(duration: 350.ms)
+            .slideY(
+              begin: 0.15,
+              end: 0,
+              duration: 350.ms,
+              curve: Curves.easeOutCubic,
+            ),
+        chip: _DuelEloChip(brightness: brightness),
+      ),
+    ];
+
+    if (columns == 1) {
+      return Column(
+        children: [
+          for (int i = 0; i < cardItems.length; i++) ...[
+            cardItems[i],
+            if (i < cardItems.length - 1) const SizedBox(height: 10),
+          ],
+        ],
+      );
+    }
+
+    // 2-column layout: pair cards side by side
+    final rows = <Widget>[];
+    for (int i = 0; i < cardItems.length; i += 2) {
+      final hasRight = i + 1 < cardItems.length;
+      rows.add(
+        // NOTE: IntrinsicHeight causes double layout pass. Monitor for jank on
+        // tablet during staggered entry animation. If frame drops occur, replace
+        // with ConstrainedBox(constraints: BoxConstraints(minHeight: kModeCardMinHeight)).
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: cardItems[i]),
+              const SizedBox(width: 12),
+              Expanded(
+                child: hasRight ? cardItems[i + 1] : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (i + 2 < cardItems.length) rows.add(const SizedBox(height: 10));
+    }
+    return Column(children: rows);
+  }
+}
+
+// ─── ModeCard + chip wrapper ──────────────────────────────────────────────────
+
+class _ModeCardWithChip extends StatelessWidget {
+  const _ModeCardWithChip({required this.card, this.chip});
+
+  final Widget card;
+  final Widget? chip;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        card,
+        if (chip != null) chip!,
+      ],
     );
   }
 }
@@ -606,6 +740,94 @@ class _DuelEloChip extends ConsumerWidget {
       child: Text(
         '$elo ELO',
         style: AppTextStyles.caption.copyWith(color: textColor),
+      ),
+    );
+  }
+}
+
+// ─── Quick Play banner ────────────────────────────────────────────────────────
+
+class _QuickPlayBanner extends StatelessWidget {
+  const _QuickPlayBanner({
+    required this.mode,
+    required this.l,
+    required this.brightness,
+    required this.onTap,
+  });
+
+  final GameMode mode;
+  final AppStrings l;
+  final Brightness brightness;
+  final VoidCallback onTap;
+
+  String _modeName() => switch (mode) {
+        GameMode.classic => l.modeClassicName,
+        GameMode.colorChef => l.modeColorChefName,
+        GameMode.timeTrial => l.modeTimeTrialName,
+        GameMode.zen => l.modeZenName,
+        GameMode.daily => l.dailyTitle,
+        GameMode.level => l.modeLevelName,
+        GameMode.duel => l.modeDuelName,
+      };
+
+  @override
+  Widget build(BuildContext context) {
+    final accentColor = kModeColors[mode] ?? kColorClassic;
+    final bgColor = resolveColor(
+      brightness,
+      dark: kSurfaceDark,
+      light: kCardBgLight,
+    );
+    final borderColor = resolveColor(
+      brightness,
+      dark: kCardBorderLight.withValues(alpha: 0.10),
+      light: kCardBorderLight,
+    );
+
+    return Semantics(
+      label: '${l.quickPlayLabel}: ${_modeName()}',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: borderColor),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.play_arrow_rounded, color: accentColor, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                l.quickPlayLabel,
+                style: AppTextStyles.caption.copyWith(
+                  color: accentColor,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(
+                ': ${_modeName()}',
+                style: AppTextStyles.caption.copyWith(
+                  color: resolveColor(
+                    brightness,
+                    dark: kMuted,
+                    light: kTextSecondaryLight,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                directionalChevronIcon(Directionality.of(context)),
+                color: accentColor.withValues(alpha: 0.7),
+                size: 18,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -103,9 +103,12 @@ Future<void> main() async {
       }
     }
 
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    if (!kIsWeb) {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
 
     // iOS immersiveSticky tam desteklemez — edgeToEdge kullan
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {

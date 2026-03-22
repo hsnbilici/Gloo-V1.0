@@ -68,16 +68,18 @@ class _CellBurstEffectState extends State<CellBurstEffect>
     }
 
     final size = widget.cellSize * 4.0;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => CustomPaint(
-          painter: _BurstPainter(
-            progress: _ctrl.value,
-            color: widget.color,
-            cellSize: widget.cellSize,
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _BurstPainter(
+              progress: _ctrl.value,
+              color: widget.color,
+              cellSize: widget.cellSize,
+            ),
           ),
         ),
       ),
@@ -309,15 +311,17 @@ class _IceBreakEffectState extends State<IceBreakEffect>
     }
 
     final size = widget.cellSize * 3.0;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => CustomPaint(
-          painter: _IceBreakPainter(
-            progress: _ctrl.value,
-            cellSize: widget.cellSize,
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _IceBreakPainter(
+              progress: _ctrl.value,
+              cellSize: widget.cellSize,
+            ),
           ),
         ),
       ),
@@ -451,16 +455,18 @@ class _ColorSynthesisBloomEffectState extends State<ColorSynthesisBloomEffect>
     }
 
     final size = widget.cellSize * 5.0;
-    return SizedBox(
-      width: size,
-      height: size,
-      child: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (_, __) => CustomPaint(
-          painter: _SynthesisBloomPainter(
-            progress: _ctrl.value,
-            color: widget.color,
-            cellSize: widget.cellSize,
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _SynthesisBloomPainter(
+              progress: _ctrl.value,
+              color: widget.color,
+              cellSize: widget.cellSize,
+            ),
           ),
         ),
       ),

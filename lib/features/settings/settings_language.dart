@@ -8,7 +8,7 @@ import '../../providers/locale_provider.dart';
 
 // ─── Dil seçim satırı ────────────────────────────────────────────────────────
 
-class LanguageTile extends StatelessWidget {
+class LanguageTile extends StatefulWidget {
   const LanguageTile({
     super.key,
     required this.label,
@@ -22,11 +22,18 @@ class LanguageTile extends StatelessWidget {
   final Color accentColor;
   final VoidCallback onTap;
 
+  @override
+  State<LanguageTile> createState() => _LanguageTileState();
+}
+
+class _LanguageTileState extends State<LanguageTile> {
+  bool _hovered = false;
+
   String get _currentNativeName {
     for (final lang in kLanguageOptions) {
-      if (lang.code == currentLocale.languageCode) return lang.nativeName;
+      if (lang.code == widget.currentLocale.languageCode) return lang.nativeName;
     }
-    return currentLocale.languageCode;
+    return widget.currentLocale.languageCode;
   }
 
   @override
@@ -35,47 +42,55 @@ class LanguageTile extends StatelessWidget {
     final textColor =
         resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
-      label: label,
+      label: widget.label,
       button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: accentColor.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-            border: Border.all(color: accentColor.withValues(alpha: 0.22)),
-          ),
-          child: Row(
-            children: [
-              Icon(Icons.language_rounded, color: accentColor, size: 18),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: widget.accentColor
+                  .withValues(alpha: _hovered ? 0.09 : 0.05),
+              borderRadius: BorderRadius.circular(UIConstants.radiusTile),
+              border: Border.all(
+                  color: widget.accentColor
+                      .withValues(alpha: _hovered ? 0.35 : 0.22)),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.language_rounded,
+                    color: widget.accentColor, size: 18),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.label,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                _currentNativeName,
-                style: TextStyle(
-                  color: accentColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+                Text(
+                  _currentNativeName,
+                  style: TextStyle(
+                    color: widget.accentColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              Icon(
-                directionalChevronIcon(Directionality.of(context)),
-                color: accentColor.withValues(alpha: 0.70),
-                size: 18,
-              ),
-            ],
+                const SizedBox(width: 6),
+                Icon(
+                  directionalChevronIcon(Directionality.of(context)),
+                  color: widget.accentColor.withValues(alpha: 0.70),
+                  size: 18,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -162,7 +177,7 @@ class LanguageSheet extends StatelessWidget {
 
 // ─── Dil chip'i ──────────────────────────────────────────────────────────────
 
-class _LangChip extends StatelessWidget {
+class _LangChip extends StatefulWidget {
   const _LangChip({
     required this.code,
     required this.nativeName,
@@ -176,73 +191,91 @@ class _LangChip extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_LangChip> createState() => _LangChipState();
+}
+
+class _LangChipState extends State<_LangChip> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final unselectedBg = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.04),
+      dark: Colors.white.withValues(alpha: _hovered ? 0.07 : 0.04),
       light: kCardBgLight,
     );
     final unselectedBorder = resolveColor(
       brightness,
-      dark: Colors.white.withValues(alpha: 0.09),
+      dark: Colors.white.withValues(alpha: _hovered ? 0.15 : 0.09),
       light: kCardBorderLight,
     );
     final unselectedText =
         resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
     return Semantics(
-      label: nativeName,
+      label: widget.nativeName,
       button: true,
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          decoration: BoxDecoration(
-            color:
-                isSelected ? kColorChef.withValues(alpha: 0.14) : unselectedBg,
-            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-            border: Border.all(
-              color: isSelected
-                  ? kColorChef.withValues(alpha: 0.55)
-                  : unselectedBorder,
-              width: isSelected ? 1.5 : 1,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          // AnimatedContainer kept intentionally: animates isSelected (selection
+          // state transition), not just hover. Hover changes are blended within
+          // the same 180ms transition.
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            decoration: BoxDecoration(
+              color: widget.isSelected
+                  ? kColorChef.withValues(alpha: 0.14)
+                  : unselectedBg,
+              borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+              border: Border.all(
+                color: widget.isSelected
+                    ? kColorChef.withValues(alpha: 0.55)
+                    : unselectedBorder,
+                width: widget.isSelected ? 1.5 : 1,
+              ),
+              boxShadow: widget.isSelected
+                  ? [
+                      BoxShadow(
+                        color: kColorChef.withValues(alpha: 0.18),
+                        blurRadius: 10,
+                      ),
+                    ]
+                  : null,
             ),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: kColorChef.withValues(alpha: 0.18),
-                      blurRadius: 10,
-                    ),
-                  ]
-                : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                nativeName,
-                style: TextStyle(
-                  color: isSelected ? kColorChef : unselectedText,
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.nativeName,
+                  style: TextStyle(
+                    color:
+                        widget.isSelected ? kColorChef : unselectedText,
+                    fontSize: 12,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                code,
-                style: TextStyle(
-                  color: isSelected
-                      ? kColorChef.withValues(alpha: 0.75)
-                      : kMuted.withValues(alpha: 0.60),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
+                const SizedBox(height: 2),
+                Text(
+                  widget.code,
+                  style: TextStyle(
+                    color: widget.isSelected
+                        ? kColorChef.withValues(alpha: 0.75)
+                        : kMuted.withValues(alpha: 0.60),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

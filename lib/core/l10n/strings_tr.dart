@@ -165,6 +165,8 @@ class StringsTr extends AppStrings {
   @override
   String get chefLevelComplete => 'SEVİYE TAMAMLANDI';
   @override
+  String get levelCompleteAnnounce => 'SEVİYE TAMAMLANDI';
+  @override
   String get chefAllComplete => 'TÜM SEVİYELER BİTTİ';
   @override
   String get chefContinue => 'Devam Et';
@@ -200,6 +202,10 @@ class StringsTr extends AppStrings {
   @override
   String get onboardingStep3Desc =>
       'Komşu birincil renkler otomatik birleşerek yeni renk üretir. Nadir renkleri keşfet!';
+  @override
+  String get onboardingTapToPlace => 'Yerleştirmek için dokun';
+  @override
+  String get onboardingGreat => 'Harika!';
 
   @override
   String get streakDays => 'GÜN';
@@ -596,6 +602,8 @@ class StringsTr extends AppStrings {
   String get levelMicroTask9 => 'Yeni bir renk sentezle';
   @override
   String get levelMicroTask10 => 'Toplam 3 satir temizle';
+  @override
+  String get levelSelectTitle => 'SEVİYELER';
 
   @override
   String get duelRematch => 'Tekrar Mac';
@@ -605,4 +613,42 @@ class StringsTr extends AppStrings {
   String get questsTitle => 'Gunluk Gorevler';
   @override
   String get questsCompleted => 'Tamamlandi';
+
+  // UX-03: Grid hücre semantics label'ları
+  @override
+  String get semanticsCellEmpty => 'Boş';
+  @override
+  String get semanticsCellPreview => 'Önizleme';
+  @override
+  String get semanticsCellStone => 'Taş';
+  @override
+  String get semanticsCellIce => 'Buz';
+  @override
+  String get semanticsCellLocked => 'Kilitli';
+  @override
+  String get semanticsCellGravity => 'Yerçekimi';
+  @override
+  String get semanticsCellRainbow => 'Gökkuşağı';
+
+  // UX-03: Power-up semantics label'ları
+  @override
+  String get semanticsPowerUpRotate => 'Döndür';
+  @override
+  String get semanticsPowerUpBomb => 'Bomba';
+  @override
+  String get semanticsPowerUpUndo => 'Geri al';
+  @override
+  String get semanticsPowerUpFreeze => 'Dondur';
+  @override
+  String get semanticsPowerUpPeek => 'Göz at';
+
+  // UX-05: Shop tab labels
+  @override
+  String get shopTabCurrency => 'Jel Özü';
+  @override
+  String get shopTabPromo => 'Promosyon Kodu';
+
+  // UX-07: Quick Play
+  @override
+  String get quickPlayLabel => 'Hızlı Oyun';
 }

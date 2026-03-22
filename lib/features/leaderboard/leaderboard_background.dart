@@ -14,21 +14,23 @@ class LeaderboardBackground extends StatelessWidget {
     final isDark = brightness == Brightness.dark;
     final orbAlpha = isDark ? 1.0 : 0.45;
 
-    return Stack(
-      children: [
-        Container(color: bgColor),
-        Positioned(
-          top: -100,
-          left: -60,
-          child: GlowOrb(
-              size: 280, color: kColorClassic, opacity: 0.06 * orbAlpha),
-        ),
-        Positioned(
-          bottom: -80,
-          right: -50,
-          child: GlowOrb(size: 240, color: kCyan, opacity: 0.05 * orbAlpha),
-        ),
-      ],
+    return ExcludeSemantics(
+      child: Stack(
+        children: [
+          Container(color: bgColor),
+          Positioned(
+            top: -100,
+            left: -60,
+            child: GlowOrb(
+                size: 280, color: kColorClassic, opacity: 0.06 * orbAlpha),
+          ),
+          Positioned(
+            bottom: -80,
+            right: -50,
+            child: GlowOrb(size: 240, color: kCyan, opacity: 0.05 * orbAlpha),
+          ),
+        ],
+      ),
     );
   }
 }
