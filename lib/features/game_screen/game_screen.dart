@@ -119,7 +119,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   int feedbackKeyIndex = 0;
   @override
-  List<({int row, int col, Color color, int key, Duration delay})> burstCells =
+  List<({int row, int col, Color color, int key, Duration delay, double intensity})> burstCells =
       [];
   @override
   int burstKeyBase = 0;

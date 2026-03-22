@@ -7,7 +7,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   GlooGame get game;
   ClipRecorder get clipRecorder;
   SoundBank get soundBank;
-  List<({int row, int col, Color color, int key, Duration delay})>
+  List<({int row, int col, Color color, int key, Duration delay, double intensity})>
       get burstCells;
   int get burstKeyBase;
   set burstKeyBase(int value);
@@ -121,8 +121,12 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (!mounted) return;
       final gridCols = game.gridManager.cols;
       final gridRows = game.gridManager.rows;
+      // Çoklu satır temizlemede daha yoğun parçacık efekti
+      final lines = clearResult.totalLines;
+      final double burstIntensity =
+          lines >= 4 ? 2.0 : (lines >= 2 ? 1.5 : 1.0);
       final bursts =
-          <({int row, int col, Color color, int key, Duration delay})>[];
+          <({int row, int col, Color color, int key, Duration delay, double intensity})>[];
       for (final entry in clearResult.clearedCellColors.entries) {
         final (row, col) = entry.key;
         final double distFromCenter = clearResult.clearedRows.contains(row)
@@ -134,6 +138,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           color: entry.value.displayColor,
           key: ++burstKeyBase,
           delay: Duration(milliseconds: (distFromCenter * 35).round()),
+          intensity: burstIntensity,
         ));
       }
       if (bursts.isNotEmpty) {

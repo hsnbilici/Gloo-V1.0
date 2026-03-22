@@ -20,7 +20,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
   set synthesisGlowTimer(Timer? value);
   int get waveKey;
   PowerUpType? get activePowerUpMode;
-  List<({int row, int col, Color color, int key, Duration delay})>
+  List<({int row, int col, Color color, int key, Duration delay, double intensity})>
       get burstCells;
   List<({int row, int col, Color color, int key})> get synthesisBlooms;
   ({double cx, double cy, int count, Color color, int key})? get placeFeedback;
@@ -263,6 +263,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                           color: burst.color,
                           cellSize: cell,
                           delay: burst.delay,
+                          intensity: burst.intensity,
                           onDismiss: () {
                             if (mounted) {
                               setState(() => burstCells

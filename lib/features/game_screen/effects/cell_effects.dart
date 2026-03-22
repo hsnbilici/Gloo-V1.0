@@ -16,12 +16,17 @@ class CellBurstEffect extends StatefulWidget {
     required this.cellSize,
     required this.delay,
     required this.onDismiss,
+    this.intensity = 1.0,
   });
 
   final Color color;
   final double cellSize;
   final Duration delay;
   final VoidCallback onDismiss;
+
+  /// Efekt yoğunluğu — parçacık sayısını ve yayılma mesafesini çarpar.
+  /// 1.0 = tek satır (16 parçacık), 1.5 = 2+ satır, 2.0 = 4+ satır (maks 32).
+  final double intensity;
 
   @override
   State<CellBurstEffect> createState() => _CellBurstEffectState();
@@ -79,6 +84,7 @@ class _CellBurstEffectState extends State<CellBurstEffect>
               progress: _ctrl.value,
               color: widget.color,
               cellSize: widget.cellSize,
+              intensity: widget.intensity,
             ),
           ),
         ),
@@ -92,6 +98,7 @@ class _BurstPainter extends CustomPainter {
     required this.progress,
     required this.color,
     required this.cellSize,
+    this.intensity = 1.0,
   })  : _flashPaint = Paint(),
         _glowPaint = Paint()
           ..style = PaintingStyle.stroke
@@ -105,9 +112,11 @@ class _BurstPainter extends CustomPainter {
   final double progress;
   final Color color;
   final double cellSize;
+  final double intensity;
 
-  // Faz F: 8 -> 16 parcacik, Bezier trajectory
-  static const int _particleCount = 16;
+  // Faz F: 8 -> 16 parcacik, Bezier trajectory. intensity ile maks 32'ye kadar olceklenir.
+  static const int _baseParticleCount = 16;
+  static const int _maxParticleCount = 32;
 
   // Pre-allocated reusable Paint objects
   final Paint _flashPaint;
@@ -138,13 +147,16 @@ class _BurstPainter extends CustomPainter {
     // 3. Jel damlacik parcaciklari: Bezier egrisi trajectory + yercekimi
     if (progress > 0.06) {
       final t = (progress - 0.06) / 0.94;
-      _drawParticles(canvas, center, t);
+      final count = (_baseParticleCount * intensity)
+          .round()
+          .clamp(_baseParticleCount, _maxParticleCount);
+      _drawParticles(canvas, center, t, count);
     }
   }
 
   void _drawFlash(Canvas canvas, Offset center, double opacity) {
-    // Faz 4: 1.5x hucre boyutu (eskiden 0.85x)
-    final radius = cellSize * 1.5;
+    // Faz 4: 1.5x hucre boyutu (eskiden 0.85x); intensity ile hafifce buyur
+    final radius = cellSize * 1.5 * (1.0 + (intensity - 1.0) * 0.25);
     _flashPaint.shader = RadialGradient(
       colors: [
         Colors.white.withValues(alpha: opacity * 0.92),
@@ -177,12 +189,13 @@ class _BurstPainter extends CustomPainter {
     canvas.drawCircle(center, radius, _ringPaint);
   }
 
-  void _drawParticles(Canvas canvas, Offset center, double t) {
+  void _drawParticles(Canvas canvas, Offset center, double t, int count) {
     final eased = Curves.easeOut.transform(t);
-    final maxDist = cellSize * 1.65;
+    // intensity ile yayılma mesafesini artır (max +35%)
+    final maxDist = cellSize * 1.65 * (1.0 + (intensity - 1.0) * 0.35);
 
-    for (int i = 0; i < _particleCount; i++) {
-      final angle = (i / _particleCount) * 2 * math.pi;
+    for (int i = 0; i < count; i++) {
+      final angle = (i / count) * 2 * math.pi;
       // Faz F: Bezier egrisi trajectory -- kontrol noktasi ile kavisli yol
       final controlAngle = angle + (i.isEven ? 0.4 : -0.4);
       final controlDist = maxDist * 0.5;
@@ -248,7 +261,8 @@ class _BurstPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_BurstPainter old) => old.progress != progress;
+  bool shouldRepaint(_BurstPainter old) =>
+      old.progress != progress || old.intensity != intensity;
 }
 
 // ─── Buz kirilma efekti ───────────────────────────────────────────────
