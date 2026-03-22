@@ -107,15 +107,21 @@ void main() {
     });
   });
 
-  // ─── Günlük bulmaca banner'ı ────────────────────────────────────────────────
+  // ─── Günlük bulmaca kısayolu (QuestBar içinde) ─────────────────────────────
 
-  group('HomeScreen daily banner', () {
-    testWidgets('renders daily puzzle banner', (tester) async {
+  group('HomeScreen daily shortcut', () {
+    testWidgets('renders daily puzzle shortcut inside quest bar', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
 
-      // DailyBanner artık "Daily Puzzle — tarih" formatında tek satır
-      expect(find.textContaining('Daily Puzzle'), findsOneWidget);
+      // DailyBanner kaldırıldı; daily kısayolu QuestBar'ın sol tarafında
+      // calendar_today_rounded ikonu (tamamlanmamış durum) veya
+      // check_circle_rounded ikonu (tamamlanmış durum) gösterir.
+      final hasCalendar =
+          tester.any(find.byIcon(Icons.calendar_today_rounded));
+      final hasCheck =
+          tester.any(find.byIcon(Icons.check_circle_rounded));
+      expect(hasCalendar || hasCheck, isTrue);
     });
   });
 }

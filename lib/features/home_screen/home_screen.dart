@@ -26,7 +26,6 @@ import '../../providers/service_providers.dart';
 import '../../services/notification_service.dart';
 import '../../providers/user_provider.dart';
 import 'widgets/bottom_bar.dart';
-import 'widgets/daily_banner.dart';
 import 'widgets/deep_background.dart';
 import 'widgets/dialogs.dart';
 import 'widgets/gel_logo.dart';
@@ -329,16 +328,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              DailyBanner(label: l.dailyTitle)
-                                  .animateOrSkip(reduceMotion: rm, delay: 60.ms)
-                                  .fadeIn(duration: 350.ms)
-                                  .slideY(
-                                    begin: 0.08,
-                                    end: 0,
-                                    duration: 350.ms,
-                                    curve: Curves.easeOutCubic,
-                                  ),
-                              const SizedBox(height: 8),
                               QuestBar(brightness: brightness)
                                   .animateOrSkip(reduceMotion: rm, delay: 70.ms)
                                   .fadeIn(duration: 350.ms)
