@@ -68,6 +68,10 @@ class QuantizedBreathListenable extends ChangeNotifier {
 ///
 /// [isGlowing] sentez aninda hucreyi daha parlak render eder:
 /// dis glow blur/alpha artar, specular ve ic parlama sabit yuksek alpha kullanir.
+///
+/// [isRecentlyPlaced] yeni yerlestirilmis hucrelerde specular ve glow uzerinde
+/// kisaca kisa sureli "jel basinci" modülasyonu uygular (Yaklasim B).
+/// Nefes animasyonu uzerinden suruluyor — reduce motion'da otomatik susar.
 class GelCellPainter extends CustomPainter {
   GelCellPainter({
     required this.color,
@@ -75,6 +79,7 @@ class GelCellPainter extends CustomPainter {
     required Animation<double> breathAnimation,
     required this.breathPhase,
     this.isGlowing = false,
+    this.isRecentlyPlaced = false,
   })  : _breathAnim = breathAnimation,
         super(
           repaint: QuantizedBreathListenable.getInstance(breathAnimation),
@@ -91,6 +96,12 @@ class GelCellPainter extends CustomPainter {
   /// Dis glow blur/alpha artar; specular ve ic parlama sabit yuksek alpha kullanir.
   final bool isGlowing;
 
+  /// Yeni yerlestirilmis hucre: specular highlight Y kayması ve glow alpha'sinda
+  /// kisaca ekstra modülasyon ("jel iç ışık basıncı" hissi).
+  /// Nefes animasyonunun ilk yarı döngüsündeki pozitif fazı kullanır.
+  /// Reduce motion'da nefes duruyorsa bu efekt de otomatik susar.
+  final bool isRecentlyPlaced;
+
   // ── Cached paint objects ────────────────────────────────────────────────
   Shader? _cachedBodyShader;
   Size? _cachedBodyShaderSize;
@@ -99,6 +110,7 @@ class GelCellPainter extends CustomPainter {
   Paint? _cachedGlowPaint;
   Color? _cachedGlowColor;
   bool? _cachedGlowState;
+  bool? _cachedRecentlyPlaced;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -107,20 +119,46 @@ class GelCellPainter extends CustomPainter {
 
     final breathMod = math.sin(_breathAnim.value * 2 * math.pi + breathPhase);
 
+    // isRecentlyPlaced modülasyonu: nefes animasyonunun pozitif fazından
+    // türetilen tek bir skaler (0.0–1.0). Subtle "jel basıncı" hissi için.
+    // breathMod aralığı -1..1; pozitif fazı sıkıştırma anına karşılık gelir.
+    final placedMod = isRecentlyPlaced ? breathMod.clamp(0.0, 1.0) : 0.0;
+
     final rect = Offset.zero & size;
     final rrect = RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
 
     // ── 1. Dis glow — hucrenin altinda renkli isik halkasi ───────────────
-    if (_cachedGlowPaint == null ||
-        _cachedGlowColor != color ||
-        _cachedGlowState != isGlowing) {
-      _cachedGlowColor = color;
-      _cachedGlowState = isGlowing;
-      _cachedGlowPaint = Paint()
-        ..color = color.withValues(alpha: isGlowing ? 0.60 : 0.40)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, isGlowing ? 12 : 6);
+    // isRecentlyPlaced: glow alpha'sı +0.10 * placedMod ekstra parlaklık.
+    // Cache: statik durum icin tekrar kullan; isRecentlyPlaced aktifken
+    // placedMod her nefes tickinde degisir, o yuzden cache atlaniyor.
+    if (!isRecentlyPlaced) {
+      if (_cachedGlowPaint == null ||
+          _cachedGlowColor != color ||
+          _cachedGlowState != isGlowing ||
+          _cachedRecentlyPlaced != false) {
+        _cachedGlowColor = color;
+        _cachedGlowState = isGlowing;
+        _cachedRecentlyPlaced = false;
+        _cachedGlowPaint = Paint()
+          ..color = color.withValues(alpha: isGlowing ? 0.60 : 0.40)
+          ..maskFilter =
+              MaskFilter.blur(BlurStyle.normal, isGlowing ? 12 : 6);
+      }
+      canvas.drawRRect(rrect.inflate(2.0), _cachedGlowPaint!);
+    } else {
+      // isRecentlyPlaced: cache yok — her tick taze alpha ile ciz.
+      _cachedGlowPaint = null; // bir sonraki normal state icin temizle
+      _cachedRecentlyPlaced = true;
+      final baseAlpha = isGlowing ? 0.60 : 0.40;
+      canvas.drawRRect(
+        rrect.inflate(2.0),
+        Paint()
+          ..color = color.withValues(
+              alpha: (baseAlpha + placedMod * 0.10).clamp(0.0, 1.0))
+          ..maskFilter =
+              MaskFilter.blur(BlurStyle.normal, isGlowing ? 12 : 6),
+      );
     }
-    canvas.drawRRect(rrect.inflate(2.0), _cachedGlowPaint!);
 
     // ── 2. Ic degrade govde — sol ust isik kaynagi → sag alt golge ──────
     //    Yuksek kontrast: acik ust-sol, koyu alt-sag → 3B derinlik
@@ -155,12 +193,15 @@ class GelCellPainter extends CustomPainter {
 
     // ── 4. Specular highlight — genis, belirgin beyaz elips ─────────────
     //    Buyuk boyut + yuksek alpha → "plastik/jel" parlaklik
+    //    isRecentlyPlaced: Y pozisyonu hafif kayar (max ±5% cellHeight),
+    //    alpha biraz artar — "jel içi ışık yayılır" hissi.
     final specAlpha =
         isGlowing ? 0.90 : (0.62 + 0.18 * breathMod).clamp(0.0, 1.0);
     final hlW = s * 0.55;
     final hlH = s * 0.30;
     final hlX = s * 0.10 + s * 0.012 * breathMod;
-    final hlY = s * 0.06 + s * 0.008 * breathMod;
+    // isRecentlyPlaced: specular Y aşağı kayar (sıkışma hissi, max %5)
+    final hlY = s * 0.06 + s * 0.008 * breathMod + s * 0.05 * placedMod;
     final hlRect = Rect.fromLTWH(hlX, hlY, hlW, hlH);
 
     canvas.drawOval(
@@ -192,12 +233,14 @@ class GelCellPainter extends CustomPainter {
     );
 
     // ── 6. Ek: ic parlama noktasi (kucuk, keskin) ──────────────────────
-    //    Speculer highlight'in merkezinde ekstra beyaz nokta
+    //    Speculer highlight'in merkezinde ekstra beyaz nokta.
+    //    isRecentlyPlaced: yarıçap basınçla büyür (max +%30), subtle pulse.
     final dotAlpha =
         isGlowing ? 0.60 : (0.35 + 0.12 * breathMod).clamp(0.0, 1.0);
+    final dotRadius = s * 0.06 * (1.0 + placedMod * 0.30);
     canvas.drawCircle(
       Offset(s * 0.28 + s * 0.01 * breathMod, s * 0.18),
-      s * 0.06,
+      dotRadius,
       Paint()..color = Colors.white.withValues(alpha: dotAlpha),
     );
   }
@@ -223,5 +266,6 @@ class GelCellPainter extends CustomPainter {
       old.color != color ||
       old.borderRadius != borderRadius ||
       old.breathPhase != breathPhase ||
-      old.isGlowing != isGlowing;
+      old.isGlowing != isGlowing ||
+      old.isRecentlyPlaced != isRecentlyPlaced;
 }

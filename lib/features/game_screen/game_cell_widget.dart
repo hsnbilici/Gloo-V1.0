@@ -136,6 +136,7 @@ class GameCellWidget extends ConsumerWidget {
             breathAnimation: breathCtrl,
             breathPhase: (row * cols + col) * 0.12,
             isGlowing: data.isSynthesisResult,
+            isRecentlyPlaced: data.isRecentlyPlaced,
           ),
           child: colorBlindMode
               ? CustomPaint(
