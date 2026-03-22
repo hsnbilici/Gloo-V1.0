@@ -14,6 +14,7 @@ import '../../data/local/local_repository.dart';
 import '../../core/utils/near_miss_detector.dart';
 import '../../game/levels/level_data.dart';
 import '../../game/meta/character_state.dart';
+import '../../game/meta/island_state.dart';
 import '../../game/meta/season_pass.dart';
 import '../../game/shapes/gel_shape.dart';
 import '../../game/systems/combo_detector.dart';

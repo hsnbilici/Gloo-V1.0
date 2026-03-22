@@ -107,10 +107,19 @@ class IslandState {
   /// Jel Fabrikası pasif üretim miktarı (saat başına).
   int get passiveGelPerHour => getBuildingLevel(BuildingType.gelFactory) * 2;
 
-  /// PvP modu açık mı?
+  /// Pasif üretim: gelFactory level * 2 enerji per tick (oyun sonu çağrılır).
+  int calculatePassiveProduction() {
+    final factoryLevel = getBuildingLevel(BuildingType.gelFactory);
+    return factoryLevel * 2;
+  }
+
+  /// Pasif üretim tick — üretilen miktarı döner (persist caller'a bırakılır).
+  int tickPassiveProduction() => calculatePassiveProduction();
+
+  /// PvP modu açık mı? (Arena >= 1 gerektirir)
   bool get isPvpUnlocked => getBuildingLevel(BuildingType.arena) > 0;
 
-  /// Sezonluk etkinlikler açık mı?
+  /// Sezonluk etkinlikler açık mı? (Harbor >= 1 gerektirir)
   bool get isSeasonUnlocked => getBuildingLevel(BuildingType.harbor) > 0;
 
   /// Tüm bina seviyelerini harita olarak döner (kalıcılık için).

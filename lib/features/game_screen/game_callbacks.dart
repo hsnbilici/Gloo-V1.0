@@ -542,6 +542,22 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         }
       }
 
+      // Island: oyun sonu güncellemesi — pasif üretim tick
+      if (!kIsWeb) {
+        final islandRepo = _cachedRepo;
+        if (islandRepo != null) {
+          final island = IslandState()..loadFromMap(islandRepo.getIslandState());
+          final produced = island.tickPassiveProduction();
+          if (produced > 0) {
+            islandRepo.getGelEnergy().then((current) {
+              islandRepo.saveGelEnergy(current + produced);
+            }).catchError((Object e) {
+              if (kDebugMode) debugPrint('GameCallbacks: island update error: $e');
+            });
+          }
+        }
+      }
+
       handleGameOverDialog();
     };
 
