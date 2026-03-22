@@ -196,6 +196,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                     label: l.leaderboardYourRank,
                     score: _userScore,
                     isPvp: _isPvpTab,
+                    rankLabel: l.rankLabel,
                   ),
                 ),
               const SizedBox(height: 8),
@@ -228,6 +229,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                 isCurrentUser: userId != null &&
                                     entry.userId == userId,
                                 isPvp: _isPvpTab,
+                                rankLabel: l.rankLabel,
                               )
                                   .animateOrSkip(
                                       reduceMotion: shouldReduceMotion(context),

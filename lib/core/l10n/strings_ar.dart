@@ -723,4 +723,24 @@ class StringsAr extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO مجموعة: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => 'إبداع حر';
+  @override
+  String get modeColorChefFlavor => 'مطبخ الألوان';
+  @override
+  String get modeTimeTrialFlavor => 'سباق مع الزمن';
+  @override
+  String get modeZenFlavor => 'تدفق هادئ';
+  @override
+  String get modeLevelFlavor => 'رحلة';
+  @override
+  String get modeDuelFlavor => 'صراع الألوان';
+  @override
+  String get modeDailyFlavor => 'إبداع يومي';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => 'قوة';
 }

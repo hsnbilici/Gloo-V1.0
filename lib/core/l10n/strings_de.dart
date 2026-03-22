@@ -724,4 +724,24 @@ class StringsDe extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO Kollektion: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => 'Freie Schöpfung';
+  @override
+  String get modeColorChefFlavor => 'Farbküche';
+  @override
+  String get modeTimeTrialFlavor => 'Gegen die Uhr';
+  @override
+  String get modeZenFlavor => 'Ruhiger Fluss';
+  @override
+  String get modeLevelFlavor => 'Reise';
+  @override
+  String get modeDuelFlavor => 'Farbduell';
+  @override
+  String get modeDailyFlavor => 'Tägliche Schöpfung';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => 'Kraft';
 }

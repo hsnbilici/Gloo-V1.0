@@ -710,4 +710,24 @@ class StringsZh extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO 收藏: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => '自由创作';
+  @override
+  String get modeColorChefFlavor => '色彩厨房';
+  @override
+  String get modeTimeTrialFlavor => '与时间赛跑';
+  @override
+  String get modeZenFlavor => '平静流动';
+  @override
+  String get modeLevelFlavor => '旅程';
+  @override
+  String get modeDuelFlavor => '色彩对决';
+  @override
+  String get modeDailyFlavor => '每日创作';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => '战力';
 }

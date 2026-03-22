@@ -725,4 +725,24 @@ class StringsRu extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO Коллекция: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => 'Свободное творчество';
+  @override
+  String get modeColorChefFlavor => 'Цветная кухня';
+  @override
+  String get modeTimeTrialFlavor => 'Гонка со временем';
+  @override
+  String get modeZenFlavor => 'Спокойный поток';
+  @override
+  String get modeLevelFlavor => 'Путешествие';
+  @override
+  String get modeDuelFlavor => 'Цветная дуэль';
+  @override
+  String get modeDailyFlavor => 'Ежедневное творчество';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => 'Сила';
 }

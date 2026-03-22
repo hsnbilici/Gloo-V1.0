@@ -52,8 +52,8 @@ void main() {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Play until the grid is full'), findsOneWidget);
-      expect(find.text('Synthesize the target color'), findsOneWidget);
+      expect(find.text('Free Creation'), findsOneWidget);
+      expect(find.text('Color Kitchen'), findsOneWidget);
     });
 
     testWidgets('Zen mode shows GLOO+ lock when not subscribed',

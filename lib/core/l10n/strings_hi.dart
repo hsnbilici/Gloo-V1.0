@@ -719,4 +719,24 @@ class StringsHi extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO संग्रह: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => 'मुक्त रचना';
+  @override
+  String get modeColorChefFlavor => 'रंग रसोई';
+  @override
+  String get modeTimeTrialFlavor => 'समय से दौड़';
+  @override
+  String get modeZenFlavor => 'शांत प्रवाह';
+  @override
+  String get modeLevelFlavor => 'यात्रा';
+  @override
+  String get modeDuelFlavor => 'रंग टकराव';
+  @override
+  String get modeDailyFlavor => 'दैनिक रचना';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => 'शक्ति';
 }

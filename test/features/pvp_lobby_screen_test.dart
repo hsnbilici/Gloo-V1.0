@@ -98,7 +98,7 @@ void main() {
 
       FlutterError.onError = oldHandler;
 
-      expect(find.text('1000 ELO'), findsOneWidget);
+      expect(find.text('1000 Power'), findsOneWidget);
     });
 
     testWidgets('shows PvP stats labels', (tester) async {

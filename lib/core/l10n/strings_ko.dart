@@ -714,4 +714,24 @@ class StringsKo extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO 컬렉션: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => '자유 창작';
+  @override
+  String get modeColorChefFlavor => '색깔 주방';
+  @override
+  String get modeTimeTrialFlavor => '시간과의 경쟁';
+  @override
+  String get modeZenFlavor => '고요한 흐름';
+  @override
+  String get modeLevelFlavor => '여정';
+  @override
+  String get modeDuelFlavor => '색깔 충돌';
+  @override
+  String get modeDailyFlavor => '오늘의 창작';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => '전력';
 }

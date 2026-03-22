@@ -152,7 +152,7 @@ class DuelResultOverlay extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'ELO: $eloChangeStr',
+                    '${l.rankLabel}: $eloChangeStr',
                     style: TextStyle(
                       color: color,
                       fontSize: 18,

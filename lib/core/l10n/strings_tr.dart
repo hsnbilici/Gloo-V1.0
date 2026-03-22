@@ -719,4 +719,24 @@ class StringsTr extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO Koleksiyon: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => 'Serbest Yaratım';
+  @override
+  String get modeColorChefFlavor => 'Renk Mutfağı';
+  @override
+  String get modeTimeTrialFlavor => 'Zamana Karşı';
+  @override
+  String get modeZenFlavor => 'Huzurlu Akış';
+  @override
+  String get modeLevelFlavor => 'Yolculuk';
+  @override
+  String get modeDuelFlavor => 'Renk Kapışması';
+  @override
+  String get modeDailyFlavor => 'Günlük Yaratım';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => 'Güç';
 }

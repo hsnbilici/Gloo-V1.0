@@ -443,6 +443,18 @@ abstract class AppStrings {
   // CD.12-15: Share collection caption
   String shareCollectionCaption(int found, int total);
 
+  // CD.31: Mod flavor text (dünya dili alt başlıkları)
+  String get modeClassicFlavor;
+  String get modeColorChefFlavor;
+  String get modeTimeTrialFlavor;
+  String get modeZenFlavor;
+  String get modeLevelFlavor;
+  String get modeDuelFlavor;
+  String get modeDailyFlavor;
+
+  // CD.31: Rank label (ELO → dünya dili)
+  String get rankLabel;
+
   // CD.12: Kişilik arketipleri
   String get personalityOrange;
   String get personalityGreen;

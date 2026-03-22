@@ -713,4 +713,24 @@ class StringsJa extends AppStrings {
   @override
   String shareCollectionCaption(int found, int total) =>
       'GLOO コレクション: $found/$total';
+
+  // CD.31: Mod flavor text
+  @override
+  String get modeClassicFlavor => '自由な創作';
+  @override
+  String get modeColorChefFlavor => '色のキッチン';
+  @override
+  String get modeTimeTrialFlavor => '時間との勝負';
+  @override
+  String get modeZenFlavor => '穏やかな流れ';
+  @override
+  String get modeLevelFlavor => '旅';
+  @override
+  String get modeDuelFlavor => '色の激突';
+  @override
+  String get modeDailyFlavor => '毎日の創作';
+
+  // CD.31: Rank label
+  @override
+  String get rankLabel => '戦力';
 }

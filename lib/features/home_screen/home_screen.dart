@@ -456,7 +456,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeClassicName,
-          subtitle: l.modeClassicDesc,
+          subtitle: l.modeClassicFlavor,
           color: kColorClassic,
           icon: Icons.grid_view_rounded,
           isFeatured: true,
@@ -481,7 +481,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeColorChefName,
-          subtitle: l.modeColorChefDesc,
+          subtitle: l.modeColorChefFlavor,
           color: kColorChef,
           icon: Icons.colorize_rounded,
           isLocked: chefLocked,
@@ -506,7 +506,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeTimeTrialName,
-          subtitle: l.modeTimeTrialDesc,
+          subtitle: l.modeTimeTrialFlavor,
           color: kColorTimeTrial,
           icon: Icons.timer_rounded,
           isLocked: timeTrialLocked,
@@ -532,7 +532,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeZenName,
-          subtitle: l.modeZenDesc,
+          subtitle: l.modeZenFlavor,
           color: kColorZen,
           icon: Icons.spa_rounded,
           isLocked: !glooPlus,
@@ -558,7 +558,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeLevelName,
-          subtitle: l.modeLevelDesc,
+          subtitle: l.modeLevelFlavor,
           color: kOrange,
           icon: Icons.map_rounded,
           badgeLabel: l.newBadge,
@@ -580,7 +580,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       _ModeCardWithChip(
         card: ModeCard(
           label: l.modeDuelName,
-          subtitle: l.modeDuelDesc,
+          subtitle: l.modeDuelFlavor,
           color: kColorClassic,
           icon: Icons.sports_mma_rounded,
           badgeLabel: l.newBadge,
@@ -797,6 +797,7 @@ class _DuelEloChip extends ConsumerWidget {
     final elo = ref.watch(eloProvider).valueOrNull ?? 0;
     if (elo == 0) return const SizedBox.shrink();
 
+    final l = ref.watch(stringsProvider);
     final textColor = resolveColor(
       brightness,
       dark: kMuted,
@@ -806,7 +807,7 @@ class _DuelEloChip extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 4),
       child: Text(
-        '$elo ELO',
+        '$elo ${l.rankLabel}',
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );
