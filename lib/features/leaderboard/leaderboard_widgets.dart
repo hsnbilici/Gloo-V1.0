@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 
 class ModeTabs extends StatelessWidget {
@@ -19,12 +20,22 @@ class ModeTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final bgColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.04),
+        light: kCardBgLight);
+    final borderClr = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.08),
+        light: kCardBorderLight);
+    final unselectedClr = resolveColor(brightness,
+        dark: kMuted, light: kMutedLight);
+
     return Container(
       height: 42,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
+        color: bgColor,
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(color: borderClr),
       ),
       child: TabBar(
         controller: controller,
@@ -36,7 +47,7 @@ class ModeTabs extends StatelessWidget {
         indicatorSize: TabBarIndicatorSize.tab,
         dividerHeight: 0,
         labelColor: kCyan,
-        unselectedLabelColor: kMuted,
+        unselectedLabelColor: unselectedClr,
         labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
         unselectedLabelStyle:
             const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
@@ -98,6 +109,16 @@ class LeaderboardFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final unselectedBg = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.03),
+        light: kCardBgLight);
+    final unselectedBorder = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.08),
+        light: kCardBorderLight);
+    final unselectedText = resolveColor(brightness,
+        dark: kMuted, light: kMutedLight);
+
     return Semantics(
       label: label,
       button: true,
@@ -109,18 +130,18 @@ class LeaderboardFilterChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? kCyan.withValues(alpha: 0.12)
-                : Colors.white.withValues(alpha: 0.03),
+                : unselectedBg,
             borderRadius: BorderRadius.circular(UIConstants.radiusSm),
             border: Border.all(
               color: isSelected
                   ? kCyan.withValues(alpha: 0.40)
-                  : Colors.white.withValues(alpha: 0.08),
+                  : unselectedBorder,
             ),
           ),
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? kCyan : kMuted,
+              color: isSelected ? kCyan : unselectedText,
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             ),
@@ -132,13 +153,26 @@ class LeaderboardFilterChip extends StatelessWidget {
 }
 
 class UserRankBanner extends StatelessWidget {
-  const UserRankBanner({super.key, required this.rank, required this.label});
+  const UserRankBanner({
+    super.key,
+    required this.rank,
+    required this.label,
+    this.score,
+    this.isPvp = false,
+  });
 
   final int rank;
   final String label;
+  final int? score;
+  final bool isPvp;
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final textColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.70),
+        light: kTextSecondaryLight);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -181,15 +215,30 @@ class UserRankBanner extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.70),
+                color: textColor,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
+          if (score != null)
+            Text(
+              isPvp ? '$score ELO' : _formatScore(score!),
+              style: const TextStyle(
+                color: kCyan,
+                fontSize: 14,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
         ],
       ),
     );
+  }
+
+  String _formatScore(int v) {
+    if (v >= 1000000) return '${(v / 1000000).toStringAsFixed(1)}M';
+    if (v >= 1000) return '${(v / 1000).toStringAsFixed(1)}K';
+    return v.toString();
   }
 }
 
@@ -199,11 +248,15 @@ class ScoreRow extends StatelessWidget {
     required this.rank,
     required this.username,
     required this.score,
+    this.isCurrentUser = false,
+    this.isPvp = false,
   });
 
   final int rank;
   final String username;
   final int score;
+  final bool isCurrentUser;
+  final bool isPvp;
 
   Color get _rankColor {
     if (rank == 1) return kGold;
@@ -219,21 +272,45 @@ class ScoreRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final defaultTextColor = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.80),
+        light: kTextPrimaryLight);
+    final topTextColor = resolveColor(brightness,
+        dark: Colors.white, light: kTextPrimaryLight);
+    final defaultBg = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.03),
+        light: kCardBgLight);
+    final defaultBorder = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.06),
+        light: kCardBorderLight);
+    final mutedColor = resolveColor(brightness,
+        dark: kMuted, light: kMutedLight);
+
+    final Color bgColor;
+    final Color borderColor;
+    if (isCurrentUser) {
+      bgColor = kCyan.withValues(alpha: 0.08);
+      borderColor = kCyan.withValues(alpha: 0.30);
+    } else if (rank <= 3) {
+      bgColor = _rankColor.withValues(alpha: 0.06);
+      borderColor = _rankColor.withValues(alpha: 0.22);
+    } else {
+      bgColor = defaultBg;
+      borderColor = defaultBorder;
+    }
+
+    final scoreText = isPvp ? '$score ELO' : _formatScore(score);
+
     return Semantics(
-      label: '#$rank $username ${_formatScore(score)}',
+      label: '#$rank $username $scoreText',
       child: Container(
         margin: const EdgeInsets.only(bottom: 6),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         decoration: BoxDecoration(
-          color: rank <= 3
-              ? _rankColor.withValues(alpha: 0.06)
-              : Colors.white.withValues(alpha: 0.03),
+          color: bgColor,
           borderRadius: BorderRadius.circular(UIConstants.radiusTile),
-          border: Border.all(
-            color: rank <= 3
-                ? _rankColor.withValues(alpha: 0.22)
-                : Colors.white.withValues(alpha: 0.06),
-          ),
+          border: Border.all(color: borderColor),
         ),
         child: Row(
           children: [
@@ -244,8 +321,8 @@ class ScoreRow extends StatelessWidget {
                   : Text(
                       '$rank',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: kMuted,
+                      style: TextStyle(
+                        color: mutedColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                       ),
@@ -253,22 +330,57 @@ class ScoreRow extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                username,
-                style: TextStyle(
-                  color: rank <= 3
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.80),
-                  fontSize: 14,
-                  fontWeight: rank <= 3 ? FontWeight.w700 : FontWeight.w500,
-                ),
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      username,
+                      style: TextStyle(
+                        color: isCurrentUser
+                            ? kCyan
+                            : rank <= 3
+                                ? topTextColor
+                                : defaultTextColor,
+                        fontSize: 14,
+                        fontWeight: (rank <= 3 || isCurrentUser)
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (isCurrentUser)
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(start: 6),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: kCyan.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          'YOU',
+                          style: TextStyle(
+                            color: kCyan,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
             Text(
-              _formatScore(score),
+              scoreText,
               style: TextStyle(
-                color: rank <= 3 ? _rankColor : kMuted,
+                color: isCurrentUser
+                    ? kCyan
+                    : rank <= 3
+                        ? _rankColor
+                        : mutedColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/models/game_mode.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
@@ -31,6 +32,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   bool _loading = true;
   List<LeaderboardEntry> _scores = [];
   int? _userRank;
+  int? _userScore;
 
   @override
   void initState() {
@@ -51,8 +53,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   bool get _isPvpTab => _tabController.index == 2;
 
   String get _currentMode => switch (_tabController.index) {
-        0 => 'classic',
-        1 => 'timetrial',
+        0 => GameMode.classic.name,
+        1 => GameMode.timeTrial.name,
         _ => 'pvp',
       };
 
@@ -64,13 +66,18 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
       if (!mounted) return;
       final userId = ref.read(currentUserIdProvider);
       int? pvpRank;
+      int? pvpScore;
       if (userId != null) {
         final idx = scores.indexWhere((e) => e.userId == userId);
-        if (idx >= 0) pvpRank = idx + 1;
+        if (idx >= 0) {
+          pvpRank = idx + 1;
+          pvpScore = scores[idx].score;
+        }
       }
       setState(() {
         _scores = scores;
         _userRank = pvpRank;
+        _userScore = pvpScore;
         _loading = false;
       });
     } else {
@@ -83,9 +90,18 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
             .getUserRank(mode: _currentMode, weekly: _weekly),
       ]);
       if (!mounted) return;
+      final fetchedScores = results[0] as List<LeaderboardEntry>;
+      final fetchedRank = results[1] as int?;
+      final userId = ref.read(currentUserIdProvider);
+      int? fetchedScore;
+      if (userId != null) {
+        final match = fetchedScores.where((e) => e.userId == userId);
+        if (match.isNotEmpty) fetchedScore = match.first.score;
+      }
       setState(() {
-        _scores = results[0] as List<LeaderboardEntry>;
-        _userRank = results[1] as int?;
+        _scores = fetchedScores;
+        _userRank = fetchedRank;
+        _userScore = fetchedScore;
         _loading = false;
       });
     }
@@ -176,7 +192,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: hPadding),
                   child: UserRankBanner(
-                      rank: _userRank!, label: l.leaderboardYourRank),
+                    rank: _userRank!,
+                    label: l.leaderboardYourRank,
+                    score: _userScore,
+                    isPvp: _isPvpTab,
+                  ),
                 ),
               const SizedBox(height: 8),
               Expanded(
@@ -199,10 +219,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                             itemBuilder: (context, index) {
                               final entry = _scores[index];
                               final rank = index + 1;
+                              final userId =
+                                  ref.read(currentUserIdProvider);
                               return ScoreRow(
                                 rank: rank,
                                 username: entry.username,
                                 score: entry.score,
+                                isCurrentUser: userId != null &&
+                                    entry.userId == userId,
+                                isPvp: _isPvpTab,
                               )
                                   .animateOrSkip(
                                       reduceMotion: shouldReduceMotion(context),
