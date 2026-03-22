@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../core/constants/tips.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
 import '../../providers/audio_provider.dart';
@@ -59,6 +63,8 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
   bool _promptDismissed = false;
   bool _promptShownMarked = false;
   String? _selectedTipKey;
+  late final String _worldTipKey =
+      kWorldTips[Random().nextInt(kWorldTips.length)];
 
   // Stat records (loaded once, before saving new values)
   int _prevLinesRecord = 0;
@@ -116,6 +122,14 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
     repo.incrementTipShown('combo');
     return 'combo';
   }
+
+  String _resolveTip(String key, AppStrings l) => switch (key) {
+        'tipWorldColors' => l.tipWorldColors,
+        'tipWorldSynthesis' => l.tipWorldSynthesis,
+        'tipWorldJel' => l.tipWorldJel,
+        'tipWorldIsland' => l.tipWorldIsland,
+        _ => '',
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -284,7 +298,25 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                                   curve: Curves.easeOutBack,
                                 ),
                           ],
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 24),
+                          // Dünya tip'i — atmosferik, dikkat çekmeyen
+                          SizedBox(
+                            width: 260,
+                            child: Text(
+                              _resolveTip(_worldTipKey, l),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: kMuted.withValues(alpha: 0.55),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.italic,
+                                height: 1.4,
+                              ),
+                            ),
+                          )
+                              .animateOrSkip(reduceMotion: rm, delay: 320.ms)
+                              .fadeIn(duration: 400.ms),
+                          const SizedBox(height: 16),
                           // İstatistikler
                           GameOverStatRow(
                             label: l.gameOverGridFill,
