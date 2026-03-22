@@ -129,13 +129,14 @@ class RemoteRepository implements IRemoteRepository {
 
   // ── PvP ELO Sıralama ───────────────────────────────────────────────────
   /// ELO bazli PvP sıralamasını döner.
+  /// `elo_leaderboard_view` SECURITY DEFINER view kullanır —
+  /// profiles RLS'i bypass ederek tüm kullanıcıları gösterir.
   Future<List<LeaderboardEntry>> getEloLeaderboard({int limit = 50}) async {
     if (!isConfigured) return [];
     try {
       final data = await _client
-          .from('profiles')
+          .from('elo_leaderboard_view')
           .select('id, username, elo')
-          .gt('elo', 0)
           .order('elo', ascending: false)
           .limit(limit);
 

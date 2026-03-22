@@ -229,7 +229,7 @@ CREATE POLICY meta_states_delete ON meta_states
 CREATE OR REPLACE VIEW leaderboard_view
   WITH (security_invoker = false)
 AS
-SELECT
+SELECT DISTINCT ON (s.user_id, s.mode)
   s.id,
   s.user_id,
   s.mode,
@@ -237,9 +237,29 @@ SELECT
   s.created_at,
   p.username
 FROM scores s
-LEFT JOIN profiles p ON p.id = s.user_id;
+LEFT JOIN profiles p ON p.id = s.user_id
+ORDER BY s.user_id, s.mode, s.score DESC;
 
 GRANT SELECT ON leaderboard_view TO anon, authenticated;
+
+-- ─── ELO Leaderboard View (SECURITY DEFINER) ──────────────────────────────
+-- profiles RLS auth.uid() = id blocks cross-user reads.
+-- This view bypasses RLS for PvP ELO leaderboard display.
+
+CREATE OR REPLACE VIEW elo_leaderboard_view
+  WITH (security_invoker = false)
+AS
+SELECT
+  p.id,
+  p.username,
+  p.elo,
+  p.pvp_wins,
+  p.pvp_losses
+FROM profiles p
+WHERE p.elo > 0
+ORDER BY p.elo DESC;
+
+GRANT SELECT ON elo_leaderboard_view TO anon, authenticated;
 
 -- =============================================================================
 -- RPC Fonksiyonlari
@@ -364,6 +384,74 @@ BEGIN
   RETURN v_new_count;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ─── User Rank Hesaplama ────────────────────────────────────────────────
+-- Kullanicinin belirli moddaki siralamasini doner.
+-- Weekly filtre hem kendi skoruna hem rank hesabina uygulanir.
+-- Unique kullanici bazli saydigi icin rank dogru hesaplanir.
+
+CREATE OR REPLACE FUNCTION get_user_rank(
+  p_mode TEXT,
+  p_weekly BOOLEAN DEFAULT FALSE
+)
+RETURNS INTEGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_user_id UUID;
+  v_top_score INTEGER;
+  v_rank INTEGER;
+BEGIN
+  v_user_id := auth.uid();
+  IF v_user_id IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  IF p_weekly THEN
+    SELECT score INTO v_top_score
+    FROM scores
+    WHERE user_id = v_user_id
+      AND mode = p_mode
+      AND created_at >= NOW() - INTERVAL '7 days'
+    ORDER BY score DESC
+    LIMIT 1;
+  ELSE
+    SELECT score INTO v_top_score
+    FROM scores
+    WHERE user_id = v_user_id AND mode = p_mode
+    ORDER BY score DESC
+    LIMIT 1;
+  END IF;
+
+  IF v_top_score IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  IF p_weekly THEN
+    SELECT COUNT(*) + 1 INTO v_rank
+    FROM (
+      SELECT DISTINCT user_id
+      FROM scores
+      WHERE mode = p_mode
+        AND score > v_top_score
+        AND created_at >= NOW() - INTERVAL '7 days'
+    ) AS unique_users;
+  ELSE
+    SELECT COUNT(*) + 1 INTO v_rank
+    FROM (
+      SELECT DISTINCT user_id
+      FROM scores
+      WHERE mode = p_mode
+        AND score > v_top_score
+    ) AS unique_users;
+  END IF;
+
+  RETURN v_rank;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION get_user_rank(TEXT, BOOLEAN) TO authenticated;
 
 -- ─── GDPR Kullanici Veri Silme ───────────────────────────────────────────
 
