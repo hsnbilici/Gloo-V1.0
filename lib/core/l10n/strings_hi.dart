@@ -121,6 +121,8 @@ class StringsHi extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'नया रिकॉर्ड!';
+  @override
   String get navLeaderboard => 'लीडरबोर्ड';
   @override
   String get navShop => 'दुकान';

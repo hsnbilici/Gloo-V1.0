@@ -35,3 +35,8 @@ final eloProvider = FutureProvider<int>((ref) async {
   final repo = await ref.watch(localRepositoryProvider.future);
   return await repo.getElo();
 });
+
+final maxCompletedLevelProvider = FutureProvider<int>((ref) async {
+  final repo = await ref.watch(localRepositoryProvider.future);
+  return repo.getMaxCompletedLevel();
+});

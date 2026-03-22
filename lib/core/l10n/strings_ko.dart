@@ -121,6 +121,8 @@ class StringsKo extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => '새 기록!';
+  @override
   String get navLeaderboard => '순위';
   @override
   String get navShop => '상점';

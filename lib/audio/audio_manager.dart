@@ -60,16 +60,19 @@ class AudioManager {
     String path, {
     double volume = 1.0,
     bool pitchVariation = true,
+    double? speed,
   }) async {
     if (!_sfxEnabled) return;
     try {
       final player = _getNextPlayer();
       await player.setVolume(AudioConfig.sfxVolume * volume);
-      if (pitchVariation) {
-        final speed = AudioConfig.pitchVarianceMin +
+      if (speed != null) {
+        await player.setSpeed(speed);
+      } else if (pitchVariation) {
+        final s = AudioConfig.pitchVarianceMin +
             (AudioConfig.pitchVarianceMax - AudioConfig.pitchVarianceMin) *
                 _random.nextDouble();
-        await player.setSpeed(speed);
+        await player.setSpeed(s);
       } else {
         await player.setSpeed(1.0);
       }

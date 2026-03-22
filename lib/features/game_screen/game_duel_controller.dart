@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -121,13 +120,14 @@ class GameDuelController {
       ref.read(duelProvider.notifier).updateOpponentScore(botScore);
     });
 
-    // Bot hafif engeller gonderir (15-20sn aralikla)
-    botObstacleTimer = Timer.periodic(const Duration(seconds: 17), (_) {
+    // Bot engel zorluğu — difficulty'ye göre ölçeklenir
+    final obstacleCount = (1 + (difficulty * 3)).round().clamp(1, 4);
+    final obstacleInterval = (20 - (difficulty * 8)).round().clamp(12, 20);
+    botObstacleTimer = Timer.periodic(Duration(seconds: obstacleInterval), (_) {
       if (game.status != GameStatus.playing) return;
-      final count = 1 + Random().nextInt(2);
       _applyIncomingObstacle(ObstaclePacket(
         type: ObstacleType.ice,
-        count: count,
+        count: obstacleCount,
       ));
     });
   }

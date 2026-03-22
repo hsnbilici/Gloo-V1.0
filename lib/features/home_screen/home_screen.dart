@@ -14,6 +14,7 @@ import '../../core/layout/responsive.dart';
 import '../../core/models/game_mode.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
+import '../../game/levels/level_progression.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -254,7 +255,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     curve: Curves.easeOutCubic,
                                   ),
                               _ClassicScoreChip(l: l, brightness: brightness)
-                                  .animateOrSkip(reduceMotion: rm, delay: 100.ms)
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 100.ms)
                                   .fadeIn(duration: 300.ms),
                               const SizedBox(height: 10),
                               ModeCard(
@@ -336,6 +338,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     duration: 350.ms,
                                     curve: Curves.easeOutCubic,
                                   ),
+                              _LevelProgressChip(
+                                l: l,
+                                brightness: brightness,
+                              ),
                               const SizedBox(height: 10),
                               ModeCard(
                                 label: l.modeDuelName,
@@ -354,6 +360,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     duration: 350.ms,
                                     curve: Curves.easeOutCubic,
                                   ),
+                              _DuelEloChip(brightness: brightness),
                               const SizedBox(height: 8),
                             ],
                           ),
@@ -400,10 +407,11 @@ class _ClassicScoreChip extends ConsumerWidget {
 
     if (lastScore == 0 && highScore == 0) return const SizedBox.shrink();
 
-    final isSoClose = lastScore > 0 &&
+    final isNewBest = lastScore > 0 && highScore > 0 && lastScore >= highScore;
+    final isSoClose = !isNewBest &&
+        lastScore > 0 &&
         highScore > 0 &&
-        lastScore >= highScore * 0.8 &&
-        lastScore < highScore;
+        lastScore >= highScore * 0.8;
 
     final textColor = resolveColor(
       brightness,
@@ -420,7 +428,11 @@ class _ClassicScoreChip extends ConsumerWidget {
             Text(
               '${l.homeScoreLast}: ${_fmt(lastScore)}',
               style: AppTextStyles.caption.copyWith(
-                color: isSoClose ? kAmber : textColor,
+                color: isNewBest
+                    ? kGold
+                    : isSoClose
+                        ? kAmber
+                        : textColor,
               ),
             ),
           ],
@@ -438,7 +450,16 @@ class _ClassicScoreChip extends ConsumerWidget {
               ),
             ),
           ],
-          if (isSoClose) ...[
+          if (isNewBest) ...[
+            const SizedBox(width: 6),
+            Text(
+              l.homeScoreNewBest,
+              style: AppTextStyles.caption.copyWith(
+                color: kGold,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ] else if (isSoClose) ...[
             const SizedBox(width: 6),
             Text(
               l.homeScoreBeatIt,
@@ -458,5 +479,65 @@ class _ClassicScoreChip extends ConsumerWidget {
       return '${(value ~/ 1000)},${(value % 1000).toString().padLeft(3, '0')}';
     }
     return value.toString();
+  }
+}
+
+// ─── Level progress chip ─────────────────────────────────────────────────────
+
+class _LevelProgressChip extends ConsumerWidget {
+  const _LevelProgressChip({
+    required this.l,
+    required this.brightness,
+  });
+
+  final AppStrings l;
+  final Brightness brightness;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final maxLevel = ref.watch(maxCompletedLevelProvider).valueOrNull ?? 0;
+    if (maxLevel == 0) return const SizedBox.shrink();
+
+    final textColor = resolveColor(
+      brightness,
+      dark: kMuted,
+      light: kTextSecondaryLight,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, left: 4),
+      child: Text(
+        '${l.levelLabel} $maxLevel/${LevelProgression.totalPredefinedLevels}',
+        style: AppTextStyles.caption.copyWith(color: textColor),
+      ),
+    );
+  }
+}
+
+// ─── Duel ELO chip ───────────────────────────────────────────────────────────
+
+class _DuelEloChip extends ConsumerWidget {
+  const _DuelEloChip({required this.brightness});
+
+  final Brightness brightness;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final elo = ref.watch(eloProvider).valueOrNull ?? 0;
+    if (elo == 0) return const SizedBox.shrink();
+
+    final textColor = resolveColor(
+      brightness,
+      dark: kMuted,
+      light: kTextSecondaryLight,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, left: 4),
+      child: Text(
+        '$elo ELO',
+        style: AppTextStyles.caption.copyWith(color: textColor),
+      ),
+    );
   }
 }

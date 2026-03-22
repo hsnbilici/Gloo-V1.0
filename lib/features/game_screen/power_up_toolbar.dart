@@ -169,6 +169,7 @@ class _PowerUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canUse = powerUpSystem.canUse(type);
+    final def = kPowerUpDefs[type]!;
     final effectiveCost = powerUpSystem.getEffectiveCost(type);
     final cooldown = powerUpSystem.getCooldown(type);
     final colors = kPowerUpColors[type]!;
@@ -285,14 +286,40 @@ class _PowerUpButton extends StatelessWidget {
                       width: 0.5,
                     ),
                   ),
-                  child: Text(
-                    '$effectiveCost',
-                    style: TextStyle(
-                      color: canUse ? primary : kMuted.withValues(alpha: 0.5),
-                      fontSize: 9,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
+                  child: effectiveCost > def.cost
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${def.cost}',
+                              style: const TextStyle(
+                                decoration: TextDecoration.lineThrough,
+                                fontSize: 8,
+                                color: kMuted,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '$effectiveCost',
+                              style: const TextStyle(
+                                fontSize: 9,
+                                color: kAmber,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          '$effectiveCost',
+                          style: TextStyle(
+                            color: canUse
+                                ? primary
+                                : kMuted.withValues(alpha: 0.5),
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                 ),
               ),
               // Cooldown overlay

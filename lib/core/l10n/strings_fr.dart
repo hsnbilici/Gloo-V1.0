@@ -121,6 +121,8 @@ class StringsFr extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'Nouveau record !';
+  @override
   String get navLeaderboard => 'Classement';
   @override
   String get navShop => 'Boutique';

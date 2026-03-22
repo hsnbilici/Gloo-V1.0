@@ -89,6 +89,7 @@ abstract class AppStrings {
   String get homeScoreLast;
   String get homeScoreBest;
   String get homeScoreBeatIt;
+  String get homeScoreNewBest;
   String get navLeaderboard;
   String get navShop;
   String get navSettings;

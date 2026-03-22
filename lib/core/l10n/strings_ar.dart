@@ -121,6 +121,8 @@ class StringsAr extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'رقم قياسي جديد!';
+  @override
   String get navLeaderboard => 'الترتيب';
   @override
   String get navShop => 'المتجر';

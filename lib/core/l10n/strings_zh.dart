@@ -121,6 +121,8 @@ class StringsZh extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => '新纪录!';
+  @override
   String get navLeaderboard => '排行榜';
   @override
   String get navShop => '商店';

@@ -29,9 +29,10 @@ class SoundBank {
     await _haptic.trigger(haptic);
   }
 
-  Future<void> onLineClear({required int lines}) async {
+  Future<void> onLineClear({required int lines, double? pitch}) async {
     await _audio.playSfx(
       lines >= 2 ? AudioPaths.lineClearCrystal : AudioPaths.lineClear,
+      speed: pitch,
     );
     await _haptic.trigger(HapticProfile.gelMergeLarge);
   }

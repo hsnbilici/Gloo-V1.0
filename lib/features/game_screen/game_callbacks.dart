@@ -301,9 +301,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     game.onCascadeStep = (step, linesCleared) {
       final rm = mounted ? MediaQuery.disableAnimationsOf(context) : false;
       final delay = rm ? 0 : step * 180;
+      final pitch = min(1.0 + (step - 1) * 0.08, 1.3);
       Future.delayed(Duration(milliseconds: delay), () {
         if (!mounted) return;
-        soundBank.onLineClear(lines: linesCleared);
+        soundBank.onLineClear(lines: linesCleared, pitch: pitch);
       });
     };
 

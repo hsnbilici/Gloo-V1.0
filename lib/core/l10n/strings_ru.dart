@@ -121,6 +121,8 @@ class StringsRu extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'Новый рекорд!';
+  @override
   String get navLeaderboard => 'Рейтинг';
   @override
   String get navShop => 'Магазин';

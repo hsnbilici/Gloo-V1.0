@@ -121,6 +121,8 @@ class StringsJa extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => '新記録!';
+  @override
   String get navLeaderboard => 'ランキング';
   @override
   String get navShop => 'ショップ';

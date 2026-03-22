@@ -121,6 +121,8 @@ class StringsPt extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'Novo recorde!';
+  @override
   String get navLeaderboard => 'Ranking';
   @override
   String get navShop => 'Loja';

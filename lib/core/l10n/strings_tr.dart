@@ -121,6 +121,8 @@ class StringsTr extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Geçebilir misin?';
   @override
+  String get homeScoreNewBest => 'Yeni rekor!';
+  @override
   String get navLeaderboard => 'Sıralama';
   @override
   String get navShop => 'Mağaza';

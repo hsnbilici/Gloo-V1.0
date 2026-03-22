@@ -121,6 +121,8 @@ class StringsEn extends AppStrings {
   @override
   String get homeScoreBeatIt => 'Beat it?';
   @override
+  String get homeScoreNewBest => 'New best!';
+  @override
   String get navLeaderboard => 'Leaderboard';
   @override
   String get navShop => 'Shop';
