@@ -107,20 +107,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
             final key = (r, c);
             final existing = cells[key];
             if (existing != null) {
-              cells[key] = CellRenderData(
-                color: existing.color,
-                type: existing.type,
-                iceLayer: existing.iceLayer,
-                lockedColor: existing.lockedColor,
-                isPreview: existing.isPreview,
-                previewValid: existing.previewValid,
-                previewSlotColor: existing.previewSlotColor,
-                isRecentlyPlaced: existing.isRecentlyPlaced,
-                waveDistance: existing.waveDistance,
-                isInteractive: existing.isInteractive,
-                isCompletionPreview: true,
-                isSynthesisResult: existing.isSynthesisResult,
-              );
+              cells[key] = existing.copyWith(isCompletionPreview: true);
             }
           }
         }
@@ -143,21 +130,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
           final key = (r, c);
           final existing = cells[key];
           if (existing != null) {
-            cells[key] = CellRenderData(
-              color: existing.color,
-              type: existing.type,
-              iceLayer: existing.iceLayer,
-              lockedColor: existing.lockedColor,
-              isPreview: existing.isPreview,
-              previewValid: existing.previewValid,
-              previewSlotColor: existing.previewSlotColor,
-              isRecentlyPlaced: existing.isRecentlyPlaced,
-              waveDistance: existing.waveDistance,
-              isInteractive: existing.isInteractive,
-              isNearlyFullRow: true,
-              isCompletionPreview: existing.isCompletionPreview,
-              isSynthesisResult: existing.isSynthesisResult,
-            );
+            cells[key] = existing.copyWith(isNearlyFullRow: true);
           }
         }
       }

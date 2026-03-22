@@ -35,6 +35,38 @@ class CellRenderData {
   final bool isCompletionPreview;
   final bool isSynthesisResult;
 
+  CellRenderData copyWith({
+    GelColor? color,
+    CellType? type,
+    int? iceLayer,
+    GelColor? lockedColor,
+    bool? isPreview,
+    bool? previewValid,
+    GelColor? previewSlotColor,
+    bool? isRecentlyPlaced,
+    int? waveDistance,
+    bool? isInteractive,
+    bool? isNearlyFullRow,
+    bool? isCompletionPreview,
+    bool? isSynthesisResult,
+  }) {
+    return CellRenderData(
+      color: color ?? this.color,
+      type: type ?? this.type,
+      iceLayer: iceLayer ?? this.iceLayer,
+      lockedColor: lockedColor ?? this.lockedColor,
+      isPreview: isPreview ?? this.isPreview,
+      previewValid: previewValid ?? this.previewValid,
+      previewSlotColor: previewSlotColor ?? this.previewSlotColor,
+      isRecentlyPlaced: isRecentlyPlaced ?? this.isRecentlyPlaced,
+      waveDistance: waveDistance ?? this.waveDistance,
+      isInteractive: isInteractive ?? this.isInteractive,
+      isNearlyFullRow: isNearlyFullRow ?? this.isNearlyFullRow,
+      isCompletionPreview: isCompletionPreview ?? this.isCompletionPreview,
+      isSynthesisResult: isSynthesisResult ?? this.isSynthesisResult,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

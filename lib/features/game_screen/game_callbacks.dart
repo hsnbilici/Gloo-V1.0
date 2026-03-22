@@ -413,6 +413,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           synthesisBlooms.removeRange(0, synthesisBlooms.length - 20);
         }
         // Sentez hücresine geçici glow efekti — 600ms sonra temizlenir
+        // Batch clear: tüm sentez hücreleri son sentezden 600ms sonra birlikte temizlenir.
+        // Per-cell timer yaklaşımı karmaşıklık ekler, mevcut UX yeterli.
         synthesisGlowCells.add(position);
         synthesisGlowTimer?.cancel();
         synthesisGlowTimer = Timer(const Duration(milliseconds: 600), () {

@@ -600,7 +600,7 @@ class _SynthesisPulseCellState extends State<SynthesisPulseCell>
   AnimationController _ensureController() {
     return _ctrl ??= AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: AnimationDurations.synthesisPulse,
     );
   }
 
@@ -628,7 +628,7 @@ class _SynthesisPulseCellState extends State<SynthesisPulseCell>
         final t = _ctrl!.value;
         // 0→0.5: scale up, 0.5→1: scale down
         final curve = t < 0.5 ? t * 2 : 2 - t * 2;
-        final scale = 1.0 + 0.12 * Curves.easeOutBack.transform(curve);
+        final scale = 1.0 + 0.08 * Curves.easeOutBack.transform(curve);
         return Transform.scale(scale: scale, child: widget.child);
       },
     );

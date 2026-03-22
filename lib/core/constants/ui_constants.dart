@@ -174,6 +174,9 @@ abstract final class AnimationDurations {
   /// Screen shake, ambient effect default.
   static const Duration medium = Duration(milliseconds: 300);
 
+  /// Synthesis pulse cell scale animation.
+  static const Duration synthesisPulse = Duration(milliseconds: 300);
+
   /// Dialog show/hide transitions.
   static const Duration dialog = Duration(milliseconds: 380);
 
