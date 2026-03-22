@@ -98,8 +98,29 @@ void main() {
   // ─── Quest ve QuestType veri modeli ─────────────────────────────────────────
 
   group('Quest data model', () {
-    test('kDailyQuestPool has at least 3 quests', () {
-      expect(kDailyQuestPool.length, greaterThanOrEqualTo(3));
+    test('kDailyQuestPool has exactly 12 quests', () {
+      expect(kDailyQuestPool.length, 12);
+    });
+
+    test('all quest ids are unique across daily and weekly pools', () {
+      final allIds = [
+        ...kDailyQuestPool.map((q) => q.id),
+        ...kWeeklyQuestPool.map((q) => q.id),
+      ];
+      expect(allIds.toSet().length, allIds.length,
+          reason: 'duplicate quest id found');
+    });
+
+    test('Quest constructor requires id parameter', () {
+      const q = Quest(
+        id: 'test_id',
+        type: QuestType.clearLines,
+        description: 'test',
+        targetCount: 1,
+        xpReward: 10,
+        gelReward: 1,
+      );
+      expect(q.id, 'test_id');
     });
 
     test('kWeeklyQuestPool has at least 5 quests', () {
