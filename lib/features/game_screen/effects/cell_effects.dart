@@ -574,3 +574,63 @@ class _SynthesisBloomPainter extends CustomPainter {
   @override
   bool shouldRepaint(_SynthesisBloomPainter old) => old.progress != progress;
 }
+
+// ─── Sentez Pulse ─────────────────────────────────────────────────────────
+
+/// Sentez sonucu hucresinde tek seferlik scale pulse animasyonu oynatir.
+/// [isActive] true'ya gectiginde ileri dogru calisiyor; reduce motion'da atlar.
+class SynthesisPulseCell extends StatefulWidget {
+  const SynthesisPulseCell({
+    super.key,
+    required this.isActive,
+    required this.child,
+  });
+
+  final bool isActive;
+  final Widget child;
+
+  @override
+  State<SynthesisPulseCell> createState() => _SynthesisPulseCellState();
+}
+
+class _SynthesisPulseCellState extends State<SynthesisPulseCell>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _ctrl;
+
+  AnimationController _ensureController() {
+    return _ctrl ??= AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void didUpdateWidget(SynthesisPulseCell old) {
+    super.didUpdateWidget(old);
+    if (widget.isActive && !old.isActive) {
+      _ensureController().forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!widget.isActive || _ctrl == null) return widget.child;
+    if (shouldReduceMotion(context)) return widget.child;
+    return AnimatedBuilder(
+      animation: _ctrl!,
+      builder: (_, __) {
+        final t = _ctrl!.value;
+        // 0→0.5: scale up, 0.5→1: scale down
+        final curve = t < 0.5 ? t * 2 : 2 - t * 2;
+        final scale = 1.0 + 0.12 * Curves.easeOutBack.transform(curve);
+        return Transform.scale(scale: scale, child: widget.child);
+      },
+    );
+  }
+}

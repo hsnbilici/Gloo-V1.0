@@ -10,6 +10,7 @@ import '../../core/utils/motion_utils.dart';
 import '../../game/world/cell_type.dart';
 import '../../providers/grid_state_provider.dart';
 import '../../providers/locale_provider.dart';
+import 'effects/cell_effects.dart';
 import 'gel_cell_painter.dart';
 
 /// Tek bir izgara hucresini render eden widget.
@@ -134,6 +135,7 @@ class GameCellWidget extends ConsumerWidget {
             borderRadius: UIConstants.radiusXs,
             breathAnimation: breathCtrl,
             breathPhase: (row * cols + col) * 0.12,
+            isGlowing: data.isSynthesisResult,
           ),
           child: colorBlindMode
               ? CustomPaint(
@@ -174,6 +176,13 @@ class GameCellWidget extends ConsumerWidget {
           child: cellContent,
         );
       }
+
+      // Protokol: Sentez pulse efekti
+      cellContent = SynthesisPulseCell(
+        key: ValueKey(('synth_pulse', row, col)),
+        isActive: data.isSynthesisResult,
+        child: cellContent,
+      );
     } else if (data.isPreview) {
       // PREVIEW HUCRE
       final base = data.previewSlotColor?.displayColor ?? Colors.white;
@@ -258,6 +267,29 @@ class GameCellWidget extends ConsumerWidget {
             children: [
               cellContent,
               if (typeOverlay != null) Positioned.fill(child: typeOverlay),
+              if (data.isSynthesisResult)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusXs),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.70),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: (data.color?.displayColor ?? Colors.white)
+                                .withValues(alpha: 0.50),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               if (data.isCompletionPreview)
                 Positioned.fill(
                   child: Container(
