@@ -691,4 +691,15 @@ class StringsAr extends AppStrings {
   String get personalityMaroon => 'القوي';
   @override
   String get personalityBrown => 'الوفي';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'الشخصيات';
+  @override
+  String get sectionCharacter => 'الشخصية';
+  @override
+  String get sectionTalents => 'المواهب';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO مجموعة: $found/$total';
 }

@@ -693,4 +693,15 @@ class StringsRu extends AppStrings {
   String get personalityMaroon => 'Стойкий';
   @override
   String get personalityBrown => 'Верный';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'ЛИЧНОСТИ';
+  @override
+  String get sectionCharacter => 'ПЕРСОНАЖ';
+  @override
+  String get sectionTalents => 'ТАЛАНТЫ';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO Коллекция: $found/$total';
 }

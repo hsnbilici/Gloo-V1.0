@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'resource_manager.dart';
 
 // ─── Gloo Adası — Base Building ──────────────────────────────────────────────
@@ -30,7 +32,7 @@ class Building {
   final String? description;
 
   /// Belirtilen seviyeye yükseltme maliyeti.
-  int costForLevel(int level) => (baseCost * (costMultiplier * level)).round();
+  int costForLevel(int level) => (baseCost * pow(costMultiplier, level)).round();
 }
 
 /// Tüm ada binaları.

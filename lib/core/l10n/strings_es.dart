@@ -694,4 +694,15 @@ class StringsEs extends AppStrings {
   String get personalityMaroon => 'Fuerte';
   @override
   String get personalityBrown => 'Leal';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'PERSONALIDADES';
+  @override
+  String get sectionCharacter => 'PERSONAJE';
+  @override
+  String get sectionTalents => 'TALENTOS';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO Colección: $found/$total';
 }

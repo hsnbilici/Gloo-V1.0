@@ -690,4 +690,15 @@ class StringsFr extends AppStrings {
   String get personalityMaroon => 'Fort';
   @override
   String get personalityBrown => 'Loyal';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'PERSONNALITÉS';
+  @override
+  String get sectionCharacter => 'PERSONNAGE';
+  @override
+  String get sectionTalents => 'TALENTS';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO Collection: $found/$total';
 }

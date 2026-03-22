@@ -687,4 +687,15 @@ class StringsTr extends AppStrings {
   String get personalityMaroon => 'Güçlü';
   @override
   String get personalityBrown => 'Sadık';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'KİŞİLİKLER';
+  @override
+  String get sectionCharacter => 'KARAKTER';
+  @override
+  String get sectionTalents => 'YETENEKLER';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO Koleksiyon: $found/$total';
 }

@@ -682,4 +682,15 @@ class StringsJa extends AppStrings {
   String get personalityMaroon => '勇者';
   @override
   String get personalityBrown => '忠実者';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => '性格';
+  @override
+  String get sectionCharacter => 'キャラクター';
+  @override
+  String get sectionTalents => '才能';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO コレクション: $found/$total';
 }

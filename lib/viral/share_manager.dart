@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../core/constants/app_constants.dart';
 import '../core/constants/color_constants.dart';
 import '../core/l10n/app_strings.dart';
 import '../services/analytics_service.dart';
@@ -86,7 +87,7 @@ class ShareManager {
     const total = 8; // sentez rengi sayısı (kColorMixingTable değerleri)
     final found = discoveredColors.length;
     final emojis = discoveredColors.map(_colorEmoji).join(' ');
-    final text = 'GLOO Collection: $found/$total\n$emojis\n#GlooGame';
+    final text = '${l.shareCollectionCaption(found, total)}\n$emojis\n#GlooGame';
     _analytics.logShare(mode: 'collection');
     await Share.share(text);
   }
@@ -114,7 +115,7 @@ class ShareManager {
     final overflow = filledRows.length - shownRows.length;
 
     final buffer = StringBuffer();
-    buffer.writeln('GLOO Daily $starStr');
+    buffer.writeln('$kAppName Daily $starStr');
     for (final row in shownRows) {
       buffer.writeln(row.map((c) => c != null ? _colorEmoji(c) : '⬛').join());
     }

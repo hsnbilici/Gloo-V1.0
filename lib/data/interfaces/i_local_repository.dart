@@ -206,7 +206,7 @@ abstract class ILocalRepository {
 
   // ─── Tema Modu ───────────────────────────────────────────────────────────
 
-  Future<ThemeMode> getThemeMode();
+  ThemeMode getThemeMode();
 
   Future<void> setThemeMode(ThemeMode mode);
 

@@ -152,9 +152,9 @@ void main() {
   group('Building', () {
     test('costForLevel calculates correctly', () {
       final building = kBuildings[BuildingType.gelFactory]!;
-      // baseCost=50, costMultiplier=1.5
-      expect(building.costForLevel(1), (50 * 1.5 * 1).round());
-      expect(building.costForLevel(2), (50 * 1.5 * 2).round());
+      // baseCost=50, costMultiplier=1.5, exponential: baseCost * pow(multiplier, level)
+      expect(building.costForLevel(1), (50 * 1.5).round()); // 75
+      expect(building.costForLevel(2), (50 * 1.5 * 1.5).round()); // 113
     });
 
     test('all 5 building types defined', () {

@@ -57,7 +57,7 @@ class SettingsRepository {
 
   // ─── Tema Modu ──────────────────────────────────────────────────────────
 
-  Future<ThemeMode> getThemeMode() async {
+  ThemeMode getThemeMode() {
     final value = _prefs.getString('theme_mode');
     return switch (value) {
       'light' => ThemeMode.light,

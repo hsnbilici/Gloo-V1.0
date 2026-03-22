@@ -28,10 +28,10 @@ void main() {
       final repo = LocalRepository(prefs, secureStorage: FakeSecureStorage());
 
       await repo.setThemeMode(ThemeMode.light);
-      expect(await repo.getThemeMode(), ThemeMode.light);
+      expect(repo.getThemeMode(), ThemeMode.light);
 
       await repo.setThemeMode(ThemeMode.dark);
-      expect(await repo.getThemeMode(), ThemeMode.dark);
+      expect(repo.getThemeMode(), ThemeMode.dark);
     });
 
     test('returns dark when no value persisted', () async {
@@ -39,7 +39,7 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       final repo = LocalRepository(prefs, secureStorage: FakeSecureStorage());
 
-      expect(await repo.getThemeMode(), ThemeMode.dark);
+      expect(repo.getThemeMode(), ThemeMode.dark);
     });
   });
 }

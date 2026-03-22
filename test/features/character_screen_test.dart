@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/data/local/local_repository.dart';
 import 'package:gloo/features/character/character_screen.dart';
 import 'package:gloo/providers/user_provider.dart';
@@ -39,11 +40,12 @@ void main() {
       expect(find.byType(CharacterScreen), findsOneWidget);
     });
 
-    testWidgets('shows KARAKTER title', (tester) async {
+    testWidgets('shows CHARACTER title', (tester) async {
+      final l = StringsEn();
       await tester.pumpWidget(buildCharacter());
       await tester.pumpAndSettle();
 
-      expect(find.text('KARAKTER'), findsOneWidget);
+      expect(find.text(l.sectionCharacter), findsOneWidget);
     });
 
     testWidgets('shows back button', (tester) async {
@@ -54,10 +56,11 @@ void main() {
     });
 
     testWidgets('shows talent section header', (tester) async {
+      final l = StringsEn();
       await tester.pumpWidget(buildCharacter());
       await tester.pumpAndSettle();
 
-      expect(find.text('YETENEKLER'), findsOneWidget);
+      expect(find.text(l.sectionTalents), findsOneWidget);
     });
 
     testWidgets('shows energy display with bolt icon', (tester) async {

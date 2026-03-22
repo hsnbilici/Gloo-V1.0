@@ -124,7 +124,7 @@ Future<void> main() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final repo = LocalRepository(prefs);
-      savedThemeMode = await repo.getThemeMode();
+      savedThemeMode = repo.getThemeMode();
       // Ses paketini yükle ve AudioManager singleton'ına uygula
       AudioManager().setAudioPackage(repo.getAudioPackage());
     } catch (_) {

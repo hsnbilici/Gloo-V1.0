@@ -687,4 +687,15 @@ class StringsHi extends AppStrings {
   String get personalityMaroon => 'शक्तिशाली';
   @override
   String get personalityBrown => 'विश्वासपात्र';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => 'व्यक्तित्व';
+  @override
+  String get sectionCharacter => 'चरित्र';
+  @override
+  String get sectionTalents => 'प्रतिभा';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO संग्रह: $found/$total';
 }

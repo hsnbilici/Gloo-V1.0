@@ -1,3 +1,4 @@
+import 'dart:async' show unawaited;
 import 'dart:math' as math;
 
 import 'package:audio_session/audio_session.dart';
@@ -252,9 +253,4 @@ class AudioManager {
       await p?.dispose();
     }
   }
-}
-
-/// `unawaited` yardımcısı — lint uyarısını bastırmak için.
-void unawaited(Future<void> future) {
-  future.ignore();
 }

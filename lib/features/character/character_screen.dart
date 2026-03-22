@@ -68,7 +68,7 @@ class _PersonalitySection extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            'KİŞİLİKLER',
+            l.sectionPersonalities,
             style: TextStyle(
               color: textSecondary,
               fontSize: 11,
@@ -82,7 +82,9 @@ class _PersonalitySection extends ConsumerWidget {
           runSpacing: 8,
           children: discoveredPersonalities.map((p) {
             final paint = p.color.displayColor;
-            return Container(
+            return Semantics(
+              label: p.personalityName(l),
+              child: Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
@@ -116,6 +118,7 @@ class _PersonalitySection extends ConsumerWidget {
                   ),
                 ],
               ),
+            ),
             );
           }).toList(),
         ),
@@ -181,6 +184,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l = ref.watch(stringsProvider);
     final dir = Directionality.of(context);
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
@@ -212,7 +216,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                       child: Row(
                         children: [
                           Semantics(
-                            label: ref.read(stringsProvider).backLabel,
+                            label: l.backLabel,
                             button: true,
                             child: GestureDetector(
                               onTap: () => context.canPop() ? context.pop() : context.go('/'),
@@ -232,7 +236,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                           ),
                           const SizedBox(width: 14),
                           Text(
-                            'KARAKTER',
+                            l.sectionCharacter,
                             style: TextStyle(
                               color: accentColor,
                               fontSize: 18,
@@ -303,7 +307,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12),
                                   child: Text(
-                                    'YETENEKLER',
+                                    l.sectionTalents,
                                     style: TextStyle(
                                       color: textSecondary,
                                       fontSize: 11,

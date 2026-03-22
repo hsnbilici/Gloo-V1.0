@@ -683,4 +683,15 @@ class StringsKo extends AppStrings {
   String get personalityMaroon => '강인한';
   @override
   String get personalityBrown => '충직한';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => '성격';
+  @override
+  String get sectionCharacter => '캐릭터';
+  @override
+  String get sectionTalents => '재능';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO 컬렉션: $found/$total';
 }

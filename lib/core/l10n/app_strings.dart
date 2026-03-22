@@ -423,6 +423,14 @@ abstract class AppStrings {
   String get notifComebackBody;
   String get settingsNotifications;
 
+  // CD.12-15: Character screen section headers
+  String get sectionPersonalities;
+  String get sectionCharacter;
+  String get sectionTalents;
+
+  // CD.12-15: Share collection caption
+  String shareCollectionCaption(int found, int total);
+
   // CD.12: Kişilik arketipleri
   String get personalityOrange;
   String get personalityGreen;

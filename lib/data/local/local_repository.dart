@@ -384,7 +384,8 @@ class LocalRepository {
 
   // ─── Tema Modu ───────────────────────────────────────────────────────────
 
-  Future<ThemeMode> getThemeMode() => settings.getThemeMode();
+  @override
+  ThemeMode getThemeMode() => settings.getThemeMode();
 
   Future<void> setThemeMode(ThemeMode mode) => settings.setThemeMode(mode);
 

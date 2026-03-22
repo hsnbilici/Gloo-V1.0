@@ -679,4 +679,15 @@ class StringsZh extends AppStrings {
   String get personalityMaroon => '勇者';
   @override
   String get personalityBrown => '忠诚者';
+
+  // CD.12-15
+  @override
+  String get sectionPersonalities => '性格';
+  @override
+  String get sectionCharacter => '角色';
+  @override
+  String get sectionTalents => '天赋';
+  @override
+  String shareCollectionCaption(int found, int total) =>
+      'GLOO 收藏: $found/$total';
 }
