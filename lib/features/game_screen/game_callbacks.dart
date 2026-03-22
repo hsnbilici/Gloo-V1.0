@@ -138,6 +138,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onCombo = (combo) {
       clipRecorder.onCombo(combo);
+      soundBank.onCombo(combo);
       // Quest tracking: combo (medium+ counts)
       if (combo.tier.index >= ComboTier.medium.index) {
         _trackQuest(QuestType.reachCombo);
@@ -196,6 +197,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onNearMiss = (event) {
       clipRecorder.onNearMiss(event);
+      soundBank.onNearMiss(survived: !event.isCritical);
       if (mounted) {
         setState(() {
           activeNearMiss = event;
@@ -256,6 +258,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         _cachedRepo?.saveGelOzu(balance);
         _cachedRepo
             ?.saveLifetimeEarnings(game.currencyManager.lifetimeEarnings);
+        soundBank.onGelOzuEarn();
       }
     };
 
@@ -269,6 +272,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     // Seviye tamamlama
     game.onLevelComplete = () {
       if (!mounted) return;
+      soundBank.onLevelComplete();
       final levelId = widget.levelData?.id ?? 0;
       final score = game.score;
       _cachedRepo?.setLevelCompleted(levelId, score);
@@ -348,6 +352,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onGameOver = () {
       if (!mounted) return;
+      soundBank.onGameOver();
       final score = game.score;
       // Quest tracking: play games + reach score
       _trackQuest(QuestType.playGames);

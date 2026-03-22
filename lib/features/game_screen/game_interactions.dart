@@ -5,6 +5,7 @@ part of 'game_screen.dart';
 /// _onCellTap, _onSlotTap, _onCellHover, _onPowerUpTap, _clampAnchor
 mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   GlooGame get game;
+  SoundBank get soundBank;
   List<(GelShape, GelColor)?> get hand;
   int? get selectedSlot;
   set selectedSlot(int? value);
@@ -154,6 +155,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
         final (shape, color) = hand[selectedSlot!]!;
         final rotated = game.rotateShape(shape);
         if (rotated != null) {
+          soundBank.onPowerUpActivate();
           setState(() {
             hand[selectedSlot!] = (rotated, color);
             previewCells = {};
@@ -175,6 +177,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       case PowerUpType.undo:
         final result = game.useUndo();
         if (result != null) {
+          soundBank.onPowerUpActivate();
           setState(() {
             undoEffect = (cells: result, key: ++undoFxKey);
           });
@@ -183,6 +186,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       case PowerUpType.freeze:
         final success = game.useFreeze();
         if (success) {
+          soundBank.onPowerUpActivate();
           showToast(ref.read(stringsProvider).toastFrozen);
         }
 
@@ -203,6 +207,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     required bool Function() tutorialShouldComplete,
   }) {
     game.placePiece(cells, color);
+    soundBank.onGelPlaced();
     ref
         .read(gameProvider(widget.mode).notifier)
         .updateFill(game.gridManager.filledCells);
