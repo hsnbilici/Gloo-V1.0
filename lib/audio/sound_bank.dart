@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../core/constants/audio_constants.dart';
 import '../core/models/combo_types.dart';
 import 'audio_manager.dart';
@@ -10,6 +12,16 @@ class SoundBank {
 
   final AudioManager _audio;
   final HapticManager _haptic;
+  Timer? _duckTimer;
+
+  /// Müzik volume'unu geçici olarak düşür (ducking).
+  void _duckMusic({Duration duration = const Duration(milliseconds: 500)}) {
+    _duckTimer?.cancel();
+    _audio.setMusicVolume(AudioConfig.musicVolume * 0.5);
+    _duckTimer = Timer(duration, () {
+      _audio.setMusicVolume(AudioConfig.musicVolume);
+    });
+  }
 
   Future<void> onGelPlaced({bool soft = false}) async {
     await _audio.playSfx(soft ? AudioPaths.gelPlaceSoft : AudioPaths.gelPlace);
@@ -51,8 +63,10 @@ class SoundBank {
     }
     if (combo.tier == ComboTier.epic) {
       await _haptic.trigger(HapticProfile.comboEpic);
+      _duckMusic();
     } else if (combo.tier == ComboTier.large) {
       await _haptic.trigger(HapticProfile.gelMergeLarge);
+      _duckMusic();
     }
   }
 
@@ -114,6 +128,7 @@ class SoundBank {
   Future<void> onBombExplosion() async {
     await _audio.playSfx(AudioPaths.bombExplosion);
     await _haptic.trigger(HapticProfile.bombExplosion);
+    _duckMusic();
   }
 
   Future<void> onRotate() async {
