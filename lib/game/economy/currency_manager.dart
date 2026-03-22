@@ -106,7 +106,8 @@ class CurrencyManager {
   /// - lifetimeEarnings = 0 → 1.0x multiplier (orijinal maliyet)
   /// - lifetimeEarnings = 1000 → 2.0x multiplier (max cap)
   int inflatedCost(int baseCost) {
-    final multiplier = (1.0 + _lifetimeEarnings / 1000).clamp(1.0, 2.0);
+    final cap = isGlooPlus ? 1.5 : 2.0;
+    final multiplier = (1.0 + _lifetimeEarnings / 1000).clamp(1.0, cap);
     return (baseCost * multiplier).ceil();
   }
 

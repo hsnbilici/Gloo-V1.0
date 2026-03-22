@@ -111,6 +111,14 @@ class AnalyticsService {
     );
   }
 
+  void logBotMatchCount({required int dailyCount}) {
+    if (!_enabled) return;
+    _safeAnalytics?.logEvent(
+      name: 'bot_match_count',
+      parameters: {'daily_count': dailyCount},
+    );
+  }
+
   void logPurchase({required String productId}) {
     if (!_enabled) return;
     _safeAnalytics?.logEvent(

@@ -193,6 +193,23 @@ class GameDataRepository {
     await _prefs.setInt('consecutive_losses', count);
   }
 
+  // ─── Günlük Bot Maç Sayacı ───────────────────────────────────────────────
+
+  /// Bugünkü bot maç sayısını artırır ve yeni değeri döner.
+  Future<int> incrementDailyBotMatchCount() async {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final storedDate = _prefs.getString('bot_match_date');
+    int count;
+    if (storedDate == today) {
+      count = (_prefs.getInt('bot_match_count') ?? 0) + 1;
+    } else {
+      count = 1;
+      await _prefs.setString('bot_match_date', today);
+    }
+    await _prefs.setInt('bot_match_count', count);
+    return count;
+  }
+
   // ─── Ada Durumu ──────────────────────────────────────────────────────────
 
   Map<String, int> getIslandState() {

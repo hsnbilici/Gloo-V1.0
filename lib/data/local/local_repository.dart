@@ -241,6 +241,9 @@ class LocalRepository {
   Future<void> updateAverageScore(int newScore) =>
       gameData.updateAverageScore(newScore);
 
+  Future<int> incrementDailyBotMatchCount() =>
+      gameData.incrementDailyBotMatchCount();
+
   int getConsecutiveLosses() => gameData.getConsecutiveLosses();
 
   Future<void> setConsecutiveLosses(int count) =>

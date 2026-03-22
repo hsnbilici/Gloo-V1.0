@@ -146,8 +146,11 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
     final isNewCombo = widget.maxCombo > _prevComboRecord &&
         widget.maxCombo > 0;
 
+    final gamesPlayed = repo?.getTotalGamesPlayed() ?? 0;
     final showColorblindPrompt = !_promptDismissed &&
         repo != null &&
+        gamesPlayed >= 2 &&
+        gamesPlayed <= 5 &&
         !repo.getColorblindPromptShown() &&
         !ref.watch(appSettingsProvider).colorBlindMode;
     if (showColorblindPrompt) {
@@ -285,15 +288,10 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                         value: '${widget.linesCleared}',
                         color: color,
                         isNewRecord: isNewLines,
-                        subtitle: _recordsLoaded && widget.linesCleared > 0
-                            ? isNewLines
-                                ? l.gameOverNewStatRecord
-                                : _prevLinesRecord > 0
-                                    ? l.gameOverRecordComparison(
-                                        widget.linesCleared,
-                                        _prevLinesRecord,
-                                      )
-                                    : null
+                        subtitle: _recordsLoaded &&
+                                widget.linesCleared > 0 &&
+                                isNewLines
+                            ? l.gameOverNewStatRecord
                             : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 500.ms)
@@ -310,15 +308,10 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                         value: '${widget.synthesisCount}',
                         color: color,
                         isNewRecord: isNewSynth,
-                        subtitle: _recordsLoaded && widget.synthesisCount > 0
-                            ? isNewSynth
-                                ? l.gameOverNewStatRecord
-                                : _prevSynthRecord > 0
-                                    ? l.gameOverRecordComparison(
-                                        widget.synthesisCount,
-                                        _prevSynthRecord,
-                                      )
-                                    : null
+                        subtitle: _recordsLoaded &&
+                                widget.synthesisCount > 0 &&
+                                isNewSynth
+                            ? l.gameOverNewStatRecord
                             : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 540.ms)
@@ -335,15 +328,10 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                         value: '${widget.maxCombo}x',
                         color: color,
                         isNewRecord: isNewCombo,
-                        subtitle: _recordsLoaded && widget.maxCombo > 0
-                            ? isNewCombo
-                                ? l.gameOverNewStatRecord
-                                : _prevComboRecord > 0
-                                    ? l.gameOverRecordComparison(
-                                        widget.maxCombo,
-                                        _prevComboRecord,
-                                      )
-                                    : null
+                        subtitle: _recordsLoaded &&
+                                widget.maxCombo > 0 &&
+                                isNewCombo
+                            ? l.gameOverNewStatRecord
                             : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 580.ms)

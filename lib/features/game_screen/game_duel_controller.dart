@@ -59,6 +59,7 @@ class GameDuelController {
 
     if (isBot) {
       _initBotSimulation();
+      _logBotMatchAnalytics();
       return;
     }
 
@@ -97,6 +98,14 @@ class GameDuelController {
         }
       },
     );
+  }
+
+  Future<void> _logBotMatchAnalytics() async {
+    final repo = await ref.read(localRepositoryProvider.future);
+    final dailyCount = await repo.incrementDailyBotMatchCount();
+    ref.read(analyticsServiceProvider).logBotMatchCount(
+          dailyCount: dailyCount,
+        );
   }
 
   void _initBotSimulation() {

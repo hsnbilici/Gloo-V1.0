@@ -247,7 +247,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       _cachedRepo?.setLevelCompleted(levelId, score);
       final l = ref.read(stringsProvider);
       // Level completion reward: levelId * 2 Jel Özü
-      final rewardAmount = levelId * 2;
+      final rewardAmount = min(levelId * 2, 30);
       if (rewardAmount > 0) {
         game.currencyManager.earnFromLineClear(rewardAmount);
       }
@@ -334,7 +334,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           .logGameOver(mode: widget.mode.name, score: score);
 
       // Season Pass XP: score / 100
-      final xp = score ~/ 100;
+      final xp = max(10, score ~/ 100);
       if (xp > 0 && repo != null) {
         final passState = SeasonPassState();
         passState.loadFromMap(repo.getSeasonPassState());
