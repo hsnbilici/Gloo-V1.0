@@ -218,7 +218,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             if (i < 4) {
                               final stepIdx = _kStepPageIndices.indexOf(i);
                               return _StepPage(
-                                stepIndex: i,
+                                stepIndex: stepIdx,
                                 step: _StepData(
                                   icon: _kStepMeta[stepIdx].icon,
                                   color: _kStepMeta[stepIdx].color,
