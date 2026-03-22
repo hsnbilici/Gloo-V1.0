@@ -41,6 +41,11 @@ class LocalRepository {
 
   Future<int> getHighScore(String mode) => gameData.getHighScore(mode);
 
+  int getLastScore(String mode) => gameData.getLastScore(mode);
+
+  Future<void> saveLastScore({required String mode, required int value}) =>
+      gameData.saveLastScore(mode: mode, value: value);
+
   // ─── Profile ─────────────────────────────────────────────────────────────
 
   Future<UserProfile?> getProfile() => profile.getProfile();

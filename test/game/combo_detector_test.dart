@@ -61,11 +61,35 @@ void main() {
       expect(event.multiplier, 3.0);
     });
 
-    test('rapid consecutive clears accumulate chain', () {
-      detector.registerClear(1); // chain = 1
-      final event = detector.registerClear(2); // chain = 3 (within 1500ms)
+    test('consecutive clears accumulate chain (move-based)', () {
+      detector.registerClear(1); // hamle 1: chain = 1
+      final event = detector.registerClear(2); // hamle 2: chain = 3
       expect(event.tier, ComboTier.medium);
       expect(event.size, 3);
+    });
+
+    test('move without clear resets chain', () {
+      detector.registerClear(2); // chain = 2
+      detector.recordMoveWithoutClear(); // temizleme olmayan hamle → sıfırla
+      final event = detector.registerClear(1); // chain = 1 (yeniden başla)
+      expect(event.size, 1);
+      expect(event.tier, ComboTier.small);
+    });
+
+    test('consecutive clears without interruption keep accumulating', () {
+      detector.registerClear(1); // chain = 1
+      detector.registerClear(1); // chain = 2
+      detector.registerClear(1); // chain = 3
+      final event = detector.registerClear(1); // chain = 4
+      expect(event.tier, ComboTier.medium);
+      expect(event.size, 4);
+    });
+
+    test('recordMoveWithoutClear resets lastComboSize', () {
+      detector.registerClear(3);
+      expect(detector.lastComboSize, 3);
+      detector.recordMoveWithoutClear();
+      expect(detector.lastComboSize, 0);
     });
 
     test('reset clears chain', () {

@@ -8,10 +8,12 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/game_constants.dart';
+import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/layout/responsive.dart';
+import '../../core/models/game_mode.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
-import '../../core/models/game_mode.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -21,7 +23,6 @@ import 'widgets/daily_banner.dart';
 import 'widgets/deep_background.dart';
 import 'widgets/dialogs.dart';
 import 'widgets/gel_logo.dart';
-import 'widgets/meta_game_bar.dart';
 import 'widgets/mode_card.dart';
 import 'widgets/streak_badge.dart';
 import 'widgets/streak_reward_dialog.dart';
@@ -113,9 +114,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.read(analyticsServiceProvider).setEnabled(enabled);
     // ATT izni (iOS) — consent kabul edildiyse
     if (enabled) _requestATTIfNeeded();
-    // Sonraki adım: renk körü prompt
-    if (mounted && !repo.getColorblindPromptShown()) {
-      _showColorblindDialog(repo);
+    // Renk körü prompt'u atla — Settings'ten erişilebilir
+    if (!repo.getColorblindPromptShown()) {
+      await repo.setColorblindPromptShown();
     }
   }
 
@@ -252,6 +253,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     duration: 350.ms,
                                     curve: Curves.easeOutCubic,
                                   ),
+                              _ClassicScoreChip(l: l, brightness: brightness)
+                                  .animateOrSkip(reduceMotion: rm, delay: 100.ms)
+                                  .fadeIn(duration: 300.ms),
                               const SizedBox(height: 10),
                               ModeCard(
                                 label: l.modeColorChefName,
@@ -355,16 +359,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ),
                       ),
-                      // Faz 4: Meta-game hizli erisim cubugu
-                      MetaGameBar(
-                        islandLabel: l.islandLabel,
-                        characterLabel: l.characterLabel,
-                        seasonLabel: l.seasonLabel,
-                      )
-                          .animateOrSkip(reduceMotion: rm, delay: 600.ms)
-                          .fadeIn(duration: 350.ms)
-                          .slideY(begin: 0.12, end: 0, duration: 350.ms),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       BottomBar(
                         leaderboardLabel: l.navLeaderboard,
                         shopLabel: l.navShop,
@@ -374,7 +369,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           .animateOrSkip(reduceMotion: rm, delay: 500.ms)
                           .fadeIn(duration: 400.ms)
                           .slideY(begin: 0.2, end: 0, duration: 400.ms),
-                      const SizedBox(height: 28),
+                      const SizedBox(height: 0),
                     ],
                   ),
                 ),
@@ -384,5 +379,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
     );
+  }
+}
+
+// ─── Classic skor chip'i ──────────────────────────────────────────────────────
+
+class _ClassicScoreChip extends ConsumerWidget {
+  const _ClassicScoreChip({
+    required this.l,
+    required this.brightness,
+  });
+
+  final AppStrings l;
+  final Brightness brightness;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final lastScore = ref.watch(lastScoreProvider('classic'));
+    final highScore = ref.watch(highScoreProvider('classic')).valueOrNull ?? 0;
+
+    if (lastScore == 0 && highScore == 0) return const SizedBox.shrink();
+
+    final textColor = resolveColor(
+      brightness,
+      dark: kMuted,
+      light: kTextSecondaryLight,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, left: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (lastScore > 0) ...[
+            Text(
+              '${l.homeScoreLast}: ${_fmt(lastScore)}',
+              style: AppTextStyles.caption.copyWith(color: textColor),
+            ),
+          ],
+          if (lastScore > 0 && highScore > 0)
+            Text(
+              '  ·  ',
+              style: AppTextStyles.caption.copyWith(color: textColor),
+            ),
+          if (highScore > 0) ...[
+            Text(
+              '${l.homeScoreBest}: ${_fmt(highScore)}',
+              style: AppTextStyles.caption.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _fmt(int value) {
+    if (value >= 1000) {
+      return '${(value ~/ 1000)},${(value % 1000).toString().padLeft(3, '0')}';
+    }
+    return value.toString();
   }
 }

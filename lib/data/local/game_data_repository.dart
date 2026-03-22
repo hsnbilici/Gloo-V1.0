@@ -23,6 +23,14 @@ class GameDataRepository {
     return _prefs.getInt('highscore_$mode') ?? 0;
   }
 
+  int getLastScore(String mode) {
+    return _prefs.getInt('lastscore_$mode') ?? 0;
+  }
+
+  Future<void> saveLastScore({required String mode, required int value}) async {
+    await _prefs.setInt('lastscore_$mode', value);
+  }
+
   // ─── Tutorial ────────────────────────────────────────────────────────────
 
   bool getTutorialDone() => _prefs.getBool('tutorial_done') ?? false;

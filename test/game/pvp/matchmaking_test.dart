@@ -30,14 +30,15 @@ void main() {
       expect(largeTotal, greaterThan(mediumTotal));
     });
 
-    test('epic kombo alan etkisi uretir', () {
+    test('epic kombo 4-5 rastgele buz uretir', () {
       final packets = ObstacleGenerator.fromLineClear(
         linesCleared: 1,
         comboTier: 'epic',
       );
-      final hasAreaEffect =
-          packets.any((p) => p.areaSize != null && p.areaSize! > 1);
-      expect(hasAreaEffect, isTrue);
+      final epicPacket = packets.last;
+      expect(epicPacket.type, ObstacleType.ice);
+      expect(epicPacket.count, inInclusiveRange(4, 5));
+      expect(epicPacket.areaSize, isNull);
     });
   });
 }

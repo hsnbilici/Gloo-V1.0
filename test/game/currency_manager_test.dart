@@ -75,16 +75,6 @@ void main() {
       expect(cm.balance, 5);
     });
 
-    test('applyGlooPlusBonus adds 50% extra', () {
-      cm.applyGlooPlusBonus(10);
-      expect(cm.balance, 5); // 10 * 0.5 = 5
-    });
-
-    test('applyGlooPlusBonus rounds correctly', () {
-      cm.applyGlooPlusBonus(3);
-      expect(cm.balance, 2); // 3 * 0.5 = 1.5 → round = 2
-    });
-
     test('earnings accumulate', () {
       cm.earnFromLineClear(2);
       cm.earnFromCombo('epic');
@@ -92,6 +82,63 @@ void main() {
       cm.earnDailyLogin();
       expect(cm.balance, 2 + 5 + 1 + 3);
       expect(cm.earnedThisGame, 11);
+    });
+  });
+
+  // ─── Gloo+ bonus entegrasyonu ─────────────────────────────────────────────
+
+  group('CurrencyManager isGlooPlus', () {
+    test('isGlooPlus false by default', () {
+      expect(cm.isGlooPlus, isFalse);
+    });
+
+    test('earnFromLineClear applies 50% bonus when isGlooPlus', () {
+      cm.isGlooPlus = true;
+      cm.earnFromLineClear(2);
+      // 2 + (2 * 0.5).round() = 2 + 1 = 3
+      expect(cm.balance, 3);
+      expect(cm.earnedThisGame, 3);
+    });
+
+    test('earnFromCombo applies 50% bonus when isGlooPlus', () {
+      cm.isGlooPlus = true;
+      cm.earnFromCombo('epic');
+      // 5 + (5 * 0.5).round() = 5 + 3 = 8
+      expect(cm.balance, 8);
+    });
+
+    test('earnFromSynthesis applies 50% bonus when isGlooPlus', () {
+      cm.isGlooPlus = true;
+      cm.earnFromSynthesis(4);
+      // 4 + (4 * 0.5).round() = 4 + 2 = 6
+      expect(cm.balance, 6);
+    });
+
+    test('earnDailyLogin applies 50% bonus when isGlooPlus', () {
+      cm.isGlooPlus = true;
+      cm.earnDailyLogin();
+      // 3 + (3 * 0.5).round() = 3 + 2 = 5
+      expect(cm.balance, 5);
+    });
+
+    test('earnFromAd applies 50% bonus when isGlooPlus', () {
+      cm.isGlooPlus = true;
+      cm.earnFromAd();
+      // 5 + (5 * 0.5).round() = 5 + 3 = 8
+      expect(cm.balance, 8);
+    });
+
+    test('no bonus when isGlooPlus is false', () {
+      cm.isGlooPlus = false;
+      cm.earnFromLineClear(4);
+      expect(cm.balance, 4);
+    });
+
+    test('lifetimeEarnings includes bonus', () {
+      cm.isGlooPlus = true;
+      cm.earnFromLineClear(10);
+      // 10 + 5 = 15
+      expect(cm.lifetimeEarnings, 15);
     });
   });
 

@@ -17,32 +17,32 @@ void main() {
       expect(scoreSystem.highScore, 0);
     });
 
-    test('single line clear gives 100 points', () {
+    test('single line clear gives 150 points', () {
       final points = scoreSystem.addLineClear(
         linesCleared: 1,
         combo: ComboEvent.none,
       );
-      // 100 * 1.0 = 100
-      expect(points, 100);
-      expect(scoreSystem.score, 100);
+      // 150 * 1.0 = 150
+      expect(points, 150);
+      expect(scoreSystem.score, 150);
     });
 
-    test('multi line clear: 2 lines = 300', () {
+    test('multi line clear: 2 lines = 400', () {
       final points = scoreSystem.addLineClear(
         linesCleared: 2,
         combo: ComboEvent.none,
       );
-      // 300 * (2-1) * 1.0 = 300
-      expect(points, 300);
+      // lookup: 2 → 400
+      expect(points, 400);
     });
 
-    test('multi line clear: 3 lines = 600', () {
+    test('multi line clear: 3 lines = 1000', () {
       final points = scoreSystem.addLineClear(
         linesCleared: 3,
         combo: ComboEvent.none,
       );
-      // 300 * (3-1) * 1.0 = 600
-      expect(points, 600);
+      // lookup: 3 → 1000
+      expect(points, 1000);
     });
 
     test('combo multiplier applied', () {
@@ -55,8 +55,8 @@ void main() {
         linesCleared: 1,
         combo: combo,
       );
-      // 100 * 1.5 = 150
-      expect(points, 150);
+      // 150 * 1.5 = 225
+      expect(points, 225);
     });
 
     test('epic combo multiplier', () {
@@ -69,8 +69,8 @@ void main() {
         linesCleared: 1,
         combo: combo,
       );
-      // 100 * 3.0 = 300
-      expect(points, 300);
+      // 150 * 3.0 = 450
+      expect(points, 450);
     });
 
     test('color synthesis bonus added', () {
@@ -79,8 +79,8 @@ void main() {
         combo: ComboEvent.none,
         colorSynthesisCount: 2,
       );
-      // 100 * 1.0 + 2 * 50 = 200
-      expect(points, 200);
+      // 150 * 1.0 + 2 * 150 = 450
+      expect(points, 450);
     });
 
     test('combo + synthesis combined', () {
@@ -94,53 +94,53 @@ void main() {
         combo: combo,
         colorSynthesisCount: 1,
       );
-      // 100 * 1.2 = 120 + 1 * 50 = 170
-      expect(points, 170);
+      // 150 * 1.2 = 180 + 1 * 150 = 330
+      expect(points, 330);
     });
 
     test('score accumulates across calls', () {
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
-      expect(scoreSystem.score, 200);
+      expect(scoreSystem.score, 300);
     });
 
     test('high score tracks maximum', () {
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
-      expect(scoreSystem.highScore, 100);
+      expect(scoreSystem.highScore, 150);
       scoreSystem.reset();
       expect(scoreSystem.score, 0);
-      expect(scoreSystem.highScore, 100);
+      expect(scoreSystem.highScore, 150);
     });
 
     test('isNewHighScore is false when score equals high score', () {
       // addLineClear internally updates _highScore when _score > _highScore
-      // So after first call: score=100, highScore=100 → false (not strictly greater)
+      // So after first call: score=150, highScore=150 → false (not strictly greater)
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
-      expect(scoreSystem.score, 100);
-      expect(scoreSystem.highScore, 100);
+      expect(scoreSystem.score, 150);
+      expect(scoreSystem.highScore, 150);
       expect(scoreSystem.isNewHighScore, isFalse);
     });
 
     test('isNewHighScore is false when score below initial high', () {
       scoreSystem.setInitialHighScore(500);
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
-      expect(scoreSystem.score, 100);
+      expect(scoreSystem.score, 150);
       expect(scoreSystem.highScore, 500);
       expect(scoreSystem.isNewHighScore, isFalse);
     });
 
     test('setInitialHighScore does not overwrite higher value', () {
       scoreSystem.addLineClear(linesCleared: 2, combo: ComboEvent.none);
-      // score=300, highScore=300
+      // score=400, highScore=400
       scoreSystem.setInitialHighScore(100);
-      expect(scoreSystem.highScore, 300);
+      expect(scoreSystem.highScore, 400);
     });
 
     test('reset clears score but keeps highScore', () {
       scoreSystem.addLineClear(linesCleared: 1, combo: ComboEvent.none);
       scoreSystem.reset();
       expect(scoreSystem.score, 0);
-      expect(scoreSystem.highScore, 100);
+      expect(scoreSystem.highScore, 150);
     });
   });
 

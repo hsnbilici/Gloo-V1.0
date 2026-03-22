@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../game/pvp/matchmaking.dart';
 
 // ─── Eslestirme Ara butonu ───────────────────────────────────────────────────
 
 class MatchButton extends StatefulWidget {
-  const MatchButton({super.key, required this.onTap});
+  const MatchButton({super.key, required this.onTap, required this.l});
 
   final VoidCallback onTap;
+  final AppStrings l;
 
   @override
   State<MatchButton> createState() => _MatchButtonState();
@@ -21,7 +23,7 @@ class _MatchButtonState extends State<MatchButton> {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Eslestirme Ara',
+      label: widget.l.duelSearchMatch,
       button: true,
       child: GestureDetector(
         onTap: widget.onTap,
@@ -53,14 +55,15 @@ class _MatchButtonState extends State<MatchButton> {
               ),
             ],
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.sports_mma_rounded, color: kColorClassic, size: 22),
-              SizedBox(width: 10),
+              const Icon(
+                  Icons.sports_mma_rounded, color: kColorClassic, size: 22),
+              const SizedBox(width: 10),
               Text(
-                'Eslestirme Ara',
-                style: TextStyle(
+                widget.l.duelSearchMatch,
+                style: const TextStyle(
                   color: kColorClassic,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -84,12 +87,14 @@ class SearchingIndicator extends StatelessWidget {
     required this.pulseCtrl,
     required this.onCancel,
     required this.cancelLabel,
+    required this.l,
   });
 
   final int waitSeconds;
   final AnimationController pulseCtrl;
   final VoidCallback onCancel;
   final String cancelLabel;
+  final AppStrings l;
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +142,7 @@ class SearchingIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Rakip araniyor...',
+          l.duelSearching,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.70),
             fontSize: 14,
@@ -146,7 +151,7 @@ class SearchingIndicator extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          '${waitSeconds}sn / ${MatchmakingManager.maxWaitSeconds}sn',
+          l.duelWaitSeconds(waitSeconds, MatchmakingManager.maxWaitSeconds),
           style: const TextStyle(
             color: kMuted,
             fontSize: 12,

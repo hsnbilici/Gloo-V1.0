@@ -25,6 +25,9 @@ class GameOverOverlay extends ConsumerWidget {
     this.showSecondChance = false,
     this.onSecondChance,
     this.secondChanceLabel,
+    this.linesCleared = 0,
+    this.synthesisCount = 0,
+    this.maxCombo = 0,
   });
 
   final int score;
@@ -37,6 +40,9 @@ class GameOverOverlay extends ConsumerWidget {
   final bool showSecondChance;
   final VoidCallback? onSecondChance;
   final String? secondChanceLabel;
+  final int linesCleared;
+  final int synthesisCount;
+  final int maxCombo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,8 +99,10 @@ class GameOverOverlay extends ConsumerWidget {
                     ),
                 // ── Merkez içerik
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       // Başlık
                       Text(
@@ -160,7 +168,7 @@ class GameOverOverlay extends ConsumerWidget {
                             ),
                       ],
                       const SizedBox(height: 40),
-                      // İstatistik
+                      // İstatistikler
                       GameOverStatRow(
                         label: l.gameOverGridFill,
                         value: '%$fillPct',
@@ -174,7 +182,73 @@ class GameOverOverlay extends ConsumerWidget {
                             duration: 280.ms,
                             curve: Curves.easeOutCubic,
                           ),
+                      const SizedBox(height: 6),
+                      GameOverStatRow(
+                        label: l.gameOverLinesCleared,
+                        value: '$linesCleared',
+                        color: color,
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 500.ms)
+                          .fadeIn(duration: 280.ms)
+                          .slideX(
+                            begin: 0.12,
+                            end: 0,
+                            duration: 280.ms,
+                            curve: Curves.easeOutCubic,
+                          ),
+                      const SizedBox(height: 6),
+                      GameOverStatRow(
+                        label: l.gameOverSyntheses,
+                        value: '$synthesisCount',
+                        color: color,
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 540.ms)
+                          .fadeIn(duration: 280.ms)
+                          .slideX(
+                            begin: 0.12,
+                            end: 0,
+                            duration: 280.ms,
+                            curve: Curves.easeOutCubic,
+                          ),
+                      const SizedBox(height: 6),
+                      GameOverStatRow(
+                        label: l.gameOverMaxCombo,
+                        value: '${maxCombo}x',
+                        color: color,
+                      )
+                          .animateOrSkip(reduceMotion: rm, delay: 580.ms)
+                          .fadeIn(duration: 280.ms)
+                          .slideX(
+                            begin: 0.12,
+                            end: 0,
+                            duration: 280.ms,
+                            curve: Curves.easeOutCubic,
+                          ),
+                      // İpucu
+                      if (synthesisCount == 0 || maxCombo == 0) ...[
+                        const SizedBox(height: 14),
+                        SizedBox(
+                          width: 260,
+                          child: Text(
+                            synthesisCount == 0
+                                ? l.gameOverTipSynthesis
+                                : l.gameOverTipCombo,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: kMuted.withValues(alpha: 0.7),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.italic,
+                              height: 1.4,
+                            ),
+                          ),
+                        )
+                            .animateOrSkip(reduceMotion: rm, delay: 650.ms)
+                            .fadeIn(duration: 300.ms),
+                      ],
                     ],
+                  ),
+                    ),
                   ),
                 ),
                 // ── Butonlar

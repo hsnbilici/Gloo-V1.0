@@ -30,6 +30,18 @@ class StringsEs extends AppStrings {
   @override
   String get gameOverGridFill => 'Llenado de cuadrícula';
   @override
+  String get gameOverLinesCleared => 'Lines Cleared';
+  @override
+  String get gameOverSyntheses => 'Syntheses';
+  @override
+  String get gameOverMaxCombo => 'Max Combo';
+  @override
+  String get gameOverTipSynthesis =>
+      'Tip: Place same-colored gels adjacent to create new colors!';
+  @override
+  String get gameOverTipCombo =>
+      'Tip: Clear lines on consecutive moves to build combos!';
+  @override
   String get gameOverModeClassic => 'CLÁSICO';
   @override
   String get gameOverModeColorChef => 'CHEF DE COLOR';
@@ -94,6 +106,10 @@ class StringsEs extends AppStrings {
   String get homeSubtitle => 'A S M R   P U Z Z L E';
   @override
   String get homeBadgeBeginning => 'PRINCIPIANTE';
+  @override
+  String get homeScoreLast => 'Último';
+  @override
+  String get homeScoreBest => 'Récord';
   @override
   String get navLeaderboard => 'Clasificación';
   @override
@@ -480,6 +496,27 @@ class StringsEs extends AppStrings {
   String get levelSectionColorGarden => 'Jardín de Colores';
   @override
   String get levelSectionDarkCellar => 'Sótano Oscuro';
+
+  @override
+  String get duelSearchMatch => 'Buscar partida';
+  @override
+  String get duelSearching => 'Buscando oponente...';
+  @override
+  String duelWaitSeconds(int current, int max) => '${current}s / ${max}s';
+  @override
+  String get duelOutcomeWin => '¡VICTORIA!';
+  @override
+  String get duelOutcomeLoss => 'DERROTA';
+  @override
+  String get duelOutcomeDraw => 'EMPATE';
+  @override
+  String get duelYou => 'TÚ';
+  @override
+  String get duelVs => 'VS';
+  @override
+  String get duelOpponent => 'RIVAL';
+  @override
+  String duelGelReward(int amount) => '+$amount Gel Ozu';
 
   @override
   String shareScoreCaption(String modeName, String score) =>

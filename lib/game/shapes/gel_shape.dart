@@ -99,9 +99,13 @@ final List<GelShape> kLargeShapes = [
 
 /// Rastgele el (hand) oluşturucu — Smart Seed RNG destekli.
 class ShapeGenerator {
-  ShapeGenerator({Random? rng}) : _rng = rng ?? Random();
+  ShapeGenerator({Random? rng, this.betterHandBonus = 0.0})
+      : _rng = rng ?? Random();
 
   final Random _rng;
+
+  /// Talent bonusu: küçük şekil olasılığına eklenir (0.0–0.3).
+  final double betterHandBonus;
 
   // ─── Merhamet Mekanizması durumu ──────────────────────────────────────────
   int _consecutiveLosses = 0;
@@ -150,7 +154,7 @@ class ShapeGenerator {
         final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       } else {
-        final shape = _weightedRandomShape(effectiveDifficulty);
+        final shape = _weightedRandomShape(effectiveDifficulty, gamesPlayed);
         final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       }
@@ -165,17 +169,41 @@ class ShapeGenerator {
   }
 
   /// Ağırlıklı rastgele şekil seçimi (zorluğa göre).
-  GelShape _weightedRandomShape(double difficulty) {
+  /// [betterHandBonus] küçük şekil olasılığına eklenir (büyükten düşülür).
+  /// İlk 5 oyunda [gamesPlayed] < 5 ise yeni oyuncu koruması devreye girer:
+  /// %80 küçük, %15 orta, %5 büyük.
+  GelShape _weightedRandomShape(double difficulty, [int gamesPlayed = 0]) {
     final roll = _rng.nextDouble();
+
+    // Yeni oyuncu koruması: ilk 5 oyunda küçük şekil ağırlığını artır
+    if (gamesPlayed < 5) {
+      late final List<GelShape> pool;
+      if (roll < 0.80) {
+        pool = kSmallShapes;
+      } else if (roll < 0.95) {
+        pool = kMediumShapes;
+      } else {
+        pool = kLargeShapes;
+      }
+      return pool[_rng.nextInt(pool.length)];
+    }
 
     // Zorluk 0.0-0.3: %60 küçük, %30 orta, %10 büyük
     // Zorluk 0.3-0.7: %30 küçük, %40 orta, %30 büyük
     // Zorluk 0.7-1.0: %10 küçük, %30 orta, %60 büyük
-    final (smallW, mediumW) = switch (difficulty) {
+    var (smallW, mediumW) = switch (difficulty) {
       < 0.3 => (0.60, 0.30),
       < 0.7 => (0.30, 0.40),
       _ => (0.10, 0.30),
     };
+
+    // Talent bonusu: küçük şekil olasılığını artır, büyükten düş
+    if (betterHandBonus > 0) {
+      final largeW = 1.0 - smallW - mediumW;
+      final shift = betterHandBonus.clamp(0.0, largeW);
+      smallW += shift;
+      // mediumW sabit kalır, büyük otomatik olarak azalır
+    }
 
     late final List<GelShape> pool;
     if (roll < smallW) {

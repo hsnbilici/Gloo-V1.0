@@ -230,9 +230,13 @@ class _PvpLobbyScreenState extends ConsumerState<PvpLobbyScreen>
                                 onCancel: _cancelSearch,
                                 cancelLabel:
                                     ref.watch(stringsProvider).cancelLabel,
+                                l: ref.watch(stringsProvider),
                               )
                             else
-                              MatchButton(onTap: _startSearch)
+                              MatchButton(
+                                onTap: _startSearch,
+                                l: ref.watch(stringsProvider),
+                              )
                                   .animateOrSkip(
                                       reduceMotion: _rm, delay: 300.ms)
                                   .fadeIn(duration: 350.ms)

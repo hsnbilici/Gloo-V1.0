@@ -30,6 +30,18 @@ class StringsRu extends AppStrings {
   @override
   String get gameOverGridFill => 'Заполнение сетки';
   @override
+  String get gameOverLinesCleared => 'Lines Cleared';
+  @override
+  String get gameOverSyntheses => 'Syntheses';
+  @override
+  String get gameOverMaxCombo => 'Max Combo';
+  @override
+  String get gameOverTipSynthesis =>
+      'Tip: Place same-colored gels adjacent to create new colors!';
+  @override
+  String get gameOverTipCombo =>
+      'Tip: Clear lines on consecutive moves to build combos!';
+  @override
   String get gameOverModeClassic => 'КЛАССИК';
   @override
   String get gameOverModeColorChef => 'КОЛОР ШЕФ';
@@ -94,6 +106,10 @@ class StringsRu extends AppStrings {
   String get homeSubtitle => 'A S M R   П А З Л';
   @override
   String get homeBadgeBeginning => 'НОВИЧОК';
+  @override
+  String get homeScoreLast => 'Посл.';
+  @override
+  String get homeScoreBest => 'Рекорд';
   @override
   String get navLeaderboard => 'Рейтинг';
   @override
@@ -479,6 +495,27 @@ class StringsRu extends AppStrings {
   String get levelSectionColorGarden => 'Цветной сад';
   @override
   String get levelSectionDarkCellar => 'Тёмный подвал';
+
+  @override
+  String get duelSearchMatch => 'Найти матч';
+  @override
+  String get duelSearching => 'Поиск соперника...';
+  @override
+  String duelWaitSeconds(int current, int max) => '${current}с / ${max}с';
+  @override
+  String get duelOutcomeWin => 'ПОБЕДА!';
+  @override
+  String get duelOutcomeLoss => 'ПОРАЖЕНИЕ';
+  @override
+  String get duelOutcomeDraw => 'НИЧЬЯ';
+  @override
+  String get duelYou => 'ВЫ';
+  @override
+  String get duelVs => 'VS';
+  @override
+  String get duelOpponent => 'СОПЕРНИК';
+  @override
+  String duelGelReward(int amount) => '+$amount Gel Ozu';
 
   @override
   String shareScoreCaption(String modeName, String score) =>

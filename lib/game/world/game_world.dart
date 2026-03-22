@@ -18,15 +18,31 @@ import 'grid_manager.dart';
 enum GameStatus { idle, playing, paused, gameOver, frozen }
 
 class GlooGame {
-  GlooGame({required this.mode, this.levelData, ShapeGenerator? shapeGenerator})
-      : _shapeGenerator = shapeGenerator ?? ShapeGenerator();
+  GlooGame({
+    required this.mode,
+    this.levelData,
+    ShapeGenerator? shapeGenerator,
+    this.betterHandBonus = 0.0,
+    this.colorMasterBonus = 0.0,
+    this.fastHandsBonus = 0,
+    this.zenGuruBonus = 0,
+  }) : _shapeGenerator = shapeGenerator ??
+            ShapeGenerator(betterHandBonus: betterHandBonus);
 
   final GameMode mode;
   final LevelData? levelData;
   final ShapeGenerator _shapeGenerator;
 
+  /// Talent bonusları (saf değerler — CharacterState import edilmez).
+  final double betterHandBonus;
+  final double colorMasterBonus;
+  final int fastHandsBonus;
+  final int zenGuruBonus;
+
   late GridManager _gridManager;
-  final ScoreSystem _scoreSystem = ScoreSystem();
+  late final ScoreSystem _scoreSystem = ScoreSystem(
+    colorMasterBonus: colorMasterBonus,
+  );
   final ComboDetector _comboDetector = ComboDetector();
   final ColorSynthesisSystem _synthesisSystem = ColorSynthesisSystem();
   final NearMissDetector _nearMissDetector = NearMissDetector();
@@ -56,6 +72,11 @@ class GlooGame {
   // Near-miss: eldeki kalan şekil sayısı (her placePiece'de azalır, her
   // generateNextHand'de sıfırlanır). Gerçek availableMoves değerini sağlar.
   int _handRemaining = GameConstants.shapesInHand;
+
+  // Game Over özet istatistikleri
+  int _totalLinesCleared = 0;
+  int _totalSynthesisCount = 0;
+  int _maxComboSize = 0;
 
   // Faz 4: Freeze durumu
   Timer? _freezeTimer;
@@ -92,6 +113,9 @@ class GlooGame {
           ? kColorChefLevels[_chefLevelIndex]
           : null;
   GridManager get gridManager => _gridManager;
+  int get totalLinesCleared => _totalLinesCleared;
+  int get totalSynthesisCount => _totalSynthesisCount;
+  int get maxComboSize => _maxComboSize;
 
   void setInitialHighScore(int value) =>
       _scoreSystem.setInitialHighScore(value);
@@ -119,12 +143,15 @@ class GlooGame {
     _levelCompleted = false;
     _handIndex = 0;
     _handRemaining = GameConstants.shapesInHand;
+    _totalLinesCleared = 0;
+    _totalSynthesisCount = 0;
+    _maxComboSize = 0;
     currencyManager.resetGameStats();
 
     powerUpSystem = PowerUpSystem(currencyManager: currencyManager);
     powerUpSystem.onPowerUpUsed = onPowerUpUsed;
 
-    _remainingSeconds = GameConstants.timeTrialDuration;
+    _remainingSeconds = GameConstants.timeTrialDuration + fastHandsBonus;
     if (mode == GameMode.colorChef) {
       _chefLevelIndex = 0;
       _chefProgress = 0;
@@ -212,6 +239,10 @@ class GlooGame {
     _handIndex++;
     if (_handRemaining > 0) _handRemaining--;
 
+    // Yerleştirme puanı: hücre başına 10 puan
+    final placementPoints = _scoreSystem.addPlacementScore(cells.length);
+    onScoreGained?.call(placementPoints);
+
     // Power-up: Undo için yerleştirme kaydı
     powerUpSystem.recordPlacement(cells, color);
     powerUpSystem.onMoveCompleted();
@@ -268,7 +299,8 @@ class GlooGame {
       _checkTimeTrialBonus(clearResult);
       if (_checkLevelCompletion()) return;
     } else {
-      // Satır temizlenmedi → Merhamet RNG güncelleme
+      // Satır temizlenmedi → kombo sıfırla + Merhamet RNG güncelleme
+      _comboDetector.recordMoveWithoutClear();
       _shapeGenerator.recordMoveWithoutClear();
     }
 
@@ -309,6 +341,7 @@ class GlooGame {
 
     // Faz 4: Sentez → Jel Özü kazanımı
     if (appliedSynthesisCount > 0) {
+      _totalSynthesisCount += appliedSynthesisCount;
       currencyManager.earnFromSynthesis(appliedSynthesisCount);
     }
 
@@ -347,7 +380,9 @@ class GlooGame {
     bool isCascade = false,
   }) {
     onLineClear?.call(clearResult);
+    _totalLinesCleared += clearResult.totalLines;
     final combo = _comboDetector.registerClear(clearResult.totalLines);
+    if (combo.size > _maxComboSize) _maxComboSize = combo.size;
     final points = _scoreSystem.addLineClear(
       linesCleared: clearResult.totalLines,
       combo: combo,
@@ -357,6 +392,10 @@ class GlooGame {
     if (combo.tier != ComboTier.none) onCombo?.call(combo);
 
     currencyManager.earnFromLineClear(clearResult.totalLines);
+    // Zen Guru talent: Zen modunda ekstra Jel Özü kazanımı
+    if (mode == GameMode.zen && zenGuruBonus > 0) {
+      currencyManager.earnFromLineClear(zenGuruBonus);
+    }
     if (!isCascade) _shapeGenerator.recordClear();
 
     onJelEnergyEarned?.call(clearResult.totalLines);

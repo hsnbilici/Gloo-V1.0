@@ -83,7 +83,7 @@ void main() {
 
       FlutterError.onError = oldHandler;
 
-      expect(find.text('Eslestirme Ara'), findsOneWidget);
+      expect(find.text('Find Match'), findsOneWidget);
     });
 
     testWidgets('shows ELO display', (tester) async {

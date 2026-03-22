@@ -55,6 +55,9 @@ void showGameOver({
   required VoidCallback onReplay,
   required VoidCallback onHome,
   String? secondChanceLabel,
+  int linesCleared = 0,
+  int synthesisCount = 0,
+  int maxCombo = 0,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -74,6 +77,9 @@ void showGameOver({
         showSecondChance: showSecondChance,
         onSecondChance: onSecondChance,
         secondChanceLabel: secondChanceLabel,
+        linesCleared: linesCleared,
+        synthesisCount: synthesisCount,
+        maxCombo: maxCombo,
         onReplay: () {
           Navigator.of(ctx).pop();
           onReplay();

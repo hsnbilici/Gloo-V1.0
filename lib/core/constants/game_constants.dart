@@ -35,10 +35,10 @@ abstract final class GameConstants {
   static const int timeTrialLineClearBonus = 2; // satır başına kazanılan saniye
 
   // Skor katsayıları
-  static const int singleLineClear = 100;
+  static const int singleLineClear = 150;
   static const int multiLineClear = 300;
   static const double comboMultiplier = 1.5;
-  static const int colorSynthesisBonus = 50;
+  static const int colorSynthesisBonus = 150;
 
   // Pil koruması
   static const int lowBatteryThreshold = 20; // yüzde
@@ -59,7 +59,7 @@ abstract final class GameConstants {
   static const int freezeDuration = 10; // saniye
 
   // Merhamet mekanizması
-  static const int mercyLossThreshold = 3; // Ardışık kayıp eşiği
+  static const int mercyLossThreshold = 2; // Ardışık kayıp eşiği
   static const int mercyNoClearThreshold = 5; // Temizleme olmadan hamle eşiği
   static const double mercyDifficultyMultiplier = 0.7;
 

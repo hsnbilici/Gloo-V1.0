@@ -30,6 +30,18 @@ class StringsKo extends AppStrings {
   @override
   String get gameOverGridFill => '그리드 채움';
   @override
+  String get gameOverLinesCleared => 'Lines Cleared';
+  @override
+  String get gameOverSyntheses => 'Syntheses';
+  @override
+  String get gameOverMaxCombo => 'Max Combo';
+  @override
+  String get gameOverTipSynthesis =>
+      'Tip: Place same-colored gels adjacent to create new colors!';
+  @override
+  String get gameOverTipCombo =>
+      'Tip: Clear lines on consecutive moves to build combos!';
+  @override
   String get gameOverModeClassic => '클래식';
   @override
   String get gameOverModeColorChef => '컬러 셰프';
@@ -94,6 +106,10 @@ class StringsKo extends AppStrings {
   String get homeSubtitle => 'A S M R   P U Z Z L E';
   @override
   String get homeBadgeBeginning => '입문자';
+  @override
+  String get homeScoreLast => '최근';
+  @override
+  String get homeScoreBest => '최고';
   @override
   String get navLeaderboard => '순위';
   @override
@@ -471,6 +487,27 @@ class StringsKo extends AppStrings {
   String get levelSectionColorGarden => '색 정원';
   @override
   String get levelSectionDarkCellar => '어둠의 지하실';
+
+  @override
+  String get duelSearchMatch => 'Find Match';
+  @override
+  String get duelSearching => 'Searching for opponent...';
+  @override
+  String duelWaitSeconds(int current, int max) => '${current}s / ${max}s';
+  @override
+  String get duelOutcomeWin => 'VICTORY!';
+  @override
+  String get duelOutcomeLoss => 'DEFEAT';
+  @override
+  String get duelOutcomeDraw => 'DRAW';
+  @override
+  String get duelYou => 'YOU';
+  @override
+  String get duelVs => 'VS';
+  @override
+  String get duelOpponent => 'OPPONENT';
+  @override
+  String duelGelReward(int amount) => '+$amount Gel Ozu';
 
   @override
   String shareScoreCaption(String modeName, String score) =>

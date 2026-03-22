@@ -298,6 +298,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       final repo = _cachedRepo;
       if (repo != null) {
         repo.saveScore(mode: widget.mode.name, value: score);
+        repo.saveLastScore(mode: widget.mode.name, value: score);
         repo.incrementGamesPlayed();
         repo.updateAverageScore(score);
         if (widget.mode == GameMode.daily) {

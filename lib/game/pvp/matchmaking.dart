@@ -114,8 +114,8 @@ class ObstacleGenerator {
         packets.add(const ObstaclePacket(type: ObstacleType.ice, count: 3));
         packets.add(const ObstaclePacket(type: ObstacleType.stone, count: 2));
       case 'epic':
-        packets.add(const ObstaclePacket(
-            type: ObstacleType.ice, count: 9, areaSize: 3));
+        packets.add(ObstaclePacket(
+            type: ObstacleType.ice, count: 4 + Random().nextInt(2)));
       default:
         break;
     }

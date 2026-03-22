@@ -30,6 +30,18 @@ class StringsZh extends AppStrings {
   @override
   String get gameOverGridFill => '网格填充';
   @override
+  String get gameOverLinesCleared => 'Lines Cleared';
+  @override
+  String get gameOverSyntheses => 'Syntheses';
+  @override
+  String get gameOverMaxCombo => 'Max Combo';
+  @override
+  String get gameOverTipSynthesis =>
+      'Tip: Place same-colored gels adjacent to create new colors!';
+  @override
+  String get gameOverTipCombo =>
+      'Tip: Clear lines on consecutive moves to build combos!';
+  @override
   String get gameOverModeClassic => '经典';
   @override
   String get gameOverModeColorChef => '调色师';
@@ -94,6 +106,10 @@ class StringsZh extends AppStrings {
   String get homeSubtitle => 'A S M R   P U Z Z L E';
   @override
   String get homeBadgeBeginning => '新手';
+  @override
+  String get homeScoreLast => '上次';
+  @override
+  String get homeScoreBest => '最高';
   @override
   String get navLeaderboard => '排行榜';
   @override
@@ -467,6 +483,27 @@ class StringsZh extends AppStrings {
   String get levelSectionColorGarden => '色彩花园';
   @override
   String get levelSectionDarkCellar => '暗黑地窖';
+
+  @override
+  String get duelSearchMatch => 'Find Match';
+  @override
+  String get duelSearching => 'Searching for opponent...';
+  @override
+  String duelWaitSeconds(int current, int max) => '${current}s / ${max}s';
+  @override
+  String get duelOutcomeWin => 'VICTORY!';
+  @override
+  String get duelOutcomeLoss => 'DEFEAT';
+  @override
+  String get duelOutcomeDraw => 'DRAW';
+  @override
+  String get duelYou => 'YOU';
+  @override
+  String get duelVs => 'VS';
+  @override
+  String get duelOpponent => 'OPPONENT';
+  @override
+  String duelGelReward(int amount) => '+$amount Gel Ozu';
 
   @override
   String shareScoreCaption(String modeName, String score) =>

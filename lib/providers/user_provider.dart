@@ -21,6 +21,11 @@ final highScoreProvider = FutureProvider.family<int, String>((ref, mode) async {
   return repo.getHighScore(mode);
 });
 
+final lastScoreProvider = Provider.family<int, String>((ref, mode) {
+  final repoAsync = ref.watch(localRepositoryProvider);
+  return repoAsync.valueOrNull?.getLastScore(mode) ?? 0;
+});
+
 final streakProvider = FutureProvider<int>((ref) async {
   final repo = await ref.watch(localRepositoryProvider.future);
   return repo.checkAndUpdateStreak();

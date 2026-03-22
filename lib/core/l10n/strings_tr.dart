@@ -30,6 +30,18 @@ class StringsTr extends AppStrings {
   @override
   String get gameOverGridFill => 'Izgara Doluluk';
   @override
+  String get gameOverLinesCleared => 'Temizlenen Satır';
+  @override
+  String get gameOverSyntheses => 'Sentez';
+  @override
+  String get gameOverMaxCombo => 'Maks Kombo';
+  @override
+  String get gameOverTipSynthesis =>
+      'İpucu: Aynı renkli jelleri yan yana koyarak yeni renkler oluştur!';
+  @override
+  String get gameOverTipCombo =>
+      'İpucu: Art arda satır temizleyerek kombo yap!';
+  @override
   String get gameOverModeClassic => 'KLASİK';
   @override
   String get gameOverModeColorChef => 'RENK ŞEFİ';
@@ -94,6 +106,10 @@ class StringsTr extends AppStrings {
   String get homeSubtitle => 'A S M R   P U Z Z L E';
   @override
   String get homeBadgeBeginning => 'BAŞLANGIÇ';
+  @override
+  String get homeScoreLast => 'Son';
+  @override
+  String get homeScoreBest => 'Rekor';
   @override
   String get navLeaderboard => 'Sıralama';
   @override
@@ -473,6 +489,27 @@ class StringsTr extends AppStrings {
   String get levelSectionColorGarden => 'Renk Bahçesi';
   @override
   String get levelSectionDarkCellar => 'Karanlık Mahzen';
+
+  @override
+  String get duelSearchMatch => 'Eşleştirme Ara';
+  @override
+  String get duelSearching => 'Rakip aranıyor...';
+  @override
+  String duelWaitSeconds(int current, int max) => '${current}sn / ${max}sn';
+  @override
+  String get duelOutcomeWin => 'GALİBİYET!';
+  @override
+  String get duelOutcomeLoss => 'MAĞLUBİYET';
+  @override
+  String get duelOutcomeDraw => 'BERABERE';
+  @override
+  String get duelYou => 'SEN';
+  @override
+  String get duelVs => 'VS';
+  @override
+  String get duelOpponent => 'RAKİP';
+  @override
+  String duelGelReward(int amount) => '+$amount Jel Özü';
 
   @override
   String shareScoreCaption(String modeName, String score) =>

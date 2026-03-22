@@ -303,8 +303,8 @@ final List<LevelData> _predefinedLevels = [
       id: 41,
       rows: 10,
       cols: 8,
-      targetScore: 1300,
-      maxMoves: 40,
+      targetScore: 950,
+      maxMoves: 48,
       specialCells: {
         (2, 2): CellConfig(type: CellType.ice, iceLayer: 1),
         (2, 5): CellConfig(type: CellType.ice, iceLayer: 1),
@@ -315,19 +315,19 @@ final List<LevelData> _predefinedLevels = [
       id: 42,
       rows: 10,
       cols: 8,
-      targetScore: 1350,
-      maxMoves: 38,
+      targetScore: 1000,
+      maxMoves: 46,
       specialCells: {
         for (int c = 0; c < 8; c += 2)
           (4, c): const CellConfig(type: CellType.ice, iceLayer: 1),
       }),
-  const LevelData(id: 43, rows: 10, cols: 8, targetScore: 1400, maxMoves: 36),
+  const LevelData(id: 43, rows: 10, cols: 8, targetScore: 1050, maxMoves: 44),
   const LevelData(
       id: 44,
       rows: 10,
       cols: 8,
-      targetScore: 1450,
-      maxMoves: 35,
+      targetScore: 1050,
+      maxMoves: 44,
       specialCells: {
         // X şeklinde buz
         (2, 2): CellConfig(type: CellType.ice, iceLayer: 1),
@@ -337,25 +337,25 @@ final List<LevelData> _predefinedLevels = [
         (6, 2): CellConfig(type: CellType.ice, iceLayer: 1),
         (6, 5): CellConfig(type: CellType.ice, iceLayer: 1),
       }),
-  const LevelData(id: 45, rows: 10, cols: 8, targetScore: 1500, maxMoves: 34),
+  const LevelData(id: 45, rows: 10, cols: 8, targetScore: 1100, maxMoves: 42),
   LevelData(
       id: 46,
       rows: 10,
       cols: 8,
-      targetScore: 1550,
-      maxMoves: 33,
+      targetScore: 1150,
+      maxMoves: 42,
       specialCells: {
         for (int r = 1; r <= 8; r += 3)
           for (int c = 1; c <= 6; c += 3)
             (r, c): const CellConfig(type: CellType.ice, iceLayer: 1),
       }),
-  const LevelData(id: 47, rows: 10, cols: 8, targetScore: 1600, maxMoves: 32),
+  const LevelData(id: 47, rows: 10, cols: 8, targetScore: 1200, maxMoves: 40),
   LevelData(
       id: 48,
       rows: 10,
       cols: 8,
-      targetScore: 1650,
-      maxMoves: 30,
+      targetScore: 1200,
+      maxMoves: 40,
       specialCells: {
         // Üst ve alt buz kenarları
         for (int c = 0; c < 8; c++) ...<(int, int), CellConfig>{
@@ -363,7 +363,7 @@ final List<LevelData> _predefinedLevels = [
           (9, c): const CellConfig(type: CellType.ice, iceLayer: 1),
         },
       }),
-  const LevelData(id: 49, rows: 10, cols: 8, targetScore: 1700, maxMoves: 28),
+  const LevelData(id: 49, rows: 10, cols: 8, targetScore: 1250, maxMoves: 38),
   // Breathing room — Bölüm sonu
   const LevelData(id: 50, rows: 8, cols: 7, targetScore: 800),
 ];

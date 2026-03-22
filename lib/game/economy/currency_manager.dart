@@ -19,6 +19,9 @@ class CurrencyManager {
   int _spentThisGame = 0;
   int _lifetimeEarnings;
 
+  /// Gloo+ aboneleri için %50 ekstra Jel Özü bonusu aktif mi.
+  bool isGlooPlus = false;
+
   int get balance => _balance;
   int get earnedThisGame => _earnedThisGame;
   int get spentThisGame => _spentThisGame;
@@ -59,16 +62,12 @@ class CurrencyManager {
     _earn(5);
   }
 
-  /// Gloo+ aboneler için bonus çarpan (%50 ekstra).
-  void applyGlooPlusBonus(int baseEarned) {
-    final bonus = (baseEarned * 0.5).round();
-    if (bonus > 0) _earn(bonus);
-  }
-
   void _earn(int amount) {
-    _balance += amount;
-    _earnedThisGame += amount;
-    _lifetimeEarnings += amount;
+    final total =
+        isGlooPlus ? amount + (amount * 0.5).round() : amount;
+    _balance += total;
+    _earnedThisGame += total;
+    _lifetimeEarnings += total;
     onBalanceChanged?.call(_balance);
   }
 

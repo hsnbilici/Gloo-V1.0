@@ -10,6 +10,7 @@ import '../../core/layout/responsive.dart';
 import '../../data/local/local_repository.dart';
 import '../../core/utils/near_miss_detector.dart';
 import '../../game/levels/level_data.dart';
+import '../../game/meta/character_state.dart';
 import '../../game/shapes/gel_shape.dart';
 import '../../game/systems/combo_detector.dart';
 import '../../game/systems/powerup_system.dart';
@@ -190,7 +191,25 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   void initState() {
     super.initState();
-    game = GlooGame(mode: widget.mode, levelData: widget.levelData);
+
+    // Talent bonuslarını CharacterState'ten oku
+    final charMap = ref.read(localRepositoryProvider).valueOrNull
+        ?.getCharacterState();
+    final character = CharacterState();
+    if (charMap != null && charMap.isNotEmpty) {
+      character.loadFromMap(charMap);
+    }
+
+    game = GlooGame(
+      mode: widget.mode,
+      levelData: widget.levelData,
+      betterHandBonus: character.getBetterHandBonus(),
+      colorMasterBonus: character.getColorMasterBonus(),
+      fastHandsBonus: character.getFastHandsBonus(),
+      zenGuruBonus: character.getZenGuruPassiveRate(),
+    );
+    game.currencyManager.isGlooPlus =
+        ref.read(appSettingsProvider).glooPlus;
 
     effectManager = GameEffectManager(this);
 
@@ -426,6 +445,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
         isNewHighScore: game.isNewHighScore,
         showSecondChance: canSecondChance,
         secondChanceLabel: l.secondChanceMoves,
+        linesCleared: game.totalLinesCleared,
+        synthesisCount: game.totalSynthesisCount,
+        maxCombo: game.maxComboSize,
         onSecondChance: canSecondChance
             ? () {
                 adManager.showSecondChance(

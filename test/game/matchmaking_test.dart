@@ -199,17 +199,17 @@ void main() {
       expect(packets.length, 3);
     });
 
-    test('epic combo adds 3x3 ice area', () {
+    test('epic combo adds 4-5 random ice cells', () {
       final packets = ObstacleGenerator.fromLineClear(
         linesCleared: 1,
         comboTier: 'epic',
       );
-      // 1 ice (base) + 9 ice with areaSize=3
+      // 1 ice (base) + 4-5 ice (random, no area effect)
       expect(packets.length, 2);
       final epicPacket = packets.last;
       expect(epicPacket.type, ObstacleType.ice);
-      expect(epicPacket.count, 9);
-      expect(epicPacket.areaSize, 3);
+      expect(epicPacket.count, inInclusiveRange(4, 5));
+      expect(epicPacket.areaSize, isNull);
     });
   });
 

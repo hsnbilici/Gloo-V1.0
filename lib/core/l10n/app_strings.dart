@@ -35,6 +35,11 @@ abstract class AppStrings {
   String get gameOverScoreLabel;
   String get gameOverNewRecord;
   String get gameOverGridFill;
+  String get gameOverLinesCleared;
+  String get gameOverSyntheses;
+  String get gameOverMaxCombo;
+  String get gameOverTipSynthesis;
+  String get gameOverTipCombo;
   String get gameOverModeClassic;
   String get gameOverModeColorChef;
   String get gameOverModeTimeTrial;
@@ -77,6 +82,8 @@ abstract class AppStrings {
   // Ana ekran — diğer
   String get homeSubtitle;
   String get homeBadgeBeginning;
+  String get homeScoreLast;
+  String get homeScoreBest;
   String get navLeaderboard;
   String get navShop;
   String get navSettings;
@@ -300,6 +307,18 @@ abstract class AppStrings {
   String get levelSectionStoneMaze;
   String get levelSectionColorGarden;
   String get levelSectionDarkCellar;
+
+  // PvP / Duel UI
+  String get duelSearchMatch;
+  String get duelSearching;
+  String duelWaitSeconds(int current, int max);
+  String get duelOutcomeWin;
+  String get duelOutcomeLoss;
+  String get duelOutcomeDraw;
+  String get duelYou;
+  String get duelVs;
+  String get duelOpponent;
+  String duelGelReward(int amount);
 
   // Share texts
   String shareScoreCaption(String modeName, String score);

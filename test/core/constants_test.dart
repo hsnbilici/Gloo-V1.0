@@ -18,9 +18,9 @@ void main() {
     });
 
     test('scoring constants', () {
-      expect(GameConstants.singleLineClear, 100);
+      expect(GameConstants.singleLineClear, 150);
       expect(GameConstants.multiLineClear, 300);
-      expect(GameConstants.colorSynthesisBonus, 50);
+      expect(GameConstants.colorSynthesisBonus, 150);
     });
 
     test('time trial constants', () {
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('mercy constants', () {
-      expect(GameConstants.mercyLossThreshold, 3);
+      expect(GameConstants.mercyLossThreshold, 2);
       expect(GameConstants.mercyNoClearThreshold, 5);
       expect(GameConstants.mercyDifficultyMultiplier, 0.7);
     });

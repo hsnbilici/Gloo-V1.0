@@ -256,6 +256,7 @@ class GameDuelController {
             playerElo: newElo,
             playAgainLabel: l.playAgainLabel,
             mainMenuLabel: l.mainMenuLabel,
+            l: l,
             onHome: () {
               Navigator.of(ctx).pop();
               context.go('/');

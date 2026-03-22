@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../game/pvp/matchmaking.dart';
 
@@ -17,6 +18,7 @@ class DuelResultOverlay extends StatelessWidget {
     required this.onRematch,
     required this.playAgainLabel,
     required this.mainMenuLabel,
+    required this.l,
   });
 
   final DuelResult result;
@@ -25,6 +27,7 @@ class DuelResultOverlay extends StatelessWidget {
   final VoidCallback onRematch;
   final String playAgainLabel;
   final String mainMenuLabel;
+  final AppStrings l;
 
   static const _kLoss = kRed;
   static const _kDraw = kYellow;
@@ -36,9 +39,9 @@ class DuelResultOverlay extends StatelessWidget {
       };
 
   String get _outcomeLabel => switch (result.outcome) {
-        DuelOutcome.win => 'GALIBIYET!',
-        DuelOutcome.loss => 'MAGLUBIYET',
-        DuelOutcome.draw => 'BERABERE',
+        DuelOutcome.win => l.duelOutcomeWin,
+        DuelOutcome.loss => l.duelOutcomeLoss,
+        DuelOutcome.draw => l.duelOutcomeDraw,
       };
 
   IconData get _outcomeIcon => switch (result.outcome) {
@@ -109,16 +112,16 @@ class DuelResultOverlay extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _ScoreColumn(
-                  label: 'SEN',
+                  label: l.duelYou,
                   score: result.playerScore,
                   color: color,
                   isWinner: result.outcome == DuelOutcome.win,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
-                    'VS',
-                    style: TextStyle(
+                    l.duelVs,
+                    style: const TextStyle(
                       color: kMuted,
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
@@ -127,7 +130,7 @@ class DuelResultOverlay extends StatelessWidget {
                   ),
                 ),
                 _ScoreColumn(
-                  label: 'RAKIP',
+                  label: l.duelOpponent,
                   score: result.opponentScore,
                   color: kMuted,
                   isWinner: result.outcome == DuelOutcome.loss,
@@ -178,7 +181,7 @@ class DuelResultOverlay extends StatelessWidget {
             const SizedBox(height: 8),
             // Jel Ozu odulu
             Text(
-              '+${result.gelReward} Jel Ozu',
+              l.duelGelReward(result.gelReward),
               style: TextStyle(
                 color: kGold.withValues(alpha: 0.80),
                 fontSize: 14,

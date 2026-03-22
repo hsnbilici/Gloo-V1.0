@@ -125,3 +125,333 @@
 
 **129/133 gorev tamamlandi (%97). Kalan 4 gorev: manuel/harici isler (Play Console, screenshots, entegrasyon testleri, ToS).**
 **Test sayisi: 2086 (2057 → +29 yeni/guncellenen test)**
+
+---
+
+## Game Designer Analizi: Core Loop ve Oyuncu Deneyimi (2026-03-22)
+
+> Dunya standartlarinda oyun tasarimcisi perspektifinden derinlemesine analiz.
+
+### Guclu Yanlar
+
+- Pipeline mimarisi (placePiece → _evaluateBoard) temiz ve genisletilebilir
+- Merhamet RNG (3 kayip → zorluk dusme, 5 hamle temizleyemezse kurtarici el) tur standartlarinin uzerinde
+- Renk sentezi sistemi gercekten ayirt edici (4 birincil → 8 sentez, cifte odul)
+- Near-Miss dedektoru Shannon entropy tabanli — turde nadir sofistikasyon
+- 7 mod ayni core loop uzerinde anlamli fark yaratiyor
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| GD.1 | Sentez otomatik, oyuncu kasitli planlayamiyor | Orta-Yuksek | "Kazandim ama nasil?" → Flow state engeli |
+| GD.2 | Seviye tasariminda scaffolding zayif | Yuksek | Sadece 2/50 seviyede aciklama var |
+| GD.3 | Kombo penceresi (1500ms) zaman bazli ama oyun turn-based | Orta | Stratejik dusunmeyi cezalandiriyor |
+| GD.4 | Ekonomi enflasyonu salt ceza gibi hissedilebilir | Orta | Maliyet artiyor, kazanim artmiyor |
+| GD.5 | Cascade geri bildirimi yetersiz | Orta | En tatmin edici anlar cok hizli geciyor |
+| GD.6 | Talent sistemi core loop'a entegre degil | Orta | Meta-game bos vaat riski |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+- [ ] **GD.O1 — Sentez ipucu overlay:** Secili seklin rengiyle sentez potansiyeli olan bitisik bos hucrelere hafif glow (Orta efor)
+- [ ] **GD.O2 — Cascade pacing:** Her cascade adimi arasina 250ms gorsel delay + artan pitch ses (Dusuk efor)
+- [x] **GD.O3 — Komboyu hamle bazli yap:** 1500ms pencere → ardisik temizleme = combo (Dusuk efor) ✅
+- [ ] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
+- [ ] **GD.O5 — Siradaki 1 sekil silueti her zaman gorunsun:** Peek ile detay ac (Dusuk efor)
+- [x] **GD.O6 — Talent → Core Loop baglantisi:** betterHand → ShapeGenerator, colorMaster → ScoreSystem (Dusuk efor) ✅
+
+---
+
+## Game Designer Analizi: Monetizasyon ve Ekonomi Dengesi (2026-03-22)
+
+> Ekonomi dongusu, IAP yapisi, reklam dengesi ve meta-game entegrasyonu analizi.
+
+### Guclu Yanlar
+
+- Anti-frustration reklam sistemi 3 katmanli koruma (yeni oyuncu, kayip serisi, gunluk cap)
+- Starter Pack degeri net (%50 indirim algilama, 4 urun tek pakette)
+- Ikili para birimi (Jel Ozu / Jel Enerjisi) net ayrilmis
+- Power-up maliyet/cooldown dengesi makul (oyun basi hafif pozitif birikim)
+- Sunucu tarafli receipt dogrulama + graceful degradation
+- GDPR/UMP consent akisi kuralcil
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| GD.M1 | `applyGlooPlusBonus()` hicbir yerde cagrilmiyor — BUG | KRITIK | Gloo+ aboneleri %50 Jel Ozu bonusunu almiyor |
+| GD.M2 | `inflatedCost()` tanimli ama hicbir yerde kullanilmiyor | Yuksek | Enflasyon sistemi ya calismali ya kaldirilmali |
+| GD.M3 | Gloo+ deger teklifi zayif — Starter Pack ile kanibalizasyon | Orta | Aylik $1.99 icin sadece Zen modu + "early access" |
+| GD.M4 | Meta-game sistemleri (ada, karakter, gorev, season pass) UI'a bagli degil | Orta | Hayalet sistemler — retention'a katki yapmiyor |
+| GD.M5 | Jel Ozu harcama ciklileri kisitli — currency bloat riski | Dusuk-Orta | 200+ birikim sonrasi kaynak anlamsizlasiyor |
+| GD.M6 | Level tamamlama odulleri tanimlanmamis | Orta | Level modunun retention motoru olmasi engelleniyor |
+| GD.M7 | Consumable IAP yok | Dusuk-Orta | Para harcamak isteyip abonelik istemeyenler icin duvar |
+| GD.M8 | Rewarded reklam → power-up UI baglantisi eksik | Dusuk | `grantFreePowerUp` var ama tetikleyen UI yok |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+- [x] **GD.MO1 — [BUG] `applyGlooPlusBonus` cagrisini ekle:** `_clearAndScore()` veya game-end callback'inde (Dusuk efor, HEMEN) ✅
+- [ ] **GD.MO2 — Rewarded reklam → power-up UI bagla:** Game Over'da "reklam izle = ucretsiz Bomb" butonu (Dusuk efor)
+- [ ] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu + enerji formulu (Dusuk efor)
+- [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
+- [ ] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
+- [ ] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
+- [ ] **GD.MO7 — Enflasyon sistemini netlistir:** Ya `inflatedCost`'u baglayip goster ya da kaldir (Dusuk efor)
+- [ ] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyonunu coz:** Reklamsizi Starter'dan cikar VEYA Gloo+'a exclusive ekle (Dusuk efor)
+
+---
+
+## Game Designer Analizi: Seviye Tasarimi ve Zorluk Egrisi (2026-03-22)
+
+> Tester geri bildirimi: "Puan kazanimi zor." Kok neden analizi ve puanlama dekonstruksiyonu.
+
+### Puanlama Sistemi Dekonstruksiyonu
+
+| Puan Kaynagi | Formul | Sorun |
+|---|---|---|
+| Tekli satir temizleme | 100 puan | En sik eylem, en dusuk odul |
+| Coklu satir (N>=2) | 300*(N-1) | 3 satir = 600, yetersiz odullendirme |
+| Kombo carpani | x1.2 → x3.0 (1500ms pencere) | Zamana dayali — turn-based oyunda pratikte tetiklenemez |
+| Sentez bonusu | 50 puan (sabit) | Stratejik bir eylem icin cok dusuk |
+| Yerlestirme puani | YOK | Her hamle sessiz — geri bildirim dongusu bos |
+
+**Tipik oyun basi beklenen puan: 300-700.** Cok iyi oynayan: 900-1200.
+
+### Zorluk Duvari Analizi
+
+| Seviye | Hedef | Hamle | Puan/Hamle | Durum |
+|---|---|---|---|---|
+| 1-10 | 200-600 | sinirsiz | - | Makul |
+| 15 | 850 | sinirsiz | - | Siki |
+| 25 | 1000 | sinirsiz | - | Cok zor |
+| 41 | 1300 | 40 | 32.5 | Sinir noktasi |
+| 45 | 1500 | 34 | 44.1 | DUVAR |
+| 49 | 1700 | 28 | 60.7 | Matematiksel olarak imkansiza yakin |
+
+### "Puan Kazanimi Zor" — 7 Kok Neden
+
+1. **Tekli temizleme puani (100) cok dusuk** — en sik eylem en az puan
+2. **Kombo sistemi (1500ms) pratikte calismaz** — turn-based oyunda zamana dayali carpan anlamsiz
+3. **Sentez bonusu (50) cok dusuk** — stratejik eylemin odulu yetersiz
+4. **Hamle sinirlari (41+) cok dar** — 28 hamlede 1700 puan matematiksel olarak saglanamaz
+5. **Tek puan yolu** — sadece satir temizleme puan verir, yerlestirme puani yok
+6. **Buyuk sekil biasi** — yuksek skorda buyuk sekiller artarak temizleme firsatlarini azaltir
+7. **Merhamet mekanizmasi gec devreye giriyor** — 3 kayip cok gec, oyuncu cogu zaman 2. kayipta birakiryor
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| GD.L1 | Tekli satir temizleme puani 100 — cok dusuk | KRITIK | Tester sikayet kok nedeni |
+| GD.L2 | Kombo 1500ms zamana dayali — turn-based'de calismaz | YUKSEK | x3.0 carpan pratikte kullanilmaz |
+| GD.L3 | Sentez bonusu 50 — stratejik degeri yok | YUKSEK | Sentez yerine satir temizlemek her zaman karli |
+| GD.L4 | Seviye 41-50 hedef/hamle orani imkansiz | YUKSEK | Seviye 49: 60.7 puan/hamle gerekli |
+| GD.L5 | Yerlestirme puani yok — geri bildirim boslugu | ORTA | 5 hamle boyunca 0 puan = "ilerleme yok" hissi |
+| GD.L6 | Prosedural seviyelerde monotonluk | ORTA | Seviye 101+ benzer desenler |
+| GD.L7 | Merhamet esigi 3 kayip — cok gec | ORTA | Cogu oyuncu 2. kayipta birakiyor |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+- [x] **GD.LO1 — Tekli satir puanini 100 → 150 yap:** Tum seviyelerde ~%50 puan artisi (Cok dusuk efor, HEMEN) ✅
+- [x] **GD.LO2 — Sentez bonusunu 50 → 150 yap:** Sentez stratejik anlam kazanir (Cok dusuk efor, HEMEN) ✅ (GD notu: playtestte 100'e dusurme degerlendirilmeli)
+- [x] **GD.LO3 — Seviye 41-50 hedef skorlarini %25-30 dusur:** Duvari yumustir (Cok dusuk efor) ✅ (GD notu: yeni puanlamaya gore hedefler cok dusuk olabilir — playtestte izle)
+- [x] **GD.LO4 — Seviye 41-50 hamle sinirlarini genilet:** 28→40 hamle gibi (Cok dusuk efor) ✅
+- [x] **GD.LO5 — Komboyu hamle bazliya cevir:** 1500ms → ardisik N hamlede temizleme (Orta efor, en yuksek yapisal etki) ✅ (GD notu: chain+=linesCleared epic'e hızlı ulaştırıyor — chain++ olmalı mı? + 1 hamle toleransı değerlendirilmeli)
+- [x] **GD.LO6 — Yerlestirme basina puan ekle:** hucre basina 10 puan — geri bildirim dongusu (Dusuk efor) ✅
+- [x] **GD.LO7 — Coklu satir temizlemeyi ustel odul yap:** 2→400, 3→1000, 4→2000 (Dusuk efor) ✅
+- [x] **GD.LO8 — Merhamet esigini 3→2 kayba dusur:** Daha erken mudahale (Cok dusuk efor) ✅
+- [ ] **GD.LO9 — Prosedural seviyelere temali kisitlamalar ekle:** Her 5 seviyede farkli kural (Orta efor)
+- [ ] **GD.LO10 — "Neredeyse dolu satir" gorsel geri bildirimi:** %75+ dolulukta highlight (Dusuk efor)
+
+---
+
+## Game Designer Analizi: PvP/Duel Sistemi (2026-03-22)
+
+> Matchmaking, engel sistemi, ELO, realtime altyapisi ve asimetrik frustration analizi.
+
+### Guclu Yanlar
+
+- Duplicate match onlemi (leksikografik ID) zarif ve etkili
+- Reconnection stratejisi production-ready (exponential backoff, 5 deneme)
+- Bot fallback 30sn sonra garanti eslesme — kucuk oyuncu tabaninda kritik
+- Idempotent submit (duplicate skor korunmasi)
+- Server-side ELO hesaplama (Edge Function)
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| GD.P1 | Kombo sistemi duel'de islevsiz — 1500ms turn-based'de calismaz | KRITIK | Medium+ kombo engelleri hic gonderilmiyor |
+| GD.P2 | Engel gelis animasyonu/SFX yok — sessiz yerlesim | CIDDI | Oyuncu "ne oldu?" hissiyle kaliyor |
+| GD.P3 | Tas engeli kalici ve temizlenemez — geri donulemez alan kaybi | CIDDI | Asimetrik frustration'in ana kaynagi |
+| GD.P4 | Bot engel simulasyonu yok — bot maci PvP ogretmiyor | YUKSEK | Ilk gercek macta oyuncu surpriz yasiyor |
+| GD.P5 | Skor broadcast 5sn aralikla — canli yarisma hissi zayif | ORTA | Catch-up gerilimi yok |
+| GD.P6 | PvP ELO leaderboard yok | ORTA | Rekabet motivasyonunun gorsel katmani eksik |
+| GD.P7 | Hardcoded Turkce stringler (lobby + sonuc overlay) | YUKSEK | 12 dil destegini kirar |
+| GD.P8 | Bot ELO manipulasyonu — sinir yok | ORTA | Surekli bot macla ELO sisirebilir |
+| GD.P9 | Epic kombo engeli cok guclu — 9 buz tek seferde | ORTA | Kombo duzeltilince asimetri patlar |
+| GD.P10 | Rematch secenegi yok — ayni rakiple tekrar oynayamaz | DUSUK | Rekabet hissini kirar |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+- [x] **GD.PO1 — Hardcoded Turkce stringleri l10n'e tasi:** `pvp_lobby_matchmaking.dart` + `duel_result_overlay.dart` (Dusuk efor, HEMEN) ✅
+- [ ] **GD.PO2 — Engel gelis animasyonu + SFX ekle:** 0.8sn golge → yerlesim, `SoundBank.onObstacleReceived()` (Dusuk-Orta efor)
+- [ ] **GD.PO3 — Tas engelini temizlenebilir yap veya kaldir:** "2 bitisik temizleme stone kirar" veya duel'den cikar (Dusuk efor)
+- [ ] **GD.PO4 — Bot'a engel simulasyonu ekle:** 15-20sn aralikla hafif engel gondersin (Dusuk efor)
+- [ ] **GD.PO5 — Skor broadcast'ini event-driven yap:** Her puan degisiminde 500ms debounce (Dusuk efor)
+- [ ] **GD.PO6 — PvP ELO Leaderboard ekle:** LeaderboardScreen'e 3. tab (Dusuk efor)
+- [x] **GD.PO7 — Epic kombo engelini 9→4-5 buza dusur:** Kombo duzeltmesiyle birlikte (Dusuk efor) ✅
+- [ ] **GD.PO8 — Bot ELO kazanimini sinirla:** %50 azaltma veya gunluk limit (Dusuk efor)
+- [ ] **GD.PO9 — K-Factor'u ELO segmentine gore dinamik yap:** Dusuk ELO K=40, yuksek K=24 (Dusuk efor)
+- [ ] **GD.PO10 — Rematch secenegi ekle:** Ayni rakiple tekrar oynama (Orta efor)
+
+---
+
+## Game Designer Analizi: Onboarding ve Retention (2026-03-22)
+
+> Ilk 5 dakika deneyimi, tutorial etkinligi, retention hook'lari ve churn noktalari analizi.
+
+### Ilk 5 Dakika Kritik Bulgulari
+
+- Onboarding 4 sayfa tamamen metin bazli — gorsel/animasyon/interaktif eleman yok
+- Tutorial sadece 3 adim: sec-onizle-yerlestir. Sentez, kombo, power-up, skor sistemi ogretilmiyor
+- Onboarding skip edilince 3 ardisik dialog (Consent → ATT → Colorblind) — dialog fatigue
+- 7 mod birden gorunuyor — paradox of choice
+- MetaGameBar hayalet sistemlere yonlendiriyor — "oyun bitmemis" hissi
+- Ilk oyunda "aha!" ani belirsiz — sentez tesadufe bagli, kombo pratikte imkansiz
+
+### Churn Noktalari
+
+| Nokta | Zaman | Risk | Neden |
+|---|---|---|---|
+| Dialog zinciri | D0, dk 0-1 | Yuksek | 3 ardisik popup, oyun hala oynanmamis |
+| "Ne yapacagimi bilmiyorum" | D0, dk 2-4 | Yuksek | Tutorial yetersiz, bos grid korkutucu |
+| Ilk kayip | D0, dk 4-6 | Cok yuksek | Referans yok, "neden kaybettim" yok, merhamet yok |
+| 2-3. oyun arasi | D0-D1 | Orta-yuksek | "Wow" ani yoksa D1'e donmuyor |
+| D1 donus | D1 | Yuksek | Push notification yok, streak hatirlatmasi yok |
+| D3-D7 mod kesfi | D3+ | Orta | 7 mod yonlendirilmeden sunuluyor |
+
+### Retention Hook'lari Durumu
+
+| Hook | Durum |
+|---|---|
+| Streak sistemi | Var ama hatirlatma yok (push notification yok) |
+| Gunluk bulmaca | Var, DailyBanner gorunuyor |
+| Push notification | YOK — hicbir altyapi yok |
+| Gunluk gorevler | HAYALET — repository'de var, UI'da yok |
+| Season Pass / Ada / Karakter | HAYALET — butonlar var, icerik yok |
+| Streak Freeze | YOK |
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| GD.R1 | Onboarding pasif ve metin bazli | YUKSEK | Oyuncular okumuyor, show don't tell gerekli |
+| GD.R2 | Tutorial sentez/kombo/power-up ogretmiyor | KRITIK | Oyunun en ayirt edici mekanigi tutorial disinda |
+| GD.R3 | Skip sonrasi 3 ardisik dialog | YUKSEK | Dialog fatigue, D0 churn |
+| GD.R4 | 7 mod birden gorunuyor | ORTA | Paradox of choice |
+| GD.R5 | MetaGameBar hayalet sistemlere yonlendiriyor | YUKSEK | Guven kirici |
+| GD.R6 | Push notification altyapisi yok | KRITIK | D1 retention'in en onemli araci eksik |
+| GD.R7 | Ilk oyunda referans noktasi yok | ORTA | "150 puan iyi mi?" sorusu cevapsiz |
+| GD.R8 | Game Over'da "neden kaybettin" ozeti yok | ORTA | Ogretme firsati kaciriliyor |
+| GD.R9 | Gunluk gorev sistemi UI'da yok | YUKSEK | D1-D7 retention hook eksik |
+| GD.R10 | Ilk 5 oyunda zorluk ayari yok | ORTA | Kucuk sekil agirligi ile erken basari hissi saglanmali |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+**P0 — Hemen:**
+- [ ] **GD.RO1 — Onboarding'i interaktif yap:** Her sayfaya animasyonlu mini-demo ekle (Orta efor)
+- [ ] **GD.RO2 — "Guided First Game" tasarla:** Ilk oyunda kasitli renkler + sentez toast'i (Buyuk efor)
+- [x] **GD.RO3 — Dialog zincirini birlestir:** 3 popup → 1 combined dialog (Kucuk efor) ✅
+- [x] **GD.RO4 — MetaGameBar'i gizle veya "Coming Soon" yap:** Hayalet sistemleri sakla (Kucuk efor) ✅
+- [x] **GD.RO5 — Ilk 5 oyunda zorluk dusur:** `gamesPlayed < 5` → %80 kucuk sekil (Kucuk efor) ✅
+
+**P1 — Bu Sprint:**
+- [ ] **GD.RO6 — Push notification altyapisi kur:** firebase_messaging + D1/D2/D3 senaryolari (Orta efor)
+- [ ] **GD.RO7 — Progressive mod acilimi:** Classic → 3 oyun sonra Color Chef → 5 sonra Time Trial (Orta efor)
+- [x] **GD.RO8 — Game Over'da ozet ekle:** "4 satir, 1 sentez, %87 dolu" + ipucu (Kucuk efor) ✅
+- [ ] **GD.RO9 — Gunluk gorev sistemini UI'a bagla:** HomeScreen'de mini progress (Orta efor)
+- [x] **GD.RO10 — "Beat your score" karti Home'a ekle:** "Son skor: 450 | Rekor: 1200" (Kucuk efor) ✅
+
+**P2 — Gelecek Sprint:**
+- [ ] **GD.RO11 — Streak Freeze mekanigi:** 100 Jel Ozu ile satin alinabilir (Orta efor)
+- [ ] **GD.RO12 — Ilk oyunlarda share prompt'u ayarla:** Epic combo yerine ilk high score'da kucuk paylas butonu (Kucuk efor)
+
+---
+
+## Game Designer Analizi: Meta-Game ve Uzun Vadeli Ilerleme (2026-03-22)
+
+> Ada, karakter, talent, season pass, gorev ve koleksiyon sistemlerinin durum analizi.
+
+### Meta-Game Sistem Durumu
+
+| Sistem | Veri Modeli | UI | Core Loop Baglantisi | Durum |
+|---|---|---|---|---|
+| Ada (5 bina) | Hazir | Var | YOK — binalar gameplay'i degistirmiyor | HAYALET |
+| Karakter + Talent (4 tip) | Hazir | Var | YOK — bonus metodlari hic cagrilmiyor | KRITIK KOPUKLUK |
+| Season Pass (50 tier) | Hazir | Var | YOK — XP kazanim kaynagi sifir | TAMAMEN INERT |
+| Gorev (6 gunluk, 5 haftalik) | Hazir | YOK | YOK — tracking yok | EN HAZIR AMA EN KISIR |
+| Koleksiyon (8 renk) | Hazir | Calisiyor | Kismi | SIGI — 8 item, odul yok |
+| Level Progression | Hazir | Calisiyor | Calisiyor | EN SAGLIKLI ama odul yok |
+| Ekonomi: Jel Ozu | Hazir | Calisiyor | Calisiyor | Fonksiyonel, sink yetersiz |
+| Ekonomi: Jel Enerjisi | Hazir | Kazanim calisiyor | Harcama efektsiz | Para kazaniliyor, karsiligi yok |
+
+### Tespit Edilen Sorunlar
+
+| # | Sorun | Risk | Aciklama |
+|---|-------|------|----------|
+| ~~GD.MG1~~ | ~~Talent bonuslari GlooGame'e baglanmamis~~ | ~~KRITIK~~ | ✅ 4 bonus entegre edildi (T9) |
+| GD.MG2 | Season Pass XP kaynagi sifir — oyuncu Tier 0'da donuk | KRITIK | addXp() hicbir yerden cagrilmiyor |
+| GD.MG3 | Ada binalari sadece kosmetik — gameplay etkisi yok | YUKSEK | gelFactory pasif uretim yok, arena PvP gating yok |
+| GD.MG4 | applyGlooPlusBonus cagrilmiyor — ticari vaat kirik | KRITIK | App Store/Play policy ihlali riski |
+| GD.MG5 | Gorev sistemi UI'da yok | YUKSEK | En yuksek ROI ozellik entegre edilmemis |
+| GD.MG6 | inflatedCost kullanilmiyor | ORTA | Enflasyon olume terk edilmis kod |
+| GD.MG7 | Koleksiyon sigi ve odulsuz | ORTA | 8 item, tamamlama motivasyonu yok |
+| GD.MG8 | Level tamamlama odulleri yok | ORTA | Neden 200. seviyeyi oynayasim? |
+| GD.MG9 | D30+ endgame bos — sadece Duel ELO ve leaderboard kalmis | YUKSEK | Tum meta-game efektsiz → veteran churn |
+| GD.MG10 | Kostum sistemi tamamen bos — CostumePiece var, kostum tanimli degil | ORTA | Season Pass odulleri anlamsiz |
+
+### Oneriler (Oncelik Sirasina Gore)
+
+**Ayni Gun Ship Edilebilir (XS-S):**
+- [x] **GD.MGO1 — [BUG] applyGlooPlusBonus fix:** game_callbacks.dart'ta oyun sonu callback'inde cagir (XS efor) ✅
+- [x] **GD.MGO2 — Talent → GlooGame entegrasyonu:** 4 bonus noktasini bagla (S efor, 1-2 gun) ✅
+- [x] **GD.MGO3 — MetaGameBar'i kosullu goster:** Calismayan sistemleri gizle veya "Coming Soon" (XS efor) ✅
+
+**Bu Sprint (S-M):**
+- [ ] **GD.MGO4 — Gorev sistemi entegrasyonu:** GlooGame callback + HomeScreen widget + odul dagitim (M efor)
+- [ ] **GD.MGO5 — Season Pass XP kaynagi:** Gorev odulleri + skor bazli XP (S efor, gorevle birlikte)
+- [ ] **GD.MGO6 — Level tamamlama odulleri:** Her 10 seviyede Jel Ozu/Enerji paketi (S efor)
+
+**Sonraki Sprint (M-L):**
+- [ ] **GD.MGO7 — Ada binalarini gating mekanigi yap:** arena→PvP, harbor→SeasonPass, factory→pasif uretim (M efor)
+- [ ] **GD.MGO8 — Koleksiyonu genislet:** 8→16+ renk, tamamlama odulleri (S efor)
+- [ ] **GD.MGO9 — inflatedCost entegrasyonu:** A/B test ile power-up maliyetlerine bagla (S efor)
+- [ ] **GD.MGO10 — Ascension/Prestige sistemi:** Level 50 sonrasi zorluk katmanlari (L efor)
+
+---
+
+## Game Designer Review Backlog (2026-03-22)
+
+> Sprint 3 task'larinin game-designer review'indan cikan ek oneriler.
+
+### T11 — Dialog Zinciri
+
+- [ ] **GD.BL1 — Ilk oyun sonrasi colorblind inline prompt:** Oyuncu grid'i deneyimledikten sonra tek satirlik "Renkleri ayirt etmekte zorlaniyor musun? [Renk Koru Modunu Ac]" prompt'u goster (Kucuk efor)
+
+### T12 — Yeni Oyuncu Zorlugu
+
+- [ ] **GD.BL2 — Level modunu yeni oyuncu korumasindan muaf tut:** Level 1 zaten 6x6 grid ile kendi egrisine sahip (XS efor)
+- [ ] **GD.BL3 — ColorChef'e ayri agirlik tablosu:** Kucuk yerine orta sekilleri tercih et (%50 orta / %35 kucuk / %15 buyuk) — sentez firsatini korumak icin (S efor)
+- [ ] **GD.BL4 — Zorluk gecisini kademeli yap:** Oyun 3: %70/%20/%10, Oyun 4: %55/%30/%15, Oyun 5+: normal — keskin gecis yerine ramp (S efor)
+
+### T13 — Game Over Ozeti
+
+- [ ] **GD.BL5 — Ipucu gosterim sayisini persist et:** 2 gosterim sonrasi rotasyona gir, ayni ipucu tekrarlamasin (S efor)
+- [ ] **GD.BL6 — Grid doluluk metrigini gozden gecir:** Ham yuzde yerine baglamli yorum ("Daha temiz oynayabilirdin") veya kaldir (XS efor)
+- [ ] **GD.BL7 — Kisisel rekor karsilastirmasi:** "Bu sefer 5 satir — rekorun 12!" formati (S efor)
+
+### T14 — Beat Your Score Karti
+
+- [ ] **GD.BL8 — "So close" vurgu state:** lastScore >= bestScore * 0.8 ise kucuk vurgu efekti + "Beat it?" metni (S efor)
+- [ ] **GD.BL9 — Per-mode progress metadata chip:** Level (ilerleme), Duel (ELO delta) icin ayri bilgi kartlari (M efor)

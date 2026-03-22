@@ -85,15 +85,16 @@ void main() {
       );
     });
 
-    test('epic combo sends area-effect obstacle', () {
+    test('epic combo sends 4-5 random ice obstacle', () {
       final packets = ObstacleGenerator.fromLineClear(
         linesCleared: 1,
         comboTier: 'epic',
       );
 
-      final areaPackets = packets.where((p) => p.areaSize != null);
-      expect(areaPackets, isNotEmpty);
-      expect(areaPackets.first.areaSize, equals(3));
+      final epicPacket = packets.last;
+      expect(epicPacket.type, ObstacleType.ice);
+      expect(epicPacket.count, inInclusiveRange(4, 5));
+      expect(epicPacket.areaSize, isNull);
     });
   });
 
