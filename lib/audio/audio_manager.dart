@@ -107,6 +107,30 @@ class AudioManager {
     if (_musicEnabled) await _musicPlayer.play();
   }
 
+  /// Müziği kademeli olarak kıs ve duraklat.
+  Future<void> fadeOutMusic(Duration duration) async {
+    const steps = 10;
+    final stepDuration = duration ~/ steps;
+    const startVolume = AudioConfig.musicVolume;
+    for (var i = steps - 1; i >= 0; i--) {
+      await Future.delayed(stepDuration);
+      await _musicPlayer.setVolume(startVolume * i / steps);
+    }
+    await _musicPlayer.pause();
+    // Volume'u eski haline getir (resume/play'de kullanılacak)
+    await _musicPlayer.setVolume(startVolume);
+  }
+
+  /// Müzik volume'unu geçici olarak değiştir.
+  Future<void> setMusicVolume(double volume) async {
+    await _musicPlayer.setVolume(volume);
+  }
+
+  /// Müzik oynatma hızını değiştir (tempo).
+  Future<void> setMusicSpeed(double speed) async {
+    await _musicPlayer.setSpeed(speed);
+  }
+
   void setSfxEnabled(bool value) {
     _sfxEnabled = value;
     if (!value) {

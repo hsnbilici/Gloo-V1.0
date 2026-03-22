@@ -51,6 +51,8 @@ class SoundBank {
     }
     if (combo.tier == ComboTier.epic) {
       await _haptic.trigger(HapticProfile.comboEpic);
+    } else if (combo.tier == ComboTier.large) {
+      await _haptic.trigger(HapticProfile.gelMergeLarge);
     }
   }
 

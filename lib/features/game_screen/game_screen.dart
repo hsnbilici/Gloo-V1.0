@@ -507,7 +507,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
             showHighScoreBadge = false;
           });
           ref.read(gameProvider(widget.mode).notifier).reset();
-          // Replay'de müziği devam ettir (Game Over'da pauseMusic çağrılıyor)
+          // Replay'de müziği devam ettir ve tempo'yu sıfırla
+          _timerSpedUp = false;
+          AudioManager().setMusicSpeed(1.0);
           AudioManager().resumeMusic();
         },
         onHome: () => context.go('/'),
@@ -539,6 +541,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     duelController?.dispose();
     effectManager.dispose();
     clipRecorder.dispose();
+    AudioManager().setMusicSpeed(1.0);
     AudioManager().playMusic(AudioPaths.bgMenuLofi);
     super.dispose();
   }

@@ -58,6 +58,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   /// tek hamlede 2-3 kez ust uste calmayi onler.
   Timer? _gelOzuSfxDebounce;
 
+  /// Duel/TimeTrial'da son saniye müzik tempo artışı uygulandı mı
+  bool _timerSpedUp = false;
+
   /// Track quest progress and grant reward if a quest was just completed.
   void _trackQuest(QuestType type, {int amount = 1}) {
     final repo = _cachedRepo;
@@ -148,6 +151,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (combo.tier.index >= ComboTier.medium.index) {
         _trackQuest(QuestType.reachCombo);
       }
+      // Müzik volume swell: epic/large komboda geçici artış
+      if (combo.tier == ComboTier.epic || combo.tier == ComboTier.large) {
+        AudioManager().setMusicVolume(0.6);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          AudioManager().setMusicVolume(AudioConfig.musicVolume);
+        });
+      }
+
       if (mounted) {
         setState(() {
           activeCombo = combo;
@@ -220,6 +231,19 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         ref
             .read(gameProvider(widget.mode).notifier)
             .updateRemainingSeconds(seconds);
+
+        // TimeTrial: son 15 saniyede tick SFX
+        if (widget.mode == GameMode.timeTrial && seconds <= 15 && seconds > 0) {
+          soundBank.onButtonTap();
+        }
+
+        // Duel/TimeTrial: son 30/15 saniyede müzik tempo artışı
+        final threshold =
+            widget.mode == GameMode.duel ? 30 : (widget.mode == GameMode.timeTrial ? 15 : 0);
+        if (threshold > 0 && seconds <= threshold && !_timerSpedUp) {
+          _timerSpedUp = true;
+          AudioManager().setMusicSpeed(1.15);
+        }
       }
     };
 
@@ -360,10 +384,18 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       });
     };
 
+    game.onIceCracked = (_) {
+      soundBank.onIceBreak();
+    };
+
+    game.onGravityApplied = (_) {
+      soundBank.onGravityDrop();
+    };
+
     game.onGameOver = () {
       if (!mounted) return;
       soundBank.onGameOver();
-      AudioManager().pauseMusic();
+      AudioManager().fadeOutMusic(const Duration(milliseconds: 800));
       final score = game.score;
       // Quest tracking: play games + reach score
       _trackQuest(QuestType.playGames);
