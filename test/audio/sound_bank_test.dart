@@ -365,7 +365,6 @@ void main() {
         AudioPaths.undoWhoosh,
         AudioPaths.freezeChime,
         AudioPaths.gravityDrop,
-        AudioPaths.colorSynth,
         AudioPaths.colorSynthesis,
         AudioPaths.pvpObstacleSent,
         AudioPaths.pvpObstacleReceived,
@@ -453,7 +452,6 @@ void main() {
         AudioPaths.undoWhoosh,
         AudioPaths.freezeChime,
         AudioPaths.gravityDrop,
-        AudioPaths.colorSynth,
         AudioPaths.colorSynthesis,
         AudioPaths.pvpObstacleSent,
         AudioPaths.pvpObstacleReceived,
@@ -462,8 +460,8 @@ void main() {
         AudioPaths.levelCompleteNew,
         AudioPaths.gelOzuEarn,
       };
-      // 32 sfx + 4 music = 36 unique paths
-      expect(allPaths.length, 36);
+      // 31 sfx + 4 music = 35 unique paths
+      expect(allPaths.length, 35);
     });
   });
 }

@@ -229,7 +229,6 @@ void main() {
         AudioPaths.undoWhoosh,
         AudioPaths.freezeChime,
         AudioPaths.gravityDrop,
-        AudioPaths.colorSynth,
         AudioPaths.colorSynthesis,
         AudioPaths.pvpObstacleSent,
         AudioPaths.pvpObstacleReceived,
