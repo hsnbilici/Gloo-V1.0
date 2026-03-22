@@ -246,6 +246,12 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       final score = game.score;
       _cachedRepo?.setLevelCompleted(levelId, score);
       final l = ref.read(stringsProvider);
+      // Level completion reward: levelId * 2 Jel Özü
+      final rewardAmount = levelId * 2;
+      if (rewardAmount > 0) {
+        game.currencyManager.earnFromLineClear(rewardAmount);
+      }
+
       showLevelComplete(
         context: context,
         score: score,
@@ -324,6 +330,15 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       ref
           .read(analyticsServiceProvider)
           .logGameOver(mode: widget.mode.name, score: score);
+
+      // Season Pass XP: score / 100
+      final xp = score ~/ 100;
+      if (xp > 0 && repo != null) {
+        final passState = SeasonPassState();
+        passState.loadFromMap(repo.getSeasonPassState());
+        passState.addXp(xp);
+        repo.saveSeasonPassState(passState.toMap());
+      }
 
       // Duel: skor broadcast'ini durdur ve oyun bitis sinyali gonder
       if (widget.mode == GameMode.duel) {

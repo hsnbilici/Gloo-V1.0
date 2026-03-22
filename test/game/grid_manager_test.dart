@@ -540,6 +540,119 @@ void main() {
     });
   });
 
+  // ─── breakAdjacentStones ───────────────────────────────────────────────────
+
+  group('GridManager.breakAdjacentStones', () {
+    test('breaks stones adjacent to cleared rows', () {
+      final gm = GridManager(rows: 5, cols: 4);
+      // Place stones in row 1 (above row 2)
+      gm.setStone(1, 0);
+      gm.setStone(1, 2);
+      // Place stone in row 3 (below row 2)
+      gm.setStone(3, 1);
+
+      // Fill row 2 to trigger a clear
+      for (int c = 0; c < 4; c++) {
+        gm.place([(2, c)], GelColor.red);
+      }
+      final clearResult = gm.detectAndClear();
+      expect(clearResult.clearedRows, [2]);
+
+      final broken = gm.breakAdjacentStones(clearResult);
+      expect(broken.length, 3);
+      expect(broken, containsAll([(1, 0), (1, 2), (3, 1)]));
+
+      // Broken stones should now be normal empty cells
+      expect(gm.getCell(1, 0).type, CellType.normal);
+      expect(gm.getCell(1, 0).isEmpty, isTrue);
+      expect(gm.getCell(1, 2).type, CellType.normal);
+      expect(gm.getCell(3, 1).type, CellType.normal);
+    });
+
+    test('breaks stones adjacent to cleared columns', () {
+      final gm = GridManager(rows: 4, cols: 5);
+      // Place stone in col 1 (left of col 2) and col 3 (right of col 2)
+      gm.setStone(0, 1);
+      gm.setStone(2, 3);
+
+      // Fill col 2 to trigger a clear
+      for (int r = 0; r < 4; r++) {
+        gm.place([(r, 2)], GelColor.blue);
+      }
+      final clearResult = gm.detectAndClear();
+      expect(clearResult.clearedCols, [2]);
+
+      final broken = gm.breakAdjacentStones(clearResult);
+      expect(broken.length, 2);
+      expect(broken, containsAll([(0, 1), (2, 3)]));
+
+      expect(gm.getCell(0, 1).type, CellType.normal);
+      expect(gm.getCell(2, 3).type, CellType.normal);
+    });
+
+    test('does not break stones not adjacent to cleared lines', () {
+      final gm = GridManager(rows: 5, cols: 4);
+      // Stone in row 0, far from cleared row 2
+      gm.setStone(0, 0);
+      // Stone in row 4, far from cleared row 2
+      gm.setStone(4, 0);
+
+      for (int c = 0; c < 4; c++) {
+        gm.place([(2, c)], GelColor.red);
+      }
+      final clearResult = gm.detectAndClear();
+      expect(clearResult.clearedRows, [2]);
+
+      final broken = gm.breakAdjacentStones(clearResult);
+      expect(broken, isEmpty);
+      expect(gm.getCell(0, 0).type, CellType.stone);
+      expect(gm.getCell(4, 0).type, CellType.stone);
+    });
+
+    test('returns empty list when no stones adjacent', () {
+      final gm = GridManager(rows: 3, cols: 3);
+      for (int c = 0; c < 3; c++) {
+        gm.place([(1, c)], GelColor.red);
+      }
+      final clearResult = gm.detectAndClear();
+      final broken = gm.breakAdjacentStones(clearResult);
+      expect(broken, isEmpty);
+    });
+
+    test('handles boundary rows without error', () {
+      final gm = GridManager(rows: 3, cols: 3);
+      gm.setStone(1, 0);
+      // Clear top row (row 0) — check row -1 should be safely skipped
+      for (int c = 0; c < 3; c++) {
+        gm.place([(0, c)], GelColor.yellow);
+      }
+      final clearResult = gm.detectAndClear();
+      expect(clearResult.clearedRows, [0]);
+
+      final broken = gm.breakAdjacentStones(clearResult);
+      expect(broken, [(1, 0)]);
+    });
+
+    test('deduplicates stones adjacent to multiple cleared lines', () {
+      final gm = GridManager(rows: 4, cols: 3);
+      // Stone at (1, 0) is adjacent to both row 0 and row 2
+      gm.setStone(1, 0);
+
+      // Fill row 0 and row 2
+      for (int c = 0; c < 3; c++) {
+        gm.place([(0, c)], GelColor.red);
+        gm.place([(2, c)], GelColor.blue);
+      }
+      final clearResult = gm.detectAndClear();
+      expect(clearResult.clearedRows, containsAll([0, 2]));
+
+      final broken = gm.breakAdjacentStones(clearResult);
+      // Should only appear once despite being adjacent to two cleared rows
+      expect(broken.where((p) => p == (1, 0)).length, 1);
+      expect(gm.getCell(1, 0).type, CellType.normal);
+    });
+  });
+
   // ─── applyAreaObstacle ─────────────────────────────────────────────────────
 
   group('GridManager.applyAreaObstacle', () {

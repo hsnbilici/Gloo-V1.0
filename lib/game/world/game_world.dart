@@ -103,6 +103,7 @@ class GlooGame {
   void Function(int amount)? onJelEnergyEarned;
   void Function(GelColor resultColor, (int, int) position)? onColorSynthesis;
   void Function(int step, int linesCleared)? onCascadeStep;
+  void Function(List<(int, int)> brokenPositions)? onStoneBroken;
 
   int get score => _scoreSystem.score;
   int get highScore => _scoreSystem.highScore;
@@ -310,6 +311,7 @@ class GlooGame {
     final clearResult = _gridManager.detectAndClear();
 
     if (clearResult.totalLines > 0) {
+      _breakStones(clearResult);
       _processLineClear(clearResult,
           colorSynthesisCount: appliedSynthesisCount);
       _applyGravityAndCascade();
@@ -454,6 +456,7 @@ class GlooGame {
       final cascadeClear = _gridManager.detectAndClear();
       if (cascadeClear.totalLines == 0) break;
 
+      _breakStones(cascadeClear);
       iterations++;
       _processLineClear(cascadeClear, isCascade: true);
       onCascadeStep?.call(iterations, cascadeClear.totalLines);
@@ -479,6 +482,14 @@ class GlooGame {
       }
     }
     return false;
+  }
+
+  /// Temizlenen satır/sütunlara komşu taşları kırar ve callback tetikler.
+  void _breakStones(LineClearResult clearResult) {
+    final broken = _gridManager.breakAdjacentStones(clearResult);
+    if (broken.isNotEmpty) {
+      onStoneBroken?.call(broken);
+    }
   }
 
   /// Near-miss değerlendirmesi (Time Trial ve Duel modlarında atlanır).
@@ -519,6 +530,7 @@ class GlooGame {
       // Temizleme + kombo + ekonomi
       final clearResult = _gridManager.detectAndClear();
       if (clearResult.totalLines > 0) {
+        _breakStones(clearResult);
         _processLineClear(clearResult);
         _applyGravityAndCascade();
         _checkTimeTrialBonus(clearResult);

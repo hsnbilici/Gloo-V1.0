@@ -101,6 +101,9 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
     // If the player needs neither tip, don't show anything
     if (widget.synthesisCount > 0 && widget.maxCombo > 0) return null;
 
+    // Total cap: stop showing tips after 6 total displays
+    if (synthCount + comboCount >= 6) return null;
+
     // Rotation: show the less-seen tip
     if (synthCount <= comboCount) {
       repo.incrementTipShown('synthesis');

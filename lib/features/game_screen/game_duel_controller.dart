@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,8 @@ class GameDuelController {
   StreamSubscription<int>? _opponentGameOverSub;
   Timer? scoreBroadcastTimer;
   Timer? botScoreTimer;
+  Timer? botObstacleTimer;
+  int _lastBroadcastedScore = 0;
 
   PvpRealtimeService? get pvpService => _pvpService;
 
@@ -83,11 +86,13 @@ class GameDuelController {
       ref.read(duelProvider.notifier).setOpponentDone(finalScore);
     });
 
-    // Skoru her 5sn'de bir broadcast et
+    // Skor degistiginde 500ms icinde broadcast et
     scoreBroadcastTimer = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(milliseconds: 500),
       (_) {
-        if (game.status == GameStatus.playing) {
+        if (game.status == GameStatus.playing &&
+            game.score != _lastBroadcastedScore) {
+          _lastBroadcastedScore = game.score;
           _pvpService!.broadcastScore(matchId!, game.score);
         }
       },
@@ -105,6 +110,16 @@ class GameDuelController {
       final gain = (30 + (70 * difficulty)).round();
       botScore += gain;
       ref.read(duelProvider.notifier).updateOpponentScore(botScore);
+    });
+
+    // Bot hafif engeller gonderir (15-20sn aralikla)
+    botObstacleTimer = Timer.periodic(const Duration(seconds: 17), (_) {
+      if (game.status != GameStatus.playing) return;
+      final count = 1 + Random().nextInt(2);
+      _applyIncomingObstacle(ObstaclePacket(
+        type: ObstacleType.ice,
+        count: count,
+      ));
     });
   }
 
@@ -159,6 +174,8 @@ class GameDuelController {
     scoreBroadcastTimer = null;
     botScoreTimer?.cancel();
     botScoreTimer = null;
+    botObstacleTimer?.cancel();
+    botObstacleTimer = null;
   }
 
   Future<void> _finalizeDuelResult(

@@ -191,6 +191,42 @@ class GridManager {
     );
   }
 
+  /// Temizlenen satır/sütunlara komşu taş hücrelerini kırar.
+  /// Kırılan taş hücreleri normal boş hücreye dönüşür.
+  /// Dönen liste kırılan taş pozisyonlarını içerir.
+  List<(int, int)> breakAdjacentStones(LineClearResult clearResult) {
+    final stoneBreakPositions = <(int, int)>{};
+
+    for (final row in clearResult.clearedRows) {
+      for (final checkRow in [row - 1, row + 1]) {
+        if (checkRow < 0 || checkRow >= _rows) continue;
+        for (int c = 0; c < _cols; c++) {
+          if (_cells[checkRow][c].type == CellType.stone) {
+            stoneBreakPositions.add((checkRow, c));
+          }
+        }
+      }
+    }
+
+    for (final col in clearResult.clearedCols) {
+      for (final checkCol in [col - 1, col + 1]) {
+        if (checkCol < 0 || checkCol >= _cols) continue;
+        for (int r = 0; r < _rows; r++) {
+          if (_cells[r][checkCol].type == CellType.stone) {
+            stoneBreakPositions.add((r, checkCol));
+          }
+        }
+      }
+    }
+
+    for (final (r, c) in stoneBreakPositions) {
+      _cells[r][c] = Cell();
+    }
+
+    if (stoneBreakPositions.isNotEmpty) _invalidateCache();
+    return stoneBreakPositions.toList();
+  }
+
   /// Yerçekimi uygula — gravity hücrelerin üstündeki bloklar aşağı düşer.
   List<(int, int, int, int)> applyGravity() {
     final moves = <(int, int, int, int)>[]; // (fromR, fromC, toR, toC)
