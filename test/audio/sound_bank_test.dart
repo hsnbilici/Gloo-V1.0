@@ -148,6 +148,10 @@ void main() {
       when(
         () => audio.playSfx(any(), volume: any(named: 'volume')),
       ).thenAnswer((_) async {});
+      when(
+        () => audio.playSfx(any(), volume: any(named: 'volume'), speed: any(named: 'speed')),
+      ).thenAnswer((_) async {});
+      when(() => audio.setMusicVolume(any())).thenAnswer((_) async {});
       when(() => haptic.trigger(any())).thenAnswer((_) async {});
     });
 
@@ -225,11 +229,12 @@ void main() {
       verifyNever(() => haptic.trigger(any()));
     });
 
-    test('onCombo(large) plays comboLarge SFX, no haptic', () async {
+    test('onCombo(large) plays comboLarge SFX and triggers gelMergeLarge haptic',
+        () async {
       const combo = ComboEvent(size: 7, tier: ComboTier.large, multiplier: 2.0);
       await bank.onCombo(combo);
       verify(() => audio.playSfx(AudioPaths.comboLarge, volume: 1.0)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.gelMergeLarge)).called(1);
     });
 
     test('onCombo(epic) plays comboEpic SFX and comboEpic haptic', () async {
@@ -265,18 +270,19 @@ void main() {
 
     // ── onGameOver ───────────────────────────────────────────────────────────
 
-    test('onGameOver plays gameOver SFX, no haptic', () async {
+    test('onGameOver plays gameOver SFX and gelMergeLarge haptic', () async {
       await bank.onGameOver();
       verify(() => audio.playSfx(AudioPaths.gameOver)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.gelMergeLarge)).called(1);
     });
 
     // ── onSynthesis ──────────────────────────────────────────────────────────
 
-    test('onSynthesis plays colorSynthesis SFX, no haptic', () async {
+    test('onSynthesis plays colorSynthesis SFX and rainbowMerge haptic',
+        () async {
       await bank.onSynthesis();
       verify(() => audio.playSfx(AudioPaths.colorSynthesis)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.rainbowMerge)).called(1);
     });
 
     // ── onIceBreak ───────────────────────────────────────────────────────────
@@ -299,18 +305,18 @@ void main() {
 
     // ── onGravityDrop ─────────────────────────────────────────────────────────
 
-    test('onGravityDrop plays gravityDrop SFX, no haptic', () async {
+    test('onGravityDrop plays gravityDrop SFX and gravityDrop haptic', () async {
       await bank.onGravityDrop();
       verify(() => audio.playSfx(AudioPaths.gravityDrop)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.gravityDrop)).called(1);
     });
 
     // ── onButtonTap ───────────────────────────────────────────────────────────
 
-    test('onButtonTap plays buttonTap SFX, no haptic', () async {
+    test('onButtonTap plays buttonTap SFX and buttonTap haptic', () async {
       await bank.onButtonTap();
       verify(() => audio.playSfx(AudioPaths.buttonTap)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.buttonTap)).called(1);
     });
 
     // ── onGelOzuEarn ──────────────────────────────────────────────────────────
@@ -323,16 +329,18 @@ void main() {
 
     // ── onNearMiss ────────────────────────────────────────────────────────────
 
-    test('onNearMiss(survived:true) plays nearMissRelief SFX', () async {
+    test('onNearMiss(survived:true) plays nearMissRelief SFX and gelMergeSmall haptic',
+        () async {
       await bank.onNearMiss(survived: true);
       verify(() => audio.playSfx(AudioPaths.nearMissRelief)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.gelMergeSmall)).called(1);
     });
 
-    test('onNearMiss(survived:false) plays nearMissTension SFX', () async {
+    test('onNearMiss(survived:false) plays nearMissTension SFX and gelMergeLarge haptic',
+        () async {
       await bank.onNearMiss(survived: false);
       verify(() => audio.playSfx(AudioPaths.nearMissTension)).called(1);
-      verifyNever(() => haptic.trigger(any()));
+      verify(() => haptic.trigger(HapticProfile.gelMergeLarge)).called(1);
     });
   });
 

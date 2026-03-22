@@ -47,56 +47,75 @@ void main() {
 
     testWidgets('shows Gloo+ subscription section', (tester) async {
       await tester.pumpWidget(buildShop());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
+      // 'GLOO+' is the section header on the Gloo+ tab (active by default)
       expect(find.text('GLOO+'), findsOneWidget);
-      expect(find.text('Gloo+'), findsOneWidget);
+      // 'Gloo+' appears as both the tab label and the card title
+      expect(find.text('Gloo+'), findsAtLeastNWidgets(1));
     });
 
-    testWidgets('shows AD-FREE and JEL OZU sections', (tester) async {
-      await tester.pumpWidget(buildShop());
-      await tester.pumpAndSettle();
-
-      expect(find.text('AD-FREE'), findsOneWidget);
-      expect(find.text('JEL OZU'), findsOneWidget);
-    });
-
-    testWidgets('shows SOUND PACKS section after scrolling', (tester) async {
+    testWidgets('shows AD-FREE section in Premium tab', (tester) async {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
 
-      await tester.drag(find.byType(ListView), const Offset(0, -300));
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
+      // Navigate to Premium tab (index 2)
+      await tester.tap(find.text('Premium'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('AD-FREE'), findsOneWidget);
+    });
+
+    testWidgets('shows JEL OZU section in currency tab', (tester) async {
+      await tester.pumpWidget(buildShop());
+      await tester.pump(const Duration(seconds: 1));
+
+      // Navigate to Gel Drops / Jel Özü tab (index 1)
+      await tester.tap(find.byIcon(Icons.water_drop_rounded).first);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('JEL OZU'), findsOneWidget);
+    });
+
+    testWidgets('shows SOUND PACKS section in Premium tab', (tester) async {
+      await tester.pumpWidget(buildShop());
+      await tester.pump(const Duration(seconds: 1));
+
+      // Navigate to Premium tab (index 2)
+      await tester.tap(find.text('Premium'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.text('SOUND PACKS'), findsOneWidget);
     });
 
-    // flutter_animate widget'ları scroll'da inflate olunca timer başlatır.
-    // pump ile animasyonları bitirmeli, birden fazla pump gerekebilir.
-    testWidgets('shows redeem code section after scrolling', (tester) async {
+    // flutter_animate widget'ları inflate olunca timer başlatır.
+    // pump ile animasyonları bitirmeli.
+    testWidgets('shows redeem code section in Promo tab', (tester) async {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
 
-      // Scroll down to reveal redeem code section
-      await tester.drag(find.byType(ListView), const Offset(0, -600));
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
+      // Navigate to Promo Code tab (index 3)
+      await tester.tap(find.byIcon(Icons.confirmation_number_rounded));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.text('REDEEM CODE'), findsOneWidget);
       expect(find.text('Redeem'), findsOneWidget);
     });
 
-    testWidgets('shows restore purchases after scrolling', (tester) async {
+    testWidgets('shows restore purchases button (persistent footer)', (tester) async {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
 
-      // Scroll down to reveal restore purchases link
-      await tester.drag(find.byType(ListView), const Offset(0, -800));
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
-      await tester.pump(const Duration(milliseconds: 500));
-
+      // Restore Purchases is a persistent footer outside the TabBarView
       expect(find.text('Restore Purchases'), findsOneWidget);
     });
   });
