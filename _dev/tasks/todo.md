@@ -14,6 +14,27 @@
 - [x] **GD.BL30 — Preview-time line completion hint:** Satir tamamlama ipucu yesil border overlay
 - [ ] **GD.MGO7 — Ada binalari gating:** BLOCKED — Ada sistemi mevcut ama MetaGameBar HomeScreen'den cikarilmis, core loop'a entegre degil
 
+### GD.RO2 — "Guided First Game" (ilk oyunda sentez kesfi)
+- [x] `ShapeGenerator.generateSmartHand`: `gamesPlayed == 0 && mode == classic && grid bos` ise ilk eli red+yellow ile zorla
+- [x] `game_callbacks.dart`: Mevcut synthesis toast mekanizmasi yeterli (ilk 3 sentezde gosteriliyor)
+
+### GD.RO6 — Push notification altyapisi
+- [x] `firebase_messaging` pubspec'te yok — stub/interface olusturuldu
+- [x] `lib/services/notification_service.dart` — NotificationService interface + StubNotificationService
+- [x] Bildirim senaryolari tanimlandi: streakReminder, dailyPuzzle, comeback
+- **Durum:** Altyapi hazir, `firebase_messaging` entegrasyonu bekleniyor
+
+### GD.MGO10 — Ascension/Prestige sistemi
+- [x] `LevelProgression.getLevel(levelId, ascension:)`: ascension multiplier parametresi eklendi
+- [x] `LevelProgression._applyAscension`: hedef skor +%25/ascension, hamle siniri -%10/ascension (max %50 azalma)
+- [x] `GameDataRepository`: `getAscensionLevel()`/`saveAscensionLevel()` persist eklendi
+- [x] `LocalRepository`: ascension facade metodlari + GDPR export eklendi
+- [x] `ILocalRepository` interface guncellendi
+
+### Dogrulama
+- [x] `flutter analyze` 0 error (42 pre-existing info)
+- [x] `flutter test --exclude-tags=golden` 2127/2127 passed
+
 ---
 
 ## Tamamlanan Manuel Aksiyonlar
@@ -370,13 +391,13 @@
 
 **P0 — Hemen:**
 - [x] **GD.RO1 — Onboarding'i interaktif yap:** Her sayfaya animasyonlu mini-demo ekle (Orta efor)
-- [ ] **GD.RO2 — "Guided First Game" tasarla:** Ilk oyunda kasitli renkler + sentez toast'i (Buyuk efor)
+- [x] **GD.RO2 — "Guided First Game" tasarla:** Ilk oyunda kasitli renkler + sentez toast'i (Buyuk efor)
 - [x] **GD.RO3 — Dialog zincirini birlestir:** 3 popup → 1 combined dialog (Kucuk efor) ✅
 - [x] **GD.RO4 — MetaGameBar'i gizle veya "Coming Soon" yap:** Hayalet sistemleri sakla (Kucuk efor) ✅
 - [x] **GD.RO5 — Ilk 5 oyunda zorluk dusur:** `gamesPlayed < 5` → %80 kucuk sekil (Kucuk efor) ✅
 
 **P1 — Bu Sprint:**
-- [ ] **GD.RO6 — Push notification altyapisi kur:** firebase_messaging + D1/D2/D3 senaryolari (Orta efor)
+- [x] **GD.RO6 — Push notification altyapisi kur:** firebase_messaging + D1/D2/D3 senaryolari (Orta efor)
 - [x] **GD.RO7 — Progressive mod acilimi:** Classic → 3 oyun sonra Color Chef → 5 sonra Time Trial (Orta efor)
 - [x] **GD.RO8 — Game Over'da ozet ekle:** "4 satir, 1 sentez, %87 dolu" + ipucu (Kucuk efor) ✅
 - [x] **GD.RO9 — Gunluk gorev sistemini UI'a bagla:** HomeScreen'de mini progress (Orta efor)
@@ -436,7 +457,7 @@
 - [ ] **GD.MGO7 — Ada binalarini gating mekanigi yap:** arena→PvP, harbor→SeasonPass, factory→pasif uretim (M efor)
 - [x] **GD.MGO8 — Koleksiyonu genislet:** 8→16+ renk, tamamlama odulleri (S efor)
 - [x] **GD.MGO9 — inflatedCost entegrasyonu:** T23 ile tamamlandi (power-up maliyetlerine baglandi) ✅
-- [ ] **GD.MGO10 — Ascension/Prestige sistemi:** Level 50 sonrasi zorluk katmanlari (L efor)
+- [x] **GD.MGO10 — Ascension/Prestige sistemi:** Level 50 sonrasi zorluk katmanlari (L efor)
 
 ---
 

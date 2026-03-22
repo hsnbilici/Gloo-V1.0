@@ -125,6 +125,7 @@ class LocalRepository {
       'progress': {
         'current_level': getCurrentLevel(),
         'max_completed_level': getMaxCompletedLevel(),
+        'ascension_level': getAscensionLevel(),
         'completed_levels': getCompletedLevels().toList(),
       },
       'pvp': {
@@ -216,6 +217,12 @@ class LocalRepository {
   int getCurrentLevel() => gameData.getCurrentLevel();
 
   Future<void> saveCurrentLevel(int level) => gameData.saveCurrentLevel(level);
+
+  // ─── Ascension (Prestige) ──────────────────────────────────────────────
+
+  int getAscensionLevel() => gameData.getAscensionLevel();
+
+  Future<void> saveAscensionLevel(int level) => gameData.saveAscensionLevel(level);
 
   int getMaxCompletedLevel() => gameData.getMaxCompletedLevel();
 

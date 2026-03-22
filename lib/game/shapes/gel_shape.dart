@@ -149,8 +149,20 @@ class ShapeGenerator {
     final candidates = <(GelShape, GelColor)>[];
     final grid = gridManager.grid;
 
+    // İlk oyun keşfi: gamesPlayed == 0 && classic && ızgara boş →
+    // red + yellow zorla → doğal sentez keşfi (orange)
+    final isFirstHand = gamesPlayed == 0 &&
+        mode == GameMode.classic &&
+        grid.every((row) => row.every((cell) => cell == null));
+
     for (int i = 0; i < GameConstants.shapesInHand; i++) {
-      if (forceMercy && i == 0) {
+      if (isFirstHand) {
+        // İlk elde sentez çifti: red, yellow, red (sentez keşfi)
+        final color = i == 1 ? GelColor.yellow : GelColor.red;
+        final shape =
+            _weightedRandomShape(effectiveDifficulty, gamesPlayed, mode);
+        candidates.add((shape, color));
+      } else if (forceMercy && i == 0) {
         // Kurtarıcı şekil: küçük + sentez dostu renk
         final shape = kSmallShapes[_rng.nextInt(kSmallShapes.length)];
         final color = _weightedRandomColor(grid, availableColors);

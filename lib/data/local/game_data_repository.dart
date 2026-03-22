@@ -136,6 +136,14 @@ class GameDataRepository {
     await _prefs.setInt('current_level', level);
   }
 
+  // ─── Ascension (Prestige) ──────────────────────────────────────────────
+
+  int getAscensionLevel() => _prefs.getInt('ascension_level') ?? 0;
+
+  Future<void> saveAscensionLevel(int level) async {
+    await _prefs.setInt('ascension_level', level);
+  }
+
   int getMaxCompletedLevel() => _prefs.getInt('max_completed_level') ?? 0;
 
   Future<void> saveMaxCompletedLevel(int level) async {

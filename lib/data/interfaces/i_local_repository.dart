@@ -111,6 +111,10 @@ abstract class ILocalRepository {
 
   Future<void> saveCurrentLevel(int level);
 
+  int getAscensionLevel();
+
+  Future<void> saveAscensionLevel(int level);
+
   int getMaxCompletedLevel();
 
   Future<void> saveMaxCompletedLevel(int level);

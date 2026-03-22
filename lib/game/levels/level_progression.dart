@@ -15,16 +15,45 @@ import 'level_data.dart';
 /// Her 10 seviyede 1 "breathing room" — kolay seviye (Retention için kritik).
 class LevelProgression {
   /// Mevcut seviyeyi döner. Seviye yoksa null döner.
-  static LevelData? getLevel(int levelId) {
+  ///
+  /// [ascension] > 0 ise hedef skor %25 artırılır ve hamle sınırı %10
+  /// azaltılır (her ascension katmanı için kümülatif).
+  static LevelData? getLevel(int levelId, {int ascension = 0}) {
     if (levelId < 1) return null;
 
+    LevelData? base;
     // Önceden tanımlı seviyeler
     if (levelId <= _predefinedLevels.length) {
-      return _predefinedLevels[levelId - 1];
+      base = _predefinedLevels[levelId - 1];
+    } else {
+      // Prosedürel üretim (50+ seviyeler)
+      base = _generateProceduralLevel(levelId);
     }
 
-    // Prosedürel üretim (50+ seviyeler)
-    return _generateProceduralLevel(levelId);
+    if (ascension <= 0) return base;
+    return _applyAscension(base, ascension);
+  }
+
+  /// Ascension çarpanlarını seviye verisine uygular.
+  /// Her ascension katmanı: hedef skor +%25, hamle sınırı -%10.
+  static LevelData _applyAscension(LevelData base, int ascension) {
+    final scoreMultiplier = 1.0 + (ascension * 0.25);
+    final movesMultiplier = 1.0 - (ascension * 0.10).clamp(0.0, 0.50);
+
+    return LevelData(
+      id: base.id,
+      rows: base.rows,
+      cols: base.cols,
+      specialCells: base.specialCells,
+      availableColors: base.availableColors,
+      targetScore: (base.targetScore * scoreMultiplier).round(),
+      maxMoves: base.maxMoves != null
+          ? (base.maxMoves! * movesMultiplier).round().clamp(10, 9999)
+          : null,
+      shape: base.shape,
+      description: base.description,
+      microTask: base.microTask,
+    );
   }
 
   /// Toplam tanımlı seviye sayısı.
