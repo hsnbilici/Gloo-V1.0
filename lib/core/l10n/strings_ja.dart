@@ -562,6 +562,8 @@ class StringsJa extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy => '\u30B9\u30C8\u30EA\u30FC\u30AF\u30D5\u30EA\u30FC\u30BA\u8CFC\u5165 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

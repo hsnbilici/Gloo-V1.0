@@ -470,7 +470,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 );
               }
             : null,
-        onWatchAdBomb: !_bombAdUsed
+        onWatchAdBomb: !_bombAdUsed && adManager.isRewardedReady
             ? () {
                 adManager.showNearMissRescue(
                   onRewarded: () {

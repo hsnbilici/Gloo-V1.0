@@ -566,6 +566,9 @@ class StringsHi extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy =>
+      '\u0938\u094D\u091F\u094D\u0930\u0940\u0915 \u092B\u094D\u0930\u0940\u091C \u0916\u0930\u0940\u0926\u0947\u0902 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

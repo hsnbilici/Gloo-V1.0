@@ -570,6 +570,9 @@ class StringsAr extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy =>
+      '\u0634\u0631\u0627\u0621 \u062A\u062C\u0645\u064A\u062F \u0627\u0644\u0633\u0644\u0633\u0644\u0629 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

@@ -568,6 +568,8 @@ class StringsPt extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy => 'Comprar Streak Freeze — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

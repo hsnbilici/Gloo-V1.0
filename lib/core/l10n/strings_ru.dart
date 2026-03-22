@@ -572,6 +572,9 @@ class StringsRu extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy =>
+      '\u041A\u0443\u043F\u0438\u0442\u044C \u0437\u0430\u043C\u043E\u0440\u043E\u0437\u043A\u0443 \u0441\u0435\u0440\u0438\u0438 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

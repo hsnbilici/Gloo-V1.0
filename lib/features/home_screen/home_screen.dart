@@ -14,6 +14,7 @@ import '../../core/layout/responsive.dart';
 import '../../core/models/game_mode.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
+import '../../game/economy/currency_manager.dart';
 import '../../game/levels/level_progression.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -215,7 +216,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                       if (streak >= 2) ...[
                         const SizedBox(height: 10),
-                        StreakBadge(streak: streak, days: l.streakDays)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            StreakBadge(streak: streak, days: l.streakDays),
+                            if (repo != null && !repo.hasStreakFreeze())
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: _StreakFreezeButton(repo: repo, l: l),
+                              )
+                            else if (repo != null && repo.hasStreakFreeze())
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8),
+                                child: Icon(
+                                  Icons.ac_unit_rounded,
+                                  color: kCyan.withValues(alpha: 0.7),
+                                  size: 16,
+                                ),
+                              ),
+                          ],
+                        )
                             .animateOrSkip(reduceMotion: rm, delay: 200.ms)
                             .fadeIn(duration: 400.ms)
                             .scale(
@@ -568,6 +588,78 @@ class _DuelEloChip extends ConsumerWidget {
       child: Text(
         '$elo ELO',
         style: AppTextStyles.caption.copyWith(color: textColor),
+      ),
+    );
+  }
+}
+
+// ─── Streak Freeze buy button ─────────────────────────────────────────────────
+
+class _StreakFreezeButton extends StatefulWidget {
+  const _StreakFreezeButton({required this.repo, required this.l});
+
+  final LocalRepository repo;
+  final AppStrings l;
+
+  @override
+  State<_StreakFreezeButton> createState() => _StreakFreezeButtonState();
+}
+
+class _StreakFreezeButtonState extends State<_StreakFreezeButton> {
+  bool _purchased = false;
+
+  Future<void> _buy() async {
+    final balance = await widget.repo.getGelOzu();
+    if (balance < CurrencyCosts.streakFreeze) return;
+    await widget.repo.saveGelOzu(balance - CurrencyCosts.streakFreeze);
+    await widget.repo.setStreakFreeze(true);
+    if (!mounted) return;
+    setState(() => _purchased = true);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(widget.l.streakFreezeLabel),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_purchased) {
+      return Icon(
+        Icons.ac_unit_rounded,
+        color: kCyan.withValues(alpha: 0.7),
+        size: 16,
+      );
+    }
+    return Semantics(
+      label: widget.l.streakFreezeBuy,
+      button: true,
+      child: GestureDetector(
+        onTap: _buy,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          decoration: BoxDecoration(
+            color: kCyan.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: kCyan.withValues(alpha: 0.30)),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.ac_unit_rounded, color: kCyan, size: 12),
+              SizedBox(width: 4),
+              Text(
+                '100',
+                style: TextStyle(
+                  color: kCyan,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

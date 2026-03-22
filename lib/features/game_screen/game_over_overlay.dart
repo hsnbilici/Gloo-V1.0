@@ -274,20 +274,28 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                                         ),
                                       );
                                     },
-                                    child: Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: BoxDecoration(
-                                        color: color.withValues(alpha: 0.12),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: color.withValues(alpha: 0.30),
+                                    child: SizedBox(
+                                      width: 44,
+                                      height: 44,
+                                      child: Center(
+                                        child: Container(
+                                          width: 32,
+                                          height: 32,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                color.withValues(alpha: 0.12),
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color:
+                                                  color.withValues(alpha: 0.30),
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.share_rounded,
+                                            color: color,
+                                            size: 14,
+                                          ),
                                         ),
-                                      ),
-                                      child: Icon(
-                                        Icons.share_rounded,
-                                        color: color,
-                                        size: 14,
                                       ),
                                     ),
                                   ),

@@ -559,6 +559,8 @@ class StringsZh extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy => '\u8D2D\u4E70\u8FDE\u7EED\u767B\u5F55\u4FDD\u62A4 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

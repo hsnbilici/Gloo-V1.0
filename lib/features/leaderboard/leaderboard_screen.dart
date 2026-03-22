@@ -11,6 +11,7 @@ import '../../core/layout/rtl_helpers.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/pvp_provider.dart';
 import '../../providers/service_providers.dart';
 import 'leaderboard_background.dart';
 import 'leaderboard_widgets.dart';
@@ -61,9 +62,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
       final scores =
           await ref.read(remoteRepositoryProvider).getEloLeaderboard();
       if (!mounted) return;
+      final userId = ref.read(currentUserIdProvider);
+      int? pvpRank;
+      if (userId != null) {
+        final idx = scores.indexWhere((e) => e.userId == userId);
+        if (idx >= 0) pvpRank = idx + 1;
+      }
       setState(() {
         _scores = scores;
-        _userRank = null;
+        _userRank = pvpRank;
         _loading = false;
       });
     } else {

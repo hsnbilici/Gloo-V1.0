@@ -564,6 +564,8 @@ class StringsEn extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy => 'Buy Streak Freeze — 100';
 
   // GD.MO5: Jel Özü consumable IAP
   @override

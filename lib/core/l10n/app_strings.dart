@@ -360,6 +360,7 @@ abstract class AppStrings {
   // GD.RO11: Streak Freeze
   String get streakFreezeLabel;
   String get streakFreezeUsed;
+  String get streakFreezeBuy;
 
   // GD.MO5: Jel Özü consumable IAP
   String get shopJelOzu100;

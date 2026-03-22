@@ -563,6 +563,8 @@ class StringsKo extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+  @override
+  String get streakFreezeBuy => '\uC2A4\uD2B8\uB9AD \uB3D9\uACB0 \uAD6C\uB9E4 — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';

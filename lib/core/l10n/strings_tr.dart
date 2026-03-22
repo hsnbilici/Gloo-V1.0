@@ -566,6 +566,8 @@ class StringsTr extends AppStrings {
   String get streakFreezeLabel => 'Seri Dondurma';
   @override
   String get streakFreezeUsed => 'Seri dondurma kullanildi!';
+  @override
+  String get streakFreezeBuy => 'Seri Dondurma Satin Al — 100';
 
   @override
   String get shopJelOzu100 => '100 Jel Ozu';
