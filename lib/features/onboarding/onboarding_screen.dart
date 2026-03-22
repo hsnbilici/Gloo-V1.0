@@ -933,7 +933,27 @@ class _InteractivePlaceDemoState extends State<_InteractivePlaceDemo>
   Widget build(BuildContext context) {
     final rm = shouldReduceMotion(context);
 
-    return Column(
+    return Stack(
+      alignment: Alignment.center,
+      clipBehavior: Clip.none,
+      children: [
+        // Atmospheric glow orbs — decorative, always static
+        const Positioned(
+          top: -20,
+          left: -30,
+          child: GlowOrb(size: 100, color: kCyan, opacity: 0.05),
+        ),
+        const Positioned(
+          bottom: -10,
+          right: -24,
+          child: GlowOrb(size: 80, color: kPink, opacity: 0.05),
+        ),
+        const Positioned(
+          top: 10,
+          right: -18,
+          child: GlowOrb(size: 60, color: kGold, opacity: 0.06),
+        ),
+        Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Grid
@@ -1009,10 +1029,16 @@ class _InteractivePlaceDemoState extends State<_InteractivePlaceDemo>
                       children: [
                         Text(
                           widget.greatLabel,
-                          style: TextStyle(
-                            color: widget.color,
+                          style: const TextStyle(
+                            color: kGold,
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
+                            shadows: [
+                              Shadow(
+                                color: kGold,
+                                blurRadius: 12,
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -1040,6 +1066,8 @@ class _InteractivePlaceDemoState extends State<_InteractivePlaceDemo>
                   : const SizedBox.shrink(
                       key: ValueKey('placing'),
                     ),
+        ),
+      ],
         ),
       ],
     );
@@ -1124,7 +1152,14 @@ class _InteractivePlaceDemoState extends State<_InteractivePlaceDemo>
                   blurRadius: 8,
                 ),
               ]
-            : null,
+            : cellColor != null
+                ? [
+                    BoxShadow(
+                      color: cellColor.withValues(alpha: 0.30),
+                      blurRadius: 6,
+                    ),
+                  ]
+                : null,
       ),
     );
   }
