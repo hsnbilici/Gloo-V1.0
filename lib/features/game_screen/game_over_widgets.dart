@@ -166,11 +166,15 @@ class GameOverStatRow extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.subtitle,
+    this.isNewRecord = false,
   });
 
   final String label;
   final String value;
   final Color color;
+  final String? subtitle;
+  final bool isNewRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -180,27 +184,60 @@ class GameOverStatRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        border: Border.all(
+          color: isNewRecord
+              ? kGold.withValues(alpha: 0.25)
+              : Colors.white.withValues(alpha: 0.08),
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              color: kMuted,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  color: kMuted,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          Text(
-            value,
-            style: TextStyle(
-              color: color,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (isNewRecord)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 4),
+                    child: Icon(Icons.star_rounded, color: kGold, size: 10),
+                  ),
+                Text(
+                  subtitle!,
+                  style: TextStyle(
+                    color: isNewRecord
+                        ? kGold
+                        : kMuted.withValues(alpha: 0.6),
+                    fontSize: 10,
+                    fontWeight:
+                        isNewRecord ? FontWeight.w700 : FontWeight.w400,
+                  ),
+                ),
+              ],
             ),
-          ),
+          ],
         ],
       ),
     );

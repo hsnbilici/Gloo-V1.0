@@ -119,6 +119,8 @@ class StringsRu extends AppStrings {
   @override
   String get homeScoreBest => 'Рекорд';
   @override
+  String get homeScoreBeatIt => 'Beat it?';
+  @override
   String get navLeaderboard => 'Рейтинг';
   @override
   String get navShop => 'Магазин';
@@ -538,4 +540,15 @@ class StringsRu extends AppStrings {
   String get shareScoreChallenge => 'Какой у тебя рекорд?';
   @override
   String get shareDailyChallenge => 'А сколько у тебя сегодня?';
+
+  @override
+  String get colorblindPromptText => 'Having trouble telling colors apart?';
+  @override
+  String get colorblindPromptAction => 'Enable Color Assist';
+
+  @override
+  String get gameOverNewStatRecord => 'New Record!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'This time: $current \u2014 Record: $record';
 }

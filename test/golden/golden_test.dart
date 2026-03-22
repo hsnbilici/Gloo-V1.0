@@ -8,7 +8,7 @@
 //
 // Notes:
 // • flutter_animate causes pumpAndSettle() to time-out — use pump(Duration).
-// • GameOverOverlay is a ConsumerWidget; wrap in ProviderScope with
+// • GameOverOverlay is a ConsumerStatefulWidget; wrap in ProviderScope with
 //   stringsProvider overridden to StringsEn() for deterministic text.
 // • TutorialOverlay is a Positioned widget; it must live inside a Stack.
 // • Golden tests are platform-dependent — skipped in CI via --exclude-tags=golden.

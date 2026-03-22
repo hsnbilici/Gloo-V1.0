@@ -34,6 +34,16 @@ class SettingsRepository {
     await _prefs.setBool('consent_shown', true);
   }
 
+  // ─── İpucu Gösterim Sayısı ──────────────────────────────────────────────
+
+  int getTipShownCount(String tipKey) =>
+      _prefs.getInt('tip_shown_$tipKey') ?? 0;
+
+  Future<void> incrementTipShown(String tipKey) async {
+    final count = getTipShownCount(tipKey);
+    await _prefs.setInt('tip_shown_$tipKey', count + 1);
+  }
+
   // ─── Tema Modu ──────────────────────────────────────────────────────────
 
   Future<ThemeMode> getThemeMode() async {

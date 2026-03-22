@@ -119,6 +119,8 @@ class StringsEn extends AppStrings {
   @override
   String get homeScoreBest => 'Best';
   @override
+  String get homeScoreBeatIt => 'Beat it?';
+  @override
   String get navLeaderboard => 'Leaderboard';
   @override
   String get navShop => 'Shop';
@@ -530,4 +532,15 @@ class StringsEn extends AppStrings {
   String get shareScoreChallenge => 'What\'s your high score?';
   @override
   String get shareDailyChallenge => 'What did you get today?';
+
+  @override
+  String get colorblindPromptText => 'Having trouble telling colors apart?';
+  @override
+  String get colorblindPromptAction => 'Enable Color Assist';
+
+  @override
+  String get gameOverNewStatRecord => 'New Record!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'This time: $current \u2014 Record: $record';
 }

@@ -197,6 +197,19 @@ class ShapeGenerator {
       return pool[_rng.nextInt(pool.length)];
     }
 
+    // ColorChef: orta şekil ağırlıklı (sentez fırsatı için)
+    if (mode == GameMode.colorChef) {
+      late final List<GelShape> pool;
+      if (roll < 0.35) {
+        pool = kSmallShapes;
+      } else if (roll < 0.85) {
+        pool = kMediumShapes;
+      } else {
+        pool = kLargeShapes;
+      }
+      return pool[_rng.nextInt(pool.length)];
+    }
+
     // Zorluk 0.0-0.3: %60 küçük, %30 orta, %10 büyük
     // Zorluk 0.3-0.7: %30 küçük, %40 orta, %30 büyük
     // Zorluk 0.7-1.0: %10 küçük, %30 orta, %60 büyük
@@ -312,6 +325,15 @@ class ShapeGenerator {
       kAllShapes.first,
       colors[_rng.nextInt(colors.length)],
     );
+  }
+
+  /// Tek bir rastgele şekil üretir (zorluk ağırlıklı, renksiz).
+  GelShape generateSingleShape({
+    required double difficulty,
+    int gamesPlayed = 0,
+    GameMode? mode,
+  }) {
+    return _weightedRandomShape(difficulty, gamesPlayed, mode);
   }
 
   /// Zorluk eğrisi hesapla.

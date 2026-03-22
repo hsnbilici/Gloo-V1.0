@@ -400,6 +400,11 @@ class _ClassicScoreChip extends ConsumerWidget {
 
     if (lastScore == 0 && highScore == 0) return const SizedBox.shrink();
 
+    final isSoClose = lastScore > 0 &&
+        highScore > 0 &&
+        lastScore >= highScore * 0.8 &&
+        lastScore < highScore;
+
     final textColor = resolveColor(
       brightness,
       dark: kMuted,
@@ -414,7 +419,9 @@ class _ClassicScoreChip extends ConsumerWidget {
           if (lastScore > 0) ...[
             Text(
               '${l.homeScoreLast}: ${_fmt(lastScore)}',
-              style: AppTextStyles.caption.copyWith(color: textColor),
+              style: AppTextStyles.caption.copyWith(
+                color: isSoClose ? kAmber : textColor,
+              ),
             ),
           ],
           if (lastScore > 0 && highScore > 0)
@@ -427,6 +434,16 @@ class _ClassicScoreChip extends ConsumerWidget {
               '${l.homeScoreBest}: ${_fmt(highScore)}',
               style: AppTextStyles.caption.copyWith(
                 color: textColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+          if (isSoClose) ...[
+            const SizedBox(width: 6),
+            Text(
+              l.homeScoreBeatIt,
+              style: AppTextStyles.caption.copyWith(
+                color: kGold,
                 fontWeight: FontWeight.w700,
               ),
             ),

@@ -63,7 +63,14 @@ class DuelResult {
 /// ELO hesaplama sistemi.
 class EloSystem {
   static const int initialElo = 1000;
-  static const int kFactor = 32;
+
+  /// Dynamic K-Factor: lower ELO = faster movement, higher = more stable.
+  static int getKFactor(int playerElo) {
+    if (playerElo < 800) return 40;
+    if (playerElo < 1200) return 32;
+    if (playerElo < 1600) return 28;
+    return 24;
+  }
 
   /// ELO değişimini hesaplar.
   static int calculateChange({
@@ -71,13 +78,14 @@ class EloSystem {
     required int opponentElo,
     required DuelOutcome outcome,
   }) {
+    final k = getKFactor(playerElo);
     final expected = 1.0 / (1.0 + pow(10, (opponentElo - playerElo) / 400));
     final actual = switch (outcome) {
       DuelOutcome.win => 1.0,
       DuelOutcome.loss => 0.0,
       DuelOutcome.draw => 0.5,
     };
-    return (kFactor * (actual - expected)).round();
+    return (k * (actual - expected)).round();
   }
 
   /// Ödül hesapla.

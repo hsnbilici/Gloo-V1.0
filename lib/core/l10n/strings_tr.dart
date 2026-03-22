@@ -119,6 +119,8 @@ class StringsTr extends AppStrings {
   @override
   String get homeScoreBest => 'Rekor';
   @override
+  String get homeScoreBeatIt => 'Geçebilir misin?';
+  @override
   String get navLeaderboard => 'Sıralama';
   @override
   String get navShop => 'Mağaza';
@@ -532,4 +534,15 @@ class StringsTr extends AppStrings {
   String get shareScoreChallenge => 'Senin en yüksek puanın nedir?';
   @override
   String get shareDailyChallenge => 'Sen bugün kaç yaptın?';
+
+  @override
+  String get colorblindPromptText => 'Renkleri ayırt etmekte zorlanıyor musun?';
+  @override
+  String get colorblindPromptAction => 'Renk Koruyucuyu Aç';
+
+  @override
+  String get gameOverNewStatRecord => 'Yeni Rekor!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'Bu sefer: $current \u2014 Rekor: $record';
 }

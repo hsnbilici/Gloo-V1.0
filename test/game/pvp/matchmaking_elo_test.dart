@@ -39,9 +39,9 @@ void main() {
         opponentElo: 1500,
         outcome: DuelOutcome.win,
       );
-      // Expected: ~31 (1000 ELO diff means expected ~0.03, so gain ≈ 32*(1-0.03))
-      expect(change, greaterThan(28));
-      expect(change, lessThanOrEqualTo(32));
+      // K=40 for ELO<800, expected ≈ 0.03, gain ≈ 40*(1-0.03) ≈ 39
+      expect(change, greaterThan(35));
+      expect(change, lessThanOrEqualTo(40));
     });
 
     test('upset win gives larger gain than expected win', () {
@@ -77,7 +77,8 @@ void main() {
         opponentElo: 500,
         outcome: DuelOutcome.loss,
       );
-      expect(change, lessThan(-28));
+      // K=28 for ELO 1200-1599, loss ≈ -28*(0-0.997) ≈ -28
+      expect(change, lessThan(-25));
     });
   });
 
@@ -127,25 +128,26 @@ void main() {
   });
 
   group('EloSystem — ELO change magnitude bounds', () {
-    test('maximum possible gain is 32 (K-factor)', () {
-      // Extreme underdog (ELO 0) beating extreme favorite (ELO 3000)
+    test('maximum possible gain is K-factor (40 for low ELO)', () {
+      // Extreme underdog (ELO 0, K=40) beating extreme favorite (ELO 3000)
       final change = EloSystem.calculateChange(
         playerElo: 0,
         opponentElo: 3000,
         outcome: DuelOutcome.win,
       );
-      expect(change, lessThanOrEqualTo(32));
-      expect(change, greaterThan(30)); // very close to 32
+      expect(change, lessThanOrEqualTo(40));
+      expect(change, greaterThan(38)); // very close to 40
     });
 
-    test('maximum possible loss is -32 (K-factor)', () {
+    test('maximum possible loss is -K-factor (24 for high ELO)', () {
       final change = EloSystem.calculateChange(
         playerElo: 3000,
         opponentElo: 0,
         outcome: DuelOutcome.loss,
       );
-      expect(change, greaterThanOrEqualTo(-32));
-      expect(change, lessThan(-30)); // very close to -32
+      // K=24 for ELO 1600+
+      expect(change, greaterThanOrEqualTo(-24));
+      expect(change, lessThan(-22)); // very close to -24
     });
 
     test('ELO changes sum to approximately zero for both players', () {

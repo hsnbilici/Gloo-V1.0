@@ -78,6 +78,9 @@ class GlooGame {
   int _totalSynthesisCount = 0;
   int _maxComboSize = 0;
 
+  // Sıradaki şekil silueti (stratejik planlama ipucu)
+  GelShape? _nextShapeSilhouette;
+
   // Faz 4: Freeze durumu
   Timer? _freezeTimer;
 
@@ -117,6 +120,9 @@ class GlooGame {
   int get totalLinesCleared => _totalLinesCleared;
   int get totalSynthesisCount => _totalSynthesisCount;
   int get maxComboSize => _maxComboSize;
+
+  /// Sıradaki elin ilk şekil silueti (renksiz — sadece outline).
+  GelShape? get nextShapeSilhouette => _nextShapeSilhouette;
 
   void setInitialHighScore(int value) =>
       _scoreSystem.setInitialHighScore(value);
@@ -278,13 +284,22 @@ class GlooGame {
       score: _scoreSystem.score,
       gamesPlayed: _totalGamesPlayed,
     );
-    return _shapeGenerator.generateSmartHand(
+    final result = _shapeGenerator.generateSmartHand(
       gridManager: _gridManager,
       difficulty: difficulty,
       gamesPlayed: _totalGamesPlayed,
       availableColors: levelData?.availableColors,
       mode: mode,
     );
+
+    // Sıradaki elin ilk şeklini siluet olarak ön-üret
+    _nextShapeSilhouette = _shapeGenerator.generateSingleShape(
+      difficulty: difficulty,
+      gamesPlayed: _totalGamesPlayed,
+      mode: mode,
+    );
+
+    return result;
   }
 
   void _evaluateBoard() {

@@ -4,7 +4,7 @@
 // Client dogrudan ELO guncelleyemez — bu fonksiyon:
 // 1. Auth dogrulama yapar (token + match katilimci kontrolu)
 // 2. pvp_matches tablosundan iki oyuncunun skorunu dogrular
-// 3. ELO degisimini hesaplar (K=32)
+// 3. ELO degisimini hesaplar (dinamik K-Factor)
 // 4. profiles tablosunu gunceller
 //
 // Deploy: supabase functions deploy calculate-elo
@@ -15,7 +15,13 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const K_FACTOR = 32
+/** Dynamic K-Factor: lower ELO = faster movement, higher = more stable. */
+function getKFactor(playerElo: number): number {
+  if (playerElo < 800) return 40
+  if (playerElo < 1200) return 32
+  if (playerElo < 1600) return 28
+  return 24
+}
 
 const CORS_HEADERS = {
   'Content-Type': 'application/json',
@@ -46,8 +52,9 @@ function calculateEloChange(
   opponentElo: number,
   outcome: number, // 1 = win, 0 = loss, 0.5 = draw
 ): number {
+  const k = getKFactor(playerElo)
   const expected = 1.0 / (1.0 + Math.pow(10, (opponentElo - playerElo) / 400))
-  return Math.round(K_FACTOR * (outcome - expected))
+  return Math.round(k * (outcome - expected))
 }
 
 serve(async (req: Request) => {

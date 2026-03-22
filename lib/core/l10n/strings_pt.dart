@@ -119,6 +119,8 @@ class StringsPt extends AppStrings {
   @override
   String get homeScoreBest => 'Recorde';
   @override
+  String get homeScoreBeatIt => 'Beat it?';
+  @override
   String get navLeaderboard => 'Ranking';
   @override
   String get navShop => 'Loja';
@@ -534,4 +536,15 @@ class StringsPt extends AppStrings {
   String get shareScoreChallenge => 'Qual é a sua pontuação máxima?';
   @override
   String get shareDailyChallenge => 'Quanto você fez hoje?';
+
+  @override
+  String get colorblindPromptText => 'Having trouble telling colors apart?';
+  @override
+  String get colorblindPromptAction => 'Enable Color Assist';
+
+  @override
+  String get gameOverNewStatRecord => 'New Record!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'This time: $current \u2014 Record: $record';
 }

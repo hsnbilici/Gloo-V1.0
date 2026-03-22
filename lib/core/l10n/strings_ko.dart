@@ -119,6 +119,8 @@ class StringsKo extends AppStrings {
   @override
   String get homeScoreBest => '최고';
   @override
+  String get homeScoreBeatIt => 'Beat it?';
+  @override
   String get navLeaderboard => '순위';
   @override
   String get navShop => '상점';
@@ -530,4 +532,15 @@ class StringsKo extends AppStrings {
   String get shareScoreChallenge => '당신의 최고 점수는?';
   @override
   String get shareDailyChallenge => '오늘 몇 점이었나요?';
+
+  @override
+  String get colorblindPromptText => 'Having trouble telling colors apart?';
+  @override
+  String get colorblindPromptAction => 'Enable Color Assist';
+
+  @override
+  String get gameOverNewStatRecord => 'New Record!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'This time: $current \u2014 Record: $record';
 }

@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/utils/motion_utils.dart';
+import '../../data/local/local_repository.dart';
+import '../../providers/audio_provider.dart';
+import '../../providers/user_provider.dart';
 import '../shared/glow_orb.dart';
 import '../../core/models/game_mode.dart';
 import '../../providers/locale_provider.dart';
@@ -12,7 +15,7 @@ import 'game_over_widgets.dart';
 
 // ─── Tam ekran Game Over overlay ─────────────────────────────────────────────
 
-class GameOverOverlay extends ConsumerWidget {
+class GameOverOverlay extends ConsumerStatefulWidget {
   const GameOverOverlay({
     super.key,
     required this.score,
@@ -45,12 +48,75 @@ class GameOverOverlay extends ConsumerWidget {
   final int maxCombo;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GameOverOverlay> createState() => _GameOverOverlayState();
+}
+
+class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
+  bool _promptDismissed = false;
+  bool _promptShownMarked = false;
+  String? _selectedTipKey;
+
+  // Stat records (loaded once, before saving new values)
+  int _prevLinesRecord = 0;
+  int _prevSynthRecord = 0;
+  int _prevComboRecord = 0;
+  bool _recordsLoaded = false;
+
+  void _loadAndSaveRecords(LocalRepository repo) {
+    if (_recordsLoaded) return;
+    _recordsLoaded = true;
+    _prevLinesRecord = repo.getStatRecord('lines_cleared');
+    _prevSynthRecord = repo.getStatRecord('synthesis_count');
+    _prevComboRecord = repo.getStatRecord('max_combo');
+    repo.updateStatRecord('lines_cleared', widget.linesCleared);
+    repo.updateStatRecord('synthesis_count', widget.synthesisCount);
+    repo.updateStatRecord('max_combo', widget.maxCombo);
+  }
+
+  void _markPromptShown() {
+    if (_promptShownMarked) return;
+    _promptShownMarked = true;
+    ref.read(localRepositoryProvider.future).then((repo) {
+      repo.setColorblindPromptShown();
+    });
+  }
+
+  /// Selects which tip to show and increments its counter. Returns the tip
+  /// key ('synthesis' or 'combo'), or null if both tips have been shown 2+
+  /// times and the player doesn't need either.
+  String? _selectTipKey(LocalRepository repo) {
+    final synthCount = repo.getTipShownCount('synthesis');
+    final comboCount = repo.getTipShownCount('combo');
+
+    // Primary: show what the player needs (max 2 times per tip)
+    if (widget.synthesisCount == 0 && synthCount < 2) {
+      repo.incrementTipShown('synthesis');
+      return 'synthesis';
+    }
+    if (widget.maxCombo == 0 && comboCount < 2) {
+      repo.incrementTipShown('combo');
+      return 'combo';
+    }
+
+    // If the player needs neither tip, don't show anything
+    if (widget.synthesisCount > 0 && widget.maxCombo > 0) return null;
+
+    // Rotation: show the less-seen tip
+    if (synthCount <= comboCount) {
+      repo.incrementTipShown('synthesis');
+      return 'synthesis';
+    }
+    repo.incrementTipShown('combo');
+    return 'combo';
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
     final rm = shouldReduceMotion(context);
-    final color = kModeColors[mode]!;
+    final color = kModeColors[widget.mode]!;
 
-    final modeLabel = switch (mode) {
+    final modeLabel = switch (widget.mode) {
       GameMode.classic => l.gameOverModeClassic,
       GameMode.colorChef => l.gameOverModeColorChef,
       GameMode.timeTrial => l.gameOverModeTimeTrial,
@@ -60,8 +126,30 @@ class GameOverOverlay extends ConsumerWidget {
       GameMode.duel => l.duelLabel,
     };
 
-    final fillPct =
-        totalCells > 0 ? (filledCells / totalCells * 100).round() : 0;
+    final fillPct = widget.totalCells > 0
+        ? (widget.filledCells / widget.totalCells * 100).round()
+        : 0;
+
+    // Colorblind prompt: show if not already shown and colorblind mode is off
+    final repo = ref.watch(localRepositoryProvider).valueOrNull;
+
+    // Load previous records before saving new ones
+    if (repo != null) _loadAndSaveRecords(repo);
+
+    final isNewLines = widget.linesCleared > _prevLinesRecord &&
+        widget.linesCleared > 0;
+    final isNewSynth = widget.synthesisCount > _prevSynthRecord &&
+        widget.synthesisCount > 0;
+    final isNewCombo = widget.maxCombo > _prevComboRecord &&
+        widget.maxCombo > 0;
+
+    final showColorblindPrompt = !_promptDismissed &&
+        repo != null &&
+        !repo.getColorblindPromptShown() &&
+        !ref.watch(appSettingsProvider).colorBlindMode;
+    if (showColorblindPrompt) {
+      _markPromptShown();
+    }
 
     return Material(
       color: Colors.transparent,
@@ -143,7 +231,7 @@ class GameOverOverlay extends ConsumerWidget {
                           ),
                       const SizedBox(height: 48),
                       // Skor sayacı
-                      ScoreCountUp(score: score, color: color),
+                      ScoreCountUp(score: widget.score, color: color),
                       const SizedBox(height: 6),
                       Text(
                         l.gameOverScoreLabel,
@@ -156,7 +244,7 @@ class GameOverOverlay extends ConsumerWidget {
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 360.ms)
                           .fadeIn(duration: 280.ms),
-                      if (isNewHighScore) ...[
+                      if (widget.isNewHighScore) ...[
                         const SizedBox(height: 12),
                         NewRecordBadge(label: l.gameOverNewRecord, color: color)
                             .animateOrSkip(reduceMotion: rm, delay: 420.ms)
@@ -191,8 +279,19 @@ class GameOverOverlay extends ConsumerWidget {
                       const SizedBox(height: 6),
                       GameOverStatRow(
                         label: l.gameOverLinesCleared,
-                        value: '$linesCleared',
+                        value: '${widget.linesCleared}',
                         color: color,
+                        isNewRecord: isNewLines,
+                        subtitle: _recordsLoaded && widget.linesCleared > 0
+                            ? isNewLines
+                                ? l.gameOverNewStatRecord
+                                : _prevLinesRecord > 0
+                                    ? l.gameOverRecordComparison(
+                                        widget.linesCleared,
+                                        _prevLinesRecord,
+                                      )
+                                    : null
+                            : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 500.ms)
                           .fadeIn(duration: 280.ms)
@@ -205,8 +304,19 @@ class GameOverOverlay extends ConsumerWidget {
                       const SizedBox(height: 6),
                       GameOverStatRow(
                         label: l.gameOverSyntheses,
-                        value: '$synthesisCount',
+                        value: '${widget.synthesisCount}',
                         color: color,
+                        isNewRecord: isNewSynth,
+                        subtitle: _recordsLoaded && widget.synthesisCount > 0
+                            ? isNewSynth
+                                ? l.gameOverNewStatRecord
+                                : _prevSynthRecord > 0
+                                    ? l.gameOverRecordComparison(
+                                        widget.synthesisCount,
+                                        _prevSynthRecord,
+                                      )
+                                    : null
+                            : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 540.ms)
                           .fadeIn(duration: 280.ms)
@@ -219,8 +329,19 @@ class GameOverOverlay extends ConsumerWidget {
                       const SizedBox(height: 6),
                       GameOverStatRow(
                         label: l.gameOverMaxCombo,
-                        value: '${maxCombo}x',
+                        value: '${widget.maxCombo}x',
                         color: color,
+                        isNewRecord: isNewCombo,
+                        subtitle: _recordsLoaded && widget.maxCombo > 0
+                            ? isNewCombo
+                                ? l.gameOverNewStatRecord
+                                : _prevComboRecord > 0
+                                    ? l.gameOverRecordComparison(
+                                        widget.maxCombo,
+                                        _prevComboRecord,
+                                      )
+                                    : null
+                            : null,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 580.ms)
                           .fadeIn(duration: 280.ms)
@@ -231,25 +352,77 @@ class GameOverOverlay extends ConsumerWidget {
                             curve: Curves.easeOutCubic,
                           ),
                       // İpucu
-                      if (synthesisCount == 0 || maxCombo == 0) ...[
-                        const SizedBox(height: 14),
-                        SizedBox(
-                          width: 260,
-                          child: Text(
-                            synthesisCount == 0
-                                ? l.gameOverTipSynthesis
-                                : l.gameOverTipCombo,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: kMuted.withValues(alpha: 0.7),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.italic,
-                              height: 1.4,
+                      if (repo != null) ...() {
+                        _selectedTipKey ??= _selectTipKey(repo);
+                        if (_selectedTipKey == null) return <Widget>[];
+                        final tipText = _selectedTipKey == 'synthesis'
+                            ? l.gameOverTipSynthesis
+                            : l.gameOverTipCombo;
+                        return <Widget>[
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: 260,
+                            child: Text(
+                              tipText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: kMuted.withValues(alpha: 0.7),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.italic,
+                                height: 1.4,
+                              ),
                             ),
-                          ),
+                          )
+                              .animateOrSkip(reduceMotion: rm, delay: 650.ms)
+                              .fadeIn(duration: 300.ms),
+                        ];
+                      }(),
+                      // Colorblind inline prompt
+                      if (showColorblindPrompt) ...[
+                        const SizedBox(height: 14),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.visibility_outlined,
+                              size: 14,
+                              color: kMuted.withValues(alpha: 0.7),
+                            ),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                l.colorblindPromptText,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: kMuted.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                ref
+                                    .read(appSettingsProvider.notifier)
+                                    .setColorBlindMode(enabled: true);
+                                setState(() => _promptDismissed = true);
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                minimumSize: Size.zero,
+                                tapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              child: Text(
+                                l.colorblindPromptAction,
+                                style: const TextStyle(fontSize: 11),
+                              ),
+                            ),
+                          ],
                         )
-                            .animateOrSkip(reduceMotion: rm, delay: 650.ms)
+                            .animateOrSkip(reduceMotion: rm, delay: 700.ms)
                             .fadeIn(duration: 300.ms),
                       ],
                     ],
@@ -267,13 +440,14 @@ class GameOverOverlay extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Ikinci Sans butonu — Rewarded Ad
-                      if (showSecondChance && onSecondChance != null)
+                      if (widget.showSecondChance &&
+                          widget.onSecondChance != null)
                         SecondChanceButton(
                           color: color,
-                          onTap: onSecondChance!,
+                          onTap: widget.onSecondChance!,
                           watchAdLabel: l.watchAdLabel,
                           secondChanceLabel:
-                              secondChanceLabel ?? l.secondChanceMoves,
+                              widget.secondChanceLabel ?? l.secondChanceMoves,
                         )
                             .animateOrSkip(reduceMotion: rm, delay: 500.ms)
                             .fadeIn(duration: 320.ms)
@@ -283,14 +457,15 @@ class GameOverOverlay extends ConsumerWidget {
                               duration: 320.ms,
                               curve: Curves.easeOutCubic,
                             ),
-                      if (showSecondChance && onSecondChance != null)
+                      if (widget.showSecondChance &&
+                          widget.onSecondChance != null)
                         const SizedBox(height: 12),
                       ActionButton(
                         label: l.gameOverReplay,
                         icon: Icons.replay_rounded,
                         accentColor: color,
                         filled: true,
-                        onTap: onReplay,
+                        onTap: widget.onReplay,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 540.ms)
                           .fadeIn(duration: 320.ms)
@@ -306,7 +481,7 @@ class GameOverOverlay extends ConsumerWidget {
                         icon: Icons.home_rounded,
                         accentColor: kMuted,
                         filled: false,
-                        onTap: onHome,
+                        onTap: widget.onHome,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 610.ms)
                           .fadeIn(duration: 320.ms)

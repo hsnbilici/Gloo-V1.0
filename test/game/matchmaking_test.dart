@@ -60,8 +60,30 @@ void main() {
       expect(EloSystem.initialElo, 1000);
     });
 
-    test('kFactor is 32', () {
-      expect(EloSystem.kFactor, 32);
+    group('getKFactor', () {
+      test('returns 40 for ELO below 800', () {
+        expect(EloSystem.getKFactor(0), 40);
+        expect(EloSystem.getKFactor(500), 40);
+        expect(EloSystem.getKFactor(799), 40);
+      });
+
+      test('returns 32 for ELO 800-1199', () {
+        expect(EloSystem.getKFactor(800), 32);
+        expect(EloSystem.getKFactor(1000), 32);
+        expect(EloSystem.getKFactor(1199), 32);
+      });
+
+      test('returns 28 for ELO 1200-1599', () {
+        expect(EloSystem.getKFactor(1200), 28);
+        expect(EloSystem.getKFactor(1400), 28);
+        expect(EloSystem.getKFactor(1599), 28);
+      });
+
+      test('returns 24 for ELO 1600+', () {
+        expect(EloSystem.getKFactor(1600), 24);
+        expect(EloSystem.getKFactor(2000), 24);
+        expect(EloSystem.getKFactor(3000), 24);
+      });
     });
 
     test('win against equal opponent gives positive change', () {
@@ -71,7 +93,7 @@ void main() {
         outcome: DuelOutcome.win,
       );
       expect(change, greaterThan(0));
-      expect(change, 16); // K * (1 - 0.5) = 32 * 0.5 = 16
+      expect(change, 16); // K=32 (ELO 1000) * (1 - 0.5) = 16
     });
 
     test('loss against equal opponent gives negative change', () {
@@ -121,19 +143,36 @@ void main() {
       expect(changeVsWeaker, lessThan(changeVsEqual));
     });
 
-    test('changes are symmetric for zero-sum', () {
+    test('changes are symmetric when same K-Factor tier', () {
+      // Both at 1000 ELO → same K=32 tier
       final playerChange = EloSystem.calculateChange(
-        playerElo: 1200,
-        opponentElo: 1000,
+        playerElo: 1000,
+        opponentElo: 900,
         outcome: DuelOutcome.win,
       );
       final opponentChange = EloSystem.calculateChange(
-        playerElo: 1000,
-        opponentElo: 1200,
+        playerElo: 900,
+        opponentElo: 1000,
         outcome: DuelOutcome.loss,
       );
-      // Sum should approximately equal 0 (may have rounding difference of 1)
+      // Same K-Factor tier → sum approximately 0 (rounding difference of 1)
       expect((playerChange + opponentChange).abs(), lessThanOrEqualTo(1));
+    });
+
+    test('low ELO player gains more than high ELO player', () {
+      // Low ELO player (K=40) wins against high ELO player (K=24)
+      final lowEloGain = EloSystem.calculateChange(
+        playerElo: 500,
+        opponentElo: 1800,
+        outcome: DuelOutcome.win,
+      );
+      final highEloGain = EloSystem.calculateChange(
+        playerElo: 1800,
+        opponentElo: 500,
+        outcome: DuelOutcome.win,
+      );
+      // Low ELO player has higher K, so gains more from a win
+      expect(lowEloGain, greaterThan(highEloGain));
     });
   });
 

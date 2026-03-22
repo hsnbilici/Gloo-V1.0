@@ -431,6 +431,87 @@ void main() {
     });
   });
 
+  // ─── ColorChef ağırlık tablosu ─────────────────────────────────────────────
+
+  group('ColorChef shape weights (35% small, 50% medium, 15% large)', () {
+    test('colorChef mode favors medium shapes', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int smallCount = 0;
+      int mediumCount = 0;
+      int largeCount = 0;
+      final sg2 = ShapeGenerator(rng: Random(0));
+      for (int i = 0; i < 300; i++) {
+        final hand = sg2.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.5,
+          gamesPlayed: 10,
+          mode: GameMode.colorChef,
+        );
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount == 3) mediumCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      // Medium should be the most common category
+      expect(mediumCount, greaterThan(smallCount));
+      expect(mediumCount, greaterThan(largeCount));
+      // Large should be least common
+      expect(smallCount, greaterThan(largeCount));
+    });
+
+    test('colorChef weights apply regardless of difficulty', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int mediumLow = 0;
+      int mediumHigh = 0;
+      final sgLow = ShapeGenerator(rng: Random(42));
+      final sgHigh = ShapeGenerator(rng: Random(42));
+      for (int i = 0; i < 300; i++) {
+        final handLow = sgLow.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.1,
+          gamesPlayed: 10,
+          mode: GameMode.colorChef,
+        );
+        final handHigh = sgHigh.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.9,
+          gamesPlayed: 10,
+          mode: GameMode.colorChef,
+        );
+        for (final (shape, _) in handLow) {
+          if (shape.cellCount == 3) mediumLow++;
+        }
+        for (final (shape, _) in handHigh) {
+          if (shape.cellCount == 3) mediumHigh++;
+        }
+      }
+      // Same RNG seed + same weights → identical counts
+      expect(mediumLow, mediumHigh);
+    });
+
+    test('new player in colorChef gets new player protection, not colorChef weights', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int smallCount = 0;
+      int largeCount = 0;
+      final sg2 = ShapeGenerator(rng: Random(0));
+      for (int i = 0; i < 200; i++) {
+        final hand = sg2.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.5,
+          gamesPlayed: 0,
+          mode: GameMode.colorChef,
+        );
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      // New player protection: 80% small → small should dominate heavily
+      expect(smallCount, greaterThan(largeCount * 5));
+    });
+  });
+
   // ─── Merhamet mekanizmasi ──────────────────────────────────────────────────
 
   group('Mercy mechanism', () {

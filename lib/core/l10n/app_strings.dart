@@ -88,6 +88,7 @@ abstract class AppStrings {
   String get homeBadgeBeginning;
   String get homeScoreLast;
   String get homeScoreBest;
+  String get homeScoreBeatIt;
   String get navLeaderboard;
   String get navShop;
   String get navSettings;
@@ -330,6 +331,14 @@ abstract class AppStrings {
   String shareComboCaption(String comboLabel, String modeName, String score);
   String get shareScoreChallenge;
   String get shareDailyChallenge;
+
+  // Colorblind inline prompt (Game Over)
+  String get colorblindPromptText;
+  String get colorblindPromptAction;
+
+  // Personal record comparison (Game Over)
+  String get gameOverNewStatRecord;
+  String gameOverRecordComparison(int current, int record);
 
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {

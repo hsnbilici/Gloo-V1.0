@@ -336,6 +336,10 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               onDragEnd: (index, wasAccepted) {
                 if (!wasAccepted) onDragCancelled(index);
               },
+              nextShapeSilhouette:
+                  game.powerUpSystem.peekedShapes == null
+                      ? game.nextShapeSilhouette
+                      : null,
             ),
             const SizedBox(height: 16),
           ],

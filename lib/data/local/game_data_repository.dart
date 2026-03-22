@@ -153,6 +153,18 @@ class GameDataRepository {
     return score > 0 ? score : null;
   }
 
+  // ─── Stat Records (per-stat personal bests) ─────────────────────────────
+
+  int getStatRecord(String statKey) =>
+      _prefs.getInt('stat_record_$statKey') ?? 0;
+
+  Future<void> updateStatRecord(String statKey, int value) async {
+    final current = getStatRecord(statKey);
+    if (value > current) {
+      await _prefs.setInt('stat_record_$statKey', value);
+    }
+  }
+
   // ─── Oyun İstatistikleri ─────────────────────────────────────────────────
 
   int getTotalGamesPlayed() => _prefs.getInt('total_games_played') ?? 0;

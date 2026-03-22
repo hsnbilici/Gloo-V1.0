@@ -223,6 +223,13 @@ class LocalRepository {
 
   int? getLevelScore(int levelId) => gameData.getLevelScore(levelId);
 
+  // ─── Stat Records ───────────────────────────────────────────────────────
+
+  int getStatRecord(String statKey) => gameData.getStatRecord(statKey);
+
+  Future<void> updateStatRecord(String statKey, int value) =>
+      gameData.updateStatRecord(statKey, value);
+
   // ─── Oyun İstatistikleri ─────────────────────────────────────────────────
 
   int getTotalGamesPlayed() => gameData.getTotalGamesPlayed();
@@ -318,6 +325,13 @@ class LocalRepository {
 
   Future<void> addUnlockedProducts(List<String> productIds) =>
       economy.addUnlockedProducts(productIds);
+
+  // ─── İpucu Gösterim Sayısı ────────────────────────────────────────────────
+
+  int getTipShownCount(String tipKey) => settings.getTipShownCount(tipKey);
+
+  Future<void> incrementTipShown(String tipKey) =>
+      settings.incrementTipShown(tipKey);
 
   // ─── Tema Modu ───────────────────────────────────────────────────────────
 

@@ -14,6 +14,7 @@ class ShapeHand extends StatelessWidget {
     required this.onSlotTap,
     this.onDragStarted,
     this.onDragEnd,
+    this.nextShapeSilhouette,
   });
 
   final List<(GelShape, GelColor)?> hand;
@@ -21,6 +22,9 @@ class ShapeHand extends StatelessWidget {
   final void Function(int) onSlotTap;
   final void Function(int index)? onDragStarted;
   final void Function(int index, bool wasAccepted)? onDragEnd;
+
+  /// Sıradaki elin ilk şekil silueti (renksiz ipucu).
+  final GelShape? nextShapeSilhouette;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,8 @@ class ShapeHand extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(GameConstants.shapesInHand, (i) {
+        children: [
+          ...List.generate(GameConstants.shapesInHand, (i) {
           final slot = hand[i];
           final isSelected = selectedSlot == i;
 
@@ -116,8 +121,69 @@ class ShapeHand extends StatelessWidget {
               child: slotWidget,
             ),
           );
-        }),
+          }),
+          if (nextShapeSilhouette != null)
+            _buildSilhouette(nextShapeSilhouette!),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSilhouette(GelShape shape) {
+    const cellSize = 7.0;
+    const gap = 1.5;
+    final w = shape.colCount * (cellSize + gap) - gap;
+    final h = shape.rowCount * (cellSize + gap) - gap;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'NEXT',
+          style: TextStyle(
+            fontSize: 8,
+            fontWeight: FontWeight.w600,
+            color: kMuted.withValues(alpha: 0.4),
+            letterSpacing: 0.5,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.06),
+              width: 1,
+            ),
+          ),
+          child: Center(
+            child: SizedBox(
+              width: w,
+              height: h,
+              child: Stack(
+                children: [
+                  for (final cell in shape.cells)
+                    Positioned(
+                      left: cell.$2 * (cellSize + gap),
+                      top: cell.$1 * (cellSize + gap),
+                      child: Container(
+                        width: cellSize,
+                        height: cellSize,
+                        decoration: BoxDecoration(
+                          color: kMuted.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

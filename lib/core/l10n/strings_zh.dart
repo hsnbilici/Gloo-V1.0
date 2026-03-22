@@ -119,6 +119,8 @@ class StringsZh extends AppStrings {
   @override
   String get homeScoreBest => '最高';
   @override
+  String get homeScoreBeatIt => 'Beat it?';
+  @override
   String get navLeaderboard => '排行榜';
   @override
   String get navShop => '商店';
@@ -526,4 +528,15 @@ class StringsZh extends AppStrings {
   String get shareScoreChallenge => '你的最高分是多少？';
   @override
   String get shareDailyChallenge => '你今天得了多少分？';
+
+  @override
+  String get colorblindPromptText => 'Having trouble telling colors apart?';
+  @override
+  String get colorblindPromptAction => 'Enable Color Assist';
+
+  @override
+  String get gameOverNewStatRecord => 'New Record!';
+  @override
+  String gameOverRecordComparison(int current, int record) =>
+      'This time: $current \u2014 Record: $record';
 }
