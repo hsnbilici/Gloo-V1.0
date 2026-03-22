@@ -6,8 +6,12 @@ abstract final class AudioPaths {
 
   /// iOS AVAudioPlayer .ogg'yi native desteklemez — software decoding
   /// latency ve batarya maliyeti yaratir. iOS'ta .m4a (AAC), digerlerde .ogg.
-  static String get _sfxExt =>
-      defaultTargetPlatform == TargetPlatform.iOS ? 'm4a' : 'ogg';
+  /// Web (Safari) da .ogg'yi desteklemez — web'de .m4a kullan.
+  static String get _sfxExt {
+    if (kIsWeb) return 'm4a';
+    if (defaultTargetPlatform == TargetPlatform.iOS) return 'm4a';
+    return 'ogg';
+  }
 
   // Yerlestirme sesleri
   static String get gelPlace => '$_sfx/gel_place.$_sfxExt';

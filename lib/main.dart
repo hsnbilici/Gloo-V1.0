@@ -21,6 +21,7 @@ import 'data/local/local_repository.dart';
 import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
 import 'providers/theme_provider.dart';
+import 'audio/audio_manager.dart';
 import 'services/ad_manager.dart';
 import 'services/consent_service.dart';
 import 'services/purchase_service.dart';
@@ -80,6 +81,7 @@ Future<void> main() async {
     try {
       await Future.wait([
         SupabaseConfig.initialize(),
+        AudioManager().initialize(),
         if (!kIsWeb) AdManager().initialize(),
         if (!kIsWeb) PurchaseService().initialize(),
       ]);
