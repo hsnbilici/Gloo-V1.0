@@ -76,6 +76,11 @@ class SoundBank {
     await _haptic.trigger(HapticProfile.iceBreak);
   }
 
+  Future<void> onStoneBroken() async {
+    await _audio.playSfx(AudioPaths.bombExplosion);
+    await _haptic.trigger(HapticProfile.iceBreak);
+  }
+
   Future<void> onPowerUpActivate() async {
     await _audio.playSfx(AudioPaths.powerupActivate);
     await _haptic.trigger(HapticProfile.powerupActivate);

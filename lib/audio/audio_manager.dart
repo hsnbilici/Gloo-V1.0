@@ -34,6 +34,7 @@ class AudioManager {
 
   bool _sfxEnabled = true;
   bool _musicEnabled = true;
+  bool _isFading = false;
   String? _currentMusicPath;
 
   bool get sfxEnabled => _sfxEnabled;
@@ -109,6 +110,7 @@ class AudioManager {
 
   /// Müziği kademeli olarak kıs ve duraklat.
   Future<void> fadeOutMusic(Duration duration) async {
+    _isFading = true;
     const steps = 10;
     final stepDuration = duration ~/ steps;
     const startVolume = AudioConfig.musicVolume;
@@ -119,10 +121,12 @@ class AudioManager {
     await _musicPlayer.pause();
     // Volume'u eski haline getir (resume/play'de kullanılacak)
     await _musicPlayer.setVolume(startVolume);
+    _isFading = false;
   }
 
-  /// Müzik volume'unu geçici olarak değiştir.
+  /// Müzik volume'unu geçici olarak değiştir. Fade sırasında atlanır.
   Future<void> setMusicVolume(double volume) async {
+    if (_isFading) return;
     await _musicPlayer.setVolume(volume);
   }
 

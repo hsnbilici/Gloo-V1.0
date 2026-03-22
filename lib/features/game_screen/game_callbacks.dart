@@ -61,6 +61,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   /// Duel/TimeTrial'da son saniye müzik tempo artışı uygulandı mı
   bool _timerSpedUp = false;
 
+  /// Kombo müzik volume swell — iptal edilebilir Timer
+  Timer? _comboSwellTimer;
+
+  /// Gravity/Ice ses debounce — aynı 50ms içinde tekrar tetiklemeyi önler
+  DateTime _lastIceSfx = DateTime(0);
+  DateTime _lastGravitySfx = DateTime(0);
+  static const _sfxDebounce = Duration(milliseconds: 50);
+
   /// Track quest progress and grant reward if a quest was just completed.
   void _trackQuest(QuestType type, {int amount = 1}) {
     final repo = _cachedRepo;
@@ -151,12 +159,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (combo.tier.index >= ComboTier.medium.index) {
         _trackQuest(QuestType.reachCombo);
       }
-      // Müzik volume swell: epic/large komboda geçici artış
+      // Müzik volume swell: epic/large komboda geçici artış (iptal edilebilir)
       if (combo.tier == ComboTier.epic || combo.tier == ComboTier.large) {
+        _comboSwellTimer?.cancel();
         AudioManager().setMusicVolume(0.6);
-        Future.delayed(const Duration(milliseconds: 500), () {
-          AudioManager().setMusicVolume(AudioConfig.musicVolume);
-        });
+        _comboSwellTimer = Timer(
+          const Duration(milliseconds: 800),
+          () => AudioManager().setMusicVolume(AudioConfig.musicVolume),
+        );
       }
 
       if (mounted) {
@@ -232,9 +242,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
             .read(gameProvider(widget.mode).notifier)
             .updateRemainingSeconds(seconds);
 
-        // TimeTrial: son 15 saniyede tick SFX
+        // TimeTrial: son 15 saniyede tick SFX (haptik-siz, sabit pitch)
         if (widget.mode == GameMode.timeTrial && seconds <= 15 && seconds > 0) {
-          soundBank.onButtonTap();
+          AudioManager().playSfx(AudioPaths.buttonTap, pitchVariation: false);
         }
 
         // Duel/TimeTrial: son 30/15 saniyede müzik tempo artışı
@@ -385,11 +395,21 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     };
 
     game.onIceCracked = (_) {
+      final now = DateTime.now();
+      if (now.difference(_lastIceSfx) < _sfxDebounce) return;
+      _lastIceSfx = now;
       soundBank.onIceBreak();
     };
 
     game.onGravityApplied = (_) {
+      final now = DateTime.now();
+      if (now.difference(_lastGravitySfx) < _sfxDebounce) return;
+      _lastGravitySfx = now;
       soundBank.onGravityDrop();
+    };
+
+    game.onStoneBroken = (_) {
+      soundBank.onStoneBroken();
     };
 
     game.onGameOver = () {

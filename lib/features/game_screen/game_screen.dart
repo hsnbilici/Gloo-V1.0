@@ -523,6 +523,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     shakeTimer?.cancel();
     _toastTimer?.cancel();
     _gelOzuSfxDebounce?.cancel();
+    _comboSwellTimer?.cancel();
     game.cancelTimer();
     game.onLineClear = null;
     game.onCombo = null;
@@ -535,6 +536,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     game.onLevelComplete = null;
     game.onIceCracked = null;
     game.onGravityApplied = null;
+    game.onStoneBroken = null;
     game.onColorSynthesis = null;
     game.onCascadeStep = null;
     game.currencyManager.onBalanceChanged = null;
