@@ -655,4 +655,18 @@ class StringsAr extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'لعب سريع';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'حافظ على سلسلتك!';
+  @override
+  String get notifStreakBody => 'العب اليوم للحفاظ على سلسلتك.';
+  @override
+  String get notifDailyTitle => 'اللغز اليومي';
+  @override
+  String get notifDailyBody => 'لغز يومي جديد ينتظرك!';
+  @override
+  String get notifComebackTitle => 'نشتاق إليك!';
+  @override
+  String get notifComebackBody => 'عد وتابع إبداع الألوان!';
 }

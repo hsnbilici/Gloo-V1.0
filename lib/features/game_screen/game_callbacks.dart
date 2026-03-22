@@ -42,6 +42,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   List<({int row, int col, Color color, int key})> get synthesisBlooms;
   int get synthesisKeyBase;
   set synthesisKeyBase(int value);
+  Set<(int, int)> get synthesisGlowCells;
+  Timer? get synthesisGlowTimer;
+  set synthesisGlowTimer(Timer? value);
   GameDuelController? get duelController;
   set duelController(GameDuelController? value);
   int get epicComboCount;
@@ -49,6 +52,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   void refillHand();
   void handleGameOverDialog();
   void showToast(String msg, {String? a11yAnnouncement});
+  void syncGridState();
 
   /// initState'te resolve edilen LocalRepository cache'i.
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
@@ -408,7 +412,19 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         if (synthesisBlooms.length > 20) {
           synthesisBlooms.removeRange(0, synthesisBlooms.length - 20);
         }
+        // Sentez hücresine geçici glow efekti — 600ms sonra temizlenir
+        synthesisGlowCells.add(position);
+        synthesisGlowTimer?.cancel();
+        synthesisGlowTimer = Timer(const Duration(milliseconds: 600), () {
+          if (mounted) {
+            setState(() {
+              synthesisGlowCells.clear();
+              syncGridState();
+            });
+          }
+        });
       });
+      syncGridState();
       // Show synthesis hint toast for new players (first 3 times)
       final repo = _cachedRepo;
       if (repo != null) {
@@ -513,6 +529,13 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         duelController?.botScoreTimer?.cancel();
         duelController?.handleGameOver(score, context);
         return;
+      }
+
+      // Schedule comeback notification
+      if (!kIsWeb) {
+        final notif = ref.read(notificationServiceProvider);
+        final l = ref.read(stringsProvider);
+        notif.scheduleComebackNotification(title: l.notifComebackTitle, body: l.notifComebackBody);
       }
 
       handleGameOverDialog();

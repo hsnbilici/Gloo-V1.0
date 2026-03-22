@@ -651,4 +651,18 @@ class StringsTr extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Hızlı Oyun';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'Serini koru!';
+  @override
+  String get notifStreakBody => 'Bugün oyna, serini kaybetme.';
+  @override
+  String get notifDailyTitle => 'Günlük Bulmaca';
+  @override
+  String get notifDailyBody => 'Yeni günlük bulmaca seni bekliyor!';
+  @override
+  String get notifComebackTitle => 'Seni özledik!';
+  @override
+  String get notifComebackBody => 'Geri dön ve renk yaratmaya devam et!';
 }

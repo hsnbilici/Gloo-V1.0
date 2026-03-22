@@ -652,4 +652,18 @@ class StringsEn extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Quick Play';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'Keep your streak!';
+  @override
+  String get notifStreakBody => 'Play today to maintain your streak.';
+  @override
+  String get notifDailyTitle => 'Daily Puzzle';
+  @override
+  String get notifDailyBody => 'A new daily puzzle is waiting for you!';
+  @override
+  String get notifComebackTitle => 'We miss you!';
+  @override
+  String get notifComebackBody => 'Come back and keep creating colors!';
 }

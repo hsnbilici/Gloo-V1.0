@@ -646,4 +646,18 @@ class StringsJa extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'クイックプレイ';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'ストリークを続けよう！';
+  @override
+  String get notifStreakBody => '今日もプレイしてストリークを維持しよう。';
+  @override
+  String get notifDailyTitle => 'デイリーパズル';
+  @override
+  String get notifDailyBody => '新しいデイリーパズルが待っています！';
+  @override
+  String get notifComebackTitle => 'また会いたい！';
+  @override
+  String get notifComebackBody => '戻ってきて、カラーを作り続けよう！';
 }

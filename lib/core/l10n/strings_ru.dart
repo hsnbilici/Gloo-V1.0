@@ -657,4 +657,18 @@ class StringsRu extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Быстрая игра';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'Сохрани серию!';
+  @override
+  String get notifStreakBody => 'Сыграй сегодня, чтобы не прервать серию.';
+  @override
+  String get notifDailyTitle => 'Ежедневная головоломка';
+  @override
+  String get notifDailyBody => 'Новая ежедневная головоломка ждёт тебя!';
+  @override
+  String get notifComebackTitle => 'Мы скучаем!';
+  @override
+  String get notifComebackBody => 'Вернись и продолжай создавать цвета!';
 }

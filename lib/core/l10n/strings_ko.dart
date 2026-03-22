@@ -647,4 +647,18 @@ class StringsKo extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => '빠른 플레이';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => '연속 기록을 유지하세요!';
+  @override
+  String get notifStreakBody => '오늘 플레이하여 연속 기록을 이어가세요.';
+  @override
+  String get notifDailyTitle => '오늘의 퍼즐';
+  @override
+  String get notifDailyBody => '새로운 오늘의 퍼즐이 기다리고 있어요!';
+  @override
+  String get notifComebackTitle => '보고 싶었어요!';
+  @override
+  String get notifComebackBody => '돌아와서 색깔을 계속 만들어 보세요!';
 }

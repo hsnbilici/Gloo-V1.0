@@ -658,4 +658,18 @@ class StringsEs extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Partida rápida';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => '¡Mantén tu racha!';
+  @override
+  String get notifStreakBody => 'Juega hoy para mantener tu racha.';
+  @override
+  String get notifDailyTitle => 'Rompecabezas diario';
+  @override
+  String get notifDailyBody => '¡Un nuevo rompecabezas diario te espera!';
+  @override
+  String get notifComebackTitle => '¡Te echamos de menos!';
+  @override
+  String get notifComebackBody => '¡Vuelve y sigue creando colores!';
 }

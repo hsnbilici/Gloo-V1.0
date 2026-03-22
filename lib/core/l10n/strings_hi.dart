@@ -651,4 +651,18 @@ class StringsHi extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'त्वरित खेल';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'अपनी स्ट्रीक बनाए रखें!';
+  @override
+  String get notifStreakBody => 'आज खेलें और अपनी स्ट्रीक जारी रखें।';
+  @override
+  String get notifDailyTitle => 'दैनिक पहेली';
+  @override
+  String get notifDailyBody => 'एक नई दैनिक पहेली आपका इंतज़ार कर रही है!';
+  @override
+  String get notifComebackTitle => 'हम आपको याद करते हैं!';
+  @override
+  String get notifComebackBody => 'वापस आएं और रंग बनाते रहें!';
 }

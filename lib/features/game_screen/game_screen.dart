@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -156,6 +157,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
   AnimationController get breathCtrl => effectManager.breathCtrl;
   @override
   Set<(int, int)> recentlyPlacedCells = {};
+  @override
+  Set<(int, int)> synthesisGlowCells = {};
+  @override
+  Timer? synthesisGlowTimer;
   @override
   int waveKey = 0;
   @override
@@ -527,6 +532,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   void dispose() {
     waveClearTimer?.cancel();
+    synthesisGlowTimer?.cancel();
     shakeTimer?.cancel();
     _toastTimer?.cancel();
     _gelOzuSfxDebounce?.cancel();

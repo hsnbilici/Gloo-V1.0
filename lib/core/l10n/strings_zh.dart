@@ -643,4 +643,18 @@ class StringsZh extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => '快速开始';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => '保持连续记录！';
+  @override
+  String get notifStreakBody => '今天来玩，保住你的连续记录。';
+  @override
+  String get notifDailyTitle => '每日谜题';
+  @override
+  String get notifDailyBody => '新的每日谜题在等你！';
+  @override
+  String get notifComebackTitle => '我们想念你！';
+  @override
+  String get notifComebackBody => '回来继续创造色彩吧！';
 }

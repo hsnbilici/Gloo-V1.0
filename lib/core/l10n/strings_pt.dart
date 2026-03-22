@@ -653,4 +653,18 @@ class StringsPt extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Jogo rápido';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'Mantenha sua sequência!';
+  @override
+  String get notifStreakBody => 'Jogue hoje para manter sua sequência.';
+  @override
+  String get notifDailyTitle => 'Puzzle diário';
+  @override
+  String get notifDailyBody => 'Um novo puzzle diário está esperando por você!';
+  @override
+  String get notifComebackTitle => 'Sentimos sua falta!';
+  @override
+  String get notifComebackBody => 'Volte e continue criando cores!';
 }

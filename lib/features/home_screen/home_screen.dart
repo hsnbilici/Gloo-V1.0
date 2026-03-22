@@ -32,6 +32,7 @@ import 'widgets/gel_logo.dart';
 import 'widgets/mode_card.dart';
 import 'widgets/quest_bar.dart';
 import 'widgets/streak_badge.dart';
+import 'widgets/meta_game_bar.dart';
 import 'widgets/streak_reward_dialog.dart';
 
 // ─── Ana ekran ────────────────────────────────────────────────────────────────
@@ -66,6 +67,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       await _continueStartupFlow(repo);
     });
     AudioManager().playMusic(AudioPaths.bgMenuLofi);
+    // Schedule notification reminders
+    if (!kIsWeb) {
+      final notif = ref.read(notificationServiceProvider);
+      final l = ref.read(stringsProvider);
+      notif.scheduleStreakReminder(title: l.notifStreakTitle, body: l.notifStreakBody);
+      notif.scheduleDailyPuzzleReminder(title: l.notifDailyTitle, body: l.notifDailyBody);
+    }
   }
 
   Future<void> _continueStartupFlow(LocalRepository repo) async {
@@ -295,6 +303,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     duration: 350.ms,
                                     curve: Curves.easeOutCubic,
                                   ),
+                              const SizedBox(height: 8),
+                              MetaGameBar(
+                                islandLabel: l.islandLabel,
+                                characterLabel: l.characterLabel,
+                                seasonLabel: l.seasonLabel,
+                              )
+                                  .animateOrSkip(
+                                      reduceMotion: rm, delay: 80.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.08,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
                               if (quickPlayMode != null) ...[
                                 const SizedBox(height: 8),
                                 Builder(builder: (context) {
@@ -317,7 +340,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 })
                                     .animateOrSkip(
-                                        reduceMotion: rm, delay: 80.ms)
+                                        reduceMotion: rm, delay: 90.ms)
                                     .fadeIn(duration: 350.ms)
                                     .slideY(
                                       begin: 0.08,
@@ -791,7 +814,7 @@ class _QuickPlayBanner extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(14),

@@ -413,6 +413,14 @@ abstract class AppStrings {
   // UX-07: Quick Play
   String get quickPlayLabel;
 
+  // Notifications
+  String get notifStreakTitle;
+  String get notifStreakBody;
+  String get notifDailyTitle;
+  String get notifDailyBody;
+  String get notifComebackTitle;
+  String get notifComebackBody;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

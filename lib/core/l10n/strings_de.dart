@@ -656,4 +656,18 @@ class StringsDe extends AppStrings {
   // UX-07: Quick Play
   @override
   String get quickPlayLabel => 'Schnellspiel';
+
+  // Notifications
+  @override
+  String get notifStreakTitle => 'Halte deine Serie!';
+  @override
+  String get notifStreakBody => 'Spiele heute, um deine Serie zu erhalten.';
+  @override
+  String get notifDailyTitle => 'Tägliches Rätsel';
+  @override
+  String get notifDailyBody => 'Ein neues tägliches Rätsel wartet auf dich!';
+  @override
+  String get notifComebackTitle => 'Wir vermissen dich!';
+  @override
+  String get notifComebackBody => 'Komm zurück und erschaffe wieder Farben!';
 }
