@@ -30,13 +30,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   bool _analyticsEnabled = true;
   bool _colorBlindEnabled = false;
 
-  static const _kTotalPages = 4;
+  static const _kTotalPages = 5;
 
   static const _kStepMeta = [
     (icon: Icons.grid_4x4_rounded, color: kColorClassic),
     (icon: Icons.bolt_rounded, color: kColorTimeTrial),
     (icon: Icons.palette_rounded, color: kColorChef),
   ];
+
+  // Page index → step meta index (lore page at index 1 is excluded)
+  static const _kStepPageIndices = [0, 2, 3];
 
   @override
   void dispose() {
@@ -48,7 +51,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final repo = await ref.read(localRepositoryProvider.future);
     await repo.setOnboardingDone();
     // Only persist consent/colorblind prefs if user reached the prefs page (GDPR)
-    if (_page >= 3) {
+    if (_page >= 4) {
       await repo.setAnalyticsEnabled(_analyticsEnabled);
       await repo.setConsentShown();
       await repo.setColorblindPromptShown();
@@ -90,8 +93,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     ];
 
     final isLast = _page == _kTotalPages - 1;
-    final stepColor =
-        _page < _kStepMeta.length ? _kStepMeta[_page].color : kCyan;
+    // page 0→classic, 1→cyan(lore), 2→timeTrial, 3→chef, 4→cyan(prefs)
+    const pageColors = [
+      kColorClassic,
+      kCyan,
+      kColorTimeTrial,
+      kColorChef,
+      kCyan,
+    ];
+    final stepColor = pageColors[_page];
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final brightness = Theme.of(context).brightness;
@@ -114,8 +124,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeOutCubic,
             top: -120,
-            left:
-                _page == 0 ? -80 : (_page == 1 ? 60 : (_page == 2 ? 200 : 40)),
+            left: const [-80.0, 40.0, 60.0, 200.0, 40.0][_page],
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 500),
               child: GlowOrb(
@@ -196,19 +205,31 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           itemCount: _kTotalPages,
                           onPageChanged: (i) => setState(() => _page = i),
                           itemBuilder: (context, i) {
-                            if (i < 3) {
+                            // page 1 is the lore page
+                            if (i == 1) {
+                              return _LorePage(
+                                title: l.onboardingLoreTitle,
+                                line1: l.onboardingLoreLine1,
+                                line2: l.onboardingLoreLine2,
+                                line3: l.onboardingLoreLine3,
+                              );
+                            }
+                            // pages 0, 2, 3 are the tutorial step pages
+                            if (i < 4) {
+                              final stepIdx = _kStepPageIndices.indexOf(i);
                               return _StepPage(
                                 stepIndex: i,
                                 step: _StepData(
-                                  icon: _kStepMeta[i].icon,
-                                  color: _kStepMeta[i].color,
-                                  title: stepTitles[i],
-                                  desc: stepDescs[i],
+                                  icon: _kStepMeta[stepIdx].icon,
+                                  color: _kStepMeta[stepIdx].color,
+                                  title: stepTitles[stepIdx],
+                                  desc: stepDescs[stepIdx],
                                 ),
                                 tapToPlaceLabel: l.onboardingTapToPlace,
                                 greatLabel: l.onboardingGreat,
                               );
                             }
+                            // page 4 is the prefs page
                             return _PrefsPage(
                               analyticsEnabled: _analyticsEnabled,
                               colorBlindEnabled: _colorBlindEnabled,
@@ -334,6 +355,161 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Lore sayfası (2. adım — dünya tanıtımı) ─────────────────────────────────
+
+class _LorePage extends StatelessWidget {
+  const _LorePage({
+    required this.title,
+    required this.line1,
+    required this.line2,
+    required this.line3,
+  });
+
+  final String title;
+  final String line1;
+  final String line2;
+  final String line3;
+
+  @override
+  Widget build(BuildContext context) {
+    final hPadding = responsiveHPadding(MediaQuery.sizeOf(context).width);
+    final brightness = Theme.of(context).brightness;
+    final textColor =
+        resolveColor(brightness, dark: Colors.white, light: kTextPrimaryLight);
+    final textSecondary = resolveColor(brightness,
+        dark: Colors.white.withValues(alpha: 0.65), light: kTextSecondaryLight);
+    final rm = shouldReduceMotion(context);
+
+    // 4 primary color dots + arrow + 1 synthesis dot
+    const primaryColors = [kColorClassic, kColorTimeTrial, kColorChef, Colors.white];
+    const synthColor = kColorChef; // orange-ish synthesis result representative
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: hPadding),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 32),
+          // Central GlowOrb
+          const ExcludeSemantics(
+            child: Center(
+              child: GlowOrb(size: 120, color: kCyan, opacity: 0.35),
+            ),
+          ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 400.ms).scale(
+                begin: const Offset(0.6, 0.6),
+                duration: 480.ms,
+                curve: Curves.easeOutBack,
+              ),
+          const SizedBox(height: 28),
+          // Title
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Syne',
+              letterSpacing: 1.5,
+              shadows: [
+                Shadow(
+                  color: kCyan.withValues(alpha: 0.45),
+                  blurRadius: 20,
+                ),
+              ],
+            ),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 80.ms)
+              .fadeIn(duration: 280.ms)
+              .slideY(
+                  begin: -0.08,
+                  end: 0,
+                  duration: 280.ms,
+                  curve: Curves.easeOutCubic),
+          const SizedBox(height: 28),
+          // Lore lines
+          ...[line1, line2, line3].indexed.map(
+            (entry) {
+              final idx = entry.$1;
+              final line = entry.$2;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(
+                  line,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: textSecondary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    height: 1.6,
+                    letterSpacing: 0.1,
+                  ),
+                )
+                    .animateOrSkip(reduceMotion: rm, delay: (160 + idx * 80).ms)
+                    .fadeIn(duration: 300.ms)
+                    .slideY(
+                        begin: 0.08,
+                        end: 0,
+                        duration: 300.ms,
+                        curve: Curves.easeOutCubic),
+              );
+            },
+          ),
+          const SizedBox(height: 32),
+          // Static color synthesis demo: 4 primary dots → 1 synthesis dot
+          ExcludeSemantics(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...primaryColors.map(
+                  (c) => Container(
+                    width: 18,
+                    height: 18,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: c == Colors.white
+                          ? Colors.white.withValues(alpha: 0.80)
+                          : c,
+                      boxShadow: [
+                        BoxShadow(
+                          color: c.withValues(alpha: 0.45),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(Icons.arrow_forward_rounded,
+                    color: kCyan.withValues(alpha: 0.60), size: 16),
+                const SizedBox(width: 8),
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: synthColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: synthColor.withValues(alpha: 0.55),
+                        blurRadius: 12,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+              .animateOrSkip(reduceMotion: rm, delay: 400.ms)
+              .fadeIn(duration: 320.ms),
+          const SizedBox(height: 24),
         ],
       ),
     );

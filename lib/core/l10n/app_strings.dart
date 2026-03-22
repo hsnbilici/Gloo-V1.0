@@ -146,6 +146,12 @@ abstract class AppStrings {
   String get onboardingLoreLine2;
   String get onboardingLoreLine3;
 
+  // World tips (loading screen / hints)
+  String get tipWorldColors;
+  String get tipWorldSynthesis;
+  String get tipWorldJel;
+  String get tipWorldIsland;
+
   // Streak
   String get streakDays;
   String get streakRewardTitle;

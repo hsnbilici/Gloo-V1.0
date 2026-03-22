@@ -214,6 +214,14 @@ class StringsHi extends AppStrings {
   String get onboardingLoreLine2 => 'जब वे मिलते हैं, कुछ नया जन्म लेता है।';
   @override
   String get onboardingLoreLine3 => 'तुम्हारी हर बूँद एक कहानी लिखती है।';
+  @override
+  String get tipWorldColors => 'रंग एक-दूसरे को याद रखते हैं...';
+  @override
+  String get tipWorldSynthesis => 'मिलाना ही बनाना है...';
+  @override
+  String get tipWorldJel => 'हर जेल की अपनी पहचान है...';
+  @override
+  String get tipWorldIsland => 'तुम्हारा द्वीप हर खेल के साथ बढ़ता है...';
 
   @override
   String get streakDays => 'दिन';

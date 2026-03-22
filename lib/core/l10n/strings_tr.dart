@@ -214,6 +214,14 @@ class StringsTr extends AppStrings {
   String get onboardingLoreLine2 => 'Buluştuklarında yeni bir şey doğar.';
   @override
   String get onboardingLoreLine3 => 'Yerleştirdiğin her damla bir hikaye yazar.';
+  @override
+  String get tipWorldColors => 'Renkler birbirini hatırlar...';
+  @override
+  String get tipWorldSynthesis => 'Karıştırmak, yaratmaktır...';
+  @override
+  String get tipWorldJel => 'Her jelin bir kişiliği var...';
+  @override
+  String get tipWorldIsland => 'Adan her oyunla büyür...';
 
   @override
   String get streakDays => 'GÜN';

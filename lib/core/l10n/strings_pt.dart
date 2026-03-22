@@ -214,6 +214,14 @@ class StringsPt extends AppStrings {
   String get onboardingLoreLine2 => 'Quando se encontram, algo novo nasce.';
   @override
   String get onboardingLoreLine3 => 'Cada gota que você coloca escreve uma história.';
+  @override
+  String get tipWorldColors => 'As cores se lembram umas das outras...';
+  @override
+  String get tipWorldSynthesis => 'Misturar é criar...';
+  @override
+  String get tipWorldJel => 'Cada gel tem sua personalidade...';
+  @override
+  String get tipWorldIsland => 'Sua ilha cresce a cada partida...';
 
   @override
   String get streakDays => 'DIAS';

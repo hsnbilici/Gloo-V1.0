@@ -214,6 +214,14 @@ class StringsDe extends AppStrings {
   String get onboardingLoreLine2 => 'Wenn sie sich treffen, entsteht etwas Neues.';
   @override
   String get onboardingLoreLine3 => 'Jeder Tropfen, den du setzt, schreibt eine Geschichte.';
+  @override
+  String get tipWorldColors => 'Farben erinnern sich aneinander...';
+  @override
+  String get tipWorldSynthesis => 'Mischen bedeutet erschaffen...';
+  @override
+  String get tipWorldJel => 'Jedes Gel hat seine eigene Persönlichkeit...';
+  @override
+  String get tipWorldIsland => 'Deine Insel wächst mit jedem Spiel...';
 
   @override
   String get streakDays => 'TAGE';

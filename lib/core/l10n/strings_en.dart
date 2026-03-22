@@ -212,6 +212,14 @@ class StringsEn extends AppStrings {
   String get onboardingLoreLine2 => 'When they meet, something new is born.';
   @override
   String get onboardingLoreLine3 => 'Every drop you place writes a story.';
+  @override
+  String get tipWorldColors => 'Colors remember each other...';
+  @override
+  String get tipWorldSynthesis => 'Mixing is creating...';
+  @override
+  String get tipWorldJel => 'Each gel has a personality...';
+  @override
+  String get tipWorldIsland => 'Your island grows with every game...';
 
   @override
   String get streakDays => 'DAYS';

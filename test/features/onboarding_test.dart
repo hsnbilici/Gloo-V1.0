@@ -53,11 +53,11 @@ void main() {
       expect(find.text('Play!'), findsNothing);
     });
 
-    testWidgets('shows 4 page dots', (tester) async {
+    testWidgets('shows 5 page dots', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pump(const Duration(milliseconds: 500));
 
-      // 4 dot indicators: 1 active (width 22) + 3 inactive (width 6)
+      // 5 dot indicators: 1 active (width 22) + 4 inactive (width 6)
       // AnimatedContainer widgets as dot indicators
       final dots = find.byType(AnimatedContainer);
       // There are more AnimatedContainers (button, glow orb position, etc.)
@@ -89,7 +89,7 @@ void main() {
       expect(semantics, findsOneWidget);
     });
 
-    testWidgets('navigating to 4th page shows Play! button and prefs',
+    testWidgets('navigating to 5th page shows Play! button and prefs',
         (tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 3.0;
@@ -99,8 +99,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
 
       // Use programmatic Next button taps — more reliable than drag
-      // Tap Next 3 times to move from page 0 → 1 → 2 → 3
-      for (var i = 0; i < 3; i++) {
+      // Tap Next 4 times to move from page 0 → 1 → 2 → 3 → 4
+      for (var i = 0; i < 4; i++) {
         final nextFinder = find.text('Next');
         expect(nextFinder, findsOneWidget);
         await tester.tap(nextFinder);
@@ -113,7 +113,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 200));
       }
 
-      // 4th page shows Play! button
+      // 5th page shows Play! button
       expect(find.text('Play!'), findsOneWidget);
       // Shows preferences content
       expect(find.text('Settings'), findsOneWidget);

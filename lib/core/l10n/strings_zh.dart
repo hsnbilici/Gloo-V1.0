@@ -210,6 +210,14 @@ class StringsZh extends AppStrings {
   String get onboardingLoreLine2 => '当它们相遇，新的事物便诞生了。';
   @override
   String get onboardingLoreLine3 => '你放置的每一滴都在书写故事。';
+  @override
+  String get tipWorldColors => '颜色彼此记得...';
+  @override
+  String get tipWorldSynthesis => '混合就是创造...';
+  @override
+  String get tipWorldJel => '每种凝胶都有自己的个性...';
+  @override
+  String get tipWorldIsland => '你的岛屿随着每场游戏成长...';
 
   @override
   String get streakDays => '天';

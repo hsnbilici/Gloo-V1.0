@@ -214,6 +214,14 @@ class StringsAr extends AppStrings {
   String get onboardingLoreLine2 => 'عندما تلتقي، يولد شيء جديد.';
   @override
   String get onboardingLoreLine3 => 'كل قطرة تضعها تكتب قصة.';
+  @override
+  String get tipWorldColors => 'الألوان تتذكر بعضها...';
+  @override
+  String get tipWorldSynthesis => 'المزج هو الخلق...';
+  @override
+  String get tipWorldJel => 'لكل جل شخصيته...';
+  @override
+  String get tipWorldIsland => 'جزيرتك تكبر مع كل لعبة...';
 
   @override
   String get streakDays => 'أيام';

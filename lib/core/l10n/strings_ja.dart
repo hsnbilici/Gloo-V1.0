@@ -211,6 +211,14 @@ class StringsJa extends AppStrings {
   String get onboardingLoreLine2 => '出会うとき、新しいものが生まれる。';
   @override
   String get onboardingLoreLine3 => '置く一滴一滴が物語を紡ぐ。';
+  @override
+  String get tipWorldColors => '色は互いを覚えている...';
+  @override
+  String get tipWorldSynthesis => '混ぜることは、創ること...';
+  @override
+  String get tipWorldJel => 'ジェルにはそれぞれ個性がある...';
+  @override
+  String get tipWorldIsland => '島はゲームのたびに育っていく...';
 
   @override
   String get streakDays => '日';

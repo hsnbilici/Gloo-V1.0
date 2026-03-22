@@ -214,6 +214,14 @@ class StringsFr extends AppStrings {
   String get onboardingLoreLine2 => 'Quand elles se rencontrent, quelque chose de nouveau naît.';
   @override
   String get onboardingLoreLine3 => 'Chaque goutte que tu poses écrit une histoire.';
+  @override
+  String get tipWorldColors => 'Les couleurs se souviennent les unes des autres...';
+  @override
+  String get tipWorldSynthesis => 'Mélanger, c\'est créer...';
+  @override
+  String get tipWorldJel => 'Chaque gel a sa propre personnalité...';
+  @override
+  String get tipWorldIsland => 'Ton île grandit à chaque partie...';
 
   @override
   String get streakDays => 'JOURS';

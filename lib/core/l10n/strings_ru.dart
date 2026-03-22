@@ -214,6 +214,14 @@ class StringsRu extends AppStrings {
   String get onboardingLoreLine2 => 'Встречаясь, они рождают что-то новое.';
   @override
   String get onboardingLoreLine3 => 'Каждая капля, что ты ставишь, пишет историю.';
+  @override
+  String get tipWorldColors => 'Цвета помнят друг друга...';
+  @override
+  String get tipWorldSynthesis => 'Смешивать — значит создавать...';
+  @override
+  String get tipWorldJel => 'У каждого геля свой характер...';
+  @override
+  String get tipWorldIsland => 'Твой остров растёт с каждой игрой...';
 
   @override
   String get streakDays => 'ДНЕЙ';

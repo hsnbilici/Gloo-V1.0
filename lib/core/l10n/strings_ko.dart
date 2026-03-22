@@ -212,6 +212,14 @@ class StringsKo extends AppStrings {
   String get onboardingLoreLine2 => '만나면 새로운 것이 태어난다.';
   @override
   String get onboardingLoreLine3 => '당신이 놓는 한 방울 한 방울이 이야기를 쓴다.';
+  @override
+  String get tipWorldColors => '색깔은 서로를 기억한다...';
+  @override
+  String get tipWorldSynthesis => '섞는 것은 창조하는 것...';
+  @override
+  String get tipWorldJel => '각 젤에는 개성이 있다...';
+  @override
+  String get tipWorldIsland => '당신의 섬은 게임마다 자란다...';
 
   @override
   String get streakDays => '일';
