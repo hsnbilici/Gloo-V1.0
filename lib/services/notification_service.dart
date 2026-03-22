@@ -71,6 +71,9 @@ abstract class NotificationService {
     required String title,
     required String body,
   });
+
+  /// Kaynak temizliği.
+  void dispose();
 }
 
 /// Stub implementasyon — firebase_messaging eklenene kadar no-op.
@@ -115,10 +118,18 @@ class StubNotificationService implements NotificationService {
     required String title,
     required String body,
   }) async {}
+
+  @override
+  void dispose() {}
 }
 
 /// Firebase Messaging + flutter_local_notifications tabanlı gerçek implementasyon.
 class FirebaseNotificationService implements NotificationService {
+  FirebaseNotificationService({this.onTokenChanged});
+
+  /// Token değiştiğinde (ilk alım + yenileme) çağrılır.
+  final void Function(String token)? onTokenChanged;
+
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _local = FlutterLocalNotificationsPlugin();
   StreamSubscription<String>? _tokenRefreshSub;
@@ -147,8 +158,16 @@ class FirebaseNotificationService implements NotificationService {
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
-      _tokenRefreshSub = _fcm.onTokenRefresh.listen((_) {
-        // Token yenilendiğinde dışarıdan getToken() çağrılarak alınır.
+      // CR.11-C3: Bildirim iznini iste
+      await requestPermission();
+
+      // CR.11-C2: İlk token'ı al ve sync et
+      final token = await _fcm.getToken();
+      if (token != null) onTokenChanged?.call(token);
+
+      // Token yenilendiğinde sync et
+      _tokenRefreshSub = _fcm.onTokenRefresh.listen((token) {
+        onTokenChanged?.call(token);
       });
 
       if (kDebugMode) debugPrint('FirebaseNotificationService: initialized');
@@ -329,6 +348,7 @@ class FirebaseNotificationService implements NotificationService {
   }
 
   /// Token yenileme subscription'ını temizler.
+  @override
   void dispose() {
     _tokenRefreshSub?.cancel();
   }

@@ -23,6 +23,7 @@ import '../../core/constants/audio_constants.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
+import '../../services/notification_service.dart';
 import '../../providers/user_provider.dart';
 import 'widgets/bottom_bar.dart';
 import 'widgets/daily_banner.dart';
@@ -44,12 +45,14 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with WidgetsBindingObserver {
   final _soundBank = SoundBank();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // İlk açılışta sıralı kontroller — SharedPreferences yüklendikten sonra
     ref.read(localRepositoryProvider.future).then((repo) async {
       if (!mounted) return;
@@ -67,17 +70,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       await _continueStartupFlow(repo);
     });
     AudioManager().playMusic(AudioPaths.bgMenuLofi);
-    // Schedule notification reminders
+    // Initialize + schedule notification reminders
     if (!kIsWeb) {
+      _initNotifications();
+    }
+  }
+
+  Future<void> _initNotifications() async {
+    try {
+      final notif = ref.read(notificationServiceProvider);
+      await notif.initialize();
+      // Bildirimler devre dışıysa zamanlama yapma
+      final repo = await ref.read(localRepositoryProvider.future);
+      if (!repo.getNotificationsEnabled()) return;
+      final l = ref.read(stringsProvider);
+      await notif.scheduleStreakReminder(
+          title: l.notifStreakTitle, body: l.notifStreakBody);
+      await notif.scheduleDailyPuzzleReminder(
+          title: l.notifDailyTitle, body: l.notifDailyBody);
+      await notif.scheduleComebackNotification(
+          title: l.notifComebackTitle, body: l.notifComebackBody);
+    } catch (e) {
+      if (kDebugMode) debugPrint('HomeScreen: notification init error: $e');
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Uygulama ön plana geldi — comeback bildirimini iptal et
+      try {
+        ref
+            .read(notificationServiceProvider)
+            .cancelNotification(NotificationType.comeback);
+      } catch (_) {}
+    } else if (state == AppLifecycleState.paused) {
+      // Uygulama arka plana geçti — comeback bildirimini yeniden planla
       try {
         final notif = ref.read(notificationServiceProvider);
         final l = ref.read(stringsProvider);
-        notif.scheduleStreakReminder(title: l.notifStreakTitle, body: l.notifStreakBody);
-        notif.scheduleDailyPuzzleReminder(title: l.notifDailyTitle, body: l.notifDailyBody);
-      } catch (e) {
-        if (kDebugMode) debugPrint('HomeScreen: notification schedule error: $e');
-      }
+        notif.scheduleComebackNotification(
+            title: l.notifComebackTitle, body: l.notifComebackBody);
+      } catch (_) {}
     }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Future<void> _continueStartupFlow(LocalRepository repo) async {

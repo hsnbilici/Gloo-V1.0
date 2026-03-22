@@ -1,48 +1,42 @@
 # Gloo v1.0 — Kalan Gorevler
 
 > Son guncelleme: 2026-03-23
-> **Durum:** 186/194 gorev tamamlandi | Kalan 8 gorev + backlog
+> **Durum:** 194/198 gorev tamamlandi | Kalan 4 gorev + backlog + uzun vadeli
 
 ---
 
-## Yaratici Sprint — Kisa Vadeli
+## Uzun Vadeli — Vizyon Genisletme
 
-- [x] **CD.1 — Meta-game UI'yi ac:** MetaGameBar HomeScreen'e geri getirildi
-- [x] **CD.2 — Sentez anini vurgula:** Hucre glow efekti + synthesisGlowCells sistemi
-- [x] **CD.3 — Jel gorunumu:** radiusXs 4→6px
-- [x] **CD.4 — Light tema kontrast:** 6 renk koyulastirildi, WCAG AA PASS
-- [x] **CD.5 — HomeScreen sadele:** DailyBanner kompakt, QuickPlayBanner padding
+- [ ] **CD.12 — Maskot/Karakter Tasarimi** (Cok Yuksek etki)
+  - Jel bazli karakter ailesi, her sentez rengi bir kisilik
+  - **Altyapi:** CharacterState + CharacterScreen TAM implemente (kostum, yetenek, energy). Route `/character` aktif.
+  - **Eksik:** Gorsel karakter asset'leri (ilustrasyon/animasyon), kisilik tanimlari, onboarding entegrasyonu
+  - **Bagimlilik:** Gorsel asset uretimi (ilustrator gerekli)
 
-## Yaratici Sprint — Orta Vadeli
+- [ ] **CD.13 — Ada Sistemi Tam Entegrasyon** (Yuksek etki)
+  - 5 bina fonksiyonel, gorsel ada buyuyor, binalar animasyonlu
+  - **Altyapi:** IslandState + IslandScreen TAM implemente (5 bina, upgrade, pasif uretim). Route `/island` aktif. MetaGameBar acildi (CD.1).
+  - **Eksik:** Ada gorsel asset'leri, bina animasyonlari, core loop baglantisi (oyun sonu → ada guncelleme), arena→PvP ve harbor→SeasonPass gating
+  - **Bagimlilik:** GD.MGO7 (BLOCKED gorev) ile ortak
 
-- [x] **CD.6 — Jel morph efekti:** GelCellPainter isGlowing + SynthesisPulseCell 300ms pulse
-- [x] **CD.10 — Gorev sistemi:** Quest id field, 12 gunluk gorev, haftalik tracking + UI
-- [x] **CD.11 — Push notification:** FirebaseNotificationService + 3 senaryo + 12 dil l10n
+- [ ] **CD.14 — Sosyal/Viralite Katmani** (Yuksek etki)
+  - Daily sonuc paylasimi (Wordle formati), Duel davet, Collection paylasimi
+  - **Altyapi:** ShareManager 3 metod hazir (`shareScore`, `shareDailyResult`, `shareComboResult`). l10n, analytics entegre.
+  - **Eksik:** Wordle-format emoji grid, deep link davet sistemi, Collection paylasim UI, share card gorseli
+  - **Bagimlilik:** Deep link altyapisi (Firebase Dynamic Links veya app_links)
+
+- [ ] **CD.15 — ASMR Ses Paketleri** (Orta etki)
+  - Alternatif ses paketleri (orman, yagmur, deniz) + jel uzerine ambient katman
+  - **Altyapi:** AudioConstants'ta Faz 4 frekans haritasi tanimli. SoundBank 19 metod, AudioManager 8 kanal.
+  - **Eksik:** Ses paketi degistirme mekanizmasi (AudioManager'da `setAudioPackage()` yok — asset path swap gerekli), ASMR ses dosyalari uretimi, Shop'ta paket satin alma UI
+  - **Bagimlilik:** Ses asset uretimi (ses tasarimcisi gerekli), Shop entegrasyonu
 
 ---
 
-## Backlog — Kritik (Code Review)
+## Backlog (Code Review Onerileri)
 
-### CD.11 Notification Fixes (3 kritik + 3 onemli)
-- [ ] **CR.11-C1 — main.dart throwaway instance:** `FirebaseNotificationService()` singleton yerine yeni instance olusturuyor. Provider instance uzerinden initialize edilmeli.
-- [ ] **CR.11-C2 — Token sync eksik:** `saveDeviceToken` hic cagirilmiyor, `onTokenRefresh` listener no-op. Callback/repository inject edilmeli.
-- [ ] **CR.11-C3 — requestPermission hic cagirilmiyor:** iOS ve Android 13+ icin push izni istenmemis. `initialize()` icinde veya ilk schedule oncesinde cagrilmali.
-- [ ] **CR.11-I1 — Lifecycle observer eksik:** Comeback notification foreground'da iptal/reschedule yapilmiyor. `WidgetsBindingObserver` ekle.
-- [ ] **CR.11-I2 — Provider dispose eksik:** `ref.onDispose` ile `_tokenRefreshSub` cancel edilmeli.
-- [ ] **CR.11-I3 — Settings toggle eksik:** Notification enable/disable toggle Settings'te yok.
-
-### CD.10 Quest Fixes (2 kritik + 3 onemli)
-- [ ] **CR.10-C1 — d_rs500 quest imkansiz:** `reachScore` callback 1 artiriyor ama target 500. Ya callback score bazli artirmali ya da target 1 olmali.
-- [ ] **CR.10-C2 — Eski progress key migration yok:** Guncelleme yapan kullanicilar gunluk ilerlemelerini kaybedecek. Tek seferlik migration gerekli.
-- [ ] **CR.10-I1 — ISO week number edge case:** Yil siniri duzeltilmeli (Thursday-based ISO year).
-- [ ] **CR.10-I2 — useColorSynthesis enum kaldirilmali:** Dead code, spec'te belirtilmis.
-- [ ] **CR.10-I3 — 'Weekly' string hardcoded:** L10n key eklenmeli.
-
-### CD.6 Visual (oneriler)
-- [ ] **CR.6-S1 — SquashStretch + Pulse scale carpimi:** 1.12 * 1.15 = 1.29x — gorsel kontrol gerekli.
-- [ ] **CR.6-S2 — SynthesisPulseCell 300ms magic number:** `AnimationDurations` sabiti ekle.
-
-### Onceki Backlog
+- [ ] **CR.6-S1 — SquashStretch + Pulse scale carpimi:** 1.12 * 1.15 = 1.29x — gorsel kontrol gerekli
+- [ ] **CR.6-S2 — SynthesisPulseCell 300ms magic number:** `AnimationDurations` sabiti ekle
 - [ ] **CR.1 — CellRenderData copyWith metodu**
 - [ ] **CR.2 — Sentez glow per-cell timer**
 - [ ] **CR.3 — Shop tab testleri** (pre-existing)
@@ -52,7 +46,7 @@
 
 ## BLOCKED
 
-- [ ] **GD.MGO7 — Ada binalari gating:** MetaGameBar acildi ama icerik/balans calismasi gerekli
+- [ ] **GD.MGO7 — Ada binalari gating:** MetaGameBar acildi ama icerik/balans calismasi gerekli (CD.13 ile ortak)
 
 ## Manuel / Harici Isler
 

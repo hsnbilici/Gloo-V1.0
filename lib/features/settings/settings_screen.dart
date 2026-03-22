@@ -132,6 +132,37 @@ class SettingsScreen extends ConsumerWidget {
                   notifier.toggleHaptics();
                 },
               ),
+              if (!kIsWeb)
+                SettingsToggleTile(
+                  label: l.settingsNotifications,
+                  icon: Icons.notifications_rounded,
+                  value: ref.watch(localRepositoryProvider).valueOrNull
+                          ?.getNotificationsEnabled() ??
+                      true,
+                  accentColor: kColorZen,
+                  onChanged: (_) {
+                    SoundBank().onButtonTap();
+                    ref.read(localRepositoryProvider.future).then((repo) async {
+                      final newValue = !repo.getNotificationsEnabled();
+                      await repo.setNotificationsEnabled(newValue);
+                      final notif = ref.read(notificationServiceProvider);
+                      if (!newValue) {
+                        await notif.cancelAll();
+                      } else {
+                        await notif.scheduleStreakReminder(
+                            title: l.notifStreakTitle,
+                            body: l.notifStreakBody);
+                        await notif.scheduleDailyPuzzleReminder(
+                            title: l.notifDailyTitle,
+                            body: l.notifDailyBody);
+                        await notif.scheduleComebackNotification(
+                            title: l.notifComebackTitle,
+                            body: l.notifComebackBody);
+                      }
+                      ref.invalidate(localRepositoryProvider);
+                    });
+                  },
+                ),
               SectionHeader(
                   title: l.settingsSectionAccessibility,
                   color: kColorTimeTrial),

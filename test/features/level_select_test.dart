@@ -27,11 +27,12 @@ void main() {
       expect(find.byType(LevelSelectScreen), findsOneWidget);
     });
 
-    testWidgets('shows SEVIYELER title', (tester) async {
+    testWidgets('shows level select title', (tester) async {
       await tester.pumpWidget(buildLevelSelect());
       await tester.pumpAndSettle();
 
-      expect(find.text('SEVIYELER'), findsOneWidget);
+      // Test ortamı varsayılan dili (en) kullanır
+      expect(find.text('LEVELS'), findsOneWidget);
     });
 
     testWidgets('shows back button', (tester) async {

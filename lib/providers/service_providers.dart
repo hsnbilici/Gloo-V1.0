@@ -37,5 +37,14 @@ final pvpRealtimeServiceProvider = Provider<PvpRealtimeService>((ref) {
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   if (kIsWeb) return StubNotificationService();
-  return FirebaseNotificationService();
+  final remote = ref.read(remoteRepositoryProvider);
+  final service = FirebaseNotificationService(
+    onTokenChanged: (token) {
+      final platform =
+          defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
+      remote.saveDeviceToken(token, platform);
+    },
+  );
+  ref.onDispose(() => service.dispose());
+  return service;
 });
