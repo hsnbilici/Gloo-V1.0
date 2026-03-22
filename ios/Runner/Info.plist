@@ -80,6 +80,10 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
 		<!-- ATS — HTTPS-only enforced; explicit config prevents future default changes -->
 		<key>NSAppTransportSecurity</key>
 		<dict>
