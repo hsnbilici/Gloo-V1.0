@@ -385,6 +385,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       }
     };
 
+    game.onGelMerge = (mergeCount) {
+      soundBank.onGelMerge(mergeCount: mergeCount);
+    };
+
     game.onCascadeStep = (step, linesCleared) {
       final rm = mounted ? MediaQuery.disableAnimationsOf(context) : false;
       final delay = rm ? 0 : step * 180;

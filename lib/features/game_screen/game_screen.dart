@@ -538,6 +538,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     game.onGravityApplied = null;
     game.onStoneBroken = null;
     game.onColorSynthesis = null;
+    game.onGelMerge = null;
     game.onCascadeStep = null;
     game.currencyManager.onBalanceChanged = null;
     duelController?.dispose();

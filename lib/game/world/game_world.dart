@@ -104,6 +104,7 @@ class GlooGame {
   void Function(GelColor resultColor, (int, int) position)? onColorSynthesis;
   void Function(int step, int linesCleared)? onCascadeStep;
   void Function(List<(int, int)> brokenPositions)? onStoneBroken;
+  void Function(int mergeCount)? onGelMerge;
 
   int get score => _scoreSystem.score;
   int get highScore => _scoreSystem.highScore;
@@ -365,6 +366,7 @@ class GlooGame {
     if (appliedSynthesisCount > 0) {
       _totalSynthesisCount += appliedSynthesisCount;
       currencyManager.earnFromSynthesis(appliedSynthesisCount);
+      onGelMerge?.call(appliedSynthesisCount);
     }
 
     return (appliedSynthesisCount, chefTargetCount);

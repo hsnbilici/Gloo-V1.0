@@ -17,10 +17,23 @@ import '../features/pvp/pvp_lobby_screen.dart';
 import '../features/season_pass/season_pass_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/shop/shop_screen.dart';
+import '../audio/audio_manager.dart';
+import '../core/constants/audio_constants.dart';
+
+/// Route geçişlerinde hafif swoosh sesi çalan observer.
+class _SoundNavigatorObserver extends NavigatorObserver {
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (previousRoute != null) {
+      AudioManager().playSfx(AudioPaths.undoWhoosh, pitchVariation: false, volume: 0.4);
+    }
+  }
+}
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
+    observers: [_SoundNavigatorObserver()],
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(
