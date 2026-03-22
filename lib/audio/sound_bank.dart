@@ -56,6 +56,7 @@ class SoundBank {
 
   Future<void> onGameOver() async {
     await _audio.playSfx(AudioPaths.gameOver);
+    await _haptic.trigger(HapticProfile.gelMergeLarge);
   }
 
   Future<void> onLevelComplete() async {
@@ -65,6 +66,7 @@ class SoundBank {
 
   Future<void> onSynthesis() async {
     await _audio.playSfx(AudioPaths.colorSynthesis);
+    await _haptic.trigger(HapticProfile.rainbowMerge);
   }
 
   Future<void> onIceBreak() async {
@@ -79,10 +81,12 @@ class SoundBank {
 
   Future<void> onGravityDrop() async {
     await _audio.playSfx(AudioPaths.gravityDrop);
+    await _haptic.trigger(HapticProfile.gravityDrop);
   }
 
   Future<void> onButtonTap() async {
     await _audio.playSfx(AudioPaths.buttonTap);
+    await _haptic.trigger(HapticProfile.buttonTap);
   }
 
   Future<void> onGelOzuEarn() async {
@@ -93,5 +97,50 @@ class SoundBank {
     await _audio.playSfx(
       survived ? AudioPaths.nearMissRelief : AudioPaths.nearMissTension,
     );
+    if (survived) {
+      await _haptic.trigger(HapticProfile.gelMergeSmall);
+    } else {
+      await _haptic.trigger(HapticProfile.gelMergeLarge);
+    }
+  }
+
+  Future<void> onBombExplosion() async {
+    await _audio.playSfx(AudioPaths.bombExplosion);
+    await _haptic.trigger(HapticProfile.bombExplosion);
+  }
+
+  Future<void> onRotate() async {
+    await _audio.playSfx(AudioPaths.rotateClick);
+    await _haptic.trigger(HapticProfile.powerupActivate);
+  }
+
+  Future<void> onUndo() async {
+    await _audio.playSfx(AudioPaths.undoWhoosh);
+    await _haptic.trigger(HapticProfile.powerupActivate);
+  }
+
+  Future<void> onFreeze() async {
+    await _audio.playSfx(AudioPaths.freezeChime);
+    await _haptic.trigger(HapticProfile.powerupActivate);
+  }
+
+  Future<void> onPvpVictory() async {
+    await _audio.playSfx(AudioPaths.pvpVictory);
+    await _haptic.trigger(HapticProfile.levelCompleteNew);
+  }
+
+  Future<void> onPvpDefeat() async {
+    await _audio.playSfx(AudioPaths.pvpDefeat);
+    await _haptic.trigger(HapticProfile.gelMergeLarge);
+  }
+
+  Future<void> onPvpObstacleSent() async {
+    await _audio.playSfx(AudioPaths.pvpObstacleSent);
+    await _haptic.trigger(HapticProfile.pvpObstacleSent);
+  }
+
+  Future<void> onPvpObstacleReceived() async {
+    await _audio.playSfx(AudioPaths.pvpObstacleReceived);
+    await _haptic.trigger(HapticProfile.pvpObstacleReceived);
   }
 }
