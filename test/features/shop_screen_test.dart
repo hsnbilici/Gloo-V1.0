@@ -53,11 +53,22 @@ void main() {
       expect(find.text('Gloo+'), findsOneWidget);
     });
 
-    testWidgets('shows AD-FREE and SOUND PACKS sections', (tester) async {
+    testWidgets('shows AD-FREE and JEL OZU sections', (tester) async {
       await tester.pumpWidget(buildShop());
       await tester.pumpAndSettle();
 
       expect(find.text('AD-FREE'), findsOneWidget);
+      expect(find.text('JEL OZU'), findsOneWidget);
+    });
+
+    testWidgets('shows SOUND PACKS section after scrolling', (tester) async {
+      await tester.pumpWidget(buildShop());
+      await tester.pump(const Duration(seconds: 1));
+
+      await tester.drag(find.byType(ListView), const Offset(0, -300));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
+
       expect(find.text('SOUND PACKS'), findsOneWidget);
     });
 
@@ -68,7 +79,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
 
       // Scroll down to reveal redeem code section
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
+      await tester.drag(find.byType(ListView), const Offset(0, -600));
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pump(const Duration(milliseconds: 500));
 

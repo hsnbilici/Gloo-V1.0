@@ -569,4 +569,35 @@ class StringsFr extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => 'Place une forme';
+  @override
+  String get levelMicroTask2 => 'Efface une ligne';
+  @override
+  String get levelMicroTask3 => 'Efface 2 lignes';
+  @override
+  String get levelMicroTask4 => 'Essaie un combo';
+  @override
+  String get levelMicroTask5 => 'Melange les couleurs';
+  @override
+  String get levelMicroTask6 => '200+ points en un coup';
+  @override
+  String get levelMicroTask7 => 'Efface une colonne';
+  @override
+  String get levelMicroTask8 => 'Combo chaine x2';
+  @override
+  String get levelMicroTask9 => 'Synthetise une nouvelle couleur';
+  @override
+  String get levelMicroTask10 => 'Efface 3 lignes au total';
+
+  @override
+  String get duelRematch => 'Revanche';
 }

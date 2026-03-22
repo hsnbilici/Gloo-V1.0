@@ -361,6 +361,26 @@ abstract class AppStrings {
   String get streakFreezeLabel;
   String get streakFreezeUsed;
 
+  // GD.MO5: Jel Özü consumable IAP
+  String get shopJelOzu100;
+  String get shopJelOzu500;
+  String get shopSectionCurrency;
+
+  // GD.O4: Level 1-10 mikro görevler
+  String get levelMicroTask1;
+  String get levelMicroTask2;
+  String get levelMicroTask3;
+  String get levelMicroTask4;
+  String get levelMicroTask5;
+  String get levelMicroTask6;
+  String get levelMicroTask7;
+  String get levelMicroTask8;
+  String get levelMicroTask9;
+  String get levelMicroTask10;
+
+  // GD.PO10: Rematch
+  String get duelRematch;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,
@@ -375,6 +395,21 @@ abstract class AppStrings {
         GelColor.maroon => colorMaroon,
         GelColor.brown => colorBrown,
         GelColor.white => colorWhite,
+      };
+
+  /// Mikro görev anahtarından çevrilmiş metni döner.
+  String? microTaskText(String? key) => switch (key) {
+        'levelMicroTask1' => levelMicroTask1,
+        'levelMicroTask2' => levelMicroTask2,
+        'levelMicroTask3' => levelMicroTask3,
+        'levelMicroTask4' => levelMicroTask4,
+        'levelMicroTask5' => levelMicroTask5,
+        'levelMicroTask6' => levelMicroTask6,
+        'levelMicroTask7' => levelMicroTask7,
+        'levelMicroTask8' => levelMicroTask8,
+        'levelMicroTask9' => levelMicroTask9,
+        'levelMicroTask10' => levelMicroTask10,
+        _ => null,
       };
 
   // Factory: sistem diline göre doğru implementasyonu döner

@@ -568,4 +568,35 @@ class StringsPt extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => 'Coloque uma forma';
+  @override
+  String get levelMicroTask2 => 'Limpe uma linha';
+  @override
+  String get levelMicroTask3 => 'Limpe 2 linhas';
+  @override
+  String get levelMicroTask4 => 'Tente um combo';
+  @override
+  String get levelMicroTask5 => 'Misture cores';
+  @override
+  String get levelMicroTask6 => '200+ pontos em um lance';
+  @override
+  String get levelMicroTask7 => 'Limpe uma coluna';
+  @override
+  String get levelMicroTask8 => 'Combo cadeia x2';
+  @override
+  String get levelMicroTask9 => 'Sintetize uma nova cor';
+  @override
+  String get levelMicroTask10 => 'Limpe 3 linhas no total';
+
+  @override
+  String get duelRematch => 'Revanche';
 }

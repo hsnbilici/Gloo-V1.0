@@ -32,6 +32,7 @@ class LevelData {
     this.maxMoves,
     this.shape = MapShape.rectangle,
     this.description,
+    this.microTask,
   });
 
   /// Seviye numarası (1-tabanlı).
@@ -58,6 +59,9 @@ class LevelData {
 
   /// Seviye açıklaması (opsiyonel, öğretici seviyeler için).
   final String? description;
+
+  /// Mikro görev açıklaması (seviye 1-10 öğretici görevler).
+  final String? microTask;
 
   /// Harita formuna göre stone hücrelerini hesaplar.
   Map<(int, int), CellConfig> computeShapeCells() {

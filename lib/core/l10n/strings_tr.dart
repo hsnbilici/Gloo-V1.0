@@ -566,4 +566,35 @@ class StringsTr extends AppStrings {
   String get streakFreezeLabel => 'Seri Dondurma';
   @override
   String get streakFreezeUsed => 'Seri dondurma kullanildi!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => 'Bir sekil yerlestir';
+  @override
+  String get levelMicroTask2 => 'Bir satir temizle';
+  @override
+  String get levelMicroTask3 => '2 satir temizle';
+  @override
+  String get levelMicroTask4 => 'Bir kombo dene';
+  @override
+  String get levelMicroTask5 => 'Renkleri karistir';
+  @override
+  String get levelMicroTask6 => 'Tek hamlede 200+ puan';
+  @override
+  String get levelMicroTask7 => 'Bir sutun temizle';
+  @override
+  String get levelMicroTask8 => '2 zincirli kombo yap';
+  @override
+  String get levelMicroTask9 => 'Yeni bir renk sentezle';
+  @override
+  String get levelMicroTask10 => 'Toplam 3 satir temizle';
+
+  @override
+  String get duelRematch => 'Tekrar Mac';
 }

@@ -122,6 +122,28 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
     final purchase = ref.read(purchaseServiceProvider);
     final products = [
       (
+        id: PurchaseService.kJelOzu100,
+        icon: Icons.water_drop_rounded,
+        label: l.shopJelOzu100 as String,
+        desc: '100 Jel Ozu',
+        fallback: '\$0.99',
+        color: kGold,
+        delay: 140,
+        isFeatured: false,
+        section: (title: l.shopSectionCurrency as String, color: kGold),
+      ),
+      (
+        id: PurchaseService.kJelOzu500,
+        icon: Icons.water_drop_rounded,
+        label: l.shopJelOzu500 as String,
+        desc: '500 Jel Ozu',
+        fallback: '\$3.99',
+        color: kGold,
+        delay: 160,
+        isFeatured: true,
+        section: null,
+      ),
+      (
         id: PurchaseService.kSoundCrystal,
         icon: Icons.graphic_eq_rounded,
         label: l.shopSoundCrystal as String,
@@ -130,7 +152,7 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
         color: kCyan,
         delay: 180,
         isFeatured: false,
-        section: null as ({String title, Color color})?,
+        section: (title: l.shopSectionSoundPacks as String, color: kCyan),
       ),
       (
         id: PurchaseService.kSoundForest,

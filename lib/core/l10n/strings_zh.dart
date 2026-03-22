@@ -559,4 +559,35 @@ class StringsZh extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => '\u653e\u7f6e\u4e00\u4e2a\u5f62\u72b6';
+  @override
+  String get levelMicroTask2 => '\u6d88\u9664\u4e00\u884c';
+  @override
+  String get levelMicroTask3 => '\u6d88\u9664\u4e24\u884c';
+  @override
+  String get levelMicroTask4 => '\u5c1d\u8bd5\u8fde\u51fb';
+  @override
+  String get levelMicroTask5 => '\u6df7\u5408\u989c\u8272';
+  @override
+  String get levelMicroTask6 => '\u4e00\u6b65200+\u5206';
+  @override
+  String get levelMicroTask7 => '\u6d88\u9664\u4e00\u5217';
+  @override
+  String get levelMicroTask8 => '2\u8fde\u51fb';
+  @override
+  String get levelMicroTask9 => '\u5408\u6210\u65b0\u989c\u8272';
+  @override
+  String get levelMicroTask10 => '\u603b\u5171\u6d88\u96643\u884c';
+
+  @override
+  String get duelRematch => '\u518d\u6765\u4e00\u5c40';
 }

@@ -168,8 +168,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with _ShopLogicMixin {
                   .fadeIn(duration: 350.ms)
                   .slideY(begin: 0.08, end: 0, duration: 350.ms),
 
-              // ── Ses Paketleri + Doku Paketleri + Starter Pack
-              SectionHeader(title: l.shopSectionSoundPacks, color: kCyan),
+              // ── Jel Özü + Ses Paketleri + Doku Paketleri + Starter Pack
               ...buildProductTiles(l),
 
               const SizedBox(height: 20),

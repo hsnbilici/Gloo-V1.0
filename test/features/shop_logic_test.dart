@@ -53,9 +53,15 @@ void main() {
       expect(find.text('AD-FREE'), findsOneWidget);
     });
 
-    testWidgets('renders SOUND PACKS section', (tester) async {
+    testWidgets('renders JEL OZU and SOUND PACKS sections', (tester) async {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
+
+      expect(find.text('JEL OZU'), findsOneWidget);
+
+      await tester.drag(find.byType(ListView), const Offset(0, -300));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('SOUND PACKS'), findsOneWidget);
     });
@@ -93,7 +99,7 @@ void main() {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
 
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
+      await tester.drag(find.byType(ListView), const Offset(0, -700));
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pump(const Duration(milliseconds: 500));
 
@@ -105,7 +111,7 @@ void main() {
       await tester.pumpWidget(buildShop());
       await tester.pump(const Duration(seconds: 1));
 
-      await tester.drag(find.byType(ListView), const Offset(0, -500));
+      await tester.drag(find.byType(ListView), const Offset(0, -700));
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pump(const Duration(milliseconds: 500));
 
@@ -144,8 +150,8 @@ void main() {
       expect(PurchaseService.kGlooPlusYearly, equals('gloo_plus_yearly'));
     });
 
-    test('allProductIds contains all 8 products', () {
-      expect(PurchaseService.allProductIds.length, equals(8));
+    test('allProductIds contains all 10 products', () {
+      expect(PurchaseService.allProductIds.length, equals(10));
     });
   });
 }

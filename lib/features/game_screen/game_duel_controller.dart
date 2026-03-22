@@ -286,7 +286,7 @@ class GameDuelController {
           return DuelResultOverlay(
             result: result,
             playerElo: newElo,
-            playAgainLabel: l.playAgainLabel,
+            playAgainLabel: l.duelRematch,
             mainMenuLabel: l.mainMenuLabel,
             l: l,
             onHome: () {
@@ -295,7 +295,12 @@ class GameDuelController {
             },
             onRematch: () {
               Navigator.of(ctx).pop();
-              context.go('/pvp-lobby');
+              if (isBot) {
+                // Bot rematch: aynı zorlukla yeniden başlat
+                context.go('/game/duel?bot=true');
+              } else {
+                context.go('/pvp-lobby');
+              }
             },
           );
         },

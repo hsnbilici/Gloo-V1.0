@@ -563,4 +563,35 @@ class StringsKo extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => '\ubaa8\uc591 \ubc30\uce58';
+  @override
+  String get levelMicroTask2 => '1\uc904 \uc9c0\uc6b0\uae30';
+  @override
+  String get levelMicroTask3 => '2\uc904 \uc9c0\uc6b0\uae30';
+  @override
+  String get levelMicroTask4 => '\ucf64\ubcf4 \uc2dc\ub3c4';
+  @override
+  String get levelMicroTask5 => '\uc0c9 \uc12c\uae30';
+  @override
+  String get levelMicroTask6 => '\ud55c \uc218\uc5d0 200+\uc810';
+  @override
+  String get levelMicroTask7 => '1\uc5f4 \uc9c0\uc6b0\uae30';
+  @override
+  String get levelMicroTask8 => '2\uccb4\uc778 \ucf64\ubcf4';
+  @override
+  String get levelMicroTask9 => '\uc0c8 \uc0c9 \ud569\uc131';
+  @override
+  String get levelMicroTask10 => '\ucd1d 3\uc904 \uc9c0\uc6b0\uae30';
+
+  @override
+  String get duelRematch => '\uc7ac\uacbd\uae30';
 }

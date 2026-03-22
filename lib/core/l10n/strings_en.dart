@@ -564,4 +564,38 @@ class StringsEn extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  // GD.MO5: Jel Özü consumable IAP
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  // GD.O4: Level 1-10 micro tasks
+  @override
+  String get levelMicroTask1 => 'Place a shape';
+  @override
+  String get levelMicroTask2 => 'Clear a row';
+  @override
+  String get levelMicroTask3 => 'Clear 2 rows';
+  @override
+  String get levelMicroTask4 => 'Try a combo';
+  @override
+  String get levelMicroTask5 => 'Mix colors';
+  @override
+  String get levelMicroTask6 => 'Score 200+ in one move';
+  @override
+  String get levelMicroTask7 => 'Clear a column';
+  @override
+  String get levelMicroTask8 => 'Build a 2-chain combo';
+  @override
+  String get levelMicroTask9 => 'Synthesize a new color';
+  @override
+  String get levelMicroTask10 => 'Clear 3 lines total';
+
+  // GD.PO10: Rematch
+  @override
+  String get duelRematch => 'Rematch';
 }

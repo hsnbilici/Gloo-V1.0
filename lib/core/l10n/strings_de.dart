@@ -571,4 +571,35 @@ class StringsDe extends AppStrings {
   String get streakFreezeLabel => 'Streak Freeze';
   @override
   String get streakFreezeUsed => 'Streak freeze used!';
+
+  @override
+  String get shopJelOzu100 => '100 Jel Ozu';
+  @override
+  String get shopJelOzu500 => '500 Jel Ozu';
+  @override
+  String get shopSectionCurrency => 'JEL OZU';
+
+  @override
+  String get levelMicroTask1 => 'Platziere eine Form';
+  @override
+  String get levelMicroTask2 => 'Leere eine Reihe';
+  @override
+  String get levelMicroTask3 => 'Leere 2 Reihen';
+  @override
+  String get levelMicroTask4 => 'Versuche eine Combo';
+  @override
+  String get levelMicroTask5 => 'Farben mischen';
+  @override
+  String get levelMicroTask6 => '200+ Punkte in einem Zug';
+  @override
+  String get levelMicroTask7 => 'Leere eine Spalte';
+  @override
+  String get levelMicroTask8 => '2er-Ketten-Combo';
+  @override
+  String get levelMicroTask9 => 'Neue Farbe synthetisieren';
+  @override
+  String get levelMicroTask10 => 'Insgesamt 3 Reihen leeren';
+
+  @override
+  String get duelRematch => 'Revanche';
 }

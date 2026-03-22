@@ -33,6 +33,11 @@ class LevelProgression {
   /// Breathing room seviyesi mi? (Her 10 seviyede 1)
   static bool isBreathingRoom(int levelId) => levelId % 10 == 0;
 
+  /// Temali kısıtlama döngüsü (her 5 seviyede bir tema).
+  /// 0: kısıtlı renkler (3 birincil), 1: dar ızgara (7 sütun),
+  /// 2: kenar buzları, 3: çok hamle + yüksek hedef
+  static int _themeIndex(int levelId) => ((levelId - 51) ~/ 5) % 4;
+
   /// Seviye prosedürel olarak üretilir (50+ seviyeler için).
   static LevelData _generateProceduralLevel(int levelId) {
     // Zorluk eğrisi
@@ -48,15 +53,48 @@ class LevelProgression {
       );
     }
 
-    // Izgara boyutu: kademeli artış
-    final rows = (8 + (difficulty * 4).round()).clamp(6, 12);
-    final cols = (6 + (difficulty * 4).round()).clamp(6, 10);
+    // Temali kısıtlamalar (51+)
+    final theme = _themeIndex(levelId);
+
+    // Izgara boyutu: kademeli artış (tema 1: dar ızgara)
+    var rows = (8 + (difficulty * 4).round()).clamp(6, 12);
+    var cols = (6 + (difficulty * 4).round()).clamp(6, 10);
+    if (theme == 1 && levelId <= 200) {
+      cols = 7; // Dar ızgara teması
+    }
+
+    // Renk kısıtlaması (tema 0)
+    List<GelColor>? availableColors;
+    if (theme == 0 && levelId <= 200) {
+      availableColors = const [GelColor.red, GelColor.yellow, GelColor.blue];
+    }
+
+    // Hedef skor ve hamle (tema 3: çok hamle + yüksek hedef)
+    var targetScore = 500 + levelId * 15;
+    int? maxMoves = levelId > 100 ? 30 + (levelId ~/ 10) : null;
+    if (theme == 3 && levelId <= 200) {
+      targetScore = (targetScore * 1.4).round();
+      maxMoves = (maxMoves ?? 40) + 10;
+    }
 
     // Özel hücreler
     final specialCells = <(int, int), CellConfig>{};
 
-    // 51+: Buz hücreleri (2 katman)
-    if (levelId > 50) {
+    // Tema 2: kenar buzları
+    if (theme == 2 && levelId <= 200) {
+      // Üst ve sol kenarlara buz
+      for (int c = 0; c < cols; c++) {
+        specialCells[(0, c)] =
+            const CellConfig(type: CellType.ice, iceLayer: 1);
+      }
+      for (int r = 1; r < rows; r++) {
+        specialCells[(r, 0)] =
+            const CellConfig(type: CellType.ice, iceLayer: 1);
+      }
+    }
+
+    // 51+: Buz hücreleri (2 katman) — tema 2 hariç (zaten var)
+    if (levelId > 50 && theme != 2) {
       final iceCount = (difficulty * 6).round().clamp(1, 8);
       _addRandomSpecialCells(
         specialCells,
@@ -68,7 +106,7 @@ class LevelProgression {
       );
     }
     // 21-50: Buz hücreleri (1 katman)
-    else if (levelId > 20) {
+    else if (levelId > 20 && levelId <= 50) {
       final iceCount = ((levelId - 20) / 10).round().clamp(1, 4);
       _addRandomSpecialCells(
         specialCells,
@@ -138,8 +176,9 @@ class LevelProgression {
       rows: rows,
       cols: cols,
       specialCells: specialCells,
-      targetScore: 500 + levelId * 15,
-      maxMoves: levelId > 100 ? 30 + (levelId ~/ 10) : null,
+      availableColors: availableColors,
+      targetScore: targetScore,
+      maxMoves: maxMoves,
       shape: shape,
     );
   }
@@ -179,17 +218,31 @@ final List<LevelData> _predefinedLevels = [
       rows: 6,
       cols: 6,
       targetScore: 200,
-      description: 'Jel bloklarını ızgaraya yerleştir!'),
-  const LevelData(id: 2, rows: 6, cols: 6, targetScore: 250),
-  const LevelData(id: 3, rows: 6, cols: 6, targetScore: 300),
-  const LevelData(id: 4, rows: 7, cols: 6, targetScore: 350),
-  const LevelData(id: 5, rows: 7, cols: 7, targetScore: 400),
-  const LevelData(id: 6, rows: 7, cols: 7, targetScore: 450),
-  const LevelData(id: 7, rows: 8, cols: 7, targetScore: 500),
-  const LevelData(id: 8, rows: 8, cols: 7, targetScore: 550),
-  const LevelData(id: 9, rows: 8, cols: 8, targetScore: 600),
+      description: 'Jel bloklarını ızgaraya yerleştir!',
+      microTask: 'levelMicroTask1'),
+  const LevelData(
+      id: 2, rows: 6, cols: 6, targetScore: 250, microTask: 'levelMicroTask2'),
+  const LevelData(
+      id: 3, rows: 6, cols: 6, targetScore: 300, microTask: 'levelMicroTask3'),
+  const LevelData(
+      id: 4, rows: 7, cols: 6, targetScore: 350, microTask: 'levelMicroTask4'),
+  const LevelData(
+      id: 5, rows: 7, cols: 7, targetScore: 400, microTask: 'levelMicroTask5'),
+  const LevelData(
+      id: 6, rows: 7, cols: 7, targetScore: 450, microTask: 'levelMicroTask6'),
+  const LevelData(
+      id: 7, rows: 8, cols: 7, targetScore: 500, microTask: 'levelMicroTask7'),
+  const LevelData(
+      id: 8, rows: 8, cols: 7, targetScore: 550, microTask: 'levelMicroTask8'),
+  const LevelData(
+      id: 9, rows: 8, cols: 8, targetScore: 600, microTask: 'levelMicroTask9'),
   // Breathing room
-  const LevelData(id: 10, rows: 6, cols: 6, targetScore: 300),
+  const LevelData(
+      id: 10,
+      rows: 6,
+      cols: 6,
+      targetScore: 300,
+      microTask: 'levelMicroTask10'),
 
   // --- Bölüm 2: Standart oyun (11-20) ---
   const LevelData(id: 11, rows: 8, cols: 8, targetScore: 650),

@@ -39,8 +39,13 @@ class PurchaseService {
   static const kGlooPlusMonthly = 'gloo_plus_monthly';
   static const kGlooPlusQuarter = 'gloo_plus_quarter';
   static const kGlooPlusYearly = 'gloo_plus_yearly';
+  static const kJelOzu100 = 'gloo_jel_ozu_100';
+  static const kJelOzu500 = 'gloo_jel_ozu_500';
 
-  static const _kConsumableIds = <String>{};
+  static const _kConsumableIds = <String>{
+    kJelOzu100,
+    kJelOzu500,
+  };
   static const _kNonConsumableIds = <String>{
     kRemoveAds,
     kSoundCrystal,
@@ -55,6 +60,7 @@ class PurchaseService {
   };
 
   static Set<String> get allProductIds => {
+        ..._kConsumableIds,
         ..._kNonConsumableIds,
         ..._kSubscriptionIds,
       };
@@ -88,6 +94,16 @@ class PurchaseService {
 
   // Dışarıdan dinlemek için callback
   void Function(Set<String> purchasedIds)? onPurchaseUpdate;
+
+  /// Consumable satın alma sonrası Jel Özü kredileme callback'i.
+  void Function(int amount)? onConsumableFulfilled;
+
+  /// Consumable ürünün Jel Özü miktarını döner.
+  static int? jelOzuAmount(String productId) => switch (productId) {
+        kJelOzu100 => 100,
+        kJelOzu500 => 500,
+        _ => null,
+      };
 
   // ── Yaşam döngüsü ──────────────────────────────────────────────────────
   Future<void> initialize() async {
@@ -328,7 +344,13 @@ class PurchaseService {
   }
 
   /// Urunu ve alt urunlerini _purchasedIds'e ekler.
+  /// Consumable ürünler _purchasedIds'e eklenmez, callback ile kredilenir.
   void _addProduct(String productId) {
+    final jelAmount = jelOzuAmount(productId);
+    if (jelAmount != null) {
+      onConsumableFulfilled?.call(jelAmount);
+      return;
+    }
     _purchasedIds.add(productId);
     if (productId == kStarterPack) {
       _purchasedIds

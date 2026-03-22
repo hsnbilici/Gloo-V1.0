@@ -156,7 +156,7 @@
 - [x] **GD.O1 — Sentez ipucu overlay:** Secili seklin rengiyle sentez potansiyeli olan bitisik bos hucrelere hafif glow (Orta efor)
 - [x] **GD.O2 — Cascade pacing:** `onCascadeStep` callback + 250ms delayed SFX (Dusuk efor) ✅ (T21)
 - [x] **GD.O3 — Komboyu hamle bazli yap:** 1500ms pencere → ardisik temizleme = combo (Dusuk efor) ✅
-- [ ] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
+- [x] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
 - [x] **GD.O5 — Siradaki 1 sekil silueti her zaman gorunsun:** nextShapeSilhouette + muted 36x36 preview, Peek aktifken gizli (Dusuk efor) ✅ (T31)
 - [x] **GD.O6 — Talent → Core Loop baglantisi:** betterHand → ShapeGenerator, colorMaster → ScoreSystem (Dusuk efor) ✅
 
@@ -194,7 +194,7 @@
 - [x] **GD.MO2 — Rewarded reklam → power-up UI bagla:** Game Over'da "reklam izle = ucretsiz Bomb" butonu (Dusuk efor)
 - [x] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu, Gloo+ bonus otomatik (Dusuk efor) ✅ (T32)
 - [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
-- [ ] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
+- [x] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
 - [x] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
 - [x] **GD.MO7 — Enflasyon sistemini netlistir:** `inflatedCost` power-up'lara baglandi + formul 1000/2x'e yumusatildi (Dusuk efor) ✅ (T23)
 - [x] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyonunu coz:** Reklamsizi Starter'dan cikar VEYA Gloo+'a exclusive ekle (Dusuk efor)
@@ -260,7 +260,7 @@
 - [x] **GD.LO6 — Yerlestirme basina puan ekle:** hucre basina 10 puan — geri bildirim dongusu (Dusuk efor) ✅
 - [x] **GD.LO7 — Coklu satir temizlemeyi ustel odul yap:** 2→400, 3→1000, 4→2000 (Dusuk efor) ✅
 - [x] **GD.LO8 — Merhamet esigini 3→2 kayba dusur:** Daha erken mudahale (Cok dusuk efor) ✅
-- [ ] **GD.LO9 — Prosedural seviyelere temali kisitlamalar ekle:** Her 5 seviyede farkli kural (Orta efor)
+- [x] **GD.LO9 — Prosedural seviyelere temali kisitlamalar ekle:** Her 5 seviyede farkli kural (Orta efor)
 - [x] **GD.LO10 — "Neredeyse dolu satir" gorsel geri bildirimi:** `isNearlyFullRow` + amber highlight (Dusuk efor) ✅ (T20)
 
 ---
@@ -303,7 +303,7 @@
 - [x] **GD.PO7 — Epic kombo engelini 9→4-5 buza dusur:** Kombo duzeltmesiyle birlikte (Dusuk efor) ✅
 - [x] **GD.PO8 — Bot ELO kazanimini sinirla:** Bot win ELO %50 azaltma, kayip tam (Dusuk efor) ✅ (T22)
 - [x] **GD.PO9 — K-Factor'u ELO segmentine gore dinamik yap:** <800:K=40, 800-1199:K=32, 1200-1599:K=28, 1600+:K=24 + Edge Function sync (Dusuk efor) ✅ (T30)
-- [ ] **GD.PO10 — Rematch secenegi ekle:** Ayni rakiple tekrar oynama (Orta efor)
+- [x] **GD.PO10 — Rematch secenegi ekle:** Ayni rakiple tekrar oynama (Orta efor)
 
 ---
 
