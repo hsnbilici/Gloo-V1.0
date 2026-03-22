@@ -17,7 +17,7 @@ dependencies:
   flutter_animate: ^4.5.0
 
   # Durum yönetimi
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^3.3.1
 
   # Navigasyon
   go_router: ^13.2.0
