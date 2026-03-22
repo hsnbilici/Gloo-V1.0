@@ -250,6 +250,20 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     game.checkGameOver(
       hand.where((s) => s != null).map((s) => s!.$1).toList(),
     );
+
+    // Grid doluluk bazlı müzik geçişi (yalnızca relax müzik çalan modlarda)
+    if (widget.mode != GameMode.timeTrial &&
+        widget.mode != GameMode.duel &&
+        widget.mode != GameMode.zen) {
+      final total = game.gridManager.rows * game.gridManager.cols;
+      final filled = game.gridManager.filledCells;
+      final ratio = filled / total;
+      if (ratio >= 0.70) {
+        AudioManager().crossfadeMusic(AudioPaths.bgGameTension);
+      } else if (ratio < 0.60) {
+        AudioManager().crossfadeMusic(AudioPaths.bgGameRelax);
+      }
+    }
   }
 
   // ─── Drag-and-drop handler'ları ────────────────────────────────────────

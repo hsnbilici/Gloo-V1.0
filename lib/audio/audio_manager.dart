@@ -111,17 +111,52 @@ class AudioManager {
   /// Müziği kademeli olarak kıs ve duraklat.
   Future<void> fadeOutMusic(Duration duration) async {
     _isFading = true;
-    const steps = 10;
-    final stepDuration = duration ~/ steps;
-    const startVolume = AudioConfig.musicVolume;
-    for (var i = steps - 1; i >= 0; i--) {
-      await Future.delayed(stepDuration);
-      await _musicPlayer.setVolume(startVolume * i / steps);
+    try {
+      const steps = 10;
+      final stepDuration = duration ~/ steps;
+      const startVolume = AudioConfig.musicVolume;
+      for (var i = steps - 1; i >= 0; i--) {
+        await Future.delayed(stepDuration);
+        await _musicPlayer.setVolume(startVolume * i / steps);
+      }
+      await _musicPlayer.pause();
+      // Volume'u eski haline getir (resume/play'de kullanılacak)
+      await _musicPlayer.setVolume(startVolume);
+    } finally {
+      _isFading = false;
     }
-    await _musicPlayer.pause();
-    // Volume'u eski haline getir (resume/play'de kullanılacak)
-    await _musicPlayer.setVolume(startVolume);
-    _isFading = false;
+  }
+
+  /// Mevcut müzikten [newPath]'e [duration] sürede çapraz geçiş yapar.
+  /// Aynı parça zaten çalıyorsa veya fade devam ediyorsa no-op.
+  Future<void> crossfadeMusic(String newPath, {Duration duration = const Duration(milliseconds: 1500)}) async {
+    if (!_musicEnabled) return;
+    if (_currentMusicPath == newPath) return;
+    if (_isFading) return;
+    _isFading = true;
+    try {
+      // Mevcut parçayı kıs
+      const steps = 8;
+      final stepDuration = duration ~/ (steps * 2);
+      const startVolume = AudioConfig.musicVolume;
+      for (var i = steps - 1; i >= 0; i--) {
+        await Future.delayed(stepDuration);
+        await _musicPlayer.setVolume(startVolume * i / steps);
+      }
+      // Parçayı değiştir
+      _currentMusicPath = newPath;
+      await _musicPlayer.setAsset(newPath);
+      unawaited(_musicPlayer.play());
+      // Yeni parçayı aç
+      for (var i = 1; i <= steps; i++) {
+        await Future.delayed(stepDuration);
+        await _musicPlayer.setVolume(startVolume * i / steps);
+      }
+    } catch (_) {
+      // Sessizce atla
+    } finally {
+      _isFading = false;
+    }
   }
 
   /// Müzik volume'unu geçici olarak değiştir. Fade sırasında atlanır.
