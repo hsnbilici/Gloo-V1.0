@@ -671,4 +671,22 @@ class StringsPt extends AppStrings {
   String get notifComebackBody => 'Volte e continue criando cores!';
   @override
   String get settingsNotifications => 'Notificações';
+
+  // CD.12: Arquétipos de personalidade
+  @override
+  String get personalityOrange => 'Aventureiro';
+  @override
+  String get personalityGreen => 'Sábio';
+  @override
+  String get personalityPurple => 'Místico';
+  @override
+  String get personalityPink => 'Alegre';
+  @override
+  String get personalityLightBlue => 'Sereno';
+  @override
+  String get personalityLime => 'Criativo';
+  @override
+  String get personalityMaroon => 'Forte';
+  @override
+  String get personalityBrown => 'Leal';
 }

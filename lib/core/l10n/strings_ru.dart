@@ -675,4 +675,22 @@ class StringsRu extends AppStrings {
   String get notifComebackBody => 'Вернись и продолжай создавать цвета!';
   @override
   String get settingsNotifications => 'Уведомления';
+
+  // CD.12: Архетипы личности
+  @override
+  String get personalityOrange => 'Искатель';
+  @override
+  String get personalityGreen => 'Мудрец';
+  @override
+  String get personalityPurple => 'Мистик';
+  @override
+  String get personalityPink => 'Весельчак';
+  @override
+  String get personalityLightBlue => 'Спокойный';
+  @override
+  String get personalityLime => 'Творец';
+  @override
+  String get personalityMaroon => 'Стойкий';
+  @override
+  String get personalityBrown => 'Верный';
 }

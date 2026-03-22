@@ -669,4 +669,22 @@ class StringsTr extends AppStrings {
   String get notifComebackBody => 'Geri dön ve renk yaratmaya devam et!';
   @override
   String get settingsNotifications => 'Bildirimler';
+
+  // CD.12: Kişilik arketipleri
+  @override
+  String get personalityOrange => 'Maceracı';
+  @override
+  String get personalityGreen => 'Bilge';
+  @override
+  String get personalityPurple => 'Gizemli';
+  @override
+  String get personalityPink => 'Neşeli';
+  @override
+  String get personalityLightBlue => 'Sakin';
+  @override
+  String get personalityLime => 'Yaratıcı';
+  @override
+  String get personalityMaroon => 'Güçlü';
+  @override
+  String get personalityBrown => 'Sadık';
 }

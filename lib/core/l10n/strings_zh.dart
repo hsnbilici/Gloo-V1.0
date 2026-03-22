@@ -661,4 +661,22 @@ class StringsZh extends AppStrings {
   String get notifComebackBody => '回来继续创造色彩吧！';
   @override
   String get settingsNotifications => '通知';
+
+  // CD.12: 性格原型
+  @override
+  String get personalityOrange => '冒险家';
+  @override
+  String get personalityGreen => '智者';
+  @override
+  String get personalityPurple => '神秘者';
+  @override
+  String get personalityPink => '快乐者';
+  @override
+  String get personalityLightBlue => '平静者';
+  @override
+  String get personalityLime => '创造者';
+  @override
+  String get personalityMaroon => '勇者';
+  @override
+  String get personalityBrown => '忠诚者';
 }

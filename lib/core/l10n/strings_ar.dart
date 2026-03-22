@@ -673,4 +673,22 @@ class StringsAr extends AppStrings {
   String get notifComebackBody => 'عد وتابع إبداع الألوان!';
   @override
   String get settingsNotifications => 'الإشعارات';
+
+  // CD.12: أنماط الشخصية
+  @override
+  String get personalityOrange => 'المغامر';
+  @override
+  String get personalityGreen => 'الحكيم';
+  @override
+  String get personalityPurple => 'الغامض';
+  @override
+  String get personalityPink => 'المرح';
+  @override
+  String get personalityLightBlue => 'الهادئ';
+  @override
+  String get personalityLime => 'المبدع';
+  @override
+  String get personalityMaroon => 'القوي';
+  @override
+  String get personalityBrown => 'الوفي';
 }

@@ -664,4 +664,22 @@ class StringsJa extends AppStrings {
   String get notifComebackBody => '戻ってきて、カラーを作り続けよう！';
   @override
   String get settingsNotifications => '通知';
+
+  // CD.12: パーソナリティアーキタイプ
+  @override
+  String get personalityOrange => '冒険家';
+  @override
+  String get personalityGreen => '賢者';
+  @override
+  String get personalityPurple => '神秘家';
+  @override
+  String get personalityPink => '陽気者';
+  @override
+  String get personalityLightBlue => '穏やか';
+  @override
+  String get personalityLime => '創造家';
+  @override
+  String get personalityMaroon => '勇者';
+  @override
+  String get personalityBrown => '忠実者';
 }

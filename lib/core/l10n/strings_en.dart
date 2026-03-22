@@ -670,4 +670,22 @@ class StringsEn extends AppStrings {
   String get notifComebackBody => 'Come back and keep creating colors!';
   @override
   String get settingsNotifications => 'Notifications';
+
+  // CD.12: Personality archetypes
+  @override
+  String get personalityOrange => 'Adventurer';
+  @override
+  String get personalityGreen => 'Sage';
+  @override
+  String get personalityPurple => 'Mystic';
+  @override
+  String get personalityPink => 'Joyful';
+  @override
+  String get personalityLightBlue => 'Calm';
+  @override
+  String get personalityLime => 'Creative';
+  @override
+  String get personalityMaroon => 'Strong';
+  @override
+  String get personalityBrown => 'Loyal';
 }

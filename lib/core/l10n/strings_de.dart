@@ -674,4 +674,22 @@ class StringsDe extends AppStrings {
   String get notifComebackBody => 'Komm zurück und erschaffe wieder Farben!';
   @override
   String get settingsNotifications => 'Benachrichtigungen';
+
+  // CD.12: Persönlichkeitsarchetypen
+  @override
+  String get personalityOrange => 'Abenteurer';
+  @override
+  String get personalityGreen => 'Weiser';
+  @override
+  String get personalityPurple => 'Mystiker';
+  @override
+  String get personalityPink => 'Fröhlich';
+  @override
+  String get personalityLightBlue => 'Ruhig';
+  @override
+  String get personalityLime => 'Kreativ';
+  @override
+  String get personalityMaroon => 'Stark';
+  @override
+  String get personalityBrown => 'Loyal';
 }

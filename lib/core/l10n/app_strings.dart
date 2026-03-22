@@ -423,6 +423,16 @@ abstract class AppStrings {
   String get notifComebackBody;
   String get settingsNotifications;
 
+  // CD.12: Kişilik arketipleri
+  String get personalityOrange;
+  String get personalityGreen;
+  String get personalityPurple;
+  String get personalityPink;
+  String get personalityLightBlue;
+  String get personalityLime;
+  String get personalityMaroon;
+  String get personalityBrown;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

@@ -9,6 +9,7 @@ import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../core/utils/motion_utils.dart';
+import '../../game/meta/gel_personality.dart';
 import '../../game/meta/resource_manager.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -23,9 +24,110 @@ class CharacterScreen extends ConsumerStatefulWidget {
   ConsumerState<CharacterScreen> createState() => _CharacterScreenState();
 }
 
+/// Keşfedilen sentez renklerinin kişilik arketiplerini listeler.
+class _PersonalitySection extends ConsumerWidget {
+  const _PersonalitySection({
+    required this.discovered,
+    required this.textSecondary,
+    required this.surfaceColor,
+    required this.borderColor,
+  });
+
+  final Set<String> discovered;
+  final Color textSecondary;
+  final Color surfaceColor;
+  final Color borderColor;
+
+  static const _kSynthColors = [
+    GelColor.orange,
+    GelColor.green,
+    GelColor.purple,
+    GelColor.pink,
+    GelColor.lightBlue,
+    GelColor.lime,
+    GelColor.maroon,
+    GelColor.brown,
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = ref.watch(stringsProvider);
+    final brightness = Theme.of(context).brightness;
+
+    final discoveredPersonalities = _kSynthColors
+        .where((c) => discovered.contains(c.name))
+        .map(GelPersonality.fromColor)
+        .whereType<GelPersonality>()
+        .toList();
+
+    if (discoveredPersonalities.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            'KİŞİLİKLER',
+            style: TextStyle(
+              color: textSecondary,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 3,
+            ),
+          ),
+        ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: discoveredPersonalities.map((p) {
+            final paint = p.color.displayColor;
+            return Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: surfaceColor,
+                borderRadius:
+                    BorderRadius.circular(UIConstants.radiusMd),
+                border: Border.all(
+                  color: paint.withValues(
+                      alpha: brightness == Brightness.dark ? 0.35 : 0.45),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: paint,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    p.personalityName(l),
+                    style: TextStyle(
+                      color: paint,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
+
 class _CharacterScreenState extends ConsumerState<CharacterScreen> {
   late final ResourceManager _resources;
   late final CharacterState _character;
+  Set<String> _discovered = {};
   bool _loaded = false;
 
   @override
@@ -40,6 +142,7 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
     final repo = await ref.read(localRepositoryProvider.future);
     _resources.setEnergy(await repo.getGelEnergy());
     _character.loadFromMap(repo.getCharacterState());
+    _discovered = repo.getDiscoveredColors();
     setState(() => _loaded = true);
 
     // Backend'den sync
@@ -226,6 +329,14 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                                     delay: Duration(milliseconds: 100 * e.key),
                                   );
                                 }),
+                                const SizedBox(height: 24),
+                                _PersonalitySection(
+                                  discovered: _discovered,
+                                  textSecondary: textSecondary,
+                                  surfaceColor: surfaceColor,
+                                  borderColor: borderColor,
+                                ),
+                                const SizedBox(height: 16),
                               ],
                             )
                           : Center(

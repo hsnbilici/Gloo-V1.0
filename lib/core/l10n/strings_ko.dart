@@ -665,4 +665,22 @@ class StringsKo extends AppStrings {
   String get notifComebackBody => '돌아와서 색깔을 계속 만들어 보세요!';
   @override
   String get settingsNotifications => '알림';
+
+  // CD.12: 성격 원형
+  @override
+  String get personalityOrange => '모험가';
+  @override
+  String get personalityGreen => '현자';
+  @override
+  String get personalityPurple => '신비로운';
+  @override
+  String get personalityPink => '유쾌한';
+  @override
+  String get personalityLightBlue => '차분한';
+  @override
+  String get personalityLime => '창의적';
+  @override
+  String get personalityMaroon => '강인한';
+  @override
+  String get personalityBrown => '충직한';
 }

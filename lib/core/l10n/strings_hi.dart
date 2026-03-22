@@ -669,4 +669,22 @@ class StringsHi extends AppStrings {
   String get notifComebackBody => 'वापस आएं और रंग बनाते रहें!';
   @override
   String get settingsNotifications => 'सूचनाएं';
+
+  // CD.12: व्यक्तित्व प्रकार
+  @override
+  String get personalityOrange => 'साहसी';
+  @override
+  String get personalityGreen => 'ज्ञानी';
+  @override
+  String get personalityPurple => 'रहस्यमय';
+  @override
+  String get personalityPink => 'आनंदी';
+  @override
+  String get personalityLightBlue => 'शांत';
+  @override
+  String get personalityLime => 'रचनात्मक';
+  @override
+  String get personalityMaroon => 'शक्तिशाली';
+  @override
+  String get personalityBrown => 'विश्वासपात्र';
 }
