@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../audio/sound_bank.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
@@ -31,6 +32,9 @@ class ShopScreen extends ConsumerStatefulWidget {
 }
 
 class _ShopScreenState extends ConsumerState<ShopScreen> with _ShopLogicMixin {
+  @override
+  final _soundBank = SoundBank();
+
   @override
   final redeemController = TextEditingController();
   @override

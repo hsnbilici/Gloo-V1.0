@@ -17,6 +17,7 @@ import '../../data/local/local_repository.dart';
 import '../../game/economy/currency_manager.dart';
 import '../../game/levels/level_progression.dart';
 import '../../audio/audio_manager.dart';
+import '../../audio/sound_bank.dart';
 import '../../core/constants/audio_constants.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
@@ -42,6 +43,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final _soundBank = SoundBank();
+
   @override
   void initState() {
     super.initState();
@@ -281,8 +284,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 icon: Icons.grid_view_rounded,
                                 isFeatured: true,
                                 badgeLabel: l.homeBadgeBeginning,
-                                onTap: () => context
-                                    .go('/game/${GameMode.classic.name}'),
+                                onTap: () {
+                                  _soundBank.onButtonTap();
+                                  context.go('/game/${GameMode.classic.name}');
+                                },
                               )
                                   .animateOrSkip(reduceMotion: rm, delay: 80.ms)
                                   .fadeIn(duration: 350.ms)
@@ -308,6 +313,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     : null,
                                 onTap: () {
                                   if (!chefLocked) {
+                                    _soundBank.onButtonTap();
                                     context
                                         .go('/game/${GameMode.colorChef.name}');
                                   }
@@ -334,6 +340,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     : null,
                                 onTap: () {
                                   if (!timeTrialLocked) {
+                                    _soundBank.onButtonTap();
                                     context
                                         .go('/game/${GameMode.timeTrial.name}');
                                   }
@@ -358,6 +365,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     !ref.watch(appSettingsProvider).glooPlus,
                                 lockLabel: l.glooPlusTitle,
                                 onTap: () {
+                                  _soundBank.onButtonTap();
                                   if (ref.read(appSettingsProvider).glooPlus) {
                                     context.go('/game/${GameMode.zen.name}');
                                   } else {
@@ -381,7 +389,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 color: kOrange,
                                 icon: Icons.map_rounded,
                                 badgeLabel: l.newBadge,
-                                onTap: () => context.go('/levels'),
+                                onTap: () {
+                                  _soundBank.onButtonTap();
+                                  context.go('/levels');
+                                },
                               )
                                   .animateOrSkip(
                                       reduceMotion: rm, delay: 400.ms)
@@ -403,7 +414,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 color: kColorClassic,
                                 icon: Icons.sports_mma_rounded,
                                 badgeLabel: l.newBadge,
-                                onTap: () => context.go('/pvp-lobby'),
+                                onTap: () {
+                                  _soundBank.onButtonTap();
+                                  context.go('/pvp-lobby');
+                                },
                               )
                                   .animateOrSkip(
                                       reduceMotion: rm, delay: 480.ms)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../audio/sound_bank.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/color_constants_light.dart';
 import '../../../core/constants/ui_constants.dart';
@@ -92,6 +93,7 @@ class BottomItem extends StatefulWidget {
 class _BottomItemState extends State<BottomItem> {
   bool _pressed = false;
   bool _hovered = false;
+  final _soundBank = SoundBank();
 
   void _updateState({bool? pressed, bool? hovered}) {
     final newPressed = pressed ?? _pressed;
@@ -130,6 +132,7 @@ class _BottomItemState extends State<BottomItem> {
           onTapDown: (_) => _updateState(pressed: true),
           onTapUp: (_) {
             _updateState(pressed: false);
+            _soundBank.onButtonTap();
             widget.onTap();
           },
           onTapCancel: () => _updateState(pressed: false),

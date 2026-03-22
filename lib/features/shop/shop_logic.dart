@@ -2,6 +2,7 @@ part of 'shop_screen.dart';
 
 /// Shop iş mantığı: satın alma, redeem, toast ve ürün listesi.
 mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
+  SoundBank get _soundBank;
   TextEditingController get redeemController;
   bool get purchasing;
   set purchasing(bool value);
@@ -96,6 +97,7 @@ mixin _ShopLogicMixin on ConsumerState<ShopScreen> {
 
   Future<void> buy(String productId) async {
     if (purchasing) return;
+    _soundBank.onButtonTap();
     setState(() => purchasing = true);
     final l = ref.read(stringsProvider);
     try {

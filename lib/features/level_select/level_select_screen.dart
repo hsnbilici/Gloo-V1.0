@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../audio/sound_bank.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
@@ -284,6 +285,7 @@ class _LevelCell extends StatefulWidget {
 
 class _LevelCellState extends State<_LevelCell> {
   bool _pressed = false;
+  final _soundBank = SoundBank();
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +325,10 @@ class _LevelCellState extends State<_LevelCell> {
       button: isUnlocked,
       child: GestureDetector(
         onTap: isUnlocked
-            ? () => context.go('/game/level/${widget.levelId}')
+            ? () {
+                _soundBank.onButtonTap();
+                context.go('/game/level/${widget.levelId}');
+              }
             : null,
         onTapDown: isUnlocked ? (_) => setState(() => _pressed = true) : null,
         onTapUp: isUnlocked ? (_) => setState(() => _pressed = false) : null,

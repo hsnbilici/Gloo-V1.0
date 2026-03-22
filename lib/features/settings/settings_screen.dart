@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../audio/sound_bank.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
@@ -117,14 +118,20 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.volume_up_rounded,
                 value: audio.sfxEnabled,
                 accentColor: kCyan,
-                onChanged: (_) => notifier.toggleSfx(),
+                onChanged: (_) {
+                  SoundBank().onButtonTap();
+                  notifier.toggleSfx();
+                },
               ),
               SettingsToggleTile(
                 label: l.settingsMusic,
                 icon: Icons.music_note_rounded,
                 value: audio.musicEnabled,
                 accentColor: kCyan,
-                onChanged: (_) => notifier.toggleMusic(),
+                onChanged: (_) {
+                  SoundBank().onButtonTap();
+                  notifier.toggleMusic();
+                },
               ),
               SectionHeader(title: l.settingsSectionFeedback, color: kColorZen),
               SettingsToggleTile(
@@ -132,7 +139,10 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.vibration_rounded,
                 value: audio.hapticsEnabled,
                 accentColor: kColorZen,
-                onChanged: (_) => notifier.toggleHaptics(),
+                onChanged: (_) {
+                  SoundBank().onButtonTap();
+                  notifier.toggleHaptics();
+                },
               ),
               SectionHeader(
                   title: l.settingsSectionAccessibility,
@@ -142,7 +152,10 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.palette_outlined,
                 value: audio.colorBlindMode,
                 accentColor: kColorTimeTrial,
-                onChanged: (_) => notifier.toggleColorBlindMode(),
+                onChanged: (_) {
+                  SoundBank().onButtonTap();
+                  notifier.toggleColorBlindMode();
+                },
               ),
               SettingsToggleTile(
                 label: l.settingsReduceMotion,
@@ -157,7 +170,10 @@ class SettingsScreen extends ConsumerWidget {
                 label: l.settingsLanguage,
                 currentLocale: currentLocale,
                 accentColor: kColorChef,
-                onTap: () => _showLanguageSheet(context, ref, currentLocale),
+                onTap: () {
+                  SoundBank().onButtonTap();
+                  _showLanguageSheet(context, ref, currentLocale);
+                },
               ),
               SectionHeader(
                   title: l.settingsSectionTheme, color: kThemeTertiary),
@@ -167,7 +183,10 @@ class SettingsScreen extends ConsumerWidget {
                 lightLabel: l.settingsThemeLight,
                 darkLabel: l.settingsThemeDark,
                 accentColor: kThemeTertiary,
-                onTap: () => _showThemeSheet(context, ref),
+                onTap: () {
+                  SoundBank().onButtonTap();
+                  _showThemeSheet(context, ref);
+                },
               ),
               SectionHeader(
                   title: l.settingsSectionPrivacy, color: kColorClassic),
