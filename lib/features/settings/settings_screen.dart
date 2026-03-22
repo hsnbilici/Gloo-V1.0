@@ -94,6 +94,10 @@ class SettingsScreen extends ConsumerWidget {
                   profile.username = newName;
                   await repo.saveProfile(profile);
                   ref.invalidate(userProfileProvider);
+                  // Sync to Supabase so leaderboard shows updated name
+                  ref
+                      .read(remoteRepositoryProvider)
+                      .ensureProfile(username: newName.trim());
                 },
               ),
               SectionHeader(title: l.settingsSectionAudio, color: kCyan),
