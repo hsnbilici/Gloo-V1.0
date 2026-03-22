@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/constants/audio_constants.dart';
+
 /// Tema, yerel ayar, ses, analitik, onboarding ve renk körlüğü ayarlarını yönetir.
 class SettingsRepository {
   SettingsRepository(this._prefs);
@@ -34,6 +36,15 @@ class SettingsRepository {
     await _prefs.setBool('consent_shown', true);
   }
 
+  // ─── Bildirimler ───────────────────────────────────────────────────────
+
+  bool getNotificationsEnabled() =>
+      _prefs.getBool('notifications_enabled') ?? true;
+
+  Future<void> setNotificationsEnabled(bool value) async {
+    await _prefs.setBool('notifications_enabled', value);
+  }
+
   // ─── İpucu Gösterim Sayısı ──────────────────────────────────────────────
 
   int getTipShownCount(String tipKey) =>
@@ -57,5 +68,19 @@ class SettingsRepository {
 
   Future<void> setThemeMode(ThemeMode mode) async {
     await _prefs.setString('theme_mode', mode.name);
+  }
+
+  // ─── Ses Paketi ─────────────────────────────────────────────────────────────
+
+  AudioPackage getAudioPackage() {
+    final value = _prefs.getString('audio_package');
+    return AudioPackage.values.firstWhere(
+      (p) => p.name == value,
+      orElse: () => AudioPackage.standard,
+    );
+  }
+
+  Future<void> saveAudioPackage(AudioPackage package) async {
+    await _prefs.setString('audio_package', package.name);
   }
 }

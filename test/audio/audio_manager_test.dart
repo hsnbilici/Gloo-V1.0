@@ -149,6 +149,69 @@ void main() {
     );
   });
 
+  group('AudioManager AudioPackage', () {
+    late AudioManager manager;
+
+    setUp(() {
+      manager = AudioManager();
+      manager.setAudioPackage(AudioPackage.standard);
+    });
+
+    tearDown(() {
+      // Reset to standard after each test
+      manager.setAudioPackage(AudioPackage.standard);
+    });
+
+    test('activePackage defaults to standard', () {
+      expect(manager.activePackage, AudioPackage.standard);
+    });
+
+    test('setAudioPackage changes the active package', () {
+      manager.setAudioPackage(AudioPackage.crystalAsmr);
+      expect(manager.activePackage, AudioPackage.crystalAsmr);
+    });
+
+    test('setAudioPackage no-op when same package set again', () {
+      manager.setAudioPackage(AudioPackage.deepForest);
+      expect(manager.activePackage, AudioPackage.deepForest);
+      manager.setAudioPackage(AudioPackage.deepForest); // no-op
+      expect(manager.activePackage, AudioPackage.deepForest);
+    });
+
+    test('setAudioPackage can switch between non-standard packages', () {
+      manager.setAudioPackage(AudioPackage.crystalAsmr);
+      manager.setAudioPackage(AudioPackage.deepForest);
+      expect(manager.activePackage, AudioPackage.deepForest);
+    });
+  });
+
+  group('AudioPaths.resolveSfxPath', () {
+    test('standard package returns base path unchanged', () {
+      final path = AudioPaths.resolveSfxPath('gel_place', AudioPackage.standard);
+      expect(path, startsWith('assets/audio/sfx/gel_place.'));
+      expect(path, isNot(contains('standard/')));
+    });
+
+    test('crystalAsmr package inserts crystalAsmr subfolder', () {
+      final path = AudioPaths.resolveSfxPath('gel_place', AudioPackage.crystalAsmr);
+      expect(path, startsWith('assets/audio/sfx/crystalAsmr/gel_place.'));
+    });
+
+    test('deepForest package inserts deepForest subfolder', () {
+      final path = AudioPaths.resolveSfxPath('line_clear', AudioPackage.deepForest);
+      expect(path, startsWith('assets/audio/sfx/deepForest/line_clear.'));
+    });
+
+    test('resolved path has valid audio extension', () {
+      for (final pkg in AudioPackage.values) {
+        final path = AudioPaths.resolveSfxPath('gel_place', pkg);
+        final ext = path.split('.').last;
+        expect(['ogg', 'm4a'].contains(ext), isTrue,
+            reason: 'Path "$path" should end with .ogg or .m4a');
+      }
+    });
+  });
+
   group('AudioConfig constants', () {
     test('sfxVolume is in valid range (0, 1]', () {
       expect(AudioConfig.sfxVolume, greaterThan(0.0));

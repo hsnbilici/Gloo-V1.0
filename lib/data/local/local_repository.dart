@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/constants/audio_constants.dart';
 import 'data_models.dart';
 import 'economy_repository.dart';
 import 'game_data_repository.dart';
@@ -88,6 +89,13 @@ class LocalRepository {
   bool getConsentShown() => settings.getConsentShown();
 
   Future<void> setConsentShown() => settings.setConsentShown();
+
+  // ─── Bildirimler ──────────────────────────────────────────────────────────
+
+  bool getNotificationsEnabled() => settings.getNotificationsEnabled();
+
+  Future<void> setNotificationsEnabled(bool value) =>
+      settings.setNotificationsEnabled(value);
 
   // ─── GDPR ────────────────────────────────────────────────────────────────
 
@@ -379,4 +387,11 @@ class LocalRepository {
   Future<ThemeMode> getThemeMode() => settings.getThemeMode();
 
   Future<void> setThemeMode(ThemeMode mode) => settings.setThemeMode(mode);
+
+  // ─── Ses Paketi ──────────────────────────────────────────────────────────
+
+  AudioPackage getAudioPackage() => settings.getAudioPackage();
+
+  Future<void> saveAudioPackage(AudioPackage package) =>
+      settings.saveAudioPackage(package);
 }

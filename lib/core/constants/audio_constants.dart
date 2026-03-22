@@ -1,5 +1,12 @@
 import 'package:flutter/foundation.dart';
 
+/// Kullanılabilir ses paketleri.
+enum AudioPackage {
+  standard,     // Varsayılan jel sesleri
+  crystalAsmr,  // Crystal ASMR paketi (Shop: gloo_sound_crystal)
+  deepForest,   // Deep Forest paketi (Shop: gloo_sound_forest)
+}
+
 abstract final class AudioPaths {
   static const String _sfx = 'assets/audio/sfx';
   static const String _music = 'assets/audio/music';
@@ -11,6 +18,17 @@ abstract final class AudioPaths {
     if (kIsWeb) return 'm4a';
     if (defaultTargetPlatform == TargetPlatform.iOS) return 'm4a';
     return 'ogg';
+  }
+
+  /// Aktif ses paketine göre SFX path'ini resolve eder.
+  /// Standard paket: `assets/audio/sfx/<name>.<ext>`
+  /// Diğer paketler: `assets/audio/sfx/<package>/<name>.<ext>`
+  /// Dosya yoksa standard'a fallback yapar — AudioManager catch bloğu ele alır.
+  static String resolveSfxPath(String baseName, AudioPackage package) {
+    if (package == AudioPackage.standard) {
+      return '$_sfx/$baseName.$_sfxExt';
+    }
+    return '$_sfx/${package.name}/$baseName.$_sfxExt';
   }
 
   // Yerlestirme sesleri

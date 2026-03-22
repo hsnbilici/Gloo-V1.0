@@ -36,9 +36,11 @@ class AudioManager {
   bool _musicEnabled = true;
   bool _isFading = false;
   String? _currentMusicPath;
+  AudioPackage _activePackage = AudioPackage.standard;
 
   bool get sfxEnabled => _sfxEnabled;
   bool get musicEnabled => _musicEnabled;
+  AudioPackage get activePackage => _activePackage;
 
   Future<void> initialize() async {
     // iOS audio session — ambient kategorisi: diğer seslerle karışır, sessiz modda sessiz
@@ -57,6 +59,8 @@ class AudioManager {
   /// Kısa ses efekti oynat. [path] `AudioPaths` sabiti kullanılmalıdır.
   /// [pitchVariation] true ise [AudioConfig.pitchVarianceMin]–[AudioConfig.pitchVarianceMax]
   /// aralığında rasgele oynatma hızı uygulanır (tekrar hissi azalır).
+  /// Aktif ses paketi varsa path otomatik olarak paket klasörüne yönlendirilir;
+  /// paket dosyası bulunamazsa standard path'e fallback yapılır.
   Future<void> playSfx(
     String path, {
     double volume = 1.0,
@@ -64,6 +68,17 @@ class AudioManager {
     double? speed,
   }) async {
     if (!_sfxEnabled) return;
+    final resolvedPath = _resolvePackagePath(path);
+    await _playSfxAtPath(resolvedPath, volume: volume, pitchVariation: pitchVariation, speed: speed);
+  }
+
+  Future<void> _playSfxAtPath(
+    String path, {
+    double volume = 1.0,
+    bool pitchVariation = true,
+    double? speed,
+    bool isFallback = false,
+  }) async {
     try {
       final player = _getNextPlayer();
       await player.setVolume(AudioConfig.sfxVolume * volume);
@@ -80,7 +95,17 @@ class AudioManager {
       await player.setAsset(path);
       unawaited(player.play());
     } catch (_) {
-      // Ses dosyası bulunamadı ya da çalma hatası — sessizce atla
+      // Paket dosyası bulunamadıysa standard path'e fallback yap
+      if (!isFallback && _activePackage != AudioPackage.standard) {
+        await _playSfxAtPath(
+          path.replaceFirst('assets/audio/sfx/${_activePackage.name}/', 'assets/audio/sfx/'),
+          volume: volume,
+          pitchVariation: pitchVariation,
+          speed: speed,
+          isFallback: true,
+        );
+      }
+      // Standard path de başarısız olursa sessizce atla
     }
   }
 
@@ -168,6 +193,39 @@ class AudioManager {
   /// Müzik oynatma hızını değiştir (tempo).
   Future<void> setMusicSpeed(double speed) async {
     await _musicPlayer.setSpeed(speed);
+  }
+
+  /// Aktif ses paketini değiştirir. Mevcut SFX cache temizlenir.
+  void setAudioPackage(AudioPackage package) {
+    if (_activePackage == package) return;
+    _activePackage = package;
+    _clearSfxCache();
+    if (kDebugMode) debugPrint('AudioManager: package changed to ${package.name}');
+  }
+
+  /// SFX havuzundaki player'ları durdurur ve sıfırlar.
+  /// Sonraki play çağrısında yeni path'ten yüklenirler.
+  void _clearSfxCache() {
+    for (final p in _sfxPool) {
+      p?.stop();
+    }
+  }
+
+  /// Gelen tam path'i aktif pakete göre resolve eder.
+  /// Path zaten `assets/audio/sfx/<name>.<ext>` formatındaysa base adı çıkarıp
+  /// paket alt klasörüne yönlendirir. Müzik ve standart paket path'leri değişmez.
+  String _resolvePackagePath(String path) {
+    if (_activePackage == AudioPackage.standard) return path;
+    // Sadece SFX path'lerini resolve et (müzik değişmez)
+    if (!path.startsWith('assets/audio/sfx/')) return path;
+    // Alt klasör içindeki path'leri (zaten paketle yüklenmiş) değiştirme
+    const sfxPrefix = 'assets/audio/sfx/';
+    final relative = path.substring(sfxPrefix.length); // e.g. "gel_place.ogg"
+    if (relative.contains('/')) return path; // zaten alt klasörde
+    // base adı: "gel_place.ogg" → "gel_place"
+    final dotIndex = relative.lastIndexOf('.');
+    final baseName = dotIndex >= 0 ? relative.substring(0, dotIndex) : relative;
+    return AudioPaths.resolveSfxPath(baseName, _activePackage);
   }
 
   void setSfxEnabled(bool value) {

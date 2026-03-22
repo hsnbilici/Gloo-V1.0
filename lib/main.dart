@@ -24,7 +24,6 @@ import 'providers/theme_provider.dart';
 import 'audio/audio_manager.dart';
 import 'services/ad_manager.dart';
 import 'services/consent_service.dart';
-import 'services/notification_service.dart';
 import 'services/purchase_service.dart';
 
 Future<void> main() async {
@@ -104,15 +103,6 @@ Future<void> main() async {
       }
     }
 
-    // Push notification
-    if (!kIsWeb) {
-      try {
-        await FirebaseNotificationService().initialize();
-      } catch (_) {
-        // Bildirim servisi başlatılamadı — uygulama çalışmaya devam eder
-      }
-    }
-
     if (!kIsWeb) {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -133,7 +123,10 @@ Future<void> main() async {
     ThemeMode savedThemeMode = ThemeMode.dark;
     try {
       final prefs = await SharedPreferences.getInstance();
-      savedThemeMode = await LocalRepository(prefs).getThemeMode();
+      final repo = LocalRepository(prefs);
+      savedThemeMode = await repo.getThemeMode();
+      // Ses paketini yükle ve AudioManager singleton'ına uygula
+      AudioManager().setAudioPackage(repo.getAudioPackage());
     } catch (_) {
       // Okuma basarisiz — varsayilan karanlik temaya devam et
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:gloo/core/constants/audio_constants.dart';
 import 'package:gloo/data/local/data_models.dart';
 
 /// Abstract interface for local data persistence.
@@ -208,4 +209,10 @@ abstract class ILocalRepository {
   Future<ThemeMode> getThemeMode();
 
   Future<void> setThemeMode(ThemeMode mode);
+
+  // ─── Ses Paketi ──────────────────────────────────────────────────────────
+
+  AudioPackage getAudioPackage();
+
+  Future<void> saveAudioPackage(AudioPackage package);
 }
