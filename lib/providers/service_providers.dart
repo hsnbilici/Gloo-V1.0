@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../audio/audio_manager.dart';
@@ -6,6 +7,7 @@ import '../data/remote/pvp_realtime_service.dart';
 import '../data/remote/remote_repository.dart';
 import '../services/ad_manager.dart';
 import '../services/analytics_service.dart';
+import '../services/notification_service.dart';
 import '../services/purchase_service.dart';
 
 /// Singleton servislerin Riverpod provider sarmalayicilari.
@@ -31,4 +33,9 @@ final pvpRealtimeServiceProvider = Provider<PvpRealtimeService>((ref) {
   final service = PvpRealtimeService();
   ref.onDispose(() => service.dispose());
   return service;
+});
+
+final notificationServiceProvider = Provider<NotificationService>((ref) {
+  if (kIsWeb) return StubNotificationService();
+  return FirebaseNotificationService();
 });

@@ -483,6 +483,25 @@ class RemoteRepository implements IRemoteRepository {
     }
   }
 
+  // ── Cihaz Token ─────────────────────────────────────────────────────────
+
+  /// FCM cihaz token'ini Supabase'e kaydeder/günceller.
+  /// `device_tokens` tablosunda `user_id,platform` birleşik benzersiz indeksi
+  /// sayesinde upsert idempotent çalışır.
+  Future<void> saveDeviceToken(String token, String platform) async {
+    if (!isConfigured) return;
+    try {
+      await _client.from('device_tokens').upsert({
+        'user_id': SupabaseConfig.currentUserId,
+        'token': token,
+        'platform': platform,
+        'updated_at': DateTime.now().toIso8601String(),
+      }, onConflict: 'user_id,platform');
+    } catch (e) {
+      if (kDebugMode) debugPrint('RemoteRepository: saveDeviceToken error: $e');
+    }
+  }
+
   // ── GDPR: Uzak Veri Silme ───────────────────────────────────────────────
 
   /// Kullaniciya ait tum uzak verileri + auth.users satirini siler (GDPR Article 17).

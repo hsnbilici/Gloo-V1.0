@@ -24,6 +24,7 @@ import 'providers/theme_provider.dart';
 import 'audio/audio_manager.dart';
 import 'services/ad_manager.dart';
 import 'services/consent_service.dart';
+import 'services/notification_service.dart';
 import 'services/purchase_service.dart';
 
 Future<void> main() async {
@@ -100,6 +101,15 @@ Future<void> main() async {
         await AdManager().restoreDailyCaps(prefs);
       } catch (_) {
         // Network hatasi — sonraki baslatmada tekrar denenir
+      }
+    }
+
+    // Push notification
+    if (!kIsWeb) {
+      try {
+        await FirebaseNotificationService().initialize();
+      } catch (_) {
+        // Bildirim servisi başlatılamadı — uygulama çalışmaya devam eder
       }
     }
 
