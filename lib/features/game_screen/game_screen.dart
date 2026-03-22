@@ -507,6 +507,8 @@ class _GameScreenState extends ConsumerState<GameScreen>
             showHighScoreBadge = false;
           });
           ref.read(gameProvider(widget.mode).notifier).reset();
+          // Replay'de müziği devam ettir (Game Over'da pauseMusic çağrılıyor)
+          AudioManager().resumeMusic();
         },
         onHome: () => context.go('/'),
       );
@@ -518,6 +520,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     waveClearTimer?.cancel();
     shakeTimer?.cancel();
     _toastTimer?.cancel();
+    _gelOzuSfxDebounce?.cancel();
     game.cancelTimer();
     game.onLineClear = null;
     game.onCombo = null;

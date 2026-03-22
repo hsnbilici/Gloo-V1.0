@@ -54,6 +54,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
   LocalRepository? _cachedRepo;
 
+  /// GelOzu ses debounce — onBalanceChanged her deger degisiminde tetiklenir,
+  /// tek hamlede 2-3 kez ust uste calmayi onler.
+  Timer? _gelOzuSfxDebounce;
+
   /// Track quest progress and grant reward if a quest was just completed.
   void _trackQuest(QuestType type, {int amount = 1}) {
     final repo = _cachedRepo;
@@ -259,7 +263,12 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         _cachedRepo?.saveGelOzu(balance);
         _cachedRepo
             ?.saveLifetimeEarnings(game.currencyManager.lifetimeEarnings);
-        soundBank.onGelOzuEarn();
+        // Debounce: tek hamlede birden fazla balance degisimi olabilir
+        _gelOzuSfxDebounce?.cancel();
+        _gelOzuSfxDebounce = Timer(
+          const Duration(milliseconds: 300),
+          () => soundBank.onGelOzuEarn(),
+        );
       }
     };
 
