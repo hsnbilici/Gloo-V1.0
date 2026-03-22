@@ -22,6 +22,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
   PowerUpType? get activePowerUpMode;
   List<({int row, int col, Color color, int key, Duration delay, double intensity})>
       get burstCells;
+  List<({int row, int key})> get sweepRows;
   List<({int row, int col, Color color, int key})> get synthesisBlooms;
   ({double cx, double cy, int count, Color color, int key})? get placeFeedback;
   set placeFeedback(
@@ -268,6 +269,29 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                             if (mounted) {
                               setState(() => burstCells
                                   .removeWhere((b) => b.key == burst.key));
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  }),
+                  // Satır sweep overlay'leri (çoklu satır temizleme, lines >= 2)
+                  ...sweepRows.map((sweep) {
+                    final isRtl = Directionality.of(context) == TextDirection.rtl;
+                    return Positioned(
+                      key: ValueKey('sweep_${sweep.key}'),
+                      left: 0,
+                      top: sweep.row * (cell + gap),
+                      child: IgnorePointer(
+                        child: LineSweepEffect(
+                          cols: cols,
+                          cellSize: cell,
+                          gap: gap,
+                          isRtl: isRtl,
+                          onDismiss: () {
+                            if (mounted) {
+                              setState(() => sweepRows
+                                  .removeWhere((s) => s.key == sweep.key));
                             }
                           },
                         ),

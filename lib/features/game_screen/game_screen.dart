@@ -127,6 +127,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
   final List<({int row, int col, Color color, int key})> synthesisBlooms = [];
   @override
   int synthesisKeyBase = 0;
+  @override
+  final List<({int row, int key})> sweepRows = [];
+  @override
+  int sweepKeyBase = 0;
 
   // ─── Ekran sarsıntısı ─────────────────────────────────────────────
   @override

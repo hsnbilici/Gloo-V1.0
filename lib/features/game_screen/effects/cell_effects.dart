@@ -589,6 +589,137 @@ class _SynthesisBloomPainter extends CustomPainter {
   bool shouldRepaint(_SynthesisBloomPainter old) => old.progress != progress;
 }
 
+// ─── Satır Sweep Efekti ────────────────────────────────────────────────────
+
+/// Çoklu satır temizlemede (lines >= 2) satır boyunca yatay ışık süpürmesi.
+/// Soldan sağa (RTL'de sağdan sola) beyaz gradient sweep, 300ms.
+class LineSweepEffect extends StatefulWidget {
+  const LineSweepEffect({
+    super.key,
+    required this.cols,
+    required this.cellSize,
+    required this.gap,
+    required this.onDismiss,
+    this.isRtl = false,
+  });
+
+  final int cols;
+  final double cellSize;
+  final double gap;
+  final VoidCallback onDismiss;
+  final bool isRtl;
+
+  @override
+  State<LineSweepEffect> createState() => _LineSweepEffectState();
+}
+
+class _LineSweepEffectState extends State<LineSweepEffect>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: AnimationDurations.synthesisPulse,
+    )..forward();
+    _ctrl.addStatusListener((status) {
+      if (status == AnimationStatus.completed && mounted) widget.onDismiss();
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onDismiss();
+      });
+      return const SizedBox.shrink();
+    }
+
+    final totalW = widget.cols * widget.cellSize + (widget.cols - 1) * widget.gap;
+    final totalH = widget.cellSize;
+
+    return ExcludeSemantics(
+      child: SizedBox(
+        width: totalW,
+        height: totalH,
+        child: AnimatedBuilder(
+          animation: _ctrl,
+          builder: (_, __) => CustomPaint(
+            painter: _SweepPainter(
+              progress: _ctrl.value,
+              totalWidth: totalW,
+              cellSize: widget.cellSize,
+              isRtl: widget.isRtl,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SweepPainter extends CustomPainter {
+  const _SweepPainter({
+    required this.progress,
+    required this.totalWidth,
+    required this.cellSize,
+    required this.isRtl,
+  });
+
+  final double progress;
+  final double totalWidth;
+  final double cellSize;
+  final bool isRtl;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress == 0) return;
+
+    // Sweep bandının merkez x pozisyonu: 0 → totalWidth (LTR) ya da ters (RTL)
+    final sweepWidth = cellSize * 2.0;
+    final eased = Curves.easeInOut.transform(progress);
+    final centerX = isRtl
+        ? totalWidth - eased * totalWidth
+        : eased * totalWidth;
+
+    final rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final sweepRect = Rect.fromCenter(
+      center: Offset(centerX, size.height / 2),
+      width: sweepWidth,
+      height: size.height,
+    );
+
+    // Şeffaf → beyaz (0.4) → şeffaf gradient
+    final shader = LinearGradient(
+      colors: [
+        Colors.transparent,
+        Colors.white.withValues(alpha: 0.40),
+        Colors.transparent,
+      ],
+      stops: const [0.0, 0.5, 1.0],
+    ).createShader(sweepRect);
+
+    canvas.clipRect(rect);
+    canvas.drawRect(
+      sweepRect,
+      Paint()..shader = shader,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SweepPainter old) =>
+      old.progress != progress || old.isRtl != isRtl;
+}
+
 // ─── Sentez Pulse ─────────────────────────────────────────────────────────
 
 /// Sentez sonucu hucresinde tek seferlik scale pulse animasyonu oynatir.

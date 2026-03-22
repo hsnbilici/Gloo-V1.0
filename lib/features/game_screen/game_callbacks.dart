@@ -11,6 +11,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       get burstCells;
   int get burstKeyBase;
   set burstKeyBase(int value);
+  List<({int row, int key})> get sweepRows;
+  int get sweepKeyBase;
+  set sweepKeyBase(int value);
   ComboEvent? get activeCombo;
   set activeCombo(ComboEvent? value);
   int get comboKeyIndex;
@@ -148,6 +151,21 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
             burstCells.removeRange(0, burstCells.length - 200);
           }
         });
+      }
+
+      // Çoklu satır sweep efekti: lines >= 2 ise temizlenen her satır için
+      if (lines >= 2 && clearResult.clearedRows.isNotEmpty) {
+        final rm = mounted ? MediaQuery.disableAnimationsOf(context) : false;
+        if (!rm) {
+          setState(() {
+            for (final row in clearResult.clearedRows) {
+              sweepRows.add((row: row, key: ++sweepKeyBase));
+            }
+            if (sweepRows.length > 40) {
+              sweepRows.removeRange(0, sweepRows.length - 40);
+            }
+          });
+        }
       }
 
       // PvP: satir temizleyince rakibe engel gonder
