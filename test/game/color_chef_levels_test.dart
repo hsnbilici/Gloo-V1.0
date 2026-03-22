@@ -5,8 +5,8 @@ import 'package:gloo/game/systems/color_chef_levels.dart';
 
 void main() {
   group('kColorChefLevels', () {
-    test('has exactly 20 levels', () {
-      expect(kColorChefLevels.length, 20);
+    test('has exactly 40 levels', () {
+      expect(kColorChefLevels.length, 40);
     });
 
     test('all levels have positive requiredCount', () {
