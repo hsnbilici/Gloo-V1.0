@@ -67,7 +67,7 @@ class LeagueBadge extends ConsumerWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '$elo ${l.rankLabel}',
+          l.eloDisplay(elo),
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.55),
             fontSize: 13,

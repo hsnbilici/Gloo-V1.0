@@ -734,4 +734,8 @@ class StringsKo extends AppStrings {
   // CD.31: Rank label
   @override
   String get rankLabel => '전력';
+
+  // CD.34: ELO interpolation (label before value in Korean)
+  @override
+  String eloDisplay(int elo) => '파워 $elo';
 }

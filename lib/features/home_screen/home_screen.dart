@@ -807,7 +807,7 @@ class _DuelEloChip extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 4, left: 4),
       child: Text(
-        '$elo ${l.rankLabel}',
+        l.eloDisplay(elo),
         style: AppTextStyles.caption.copyWith(color: textColor),
       ),
     );

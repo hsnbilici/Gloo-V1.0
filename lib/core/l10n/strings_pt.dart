@@ -741,4 +741,8 @@ class StringsPt extends AppStrings {
   // CD.31: Rank label
   @override
   String get rankLabel => 'Poder';
+
+  // CD.34: ELO interpolation
+  @override
+  String eloDisplay(int elo) => '$elo Poder';
 }

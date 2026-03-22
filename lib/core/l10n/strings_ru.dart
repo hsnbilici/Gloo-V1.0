@@ -745,4 +745,8 @@ class StringsRu extends AppStrings {
   // CD.31: Rank label
   @override
   String get rankLabel => 'Сила';
+
+  // CD.34: ELO interpolation
+  @override
+  String eloDisplay(int elo) => '$elo Сила';
 }

@@ -733,4 +733,8 @@ class StringsJa extends AppStrings {
   // CD.31: Rank label
   @override
   String get rankLabel => '戦力';
+
+  // CD.34: ELO interpolation (label before value in Japanese)
+  @override
+  String eloDisplay(int elo) => 'パワー $elo';
 }

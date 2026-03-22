@@ -455,6 +455,9 @@ abstract class AppStrings {
   // CD.31: Rank label (ELO → dünya dili)
   String get rankLabel;
 
+  // CD.34: ELO değerini dil-uyumlu biçimde interpolate eder (ör. "1200 Power" / "パワー 1200")
+  String eloDisplay(int elo);
+
   // CD.12: Kişilik arketipleri
   String get personalityOrange;
   String get personalityGreen;

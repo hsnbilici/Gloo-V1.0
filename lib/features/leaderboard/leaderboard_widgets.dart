@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 
 class ModeTabs extends StatelessWidget {
   const ModeTabs({
@@ -160,6 +161,7 @@ class UserRankBanner extends StatelessWidget {
     this.score,
     this.isPvp = false,
     this.rankLabel = 'Power',
+    this.strings,
   });
 
   final int rank;
@@ -167,6 +169,7 @@ class UserRankBanner extends StatelessWidget {
   final int? score;
   final bool isPvp;
   final String rankLabel;
+  final AppStrings? strings;
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +228,9 @@ class UserRankBanner extends StatelessWidget {
           ),
           if (score != null)
             Text(
-              isPvp ? '$score $rankLabel' : _formatScore(score!),
+              isPvp
+                  ? (strings?.eloDisplay(score!) ?? '$score $rankLabel')
+                  : _formatScore(score!),
               style: const TextStyle(
                 color: kCyan,
                 fontSize: 14,
@@ -253,6 +258,7 @@ class ScoreRow extends StatelessWidget {
     this.isCurrentUser = false,
     this.isPvp = false,
     this.rankLabel = 'Power',
+    this.strings,
   });
 
   final int rank;
@@ -261,6 +267,7 @@ class ScoreRow extends StatelessWidget {
   final bool isCurrentUser;
   final bool isPvp;
   final String rankLabel;
+  final AppStrings? strings;
 
   Color get _rankColor {
     if (rank == 1) return kGold;
@@ -304,7 +311,9 @@ class ScoreRow extends StatelessWidget {
       borderColor = defaultBorder;
     }
 
-    final scoreText = isPvp ? '$score $rankLabel' : _formatScore(score);
+    final scoreText = isPvp
+        ? (strings?.eloDisplay(score) ?? '$score $rankLabel')
+        : _formatScore(score);
 
     return Semantics(
       label: '#$rank $username $scoreText',

@@ -179,8 +179,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         );
       }
 
-      // Epic yaklaşım motivasyon toast'ı — large tier + 6+ kombo, 3 kez sınırlı
-      if (combo.tier == ComboTier.large && combo.size >= 6) {
+      // Epic yaklaşım motivasyon toast'ı — large tier + 6+ kombo, 3 kez sınırlı, Duel'de gösterme
+      if (combo.tier == ComboTier.large && combo.size >= 6 && widget.mode != GameMode.duel) {
         final repo = _cachedRepo;
         if (repo != null) {
           final tipShown = repo.getTipShownCount('epic_approach');

@@ -730,4 +730,8 @@ class StringsZh extends AppStrings {
   // CD.31: Rank label
   @override
   String get rankLabel => '战力';
+
+  // CD.34: ELO interpolation
+  @override
+  String eloDisplay(int elo) => '$elo 战力';
 }
