@@ -202,6 +202,14 @@ class StringsZh extends AppStrings {
   String get onboardingTapToPlace => '点击放置';
   @override
   String get onboardingGreat => '太棒了！';
+  @override
+  String get onboardingLoreTitle => 'Gloo 的世界';
+  @override
+  String get onboardingLoreLine1 => '这里的颜色是有生命的。';
+  @override
+  String get onboardingLoreLine2 => '当它们相遇，新的事物便诞生了。';
+  @override
+  String get onboardingLoreLine3 => '你放置的每一滴都在书写故事。';
 
   @override
   String get streakDays => '天';
@@ -388,6 +396,8 @@ class StringsZh extends AppStrings {
   String get toastFrozen => '冻结10秒！';
   @override
   String get toastSynthesis => '颜色合成！';
+  @override
+  String get tipSynthesisTradeoff => '混合会改变一行中的颜色——规划好你的行！';
 
   @override
   String get collectionComplete => '所有颜色已收集！+50 凝胶奖励已领取！';

@@ -204,6 +204,14 @@ class StringsEn extends AppStrings {
   String get onboardingTapToPlace => 'Tap to place';
   @override
   String get onboardingGreat => 'Great!';
+  @override
+  String get onboardingLoreTitle => 'The World of Gloo';
+  @override
+  String get onboardingLoreLine1 => 'Colors are alive here.';
+  @override
+  String get onboardingLoreLine2 => 'When they meet, something new is born.';
+  @override
+  String get onboardingLoreLine3 => 'Every drop you place writes a story.';
 
   @override
   String get streakDays => 'DAYS';
@@ -390,6 +398,9 @@ class StringsEn extends AppStrings {
   String get toastFrozen => '10s frozen!';
   @override
   String get toastSynthesis => 'Color Synthesis!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'Mixing changes colors in a row — plan your lines!';
 
   @override
   String get collectionComplete =>

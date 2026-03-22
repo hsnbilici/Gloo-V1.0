@@ -206,6 +206,14 @@ class StringsAr extends AppStrings {
   String get onboardingTapToPlace => 'انقر للوضع';
   @override
   String get onboardingGreat => 'رائع!';
+  @override
+  String get onboardingLoreTitle => 'عالم Gloo';
+  @override
+  String get onboardingLoreLine1 => 'الألوان هنا حيّة.';
+  @override
+  String get onboardingLoreLine2 => 'عندما تلتقي، يولد شيء جديد.';
+  @override
+  String get onboardingLoreLine3 => 'كل قطرة تضعها تكتب قصة.';
 
   @override
   String get streakDays => 'أيام';
@@ -398,6 +406,9 @@ class StringsAr extends AppStrings {
   String get toastFrozen => 'تجميد ١٠ ثوانٍ!';
   @override
   String get toastSynthesis => 'تخليق لوني!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'الدمج يغيّر ألوان الصف — خطّط لصفوفك!';
 
   @override
   String get collectionComplete => 'تم جمع جميع الألوان! +50 جل كمكافأة!';

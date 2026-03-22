@@ -206,6 +206,14 @@ class StringsRu extends AppStrings {
   String get onboardingTapToPlace => 'Нажмите для размещения';
   @override
   String get onboardingGreat => 'Отлично!';
+  @override
+  String get onboardingLoreTitle => 'Мир Gloo';
+  @override
+  String get onboardingLoreLine1 => 'Здесь цвета живые.';
+  @override
+  String get onboardingLoreLine2 => 'Встречаясь, они рождают что-то новое.';
+  @override
+  String get onboardingLoreLine3 => 'Каждая капля, что ты ставишь, пишет историю.';
 
   @override
   String get streakDays => 'ДНЕЙ';
@@ -399,6 +407,9 @@ class StringsRu extends AppStrings {
   String get toastFrozen => 'Заморожено на 10с!';
   @override
   String get toastSynthesis => 'Синтез цвета!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'Смешивание меняет цвета в ряду — планируй свои линии!';
 
   @override
   String get collectionComplete =>
@@ -525,7 +536,7 @@ class StringsRu extends AppStrings {
   @override
   String get duelSearching => 'Поиск соперника...';
   @override
-  String duelWaitSeconds(int current, int max) => '${current}с / ${max}с';
+  String duelWaitSeconds(int current, int max) => '$currentс / $maxс';
   @override
   String get duelOutcomeWin => 'ПОБЕДА!';
   @override

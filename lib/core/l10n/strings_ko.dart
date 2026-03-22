@@ -204,6 +204,14 @@ class StringsKo extends AppStrings {
   String get onboardingTapToPlace => '탭하여 배치';
   @override
   String get onboardingGreat => '훌륭해요!';
+  @override
+  String get onboardingLoreTitle => 'Gloo의 세계';
+  @override
+  String get onboardingLoreLine1 => '여기서 색은 살아있다.';
+  @override
+  String get onboardingLoreLine2 => '만나면 새로운 것이 태어난다.';
+  @override
+  String get onboardingLoreLine3 => '당신이 놓는 한 방울 한 방울이 이야기를 쓴다.';
 
   @override
   String get streakDays => '일';
@@ -392,6 +400,8 @@ class StringsKo extends AppStrings {
   String get toastFrozen => '10초 동결!';
   @override
   String get toastSynthesis => '색상 합성!';
+  @override
+  String get tipSynthesisTradeoff => '혼합하면 행의 색이 바뀝니다 — 라인을 계획하세요!';
 
   @override
   String get collectionComplete => '모든 색상 수집 완료! +50 젤 보상 획득!';

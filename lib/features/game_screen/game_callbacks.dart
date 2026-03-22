@@ -434,6 +434,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         if (shown < 3) {
           repo.incrementTipShown('synthesis_hint');
           showToast(ref.read(stringsProvider).toastSynthesis);
+        } else {
+          // Sentez-temizleme trade-off ipucu: oyun 3-8 arasında, 2 kez göster
+          final gamesPlayed = repo.getTotalGamesPlayed();
+          final tradeoffShown = repo.getTipShownCount('synthesis_tradeoff');
+          if (tradeoffShown < 2 && gamesPlayed >= 3 && gamesPlayed <= 8) {
+            repo.incrementTipShown('synthesis_tradeoff');
+            showToast(ref.read(stringsProvider).tipSynthesisTradeoff);
+          }
         }
       }
     };

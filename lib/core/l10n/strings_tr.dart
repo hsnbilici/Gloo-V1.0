@@ -206,6 +206,14 @@ class StringsTr extends AppStrings {
   String get onboardingTapToPlace => 'Yerleştirmek için dokun';
   @override
   String get onboardingGreat => 'Harika!';
+  @override
+  String get onboardingLoreTitle => 'Gloo Dünyası';
+  @override
+  String get onboardingLoreLine1 => 'Burada renkler canlı.';
+  @override
+  String get onboardingLoreLine2 => 'Buluştuklarında yeni bir şey doğar.';
+  @override
+  String get onboardingLoreLine3 => 'Yerleştirdiğin her damla bir hikaye yazar.';
 
   @override
   String get streakDays => 'GÜN';
@@ -393,6 +401,9 @@ class StringsTr extends AppStrings {
   String get toastFrozen => '10sn donduruldu!';
   @override
   String get toastSynthesis => 'Renk Sentezi!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'Sentez satırdaki renkleri değiştirir — satırlarını planla!';
 
   @override
   String get collectionComplete =>

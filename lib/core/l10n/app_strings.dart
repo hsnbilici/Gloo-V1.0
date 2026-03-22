@@ -141,6 +141,10 @@ abstract class AppStrings {
   String get onboardingStep3Desc;
   String get onboardingTapToPlace;
   String get onboardingGreat;
+  String get onboardingLoreTitle;
+  String get onboardingLoreLine1;
+  String get onboardingLoreLine2;
+  String get onboardingLoreLine3;
 
   // Streak
   String get streakDays;
@@ -255,6 +259,7 @@ abstract class AppStrings {
   String get toastBombSelectCenter;
   String get toastFrozen;
   String get toastSynthesis;
+  String get tipSynthesisTradeoff;
 
   // Koleksiyon tamamlama
   String get collectionComplete;

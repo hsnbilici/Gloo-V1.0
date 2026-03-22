@@ -203,6 +203,14 @@ class StringsJa extends AppStrings {
   String get onboardingTapToPlace => 'タップして配置';
   @override
   String get onboardingGreat => 'すごい！';
+  @override
+  String get onboardingLoreTitle => 'Glooの世界';
+  @override
+  String get onboardingLoreLine1 => 'ここでは色が生きている。';
+  @override
+  String get onboardingLoreLine2 => '出会うとき、新しいものが生まれる。';
+  @override
+  String get onboardingLoreLine3 => '置く一滴一滴が物語を紡ぐ。';
 
   @override
   String get streakDays => '日';
@@ -391,6 +399,8 @@ class StringsJa extends AppStrings {
   String get toastFrozen => '10秒凍結！';
   @override
   String get toastSynthesis => 'カラー合成！';
+  @override
+  String get tipSynthesisTradeoff => '混合すると列の色が変わります — ラインを計画しよう！';
 
   @override
   String get collectionComplete => '全色コンプリート！+50 ジェル報酬獲得！';

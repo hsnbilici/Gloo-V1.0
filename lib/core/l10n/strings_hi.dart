@@ -206,6 +206,14 @@ class StringsHi extends AppStrings {
   String get onboardingTapToPlace => 'रखने के लिए टैप करें';
   @override
   String get onboardingGreat => 'बहुत बढ़िया!';
+  @override
+  String get onboardingLoreTitle => 'Gloo की दुनिया';
+  @override
+  String get onboardingLoreLine1 => 'यहाँ रंग जीवित हैं।';
+  @override
+  String get onboardingLoreLine2 => 'जब वे मिलते हैं, कुछ नया जन्म लेता है।';
+  @override
+  String get onboardingLoreLine3 => 'तुम्हारी हर बूँद एक कहानी लिखती है।';
 
   @override
   String get streakDays => 'दिन';
@@ -394,6 +402,9 @@ class StringsHi extends AppStrings {
   String get toastFrozen => '10 सेकंड जमा!';
   @override
   String get toastSynthesis => 'रंग संश्लेषण!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'मिलाने से पंक्ति के रंग बदल जाते हैं — अपनी लाइनें योजना बनाओ!';
 
   @override
   String get collectionComplete => 'सभी रंग एकत्र किए! +50 जेल पुरस्कार मिला!';

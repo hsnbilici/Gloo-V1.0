@@ -206,6 +206,14 @@ class StringsPt extends AppStrings {
   String get onboardingTapToPlace => 'Toque para colocar';
   @override
   String get onboardingGreat => 'Ótimo!';
+  @override
+  String get onboardingLoreTitle => 'O Mundo de Gloo';
+  @override
+  String get onboardingLoreLine1 => 'As cores são vivas aqui.';
+  @override
+  String get onboardingLoreLine2 => 'Quando se encontram, algo novo nasce.';
+  @override
+  String get onboardingLoreLine3 => 'Cada gota que você coloca escreve uma história.';
 
   @override
   String get streakDays => 'DIAS';
@@ -395,6 +403,9 @@ class StringsPt extends AppStrings {
   String get toastFrozen => 'Congelado 10s!';
   @override
   String get toastSynthesis => 'Síntese de cor!';
+  @override
+  String get tipSynthesisTradeoff =>
+      'Misturar muda as cores de uma linha — planeje suas linhas!';
 
   @override
   String get collectionComplete =>
