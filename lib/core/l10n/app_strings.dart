@@ -252,6 +252,10 @@ abstract class AppStrings {
   String get toastSelectShapeFirst;
   String get toastBombSelectCenter;
   String get toastFrozen;
+  String get toastSynthesis;
+
+  // Koleksiyon tamamlama
+  String get collectionComplete;
 
   // Renk adları (Color Chef & Koleksiyon)
   String get colorRed;

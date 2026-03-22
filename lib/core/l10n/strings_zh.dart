@@ -317,7 +317,7 @@ class StringsZh extends AppStrings {
   @override
   String get glooPlusTitle => 'Gloo+';
   @override
-  String get glooPlusDesc => '无广告 所有音效包 禅模式 抢先体验';
+  String get glooPlusDesc => '无广告、禅模式、2x XP、+50% 凝胶、抢先体验';
   @override
   String get glooPlusMonthly => '月付';
   @override
@@ -380,6 +380,11 @@ class StringsZh extends AppStrings {
   String get toastBombSelectCenter => '选择炸弹中心';
   @override
   String get toastFrozen => '冻结10秒！';
+  @override
+  String get toastSynthesis => '颜色合成！';
+
+  @override
+  String get collectionComplete => '所有颜色已收集！+50 凝胶奖励已领取！';
 
   @override
   String get colorRed => '红色';

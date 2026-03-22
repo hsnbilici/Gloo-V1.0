@@ -73,6 +73,10 @@ abstract class ILocalRepository {
 
   Future<void> addDiscoveredColor(String colorName);
 
+  bool isCollectionRewardClaimed();
+
+  Future<void> setCollectionRewardClaimed();
+
   // ─── Günlük Bulmaca ──────────────────────────────────────────────────────
 
   bool isDailyCompleted();

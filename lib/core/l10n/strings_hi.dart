@@ -322,7 +322,7 @@ class StringsHi extends AppStrings {
   String get glooPlusTitle => 'Gloo+';
   @override
   String get glooPlusDesc =>
-      'विज्ञापन-मुक्त, सभी ध्वनि पैक, ज़ेन मोड, अर्ली एक्सेस';
+      'विज्ञापन-मुक्त, ज़ेन मोड, 2x XP, +50% जेल, अर्ली एक्सेस';
   @override
   String get glooPlusMonthly => 'मासिक';
   @override
@@ -386,6 +386,11 @@ class StringsHi extends AppStrings {
   String get toastBombSelectCenter => 'बम का केंद्र चुनें';
   @override
   String get toastFrozen => '10 सेकंड जमा!';
+  @override
+  String get toastSynthesis => 'रंग संश्लेषण!';
+
+  @override
+  String get collectionComplete => 'सभी रंग एकत्र किए! +50 जेल पुरस्कार मिला!';
 
   @override
   String get colorRed => 'लाल';

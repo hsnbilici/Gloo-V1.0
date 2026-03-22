@@ -27,6 +27,7 @@ class GameDuelController {
     required this.seed,
     required this.onStateChanged,
     this.opponentElo,
+    this.onObstacleReceived,
   });
 
   final WidgetRef ref;
@@ -36,6 +37,7 @@ class GameDuelController {
   final int seed;
   final VoidCallback onStateChanged;
   final int? opponentElo;
+  final VoidCallback? onObstacleReceived;
 
   PvpRealtimeService? _pvpService;
   StreamSubscription<int>? _opponentScoreSub;
@@ -141,6 +143,7 @@ class GameDuelController {
         grid.applyRandomObstacle(packet.type);
       }
     }
+    onObstacleReceived?.call();
     onStateChanged();
   }
 

@@ -321,7 +321,7 @@ class StringsTr extends AppStrings {
   String get glooPlusTitle => 'Gloo+';
   @override
   String get glooPlusDesc =>
-      'Reklamsız, tüm ses paketleri, Zen Modu, erken erişim';
+      'Reklamsız, Zen Modu, 2x XP, +%50 Jel, erken erişim';
   @override
   String get glooPlusMonthly => 'Aylık';
   @override
@@ -385,6 +385,12 @@ class StringsTr extends AppStrings {
   String get toastBombSelectCenter => 'Bomba merkezi seç';
   @override
   String get toastFrozen => '10sn donduruldu!';
+  @override
+  String get toastSynthesis => 'Renk Sentezi!';
+
+  @override
+  String get collectionComplete =>
+      'Tüm renkler toplandı! +50 Jel ödülü alındı!';
 
   @override
   String get colorRed => 'Kırmızı';

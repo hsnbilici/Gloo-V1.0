@@ -102,6 +102,12 @@ class GameDataRepository {
     await _prefs.setStringList('discovered_colors', current.toList());
   }
 
+  bool isCollectionRewardClaimed() =>
+      _prefs.getBool('collection_reward_claimed') ?? false;
+
+  Future<void> setCollectionRewardClaimed() =>
+      _prefs.setBool('collection_reward_claimed', true);
+
   // ─── Günlük Bulmaca ──────────────────────────────────────────────────────
 
   bool isDailyCompleted() {

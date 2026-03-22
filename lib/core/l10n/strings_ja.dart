@@ -320,7 +320,7 @@ class StringsJa extends AppStrings {
   @override
   String get glooPlusTitle => 'Gloo+';
   @override
-  String get glooPlusDesc => '広告なし 全サウンドパック 禅モード 先行アクセス';
+  String get glooPlusDesc => '広告なし、禅モード、2x XP、+50% ジェル、先行アクセス';
   @override
   String get glooPlusMonthly => '月額';
   @override
@@ -383,6 +383,11 @@ class StringsJa extends AppStrings {
   String get toastBombSelectCenter => 'ボムの中心を選択';
   @override
   String get toastFrozen => '10秒凍結！';
+  @override
+  String get toastSynthesis => 'カラー合成！';
+
+  @override
+  String get collectionComplete => '全色コンプリート！+50 ジェル報酬獲得！';
 
   @override
   String get colorRed => '赤';

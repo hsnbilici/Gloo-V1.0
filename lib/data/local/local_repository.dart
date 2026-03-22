@@ -176,6 +176,11 @@ class LocalRepository {
   Future<void> addDiscoveredColor(String colorName) =>
       gameData.addDiscoveredColor(colorName);
 
+  bool isCollectionRewardClaimed() => gameData.isCollectionRewardClaimed();
+
+  Future<void> setCollectionRewardClaimed() =>
+      gameData.setCollectionRewardClaimed();
+
   // ─── Günlük Bulmaca ──────────────────────────────────────────────────────
 
   bool isDailyCompleted() => gameData.isDailyCompleted();

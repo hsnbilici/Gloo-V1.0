@@ -323,7 +323,7 @@ class StringsPt extends AppStrings {
   String get glooPlusTitle => 'Gloo+';
   @override
   String get glooPlusDesc =>
-      'Sem anúncios, todos os pacotes de som, Modo Zen, acesso antecipado';
+      'Sem anúncios, Modo Zen, 2x XP, +50% Jel, acesso antecipado';
   @override
   String get glooPlusMonthly => 'Mensal';
   @override
@@ -387,6 +387,12 @@ class StringsPt extends AppStrings {
   String get toastBombSelectCenter => 'Selecione o centro da bomba';
   @override
   String get toastFrozen => 'Congelado 10s!';
+  @override
+  String get toastSynthesis => 'Síntese de cor!';
+
+  @override
+  String get collectionComplete =>
+      'Todas as cores coletadas! +50 Jel recebidos!';
 
   @override
   String get colorRed => 'Vermelho';

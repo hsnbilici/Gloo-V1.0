@@ -37,11 +37,22 @@ class CollectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = ref.watch(stringsProvider);
     final repoAsync = ref.watch(localRepositoryProvider);
-    final discovered =
-        repoAsync.valueOrNull?.getDiscoveredColors() ?? <String>{};
+    final repo = repoAsync.valueOrNull;
+    final discovered = repo?.getDiscoveredColors() ?? <String>{};
     final total = _kCollectibleColors.length;
     final found =
         _kCollectibleColors.where((c) => discovered.contains(c.name)).length;
+    final allCollected = found == total;
+    final rewardClaimed = repo?.isCollectionRewardClaimed() ?? false;
+
+    // Auto-claim completion reward (50 Jel Ozu)
+    if (allCollected && !rewardClaimed && repo != null) {
+      Future.microtask(() async {
+        await repo.setCollectionRewardClaimed();
+        final current = await repo.getGelOzu();
+        await repo.saveGelOzu(current + 50);
+      });
+    }
     final screenWidth = MediaQuery.sizeOf(context).width;
     final hPadding = responsiveHPadding(screenWidth);
     final dir = Directionality.of(context);
@@ -129,41 +140,88 @@ class CollectionScreen extends ConsumerWidget {
                     ),
                   ),
                 )
-              : GridView.builder(
-                  padding: EdgeInsets.fromLTRB(hPadding, 16, hPadding, 40),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: responsiveColumns(screenWidth,
-                        phone: 2, tablet: 3, desktop: 4),
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.1,
-                  ),
-                  itemCount: _kCollectibleColors.length,
-                  itemBuilder: (context, index) {
-                    final gelColor = _kCollectibleColors[index];
-                    final isDiscovered = discovered.contains(gelColor.name);
+              : Column(
+                  children: [
+                    if (allCollected)
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(hPadding, 12, hPadding, 0),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                kGold.withValues(alpha: 0.15),
+                                kGold.withValues(alpha: 0.05),
+                              ],
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(UIConstants.radiusMd),
+                            border: Border.all(
+                                color: kGold.withValues(alpha: 0.40)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.emoji_events_rounded,
+                                  color: kGold, size: 20),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  l.collectionComplete,
+                                  style: const TextStyle(
+                                    color: kGold,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    Expanded(
+                      child: GridView.builder(
+                        padding:
+                            EdgeInsets.fromLTRB(hPadding, 16, hPadding, 40),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: responsiveColumns(screenWidth,
+                              phone: 2, tablet: 3, desktop: 4),
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1.1,
+                        ),
+                        itemCount: _kCollectibleColors.length,
+                        itemBuilder: (context, index) {
+                          final gelColor = _kCollectibleColors[index];
+                          final isDiscovered =
+                              discovered.contains(gelColor.name);
 
-                    // Sentez girdisini bul
-                    final recipe = _findRecipe(gelColor);
+                          // Sentez girdisini bul
+                          final recipe = _findRecipe(gelColor);
 
-                    return _ColorCard(
-                      gelColor: gelColor,
-                      isDiscovered: isDiscovered,
-                      colorName: l.colorName(gelColor),
-                      discoveredLabel: l.collectionDiscovered,
-                      lockedLabel: l.collectionLocked,
-                      recipe: recipe,
-                    )
-                        .animateOrSkip(
-                            reduceMotion: shouldReduceMotion(context),
-                            delay: (60 * index).ms)
-                        .fadeIn(duration: 350.ms)
-                        .scale(
-                          begin: const Offset(0.92, 0.92),
-                          duration: 350.ms,
-                          curve: Curves.easeOutCubic,
-                        );
-                  },
+                          return _ColorCard(
+                            gelColor: gelColor,
+                            isDiscovered: isDiscovered,
+                            colorName: l.colorName(gelColor),
+                            discoveredLabel: l.collectionDiscovered,
+                            lockedLabel: l.collectionLocked,
+                            recipe: recipe,
+                          )
+                              .animateOrSkip(
+                                  reduceMotion: shouldReduceMotion(context),
+                                  delay: (60 * index).ms)
+                              .fadeIn(duration: 350.ms)
+                              .scale(
+                                begin: const Offset(0.92, 0.92),
+                                duration: 350.ms,
+                                curve: Curves.easeOutCubic,
+                              );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
         ],
       ),

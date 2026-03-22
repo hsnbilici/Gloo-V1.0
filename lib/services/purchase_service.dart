@@ -9,13 +9,22 @@ import '../data/remote/remote_repository.dart';
 /// Uygulama içi satın alma (IAP) ve Gloo+ abonelik yöneticisi.
 ///
 /// Ürün tanımları GDD 3.2'ye uygundur:
+///
+/// **Starter Pack** (tek seferlik, $4.99):
+///   Içerik: reklamsız + 2 ses paketi + 1 doku paketi.
+///   Kanibalizasyon notu: Starter Pack yalnizca cosmetic ve reklam
+///   avantajlari saglar. Gloo+'a ozel ozellikler (Zen modu, 2x Season
+///   Pass XP, %50 Jel Ozu bonusu, erken erisim) dahil degildir.
+///
+/// **Gloo+** (abonelik, $1.99/ay veya $9.99/yil):
+///   Ozel: Zen modu, 2x Season Pass XP, %50 Jel Ozu bonusu, erken
+///   erisim, reklamsiz, tum ses paketleri.
+///
+/// Diger urunler:
 /// - Reklamsız deneyim: $2.99 tek seferlik
 /// - Ses paketi "Crystal ASMR": $1.99
 /// - Ses paketi "Deep Forest": $1.99
 /// - Jel Doku Paketi: $2.99
-/// - Starter Pack: $4.99
-/// - Gloo+ Aylık: $1.99/ay
-/// - Gloo+ Yıllık: $9.99/yıl
 class PurchaseService {
   PurchaseService._();
   static final PurchaseService _instance = PurchaseService._();

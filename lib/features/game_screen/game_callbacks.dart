@@ -48,6 +48,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   set epicComboCount(int value);
   void refillHand();
   void handleGameOverDialog();
+  void showToast(String msg);
 
   /// initState'te resolve edilen LocalRepository cache'i.
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
@@ -296,6 +297,15 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           synthesisBlooms.removeRange(0, synthesisBlooms.length - 20);
         }
       });
+      // Show synthesis hint toast for new players (first 3 times)
+      final repo = _cachedRepo;
+      if (repo != null) {
+        final shown = repo.getTipShownCount('synthesis_hint');
+        if (shown < 3) {
+          repo.incrementTipShown('synthesis_hint');
+          showToast(ref.read(stringsProvider).toastSynthesis);
+        }
+      }
     };
 
     game.onCascadeStep = (step, linesCleared) {
@@ -334,8 +344,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           .read(analyticsServiceProvider)
           .logGameOver(mode: widget.mode.name, score: score);
 
-      // Season Pass XP: score / 100
-      final xp = max(10, score ~/ 100);
+      // Season Pass XP: score / 100, Gloo+ subscribers get 2x
+      var xp = max(10, score ~/ 100);
+      if (game.currencyManager.isGlooPlus) xp *= 2;
       if (xp > 0 && repo != null) {
         final passState = SeasonPassState();
         passState.loadFromMap(repo.getSeasonPassState());
@@ -367,6 +378,15 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
           // Grid was mutated in-place by incoming PvP obstacles;
           // trigger rebuild so GridView reflects new cell states.
           if (mounted) setState(() {});
+        },
+        onObstacleReceived: () {
+          soundBank.onIceBreak();
+          if (mounted) {
+            setState(() {
+              shakeIntensity = GameConstants.shakeAmplitudeLarge;
+              shakeKey++;
+            });
+          }
         },
       );
       duelController!.init();

@@ -326,7 +326,7 @@ class StringsRu extends AppStrings {
   String get glooPlusTitle => 'Gloo+';
   @override
   String get glooPlusDesc =>
-      'Без рекламы все звуковые паки Дзен-режим ранний доступ';
+      'Без рекламы, Дзен-режим, 2x XP, +50% Jel, ранний доступ';
   @override
   String get glooPlusMonthly => 'Ежемесячно';
   @override
@@ -391,6 +391,12 @@ class StringsRu extends AppStrings {
   String get toastBombSelectCenter => 'Выберите центр бомбы';
   @override
   String get toastFrozen => 'Заморожено на 10с!';
+  @override
+  String get toastSynthesis => 'Синтез цвета!';
+
+  @override
+  String get collectionComplete =>
+      'Все цвета собраны! +50 Jel награда получена!';
 
   @override
   String get colorRed => 'Красный';

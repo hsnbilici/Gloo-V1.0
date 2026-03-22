@@ -153,7 +153,7 @@
 
 ### Oneriler (Oncelik Sirasina Gore)
 
-- [ ] **GD.O1 — Sentez ipucu overlay:** Secili seklin rengiyle sentez potansiyeli olan bitisik bos hucrelere hafif glow (Orta efor)
+- [x] **GD.O1 — Sentez ipucu overlay:** Secili seklin rengiyle sentez potansiyeli olan bitisik bos hucrelere hafif glow (Orta efor)
 - [x] **GD.O2 — Cascade pacing:** `onCascadeStep` callback + 250ms delayed SFX (Dusuk efor) ✅ (T21)
 - [x] **GD.O3 — Komboyu hamle bazli yap:** 1500ms pencere → ardisik temizleme = combo (Dusuk efor) ✅
 - [ ] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
@@ -195,9 +195,9 @@
 - [x] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu, Gloo+ bonus otomatik (Dusuk efor) ✅ (T32)
 - [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
 - [ ] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
-- [ ] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
+- [x] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
 - [x] **GD.MO7 — Enflasyon sistemini netlistir:** `inflatedCost` power-up'lara baglandi + formul 1000/2x'e yumusatildi (Dusuk efor) ✅ (T23)
-- [ ] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyonunu coz:** Reklamsizi Starter'dan cikar VEYA Gloo+'a exclusive ekle (Dusuk efor)
+- [x] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyonunu coz:** Reklamsizi Starter'dan cikar VEYA Gloo+'a exclusive ekle (Dusuk efor)
 
 ---
 
@@ -295,7 +295,7 @@
 ### Oneriler (Oncelik Sirasina Gore)
 
 - [x] **GD.PO1 — Hardcoded Turkce stringleri l10n'e tasi:** `pvp_lobby_matchmaking.dart` + `duel_result_overlay.dart` (Dusuk efor, HEMEN) ✅
-- [ ] **GD.PO2 — Engel gelis animasyonu + SFX ekle:** 0.8sn golge → yerlesim, `SoundBank.onObstacleReceived()` (Dusuk-Orta efor)
+- [x] **GD.PO2 — Engel gelis animasyonu + SFX ekle:** 0.8sn golge → yerlesim, `SoundBank.onObstacleReceived()` (Dusuk-Orta efor)
 - [x] **GD.PO3 — Tas engelini temizlenebilir yap:** Komsu satir/sutun temizlenince stone kiriliyor + onStoneBroken callback (Dusuk efor) ✅ (T34)
 - [x] **GD.PO4 — Bot'a engel simulasyonu ekle:** 17sn aralikla 1-2 buz engeli (Dusuk efor) ✅ (T35)
 - [x] **GD.PO5 — Skor broadcast'ini event-driven yap:** 5sn periodic → 500ms polling + score-change check (Dusuk efor) ✅ (T36)
@@ -425,7 +425,7 @@
 
 **Sonraki Sprint (M-L):**
 - [ ] **GD.MGO7 — Ada binalarini gating mekanigi yap:** arena→PvP, harbor→SeasonPass, factory→pasif uretim (M efor)
-- [ ] **GD.MGO8 — Koleksiyonu genislet:** 8→16+ renk, tamamlama odulleri (S efor)
+- [x] **GD.MGO8 — Koleksiyonu genislet:** 8→16+ renk, tamamlama odulleri (S efor)
 - [x] **GD.MGO9 — inflatedCost entegrasyonu:** T23 ile tamamlandi (power-up maliyetlerine baglandi) ✅
 - [ ] **GD.MGO10 — Ascension/Prestige sistemi:** Level 50 sonrasi zorluk katmanlari (L efor)
 
@@ -549,3 +549,24 @@
 ### T36 — Skor Broadcast
 
 - [x] **GD.BL34 — Score broadcast event-driven refactor:** 500ms polling yerine onScoreGained + 300ms debounce (Dusuk efor, teknik borc)
+
+---
+
+## Game Design Tasks — Sprint 7 (2026-03-22)
+
+### Monetizasyon
+
+- [x] **GD.MO6 — Gloo+ deger teklifini guclendir:** Season Pass XP'de Gloo+ abonelerine 2x XP uygulanir
+- [x] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyon coz:** Urun dokumantasyonu ve l10n aciklamalari guncellendi; Gloo+ ozel ozellikleri (2x XP, +50% Jel, Zen modu) vurgulandi
+
+### PvP
+
+- [x] **GD.PO2 — Engel gelis animasyonu + SFX:** `_applyIncomingObstacle` icinde `onIceBreak` SFX + screen shake tetiklenir
+
+### Oyun Ici Ipuclari
+
+- [x] **GD.O1 — Sentez ipucu overlay:** Sentez gerceklestiginde ilk 3 kez "Color Synthesis!" toast gosterilir (tip tracking ile)
+
+### Koleksiyon
+
+- [x] **GD.MGO8 — Koleksiyonu genislet:** Tum 8 renk toplaninca +50 Jel Ozu odul + tamamlama banner'i eklendi

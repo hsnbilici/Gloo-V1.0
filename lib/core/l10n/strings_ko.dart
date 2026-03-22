@@ -321,7 +321,7 @@ class StringsKo extends AppStrings {
   @override
   String get glooPlusTitle => 'Gloo+';
   @override
-  String get glooPlusDesc => '광고 없음 전체 사운드 팩 젠 모드 얼리 액세스';
+  String get glooPlusDesc => '광고 없음, 젠 모드, 2x XP, +50% 젤, 얼리 액세스';
   @override
   String get glooPlusMonthly => '월간';
   @override
@@ -384,6 +384,11 @@ class StringsKo extends AppStrings {
   String get toastBombSelectCenter => '폭탄 중심을 선택하세요';
   @override
   String get toastFrozen => '10초 동결!';
+  @override
+  String get toastSynthesis => '색상 합성!';
+
+  @override
+  String get collectionComplete => '모든 색상 수집 완료! +50 젤 보상 획득!';
 
   @override
   String get colorRed => '빨강';

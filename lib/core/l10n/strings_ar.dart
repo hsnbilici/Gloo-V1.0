@@ -325,7 +325,8 @@ class StringsAr extends AppStrings {
   @override
   String get glooPlusTitle => 'Gloo+';
   @override
-  String get glooPlusDesc => 'بدون إعلانات جميع حزم الصوت وضع الزن وصول مبكر';
+  String get glooPlusDesc =>
+      'بدون إعلانات، وضع الزن، 2x XP، +50% جل، وصول مبكر';
   @override
   String get glooPlusMonthly => 'شهري';
   @override
@@ -389,6 +390,11 @@ class StringsAr extends AppStrings {
   String get toastBombSelectCenter => 'اختر مركز القنبلة';
   @override
   String get toastFrozen => 'تجميد ١٠ ثوانٍ!';
+  @override
+  String get toastSynthesis => 'تخليق لوني!';
+
+  @override
+  String get collectionComplete => 'تم جمع جميع الألوان! +50 جل كمكافأة!';
 
   @override
   String get colorRed => 'أحمر';

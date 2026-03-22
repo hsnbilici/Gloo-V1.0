@@ -320,7 +320,7 @@ class StringsEn extends AppStrings {
   @override
   String get glooPlusTitle => 'Gloo+';
   @override
-  String get glooPlusDesc => 'Ad-free, all sound packs, Zen Mode, early access';
+  String get glooPlusDesc => 'Ad-free, Zen Mode, 2x XP, +50% Jel, early access';
   @override
   String get glooPlusMonthly => 'Monthly';
   @override
@@ -384,6 +384,12 @@ class StringsEn extends AppStrings {
   String get toastBombSelectCenter => 'Select bomb center';
   @override
   String get toastFrozen => '10s frozen!';
+  @override
+  String get toastSynthesis => 'Color Synthesis!';
+
+  @override
+  String get collectionComplete =>
+      'All colors collected! +50 Jel reward claimed!';
 
   @override
   String get colorRed => 'Red';
