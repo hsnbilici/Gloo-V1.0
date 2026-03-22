@@ -64,12 +64,17 @@ class QuantizedBreathListenable extends ChangeNotifier {
 /// 3. Ince kenar cizgisi — hucre siniri
 /// 4. Specular highlight — yuzey gerilimi yansimasi (nefes ile module)
 /// 5. Alt kenar golgesi — "yuzeyden yukselme" illuzyonu
+/// 6. Ic parlama noktasi — specular merkezinde ekstra beyaz nokta
+///
+/// [isGlowing] sentez aninda hucreyi daha parlak render eder:
+/// dis glow blur/alpha artar, specular ve ic parlama sabit yuksek alpha kullanir.
 class GelCellPainter extends CustomPainter {
   GelCellPainter({
     required this.color,
     required this.borderRadius,
     required Animation<double> breathAnimation,
     required this.breathPhase,
+    this.isGlowing = false,
   })  : _breathAnim = breathAnimation,
         super(
           repaint: QuantizedBreathListenable.getInstance(breathAnimation),
@@ -82,6 +87,10 @@ class GelCellPainter extends CustomPainter {
   /// Hucre bazli faz ofseti (radyan). Dalga seklinde nefes icin.
   final double breathPhase;
 
+  /// Sentez aninda hucreyi daha parlak gosterir.
+  /// Dis glow blur/alpha artar; specular ve ic parlama sabit yuksek alpha kullanir.
+  final bool isGlowing;
+
   // ── Cached paint objects ────────────────────────────────────────────────
   Shader? _cachedBodyShader;
   Size? _cachedBodyShaderSize;
@@ -89,6 +98,7 @@ class GelCellPainter extends CustomPainter {
 
   Paint? _cachedGlowPaint;
   Color? _cachedGlowColor;
+  bool? _cachedGlowState;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -101,11 +111,14 @@ class GelCellPainter extends CustomPainter {
     final rrect = RRect.fromRectAndRadius(rect, Radius.circular(borderRadius));
 
     // ── 1. Dis glow — hucrenin altinda renkli isik halkasi ───────────────
-    if (_cachedGlowPaint == null || _cachedGlowColor != color) {
+    if (_cachedGlowPaint == null ||
+        _cachedGlowColor != color ||
+        _cachedGlowState != isGlowing) {
       _cachedGlowColor = color;
+      _cachedGlowState = isGlowing;
       _cachedGlowPaint = Paint()
-        ..color = color.withValues(alpha: 0.40)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        ..color = color.withValues(alpha: isGlowing ? 0.60 : 0.40)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, isGlowing ? 12 : 6);
     }
     canvas.drawRRect(rrect.inflate(2.0), _cachedGlowPaint!);
 
@@ -142,7 +155,8 @@ class GelCellPainter extends CustomPainter {
 
     // ── 4. Specular highlight — genis, belirgin beyaz elips ─────────────
     //    Buyuk boyut + yuksek alpha → "plastik/jel" parlaklik
-    final specAlpha = (0.62 + 0.18 * breathMod).clamp(0.0, 1.0);
+    final specAlpha =
+        isGlowing ? 0.90 : (0.62 + 0.18 * breathMod).clamp(0.0, 1.0);
     final hlW = s * 0.55;
     final hlH = s * 0.30;
     final hlX = s * 0.10 + s * 0.012 * breathMod;
@@ -179,7 +193,8 @@ class GelCellPainter extends CustomPainter {
 
     // ── 6. Ek: ic parlama noktasi (kucuk, keskin) ──────────────────────
     //    Speculer highlight'in merkezinde ekstra beyaz nokta
-    final dotAlpha = (0.35 + 0.12 * breathMod).clamp(0.0, 1.0);
+    final dotAlpha =
+        isGlowing ? 0.60 : (0.35 + 0.12 * breathMod).clamp(0.0, 1.0);
     canvas.drawCircle(
       Offset(s * 0.28 + s * 0.01 * breathMod, s * 0.18),
       s * 0.06,
@@ -207,5 +222,6 @@ class GelCellPainter extends CustomPainter {
   bool shouldRepaint(GelCellPainter old) =>
       old.color != color ||
       old.borderRadius != borderRadius ||
-      old.breathPhase != breathPhase;
+      old.breathPhase != breathPhase ||
+      old.isGlowing != isGlowing;
 }
