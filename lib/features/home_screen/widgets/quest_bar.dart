@@ -53,71 +53,170 @@ class QuestBar extends ConsumerWidget {
             borderRadius: BorderRadius.circular(UIConstants.radiusMd),
             border: Border.all(color: borderColor),
           ),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.assignment_rounded,
-                color: completed >= total ? kGreen : kGold,
-                size: 18,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                l.questsTitle,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Row(
-                  children: state.dailyQuests.map((quest) {
-                    final done = state.isCompleted(quest);
-                    final progress = state.getQuestProgress(quest);
-                    final ratio = quest.targetCount > 0
-                        ? (progress / quest.targetCount).clamp(0.0, 1.0)
-                        : 0.0;
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(2),
-                              child: SizedBox(
-                                height: 4,
-                                child: LinearProgressIndicator(
-                                  value: ratio,
-                                  backgroundColor:
-                                      Colors.white.withValues(alpha: 0.08),
-                                  color: done ? kGreen : kGold,
+              // ── Daily row ────────────────────────────────────────────────
+              Row(
+                children: [
+                  Icon(
+                    Icons.assignment_rounded,
+                    color: completed >= total ? kGreen : kGold,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    l.questsTitle,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Row(
+                      children: state.dailyQuests.map((quest) {
+                        final done = state.isCompleted(quest);
+                        final progress = state.getQuestProgress(quest);
+                        final ratio = quest.targetCount > 0
+                            ? (progress / quest.targetCount).clamp(0.0, 1.0)
+                            : 0.0;
+                        return Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 2),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(2),
+                                  child: SizedBox(
+                                    height: 4,
+                                    child: LinearProgressIndicator(
+                                      value: ratio,
+                                      backgroundColor: Colors.white
+                                          .withValues(alpha: 0.08),
+                                      color: done ? kGreen : kGold,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '$completed/$total',
+                    style: TextStyle(
+                      color: completed >= total ? kGreen : mutedColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(
-                '$completed/$total',
-                style: TextStyle(
-                  color: completed >= total ? kGreen : mutedColor,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
+              // ── Weekly row ───────────────────────────────────────────────
+              if (state.weeklyQuests.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                _WeeklyRow(
+                  state: state,
+                  mutedColor: mutedColor,
+                  textColor: textColor,
                 ),
-              ),
+              ],
             ],
           ),
         );
       },
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+}
+
+/// Weekly quest progress row — rendered below the daily row when weekly
+/// quests are present. Uses kOrange accent to visually distinguish.
+class _WeeklyRow extends StatelessWidget {
+  const _WeeklyRow({
+    required this.state,
+    required this.mutedColor,
+    required this.textColor,
+  });
+
+  final QuestProgress state;
+  final Color mutedColor;
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final completedWeekly =
+        state.weeklyQuests.where((q) => state.isCompleted(q)).length;
+    final totalWeekly = state.weeklyQuests.length;
+
+    return Row(
+      children: [
+        Icon(
+          Icons.date_range_rounded,
+          color: completedWeekly >= totalWeekly ? kGreen : kOrange,
+          size: 18,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'Weekly',
+          style: TextStyle(
+            color: textColor,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Row(
+            children: state.weeklyQuests.map((quest) {
+              final done = state.isCompleted(quest);
+              final progress = state.getQuestProgress(quest);
+              final ratio = quest.targetCount > 0
+                  ? (progress / quest.targetCount).clamp(0.0, 1.0)
+                  : 0.0;
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(2),
+                        child: SizedBox(
+                          height: 4,
+                          child: LinearProgressIndicator(
+                            value: ratio,
+                            backgroundColor:
+                                Colors.white.withValues(alpha: 0.08),
+                            color: done ? kGreen : kOrange,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          '$completedWeekly/$totalWeekly',
+          style: TextStyle(
+            color: completedWeekly >= totalWeekly ? kGreen : mutedColor,
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ],
     );
   }
 }
