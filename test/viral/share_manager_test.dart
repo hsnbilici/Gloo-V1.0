@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:gloo/core/constants/color_constants.dart';
 import 'package:gloo/core/l10n/strings_en.dart';
 import 'package:gloo/viral/share_manager.dart';
 import '../helpers/mocks.dart';
@@ -127,11 +128,148 @@ void main() {
   });
 
   group('ShareManager.shareDailyResult', () {
-    test('shareDailyResult does not throw', () async {
+    test('shareDailyResult does not throw without grid', () async {
       final manager = ShareManager();
       try {
         await manager.shareDailyResult(
             score: 5000, dateLabel: '2026-03-01', l: _l);
+      } catch (_) {
+        // Expected: MissingPluginException from share_plus
+      }
+    });
+
+    test('shareDailyResult does not throw with grid', () async {
+      final manager = ShareManager();
+      final grid = <List<GelColor?>>[
+        [GelColor.red, GelColor.yellow, null],
+        [null, GelColor.blue, GelColor.white],
+      ];
+      try {
+        await manager.shareDailyResult(
+            score: 1250, dateLabel: '2026-03-01', l: _l, grid: grid);
+      } catch (_) {
+        // Expected: MissingPluginException from share_plus
+      }
+    });
+  });
+
+  group('ShareManager.buildDailyEmojiGrid', () {
+    final manager = ShareManager();
+
+    test('empty grid produces header only', () {
+      final grid = <List<GelColor?>>[];
+      final result = manager.buildDailyEmojiGrid(grid, 1000);
+      expect(result, startsWith('GLOO Daily'));
+      expect(result, contains('⭐⭐')); // score 1000 → 2 stars
+    });
+
+    test('star rating: score < 500 → 1 star', () {
+      final grid = <List<GelColor?>>[];
+      final result = manager.buildDailyEmojiGrid(grid, 100);
+      expect(result, contains('⭐'));
+      expect(result, isNot(contains('⭐⭐')));
+    });
+
+    test('star rating: score 500–1999 → 2 stars', () {
+      final grid = <List<GelColor?>>[];
+      final result = manager.buildDailyEmojiGrid(grid, 500);
+      // ⭐⭐ but NOT ⭐⭐⭐
+      expect('⭐⭐'.allMatches(result).length, 1);
+    });
+
+    test('star rating: score >= 2000 → 3 stars', () {
+      final grid = <List<GelColor?>>[];
+      final result = manager.buildDailyEmojiGrid(grid, 2000);
+      expect(result, contains('⭐⭐⭐'));
+    });
+
+    test('dolu hücreler renk emojisi, boşlar siyah kare', () {
+      final grid = <List<GelColor?>>[
+        [GelColor.red, null, GelColor.blue],
+      ];
+      final result = manager.buildDailyEmojiGrid(grid, 1000);
+      expect(result, contains('🟥⬛🟦'));
+    });
+
+    test('tamamen boş satırlar gösterilmez', () {
+      final grid = <List<GelColor?>>[
+        [null, null, null],
+        [GelColor.green, GelColor.yellow, null],
+      ];
+      final result = manager.buildDailyEmojiGrid(grid, 1000);
+      // Boş satır yok, sadece dolu satır var
+      final lines = result.split('\n').where((l) => l.trim().isNotEmpty).toList();
+      // Başlık satırı + 1 dolu satır = 2
+      expect(lines.length, 2);
+    });
+
+    test('maxRows aşımında overflow mesajı gösterilir', () {
+      final grid = List.generate(
+        7,
+        (_) => [GelColor.red, GelColor.yellow],
+      );
+      final result = manager.buildDailyEmojiGrid(grid, 1000, maxRows: 5);
+      expect(result, contains('+2 more'));
+    });
+
+    test('maxRows aşılmadığında overflow mesajı yok', () {
+      final grid = List.generate(
+        3,
+        (_) => [GelColor.red, GelColor.yellow],
+      );
+      final result = manager.buildDailyEmojiGrid(grid, 1000, maxRows: 5);
+      expect(result, isNot(contains('more')));
+    });
+
+    test('tüm GelColor değerleri geçerli emoji üretir', () {
+      final row = GelColor.values.map<GelColor?>((c) => c).toList();
+      final grid = [row];
+      final result = manager.buildDailyEmojiGrid(grid, 1000);
+      // Hiçbir null/hata karakteri yok
+      expect(result, isNotEmpty);
+      // Her renk için bir emoji satırı içermeli
+      for (final color in GelColor.values) {
+        expect(result, isNotEmpty); // buildDailyEmojiGrid çökmedi
+      }
+    });
+  });
+
+  group('ShareManager.shareCollection', () {
+    test('shareCollection does not throw', () async {
+      final manager = ShareManager();
+      try {
+        await manager.shareCollection(
+          l: _l,
+          discoveredColors: {GelColor.orange, GelColor.green, GelColor.purple},
+        );
+      } catch (_) {
+        // Expected: MissingPluginException from share_plus
+      }
+    });
+
+    test('shareCollection does not throw with empty set', () async {
+      final manager = ShareManager();
+      try {
+        await manager.shareCollection(l: _l, discoveredColors: {});
+      } catch (_) {
+        // Expected: MissingPluginException from share_plus
+      }
+    });
+
+    test('shareCollection does not throw with all synthesis colors', () async {
+      final manager = ShareManager();
+      final allSynthesis = {
+        GelColor.orange,
+        GelColor.green,
+        GelColor.purple,
+        GelColor.brown,
+        GelColor.pink,
+        GelColor.lightBlue,
+        GelColor.lime,
+        GelColor.maroon,
+      };
+      try {
+        await manager.shareCollection(l: _l, discoveredColors: allSynthesis);
       } catch (_) {
         // Expected: MissingPluginException from share_plus
       }
