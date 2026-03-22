@@ -1,14 +1,18 @@
 /// Push notification altyapısı.
 ///
-/// `firebase_messaging` paketi henüz eklenmemiş durumda.
-/// Bu dosya bildirim senaryolarını ve interface'i tanımlar.
-/// Paket eklendiğinde stub implementasyonları gerçek kodla değiştirilecek.
-///
 /// Bildirim senaryoları:
 ///   D1 — Streak reminder: Gün sonuna doğru (akşam 20:00) streak kırmamak için hatırlatma
 ///   D2 — Daily puzzle: Her gün 10:00'da günlük bulmaca hatırlatması
 ///   D3 — Comeback: 3 gün inaktif → "Seni özledik" bildirimi
 library;
+
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 /// Bildirim türleri.
 enum NotificationType {
@@ -111,4 +115,221 @@ class StubNotificationService implements NotificationService {
     required String title,
     required String body,
   }) async {}
+}
+
+/// Firebase Messaging + flutter_local_notifications tabanlı gerçek implementasyon.
+class FirebaseNotificationService implements NotificationService {
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _local = FlutterLocalNotificationsPlugin();
+  StreamSubscription<String>? _tokenRefreshSub;
+
+  @override
+  Future<void> initialize() async {
+    try {
+      tz.initializeTimeZones();
+
+      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const iosSettings = DarwinInitializationSettings(
+        requestAlertPermission: false,
+        requestBadgePermission: false,
+        requestSoundPermission: false,
+      );
+      await _local.initialize(
+        const InitializationSettings(android: androidSettings, iOS: iosSettings),
+      );
+
+      const channel = AndroidNotificationChannel(
+        'gloo_default',
+        'Gloo Notifications',
+        importance: Importance.defaultImportance,
+      );
+      await _local
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+
+      _tokenRefreshSub = _fcm.onTokenRefresh.listen((_) {
+        // Token yenilendiğinde dışarıdan getToken() çağrılarak alınır.
+      });
+
+      if (kDebugMode) debugPrint('FirebaseNotificationService: initialized');
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: init error: $e');
+    }
+  }
+
+  @override
+  Future<bool> requestPermission() async {
+    try {
+      final settings = await _fcm.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      return settings.authorizationStatus == AuthorizationStatus.authorized;
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: permission error: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<String?> getToken() async {
+    try {
+      return await _fcm.getToken();
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: getToken error: $e');
+      return null;
+    }
+  }
+
+  @override
+  Future<void> scheduleNotification({
+    required NotificationType type,
+    required DateTime scheduledAt,
+    required String title,
+    required String body,
+  }) async {
+    try {
+      await _local.zonedSchedule(
+        type.index,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledAt, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'gloo_default',
+            'Gloo Notifications',
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: scheduleNotification error: $e');
+    }
+  }
+
+  @override
+  Future<void> cancelNotification(NotificationType type) async {
+    try {
+      await _local.cancel(type.index);
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: cancelNotification error: $e');
+    }
+  }
+
+  @override
+  Future<void> cancelAll() async {
+    try {
+      await _local.cancelAll();
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: cancelAll error: $e');
+    }
+  }
+
+  @override
+  Future<void> scheduleStreakReminder({
+    required String title,
+    required String body,
+  }) async {
+    try {
+      final now = tz.TZDateTime.now(tz.local);
+      var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, 20, 0);
+      if (scheduled.isBefore(now)) {
+        scheduled = scheduled.add(const Duration(days: 1));
+      }
+      await _local.zonedSchedule(
+        NotificationType.streakReminder.index,
+        title,
+        body,
+        scheduled,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'gloo_default',
+            'Gloo Notifications',
+            importance: Importance.defaultImportance,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: streakReminder error: $e');
+    }
+  }
+
+  @override
+  Future<void> scheduleDailyPuzzleReminder({
+    required String title,
+    required String body,
+  }) async {
+    try {
+      final now = tz.TZDateTime.now(tz.local);
+      var scheduled = tz.TZDateTime(tz.local, now.year, now.month, now.day, 10, 0);
+      if (scheduled.isBefore(now)) {
+        scheduled = scheduled.add(const Duration(days: 1));
+      }
+      await _local.zonedSchedule(
+        NotificationType.dailyPuzzle.index,
+        title,
+        body,
+        scheduled,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'gloo_default',
+            'Gloo Notifications',
+            importance: Importance.defaultImportance,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: dailyPuzzle error: $e');
+    }
+  }
+
+  @override
+  Future<void> scheduleComebackNotification({
+    required String title,
+    required String body,
+  }) async {
+    try {
+      final scheduled = tz.TZDateTime.now(tz.local).add(const Duration(days: 3));
+      await _local.zonedSchedule(
+        NotificationType.comeback.index,
+        title,
+        body,
+        scheduled,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'gloo_default',
+            'Gloo Notifications',
+            importance: Importance.defaultImportance,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FirebaseNotificationService: comeback error: $e');
+    }
+  }
+
+  /// Token yenileme subscription'ını temizler.
+  void dispose() {
+    _tokenRefreshSub?.cancel();
+  }
 }
