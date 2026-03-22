@@ -84,7 +84,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
       }
     }
 
-    // Nearly-full row detection (75%+ filled, but not 100%)
+    // Nearly-full row detection: ≤2 empty playable cells (not fully filled)
     for (int r = 0; r < rows; r++) {
       int filled = 0;
       int playable = 0;
