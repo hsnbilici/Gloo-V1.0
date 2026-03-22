@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../audio/sound_bank.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../data/remote/pvp_realtime_service.dart';
 import '../../game/pvp/matchmaking.dart';
@@ -28,6 +29,7 @@ class GameDuelController {
     required this.onStateChanged,
     this.opponentElo,
     this.onObstacleReceived,
+    this.soundBank,
   });
 
   final WidgetRef ref;
@@ -38,6 +40,7 @@ class GameDuelController {
   final VoidCallback onStateChanged;
   final int? opponentElo;
   final VoidCallback? onObstacleReceived;
+  final SoundBank? soundBank;
 
   PvpRealtimeService? _pvpService;
   StreamSubscription<int>? _opponentScoreSub;
@@ -267,6 +270,11 @@ class GameDuelController {
     );
 
     if (!context.mounted) return;
+    if (outcome == DuelOutcome.win) {
+      soundBank?.onPvpVictory();
+    } else if (outcome == DuelOutcome.loss) {
+      soundBank?.onPvpDefeat();
+    }
     _showDuelResultDialog(result, newElo, context);
   }
 

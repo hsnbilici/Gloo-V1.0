@@ -127,6 +127,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
       // PvP: satir temizleyince rakibe engel gonder
       if (widget.mode == GameMode.duel && clearResult.totalLines > 0) {
+        soundBank.onPvpObstacleSent();
         duelController?.sendObstacles(clearResult.totalLines, 'small');
       }
 
@@ -417,13 +418,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         isBot: widget.duelIsBot,
         seed: widget.duelSeed ?? 0,
         opponentElo: widget.duelOpponentElo,
+        soundBank: soundBank,
         onStateChanged: () {
           // Grid was mutated in-place by incoming PvP obstacles;
           // trigger rebuild so GridView reflects new cell states.
           if (mounted) setState(() {});
         },
         onObstacleReceived: () {
-          soundBank.onIceBreak();
+          soundBank.onPvpObstacleReceived();
           if (mounted) {
             setState(() {
               shakeIntensity = GameConstants.shakeAmplitudeLarge;

@@ -94,6 +94,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     if (activePowerUpMode == PowerUpType.bomb) {
       final result = game.useBomb(row, col);
       if (result != null && result.isNotEmpty) {
+        soundBank.onBombExplosion();
         setState(() {
           activePowerUpMode = null;
           bombExplosion = (row: row, col: col, key: ++bombFxKey);
@@ -155,7 +156,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
         final (shape, color) = hand[selectedSlot!]!;
         final rotated = game.rotateShape(shape);
         if (rotated != null) {
-          soundBank.onPowerUpActivate();
+          soundBank.onRotate();
           setState(() {
             hand[selectedSlot!] = (rotated, color);
             previewCells = {};
@@ -177,7 +178,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       case PowerUpType.undo:
         final result = game.useUndo();
         if (result != null) {
-          soundBank.onPowerUpActivate();
+          soundBank.onUndo();
           setState(() {
             undoEffect = (cells: result, key: ++undoFxKey);
           });
@@ -186,7 +187,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       case PowerUpType.freeze:
         final success = game.useFreeze();
         if (success) {
-          soundBank.onPowerUpActivate();
+          soundBank.onFreeze();
           showToast(ref.read(stringsProvider).toastFrozen);
         }
 
