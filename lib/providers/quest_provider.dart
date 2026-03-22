@@ -45,9 +45,28 @@ final questProvider = FutureProvider<QuestProgress>((ref) async {
   final daySeed = DateTime.now().difference(DateTime(2024)).inDays;
   final dailies = _pickQuests(kDailyQuestPool, 3, daySeed);
 
+  // ── Migration: old type-based keys (e.g. "clearLines_d") → quest.id keys
+  if (savedDate == today && dailyProgress.isNotEmpty) {
+    final hasOldKeys = dailyProgress.keys.any((k) => k.endsWith('_d'));
+    if (hasOldKeys) {
+      final newProgress = <String, int>{};
+      for (final quest in dailies) {
+        final oldKey = '${quest.type.name}_d';
+        if (dailyProgress.containsKey(oldKey)) {
+          newProgress[quest.id] = dailyProgress[oldKey]!;
+        }
+      }
+      if (newProgress.isNotEmpty) {
+        dailyProgress = newProgress;
+        await repo.saveDailyQuestProgress(newProgress);
+      }
+    }
+  }
+
   // ── Weekly reset ──────────────────────────────────────────────────────────
   final now = DateTime.now();
-  final currentWeekKey = '${now.year}-W${_isoWeekNumber(now).toString().padLeft(2, '0')}';
+  final (isoYear, isoWeek) = _isoYearWeek(now);
+  final currentWeekKey = '$isoYear-W${isoWeek.toString().padLeft(2, '0')}';
   final savedWeekKey = repo.getWeeklyQuestWeek();
   Map<String, int> weeklyProgress;
   if (savedWeekKey != currentWeekKey) {
@@ -58,7 +77,7 @@ final questProvider = FutureProvider<QuestProgress>((ref) async {
     weeklyProgress = await repo.getWeeklyQuestProgress();
   }
 
-  final weekSeed = now.year * 100 + _isoWeekNumber(now);
+  final weekSeed = isoYear * 100 + isoWeek;
   final weeklies = _pickQuests(kWeeklyQuestPool, 5, weekSeed);
 
   return QuestProgress(
@@ -74,9 +93,13 @@ String _todayKey() {
   return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 }
 
-int _isoWeekNumber(DateTime date) {
-  final dayOfYear = date.difference(DateTime(date.year, 1, 1)).inDays;
-  return ((dayOfYear - date.weekday + 10) ~/ 7);
+/// Returns (isoYear, isoWeek) using Thursday-based ISO 8601 calculation.
+(int, int) _isoYearWeek(DateTime date) {
+  // ISO 8601: the week's year is determined by which year the Thursday falls in.
+  final thursday = date.add(Duration(days: DateTime.thursday - date.weekday));
+  final jan1 = DateTime(thursday.year, 1, 1);
+  final week = (thursday.difference(jan1).inDays ~/ 7) + 1;
+  return (thursday.year, week);
 }
 
 List<Quest> _pickQuests(List<Quest> pool, int count, int seed) {

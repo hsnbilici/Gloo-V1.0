@@ -7,7 +7,6 @@ enum QuestType {
   reachCombo, // "Kombo zinciri 4+ yap"
   completeDailyPuzzle, // "Daily Puzzle'ı tamamla"
   playGames, // "3 oyun oyna"
-  useColorSynthesis, // "Belirli renk sentezle"
   reachScore, // "1000+ skor yap"
 }
 
@@ -86,8 +85,8 @@ const List<Quest> kDailyQuestPool = [
   Quest(
       id: 'd_rs500',
       type: QuestType.reachScore,
-      description: '500 puana ulas',
-      targetCount: 500,
+      description: '500+ puana ulas',
+      targetCount: 1,
       xpReward: 35,
       gelReward: 2),
   Quest(

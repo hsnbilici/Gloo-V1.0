@@ -616,6 +616,8 @@ class StringsAr extends AppStrings {
   @override
   String get questsTitle => 'المهام اليومية';
   @override
+  String get weeklyQuestsTitle => 'أسبوعي';
+  @override
   String get questsCompleted => 'مكتمل';
 
   // UX-03: Grid hücre semantics label'ları
@@ -669,4 +671,6 @@ class StringsAr extends AppStrings {
   String get notifComebackTitle => 'نشتاق إليك!';
   @override
   String get notifComebackBody => 'عد وتابع إبداع الألوان!';
+  @override
+  String get settingsNotifications => 'الإشعارات';
 }

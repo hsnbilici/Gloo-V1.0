@@ -612,6 +612,8 @@ class StringsHi extends AppStrings {
   @override
   String get questsTitle => 'दैनिक क्वेस्ट';
   @override
+  String get weeklyQuestsTitle => 'साप्ताहिक';
+  @override
   String get questsCompleted => 'पूर्ण';
 
   // UX-03: Grid hücre semantics label'ları
@@ -665,4 +667,6 @@ class StringsHi extends AppStrings {
   String get notifComebackTitle => 'हम आपको याद करते हैं!';
   @override
   String get notifComebackBody => 'वापस आएं और रंग बनाते रहें!';
+  @override
+  String get settingsNotifications => 'सूचनाएं';
 }

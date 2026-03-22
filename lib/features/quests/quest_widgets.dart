@@ -26,7 +26,6 @@ class QuestCard extends StatelessWidget {
         QuestType.reachCombo => Icons.flash_on_rounded,
         QuestType.completeDailyPuzzle => Icons.calendar_today_rounded,
         QuestType.playGames => Icons.sports_esports_rounded,
-        QuestType.useColorSynthesis => Icons.palette_rounded,
         QuestType.reachScore => Icons.emoji_events_rounded,
       };
 

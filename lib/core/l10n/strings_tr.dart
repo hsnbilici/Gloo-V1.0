@@ -612,6 +612,8 @@ class StringsTr extends AppStrings {
   @override
   String get questsTitle => 'Gunluk Gorevler';
   @override
+  String get weeklyQuestsTitle => 'Haftalik';
+  @override
   String get questsCompleted => 'Tamamlandi';
 
   // UX-03: Grid hücre semantics label'ları
@@ -665,4 +667,6 @@ class StringsTr extends AppStrings {
   String get notifComebackTitle => 'Seni özledik!';
   @override
   String get notifComebackBody => 'Geri dön ve renk yaratmaya devam et!';
+  @override
+  String get settingsNotifications => 'Bildirimler';
 }

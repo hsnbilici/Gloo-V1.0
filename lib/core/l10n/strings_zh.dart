@@ -604,6 +604,8 @@ class StringsZh extends AppStrings {
   @override
   String get questsTitle => '每日任务';
   @override
+  String get weeklyQuestsTitle => '每周';
+  @override
   String get questsCompleted => '已完成';
 
   // UX-03: Grid hücre semantics label'ları
@@ -657,4 +659,6 @@ class StringsZh extends AppStrings {
   String get notifComebackTitle => '我们想念你！';
   @override
   String get notifComebackBody => '回来继续创造色彩吧！';
+  @override
+  String get settingsNotifications => '通知';
 }

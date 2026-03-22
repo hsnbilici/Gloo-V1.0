@@ -126,6 +126,7 @@ class QuestBar extends ConsumerWidget {
                   state: state,
                   mutedColor: mutedColor,
                   textColor: textColor,
+                  weeklyLabel: l.weeklyQuestsTitle,
                 ),
               ],
             ],
@@ -145,11 +146,13 @@ class _WeeklyRow extends StatelessWidget {
     required this.state,
     required this.mutedColor,
     required this.textColor,
+    required this.weeklyLabel,
   });
 
   final QuestProgress state;
   final Color mutedColor;
   final Color textColor;
+  final String weeklyLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +169,7 @@ class _WeeklyRow extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          'Weekly',
+          weeklyLabel,
           style: TextStyle(
             color: textColor,
             fontSize: 12,

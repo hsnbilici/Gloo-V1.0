@@ -608,6 +608,8 @@ class StringsKo extends AppStrings {
   @override
   String get questsTitle => '일일 퀘스트';
   @override
+  String get weeklyQuestsTitle => '주간';
+  @override
   String get questsCompleted => '완료';
 
   // UX-03: Grid hücre semantics label'ları
@@ -661,4 +663,6 @@ class StringsKo extends AppStrings {
   String get notifComebackTitle => '보고 싶었어요!';
   @override
   String get notifComebackBody => '돌아와서 색깔을 계속 만들어 보세요!';
+  @override
+  String get settingsNotifications => '알림';
 }

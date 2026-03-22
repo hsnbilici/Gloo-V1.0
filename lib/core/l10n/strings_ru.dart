@@ -618,6 +618,8 @@ class StringsRu extends AppStrings {
   @override
   String get questsTitle => 'Ежедневные задания';
   @override
+  String get weeklyQuestsTitle => 'Еженедельно';
+  @override
   String get questsCompleted => 'Выполнено';
 
   // UX-03: Grid hücre semantics label'ları
@@ -671,4 +673,6 @@ class StringsRu extends AppStrings {
   String get notifComebackTitle => 'Мы скучаем!';
   @override
   String get notifComebackBody => 'Вернись и продолжай создавать цвета!';
+  @override
+  String get settingsNotifications => 'Уведомления';
 }

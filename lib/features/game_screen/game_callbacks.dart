@@ -482,7 +482,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       final score = game.score;
       // Quest tracking: play games + reach score
       _trackQuest(QuestType.playGames);
-      if (score >= 800) {
+      if (score >= 500) {
         _trackQuest(QuestType.reachScore);
       }
       // Daily puzzle quest

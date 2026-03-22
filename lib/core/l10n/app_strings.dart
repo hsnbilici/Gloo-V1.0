@@ -388,6 +388,7 @@ abstract class AppStrings {
 
   // GD.MO4: Daily Quests
   String get questsTitle;
+  String get weeklyQuestsTitle;
   String get questsCompleted;
 
   // UX-03: Grid hücre semantics label'ları
@@ -420,6 +421,7 @@ abstract class AppStrings {
   String get notifDailyBody;
   String get notifComebackTitle;
   String get notifComebackBody;
+  String get settingsNotifications;
 
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
