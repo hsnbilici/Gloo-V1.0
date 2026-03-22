@@ -321,4 +321,27 @@ class GameDataRepository {
   Future<void> saveDailyQuestDate(String date) async {
     await _prefs.setString('daily_quest_date', date);
   }
+
+  // ─── Haftalık Görev İlerleme ─────────────────────────────────────────────
+
+  Future<Map<String, int>> getWeeklyQuestProgress() async {
+    final raw = _prefs.getString('weekly_quest_progress');
+    if (raw == null) return {};
+    try {
+      final map = jsonDecode(raw) as Map<String, dynamic>;
+      return map.map((k, v) => MapEntry(k, v as int));
+    } catch (_) {
+      return {};
+    }
+  }
+
+  Future<void> saveWeeklyQuestProgress(Map<String, int> progress) async {
+    await _prefs.setString('weekly_quest_progress', jsonEncode(progress));
+  }
+
+  String? getWeeklyQuestWeek() => _prefs.getString('weekly_quest_week');
+
+  Future<void> saveWeeklyQuestWeek(String week) async {
+    await _prefs.setString('weekly_quest_week', week);
+  }
 }

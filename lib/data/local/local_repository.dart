@@ -320,6 +320,19 @@ class LocalRepository {
   Future<void> saveDailyQuestDate(String date) =>
       gameData.saveDailyQuestDate(date);
 
+  // ─── Haftalık Görev İlerleme ─────────────────────────────────────────────
+
+  Future<Map<String, int>> getWeeklyQuestProgress() =>
+      gameData.getWeeklyQuestProgress();
+
+  Future<void> saveWeeklyQuestProgress(Map<String, int> progress) =>
+      gameData.saveWeeklyQuestProgress(progress);
+
+  String? getWeeklyQuestWeek() => gameData.getWeeklyQuestWeek();
+
+  Future<void> saveWeeklyQuestWeek(String week) =>
+      gameData.saveWeeklyQuestWeek(week);
+
   // ─── IAP Pending Verification ────────────────────────────────────────────
 
   Future<List<String>> getPendingVerification() =>

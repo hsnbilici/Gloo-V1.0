@@ -9,14 +9,18 @@ class QuestProgress {
   const QuestProgress({
     required this.dailyQuests,
     required this.progress,
+    this.weeklyQuests = const [],
+    this.weeklyProgress = const {},
   });
 
   final List<Quest> dailyQuests;
   final Map<String, int> progress;
+  final List<Quest> weeklyQuests;
+  final Map<String, int> weeklyProgress;
 
   int getQuestProgress(Quest quest) {
-    final key = '${quest.type.name}_${quest.isWeekly ? 'w' : 'd'}';
-    return progress[key] ?? 0;
+    if (quest.isWeekly) return weeklyProgress[quest.id] ?? 0;
+    return progress[quest.id] ?? 0;
   }
 
   bool isCompleted(Quest quest) => getQuestProgress(quest) >= quest.targetCount;
@@ -25,26 +29,54 @@ class QuestProgress {
 /// Loads today's daily quests and their progress from local storage.
 final questProvider = FutureProvider<QuestProgress>((ref) async {
   final repo = await ref.watch(localRepositoryProvider.future);
+
+  // ── Daily reset ───────────────────────────────────────────────────────────
   final today = _todayKey();
   final savedDate = repo.getDailyQuestDate();
-  Map<String, int> progress;
+  Map<String, int> dailyProgress;
   if (savedDate != today) {
-    progress = {};
+    dailyProgress = {};
     await repo.saveDailyQuestProgress({});
     await repo.saveDailyQuestDate(today);
   } else {
-    progress = repo.getDailyQuestProgress();
+    dailyProgress = repo.getDailyQuestProgress();
   }
 
   final daySeed = DateTime.now().difference(DateTime(2024)).inDays;
   final dailies = _pickQuests(kDailyQuestPool, 3, daySeed);
 
-  return QuestProgress(dailyQuests: dailies, progress: progress);
+  // ── Weekly reset ──────────────────────────────────────────────────────────
+  final now = DateTime.now();
+  final currentWeekKey = '${now.year}-W${_isoWeekNumber(now).toString().padLeft(2, '0')}';
+  final savedWeekKey = repo.getWeeklyQuestWeek();
+  Map<String, int> weeklyProgress;
+  if (savedWeekKey != currentWeekKey) {
+    weeklyProgress = {};
+    await repo.saveWeeklyQuestProgress({});
+    await repo.saveWeeklyQuestWeek(currentWeekKey);
+  } else {
+    weeklyProgress = await repo.getWeeklyQuestProgress();
+  }
+
+  final weekSeed = now.year * 100 + _isoWeekNumber(now);
+  final weeklies = _pickQuests(kWeeklyQuestPool, 5, weekSeed);
+
+  return QuestProgress(
+    dailyQuests: dailies,
+    progress: dailyProgress,
+    weeklyQuests: weeklies,
+    weeklyProgress: weeklyProgress,
+  );
 });
 
 String _todayKey() {
   final now = DateTime.now();
   return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+}
+
+int _isoWeekNumber(DateTime date) {
+  final dayOfYear = date.difference(DateTime(date.year, 1, 1)).inDays;
+  return ((dayOfYear - date.weekday + 10) ~/ 7);
 }
 
 List<Quest> _pickQuests(List<Quest> pool, int count, int seed) {
@@ -66,19 +98,35 @@ Future<int> incrementQuestProgress(
   QuestType type, {
   int amount = 1,
 }) async {
-  final key = '${type.name}_d';
-  final current = state.progress[key] ?? 0;
-  final updated = Map<String, int>.from(state.progress);
-  updated[key] = current + amount;
-  await repo.saveDailyQuestProgress(updated);
-
   int reward = 0;
-  for (final quest in state.dailyQuests) {
-    if (quest.type == type &&
-        current < quest.targetCount &&
-        updated[key]! >= quest.targetCount) {
-      reward += quest.gelReward;
+
+  // ── Daily quests ──────────────────────────────────────────────────────────
+  final dailyMatches = state.dailyQuests.where((q) => q.type == type).toList();
+  if (dailyMatches.isNotEmpty) {
+    final updated = Map<String, int>.from(state.progress);
+    for (final quest in dailyMatches) {
+      final current = updated[quest.id] ?? 0;
+      updated[quest.id] = current + amount;
+      if (current < quest.targetCount && updated[quest.id]! >= quest.targetCount) {
+        reward += quest.gelReward;
+      }
     }
+    await repo.saveDailyQuestProgress(updated);
   }
+
+  // ── Weekly quests (parallel update for matching type) ─────────────────────
+  final weeklyMatches = state.weeklyQuests.where((q) => q.type == type).toList();
+  if (weeklyMatches.isNotEmpty) {
+    final updatedWeekly = Map<String, int>.from(state.weeklyProgress);
+    for (final quest in weeklyMatches) {
+      final current = updatedWeekly[quest.id] ?? 0;
+      updatedWeekly[quest.id] = current + amount;
+      if (current < quest.targetCount && updatedWeekly[quest.id]! >= quest.targetCount) {
+        reward += quest.gelReward;
+      }
+    }
+    await repo.saveWeeklyQuestProgress(updatedWeekly);
+  }
+
   return reward;
 }
