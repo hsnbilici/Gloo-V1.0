@@ -171,7 +171,13 @@ class GameOverOverlay extends ConsumerWidget {
                       // İstatistikler
                       GameOverStatRow(
                         label: l.gameOverGridFill,
-                        value: '%$fillPct',
+                        value: fillPct < 30
+                            ? l.gridFillClean
+                            : fillPct < 60
+                                ? l.gridFillGood
+                                : fillPct < 80
+                                    ? l.gridFillCrowded
+                                    : l.gridFillFull,
                         color: color,
                       )
                           .animateOrSkip(reduceMotion: rm, delay: 460.ms)

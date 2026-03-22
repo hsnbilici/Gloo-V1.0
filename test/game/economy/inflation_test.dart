@@ -10,22 +10,22 @@ void main() {
 
     test('inflatedCost increases with lifetime earnings', () {
       final cm = CurrencyManager(initialBalance: 100);
-      cm.addLifetimeEarnings(500);
-      // 1 + 500/500 = 2.0 → rotate 3 * 2 = 6
+      cm.addLifetimeEarnings(1000);
+      // 1 + 1000/1000 = 2.0 → rotate 3 * 2 = 6
       expect(cm.inflatedCost(CurrencyCosts.rotate), 6);
     });
 
-    test('inflatedCost caps at 3x', () {
+    test('inflatedCost caps at 2x', () {
       final cm = CurrencyManager(initialBalance: 100);
       cm.addLifetimeEarnings(5000);
-      // 1 + 5000/500 = 11 → clamp 3.0 → rotate 3 * 3 = 9
-      expect(cm.inflatedCost(CurrencyCosts.rotate), 9);
+      // 1 + 5000/1000 = 6 → clamp 2.0 → rotate 3 * 2 = 6
+      expect(cm.inflatedCost(CurrencyCosts.rotate), 6);
     });
 
     test('inflatedCost rounds up', () {
       final cm = CurrencyManager(initialBalance: 100);
-      cm.addLifetimeEarnings(250);
-      // 1 + 250/500 = 1.5 → peek 2 * 1.5 = 3
+      cm.addLifetimeEarnings(500);
+      // 1 + 500/1000 = 1.5 → peek 2 * 1.5 = 3
       expect(cm.inflatedCost(CurrencyCosts.peek), 3);
     });
 
@@ -40,8 +40,8 @@ void main() {
     test('setLifetimeEarnings restores persisted value', () {
       final cm = CurrencyManager(initialBalance: 0);
       cm.setLifetimeEarnings(1000);
-      // 1 + 1000/500 = 3.0 → rotate 3 * 3 = 9
-      expect(cm.inflatedCost(CurrencyCosts.rotate), 9);
+      // 1 + 1000/1000 = 2.0 → rotate 3 * 2 = 6
+      expect(cm.inflatedCost(CurrencyCosts.rotate), 6);
     });
   });
 }

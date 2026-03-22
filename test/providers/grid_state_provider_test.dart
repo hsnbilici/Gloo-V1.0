@@ -198,6 +198,7 @@ void main() {
         isRecentlyPlaced: true,
         waveDistance: 3,
         isInteractive: true,
+        isNearlyFullRow: true,
       );
 
       container.read(gridStateProvider.notifier).updateCells({(4, 7): cell});
@@ -213,6 +214,7 @@ void main() {
       expect(stored.isRecentlyPlaced, isTrue);
       expect(stored.waveDistance, 3);
       expect(stored.isInteractive, isTrue);
+      expect(stored.isNearlyFullRow, isTrue);
     });
 
     test('stores cells with various CellTypes', () {
@@ -346,6 +348,38 @@ void main() {
         iceLayer: 0,
       );
       expect(a, equals(b));
+    });
+
+    test('not equal when isNearlyFullRow differs', () {
+      const a = CellRenderData(
+        color: null,
+        type: CellType.normal,
+        iceLayer: 0,
+      );
+      const b = CellRenderData(
+        color: null,
+        type: CellType.normal,
+        iceLayer: 0,
+        isNearlyFullRow: true,
+      );
+      expect(a, isNot(equals(b)));
+    });
+
+    test('equal when isNearlyFullRow matches', () {
+      const a = CellRenderData(
+        color: null,
+        type: CellType.normal,
+        iceLayer: 0,
+        isNearlyFullRow: true,
+      );
+      const b = CellRenderData(
+        color: null,
+        type: CellType.normal,
+        iceLayer: 0,
+        isNearlyFullRow: true,
+      );
+      expect(a, equals(b));
+      expect(a.hashCode, b.hashCode);
     });
   });
 }

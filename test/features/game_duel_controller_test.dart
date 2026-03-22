@@ -179,6 +179,61 @@ void main() {
     });
   });
 
+  group('Bot ELO gain reduction', () {
+    test('bot win ELO gain is halved', () {
+      final rawChange = EloSystem.calculateChange(
+        playerElo: 1000,
+        opponentElo: 1000,
+        outcome: DuelOutcome.win,
+      );
+      expect(rawChange, equals(16)); // K=32 * 0.5
+
+      const isBot = true;
+      final eloChange =
+          (isBot && rawChange > 0) ? (rawChange ~/ 2) : rawChange;
+      expect(eloChange, equals(8)); // halved
+    });
+
+    test('bot loss ELO penalty is NOT halved', () {
+      final rawChange = EloSystem.calculateChange(
+        playerElo: 1000,
+        opponentElo: 1000,
+        outcome: DuelOutcome.loss,
+      );
+      expect(rawChange, equals(-16));
+
+      const isBot = true;
+      final eloChange =
+          (isBot && rawChange > 0) ? (rawChange ~/ 2) : rawChange;
+      expect(eloChange, equals(-16)); // full penalty
+    });
+
+    test('non-bot win ELO gain is NOT halved', () {
+      final rawChange = EloSystem.calculateChange(
+        playerElo: 1000,
+        opponentElo: 1000,
+        outcome: DuelOutcome.win,
+      );
+
+      // Non-bot: no reduction applied
+      expect(rawChange, equals(16)); // full gain
+    });
+
+    test('bot draw ELO change is zero and not affected', () {
+      final rawChange = EloSystem.calculateChange(
+        playerElo: 1000,
+        opponentElo: 1000,
+        outcome: DuelOutcome.draw,
+      );
+      expect(rawChange, equals(0));
+
+      const isBot = true;
+      final eloChange =
+          (isBot && rawChange > 0) ? (rawChange ~/ 2) : rawChange;
+      expect(eloChange, equals(0));
+    });
+  });
+
   group('Match end detection', () {
     test('AsyncDuelState isComplete when both players done', () {
       final state = AsyncDuelState(

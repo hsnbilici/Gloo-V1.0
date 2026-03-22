@@ -189,6 +189,18 @@ class GameCellWidget extends ConsumerWidget {
           ),
         ),
       );
+    } else if (data.isNearlyFullRow && data.type != CellType.stone) {
+      // BOS HUCRE — neredeyse dolu satir ipucu
+      cellContent = Container(
+        decoration: BoxDecoration(
+          color: kAmber.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+          border: Border.all(
+            color: kAmber.withValues(alpha: 0.25),
+            width: 1,
+          ),
+        ),
+      );
     } else {
       // BOS HUCRE — hafif derinlik hissi icin RadialGradient
       cellContent = Container(

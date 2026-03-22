@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gloo/core/constants/color_constants.dart';
 import 'package:gloo/core/constants/game_constants.dart';
+import 'package:gloo/core/models/game_mode.dart';
 import 'package:gloo/game/shapes/gel_shape.dart';
 import 'package:gloo/game/world/grid_manager.dart';
 
@@ -307,19 +308,18 @@ void main() {
     });
   });
 
-  // ─── İlk 5 oyun koruması ───────────────────────────────────────────────────
+  // ─── İlk 5 oyun koruması (kademeli ramp) ──────────────────────────────────
 
-  group('New player protection (gamesPlayed < 5)', () {
-    test('first 5 games favor small shapes heavily', () {
+  group('New player protection (graduated ramp)', () {
+    test('games 0-2 favor small shapes heavily (80/15/5)', () {
       final gm = GridManager(rows: 8, cols: 10);
       int smallCount = 0;
       int largeCount = 0;
-      // Deterministik RNG ile 200 el üret
       final sg2 = ShapeGenerator(rng: Random(0));
       for (int i = 0; i < 200; i++) {
         final hand = sg2.generateSmartHand(
           gridManager: gm,
-          difficulty: 0.8, // Yüksek zorluk — koruma bunu override etmeli
+          difficulty: 0.8,
           gamesPlayed: 0,
         );
         for (final (shape, _) in hand) {
@@ -327,11 +327,10 @@ void main() {
           if (shape.cellCount >= 4) largeCount++;
         }
       }
-      // %80 küçük → büyükten çok daha fazla küçük şekil beklenir
       expect(smallCount, greaterThan(largeCount * 5));
     });
 
-    test('after 5 games normal difficulty weights apply at high difficulty', () {
+    test('game 3 has intermediate weights (70/20/10)', () {
       final gm = GridManager(rows: 8, cols: 10);
       int smallCount = 0;
       int largeCount = 0;
@@ -339,19 +338,19 @@ void main() {
       for (int i = 0; i < 200; i++) {
         final hand = sg2.generateSmartHand(
           gridManager: gm,
-          difficulty: 0.9, // Yüksek zorluk → büyük şekiller ağırlıklı
-          gamesPlayed: 5,
+          difficulty: 0.9,
+          gamesPlayed: 3,
         );
         for (final (shape, _) in hand) {
           if (shape.cellCount <= 2) smallCount++;
           if (shape.cellCount >= 4) largeCount++;
         }
       }
-      // gamesPlayed=5 → koruma yok, yüksek zorlukta büyükler öne çıkar
-      expect(largeCount, greaterThan(smallCount));
+      // Still mostly small, but less extreme than 0-2
+      expect(smallCount, greaterThan(largeCount * 3));
     });
 
-    test('gamesPlayed=4 still applies protection', () {
+    test('game 4 has transitional weights (55/30/15)', () {
       final gm = GridManager(rows: 8, cols: 10);
       int smallCount = 0;
       int largeCount = 0;
@@ -367,7 +366,68 @@ void main() {
           if (shape.cellCount >= 4) largeCount++;
         }
       }
-      expect(smallCount, greaterThan(largeCount * 3));
+      // Small still dominant but gap narrower than game 3
+      expect(smallCount, greaterThan(largeCount * 2));
+    });
+
+    test('after 5 games normal difficulty weights apply at high difficulty', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int smallCount = 0;
+      int largeCount = 0;
+      final sg2 = ShapeGenerator(rng: Random(0));
+      for (int i = 0; i < 200; i++) {
+        final hand = sg2.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.9,
+          gamesPlayed: 5,
+        );
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      expect(largeCount, greaterThan(smallCount));
+    });
+
+    test('level mode skips new player protection', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int smallCount = 0;
+      int largeCount = 0;
+      final sg2 = ShapeGenerator(rng: Random(0));
+      for (int i = 0; i < 200; i++) {
+        final hand = sg2.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.9,
+          gamesPlayed: 0,
+          mode: GameMode.level,
+        );
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      // Level mode at high difficulty → large shapes should dominate
+      expect(largeCount, greaterThan(smallCount));
+    });
+
+    test('classic mode still applies protection at gamesPlayed=0', () {
+      final gm = GridManager(rows: 8, cols: 10);
+      int smallCount = 0;
+      int largeCount = 0;
+      final sg2 = ShapeGenerator(rng: Random(0));
+      for (int i = 0; i < 200; i++) {
+        final hand = sg2.generateSmartHand(
+          gridManager: gm,
+          difficulty: 0.9,
+          gamesPlayed: 0,
+          mode: GameMode.classic,
+        );
+        for (final (shape, _) in hand) {
+          if (shape.cellCount <= 2) smallCount++;
+          if (shape.cellCount >= 4) largeCount++;
+        }
+      }
+      expect(smallCount, greaterThan(largeCount * 5));
     });
   });
 

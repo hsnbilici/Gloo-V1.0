@@ -15,22 +15,22 @@ void main() {
       expect(cm.inflatedCost(10), 10);
     });
 
-    test('500 earnings → inflatedCost(10) == 20', () {
+    test('500 earnings → inflatedCost(10) == 15', () {
       final cm = CurrencyManager(lifetimeEarnings: 500);
-      // 1 + 500/500 = 2.0 → 10 * 2.0 = 20
+      // 1 + 500/1000 = 1.5 → 10 * 1.5 = 15
+      expect(cm.inflatedCost(10), 15);
+    });
+
+    test('1000+ earnings → inflatedCost(10) == 20 (max 2x)', () {
+      final cm = CurrencyManager(lifetimeEarnings: 1000);
+      // 1 + 1000/1000 = 2.0 → 10 * 2.0 = 20
       expect(cm.inflatedCost(10), 20);
     });
 
-    test('1000+ earnings → inflatedCost(10) == 30 (max 3x)', () {
-      final cm = CurrencyManager(lifetimeEarnings: 1000);
-      // 1 + 1000/500 = 3.0 → 10 * 3.0 = 30
-      expect(cm.inflatedCost(10), 30);
-    });
-
-    test('250 earnings → inflatedCost(10) == 15 (1.5x)', () {
+    test('250 earnings → inflatedCost(10) == 13 (1.25x)', () {
       final cm = CurrencyManager(lifetimeEarnings: 250);
-      // 1 + 250/500 = 1.5 → 10 * 1.5 = 15
-      expect(cm.inflatedCost(10), 15);
+      // 1 + 250/1000 = 1.25 → 10 * 1.25 = 13 (ceil)
+      expect(cm.inflatedCost(10), 13);
     });
 
     test('lifetimeEarnings increments with _earn calls', () {

@@ -38,6 +38,10 @@ abstract class AppStrings {
   String get gameOverLinesCleared;
   String get gameOverSyntheses;
   String get gameOverMaxCombo;
+  String get gridFillClean;
+  String get gridFillGood;
+  String get gridFillCrowded;
+  String get gridFillFull;
   String get gameOverTipSynthesis;
   String get gameOverTipCombo;
   String get gameOverModeClassic;

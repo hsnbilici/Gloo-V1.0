@@ -85,11 +85,12 @@ void main() {
       expect(find.text('TIME TRIAL'), findsOneWidget);
     });
 
-    testWidgets('shows Grid Fill stat row', (tester) async {
+    testWidgets('shows Grid Fill stat row with contextual label',
+        (tester) async {
       await tester.pumpWidget(buildGameOver(filledCells: 40, totalCells: 80));
       await tester.pump(const Duration(seconds: 2));
       expect(find.text('Grid Fill'), findsOneWidget);
-      expect(find.text('%50'), findsOneWidget);
+      expect(find.text('Well Managed'), findsOneWidget);
     });
 
     testWidgets('shows NEW RECORD badge when isNewHighScore is true',

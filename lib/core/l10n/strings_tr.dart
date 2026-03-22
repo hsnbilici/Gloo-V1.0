@@ -36,6 +36,14 @@ class StringsTr extends AppStrings {
   @override
   String get gameOverMaxCombo => 'Maks Kombo';
   @override
+  String get gridFillClean => 'Temiz Oyun';
+  @override
+  String get gridFillGood => 'İyi Yönetim';
+  @override
+  String get gridFillCrowded => 'Kalabalıklaşıyor';
+  @override
+  String get gridFillFull => 'Çok Dolu';
+  @override
   String get gameOverTipSynthesis =>
       'İpucu: Aynı renkli jelleri yan yana koyarak yeni renkler oluştur!';
   @override

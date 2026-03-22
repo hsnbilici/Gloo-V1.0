@@ -83,6 +83,41 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
         );
       }
     }
+
+    // Nearly-full row detection (75%+ filled, but not 100%)
+    for (int r = 0; r < rows; r++) {
+      int filled = 0;
+      int playable = 0;
+      for (int c = 0; c < cols; c++) {
+        final cell = game.gridManager.getCell(r, c);
+        if (cell.type != CellType.stone) {
+          playable++;
+          if (!cell.isEmpty) filled++;
+        }
+      }
+      if (playable > 0 && filled < playable && filled / playable >= 0.75) {
+        for (int c = 0; c < cols; c++) {
+          final key = (r, c);
+          final existing = cells[key];
+          if (existing != null) {
+            cells[key] = CellRenderData(
+              color: existing.color,
+              type: existing.type,
+              iceLayer: existing.iceLayer,
+              lockedColor: existing.lockedColor,
+              isPreview: existing.isPreview,
+              previewValid: existing.previewValid,
+              previewSlotColor: existing.previewSlotColor,
+              isRecentlyPlaced: existing.isRecentlyPlaced,
+              waveDistance: existing.waveDistance,
+              isInteractive: existing.isInteractive,
+              isNearlyFullRow: true,
+            );
+          }
+        }
+      }
+    }
+
     ref.read(gridStateProvider.notifier).updateCells(cells);
   }
 

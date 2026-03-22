@@ -14,6 +14,7 @@ import '../../game/meta/character_state.dart';
 import '../../game/shapes/gel_shape.dart';
 import '../../game/systems/combo_detector.dart';
 import '../../game/systems/powerup_system.dart';
+import '../../game/world/cell_type.dart';
 import '../../game/world/game_world.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/game_provider.dart';
@@ -505,6 +506,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     game.onIceCracked = null;
     game.onGravityApplied = null;
     game.onColorSynthesis = null;
+    game.onCascadeStep = null;
     game.currencyManager.onBalanceChanged = null;
     duelController?.dispose();
     effectManager.dispose();

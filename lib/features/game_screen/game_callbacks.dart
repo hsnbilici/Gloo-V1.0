@@ -292,6 +292,13 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       });
     };
 
+    game.onCascadeStep = (step, linesCleared) {
+      Future.delayed(Duration(milliseconds: step * 250), () {
+        if (!mounted) return;
+        soundBank.onLineClear(lines: linesCleared);
+      });
+    };
+
     game.onGameOver = () {
       if (!mounted) return;
       final score = game.score;

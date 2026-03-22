@@ -137,17 +137,24 @@ class PowerUpSystem {
 
   // ─── Durum sorgulama ──────────────────────────────────────────────────────
 
+  /// Power-up'ın enflasyonlu maliyeti.
+  int getEffectiveCost(PowerUpType type) {
+    final def = kPowerUpDefs[type]!;
+    return currencyManager.inflatedCost(def.cost);
+  }
+
   /// Power-up kullanılabilir mi?
   bool canUse(PowerUpType type) {
-    final def = kPowerUpDefs[type]!;
+    final effectiveCost = getEffectiveCost(type);
 
     // Bakiye kontrolü
-    if (!currencyManager.canAfford(def.cost)) return false;
+    if (!currencyManager.canAfford(effectiveCost)) return false;
 
     // Cooldown kontrolü
     if ((_cooldowns[type] ?? 0) > 0) return false;
 
     // Kullanım limiti kontrolü
+    final def = kPowerUpDefs[type]!;
     if (def.maxPerGame != null) {
       if ((_usageCounts[type] ?? 0) >= def.maxPerGame!) return false;
     }
@@ -249,7 +256,7 @@ class PowerUpSystem {
   bool _activate(PowerUpType type) {
     if (!canUse(type)) return false;
     final def = kPowerUpDefs[type]!;
-    currencyManager.spend(def.cost);
+    currencyManager.spend(getEffectiveCost(type));
     _cooldowns[type] = def.cooldownMoves;
     _usageCounts[type] = (_usageCounts[type] ?? 0) + 1;
     return true;

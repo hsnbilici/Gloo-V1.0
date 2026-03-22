@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
+import '../../core/models/game_mode.dart';
 import '../world/grid_manager.dart';
 
 /// Tek bir oyun parçasını tanımlar: hücre koordinatları ve görünen ad.
@@ -134,6 +135,7 @@ class ShapeGenerator {
     required double difficulty,
     int gamesPlayed = 0,
     List<GelColor>? availableColors,
+    GameMode? mode,
   }) {
     // Merhamet: 3 ardışık kayıp → zorluk düşürme
     var effectiveDifficulty = difficulty;
@@ -154,7 +156,8 @@ class ShapeGenerator {
         final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       } else {
-        final shape = _weightedRandomShape(effectiveDifficulty, gamesPlayed);
+        final shape =
+            _weightedRandomShape(effectiveDifficulty, gamesPlayed, mode);
         final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
       }
@@ -170,17 +173,23 @@ class ShapeGenerator {
 
   /// Ağırlıklı rastgele şekil seçimi (zorluğa göre).
   /// [betterHandBonus] küçük şekil olasılığına eklenir (büyükten düşülür).
-  /// İlk 5 oyunda [gamesPlayed] < 5 ise yeni oyuncu koruması devreye girer:
-  /// %80 küçük, %15 orta, %5 büyük.
-  GelShape _weightedRandomShape(double difficulty, [int gamesPlayed = 0]) {
+  /// Yeni oyuncu koruması kademeli ramp: 0-2 → 80/15/5, 3 → 70/20/10,
+  /// 4 → 55/30/15, 5+ → normal zorluk. Level modu muaf.
+  GelShape _weightedRandomShape(double difficulty,
+      [int gamesPlayed = 0, GameMode? mode]) {
     final roll = _rng.nextDouble();
 
-    // Yeni oyuncu koruması: ilk 5 oyunda küçük şekil ağırlığını artır
-    if (gamesPlayed < 5) {
+    // Yeni oyuncu koruması — Level modu muaf (kendi zorluk eğrisi var)
+    if (gamesPlayed < 5 && mode != GameMode.level) {
+      final (smallW, mediumW) = switch (gamesPlayed) {
+        < 3 => (0.80, 0.15),
+        3 => (0.70, 0.20),
+        _ => (0.55, 0.30),
+      };
       late final List<GelShape> pool;
-      if (roll < 0.80) {
+      if (roll < smallW) {
         pool = kSmallShapes;
-      } else if (roll < 0.95) {
+      } else if (roll < smallW + mediumW) {
         pool = kMediumShapes;
       } else {
         pool = kLargeShapes;

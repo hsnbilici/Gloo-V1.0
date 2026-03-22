@@ -154,7 +154,7 @@
 ### Oneriler (Oncelik Sirasina Gore)
 
 - [ ] **GD.O1 — Sentez ipucu overlay:** Secili seklin rengiyle sentez potansiyeli olan bitisik bos hucrelere hafif glow (Orta efor)
-- [ ] **GD.O2 — Cascade pacing:** Her cascade adimi arasina 250ms gorsel delay + artan pitch ses (Dusuk efor)
+- [x] **GD.O2 — Cascade pacing:** `onCascadeStep` callback + 250ms delayed SFX (Dusuk efor) ✅ (T21)
 - [x] **GD.O3 — Komboyu hamle bazli yap:** 1500ms pencere → ardisik temizleme = combo (Dusuk efor) ✅
 - [ ] **GD.O4 — Seviye 1-10 mikro gorevler:** Her seviyeye 1 ogretim gorevi ekle (Orta efor)
 - [ ] **GD.O5 — Siradaki 1 sekil silueti her zaman gorunsun:** Peek ile detay ac (Dusuk efor)
@@ -196,7 +196,7 @@
 - [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
 - [ ] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
 - [ ] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
-- [ ] **GD.MO7 — Enflasyon sistemini netlistir:** Ya `inflatedCost`'u baglayip goster ya da kaldir (Dusuk efor)
+- [x] **GD.MO7 — Enflasyon sistemini netlistir:** `inflatedCost` power-up'lara baglandi + formul 1000/2x'e yumusatildi (Dusuk efor) ✅ (T23)
 - [ ] **GD.MO8 — Starter Pack / Gloo+ kanibalizasyonunu coz:** Reklamsizi Starter'dan cikar VEYA Gloo+'a exclusive ekle (Dusuk efor)
 
 ---
@@ -261,7 +261,7 @@
 - [x] **GD.LO7 — Coklu satir temizlemeyi ustel odul yap:** 2→400, 3→1000, 4→2000 (Dusuk efor) ✅
 - [x] **GD.LO8 — Merhamet esigini 3→2 kayba dusur:** Daha erken mudahale (Cok dusuk efor) ✅
 - [ ] **GD.LO9 — Prosedural seviyelere temali kisitlamalar ekle:** Her 5 seviyede farkli kural (Orta efor)
-- [ ] **GD.LO10 — "Neredeyse dolu satir" gorsel geri bildirimi:** %75+ dolulukta highlight (Dusuk efor)
+- [x] **GD.LO10 — "Neredeyse dolu satir" gorsel geri bildirimi:** `isNearlyFullRow` + amber highlight (Dusuk efor) ✅ (T20)
 
 ---
 
@@ -301,7 +301,7 @@
 - [ ] **GD.PO5 — Skor broadcast'ini event-driven yap:** Her puan degisiminde 500ms debounce (Dusuk efor)
 - [ ] **GD.PO6 — PvP ELO Leaderboard ekle:** LeaderboardScreen'e 3. tab (Dusuk efor)
 - [x] **GD.PO7 — Epic kombo engelini 9→4-5 buza dusur:** Kombo duzeltmesiyle birlikte (Dusuk efor) ✅
-- [ ] **GD.PO8 — Bot ELO kazanimini sinirla:** %50 azaltma veya gunluk limit (Dusuk efor)
+- [x] **GD.PO8 — Bot ELO kazanimini sinirla:** Bot win ELO %50 azaltma, kayip tam (Dusuk efor) ✅ (T22)
 - [ ] **GD.PO9 — K-Factor'u ELO segmentine gore dinamik yap:** Dusuk ELO K=40, yuksek K=24 (Dusuk efor)
 - [ ] **GD.PO10 — Rematch secenegi ekle:** Ayni rakiple tekrar oynama (Orta efor)
 
@@ -441,17 +441,52 @@
 
 ### T12 — Yeni Oyuncu Zorlugu
 
-- [ ] **GD.BL2 — Level modunu yeni oyuncu korumasindan muaf tut:** Level 1 zaten 6x6 grid ile kendi egrisine sahip (XS efor)
+- [x] **GD.BL2 — Level modunu yeni oyuncu korumasindan muaf tut:** Level 1 zaten 6x6 grid ile kendi egrisine sahip (XS efor) ✅ (T18)
 - [ ] **GD.BL3 — ColorChef'e ayri agirlik tablosu:** Kucuk yerine orta sekilleri tercih et (%50 orta / %35 kucuk / %15 buyuk) — sentez firsatini korumak icin (S efor)
-- [ ] **GD.BL4 — Zorluk gecisini kademeli yap:** Oyun 3: %70/%20/%10, Oyun 4: %55/%30/%15, Oyun 5+: normal — keskin gecis yerine ramp (S efor)
+- [x] **GD.BL4 — Zorluk gecisini kademeli yap:** Oyun 3: %70/%20/%10, Oyun 4: %55/%30/%15, Oyun 5+: normal — keskin gecis yerine ramp (S efor) ✅ (T19)
 
 ### T13 — Game Over Ozeti
 
 - [ ] **GD.BL5 — Ipucu gosterim sayisini persist et:** 2 gosterim sonrasi rotasyona gir, ayni ipucu tekrarlamasin (S efor)
-- [ ] **GD.BL6 — Grid doluluk metrigini gozden gecir:** Ham yuzde yerine baglamli yorum ("Daha temiz oynayabilirdin") veya kaldir (XS efor)
+- [x] **GD.BL6 — Grid doluluk metrigini gozden gecir:** Ham yuzde yerine baglamli yorum — 4 kademe (Clean Board / Well Managed / Getting Crowded / Very Full) ✅ (T24)
 - [ ] **GD.BL7 — Kisisel rekor karsilastirmasi:** "Bu sefer 5 satir — rekorun 12!" formati (S efor)
 
 ### T14 — Beat Your Score Karti
 
 - [ ] **GD.BL8 — "So close" vurgu state:** lastScore >= bestScore * 0.8 ise kucuk vurgu efekti + "Beat it?" metni (S efor)
 - [ ] **GD.BL9 — Per-mode progress metadata chip:** Level (ilerleme), Duel (ELO delta) icin ayri bilgi kartlari (M efor)
+
+---
+
+## Game Designer Review Backlog — Sprint 4 (2026-03-22)
+
+> Sprint 4 task'larinin game-designer review'indan cikan ek oneriler.
+
+### T18+T19 — Yeni Oyuncu Korumasi
+
+- [ ] **GD.BL10 — Daily ve Duel modlarini yeni oyuncu korumasindan muaf tut:** Seeded modlarda koruma seed'i bozabilir. Kara liste yerine beyaz liste kullan (sadece classic, colorChef, timeTrial, zen'de aktif) (XS efor)
+
+### T20 — Neredeyse Dolu Satir
+
+- [ ] **GD.BL11 — Nearly-full esigini mutlak sayiya cevir:** %75 yerine "playable - filled <= 2" — farkli grid boyutlarinda tutarli (XS efor)
+
+### T21 — Cascade Pacing
+
+- [ ] **GD.BL12 — Cascade SFX icin artan pitch ekle:** `playSfx`'e opsiyonel `speed` parametresi, step basina +0.08 pitch (1.0 → max 1.3) (S efor)
+- [ ] **GD.BL13 — Cascade delay'i 250ms → 180ms'ye dusur:** Bulmaca oyunu ritmine daha uygun (XS efor)
+- [ ] **GD.BL14 — Reduce Motion acikken cascade delay'i 0'a dusur:** `shouldReduceMotion` guard ekle (XS efor)
+
+### T22 — Bot ELO
+
+- [ ] **GD.BL15 — Bot mac sikligi analytics event'i ekle:** `daily_bot_matches_count` metrigi. 4 hafta veri sonrasi diminishing returns karari (Dusuk efor)
+
+### T23 — Enflasyon
+
+- [x] **GD.BL16 — inflatedCost formulunu yumusat:** 500/3x → 1000/2x. Rainbow max 20 (30 yerine) ✅ (hemen uygulandı)
+- [ ] **GD.BL17 — Power-up toolbar'da enflasyon gorsel ipucu:** Ustu cizgili baz maliyet veya ilk enflasyonda tek seferlik tooltip (Orta efor)
+- [ ] **GD.BL18 — Gloo+ icin enflasyon cap'ini 1.5x'e sinirla:** Premium deger hissi, tam muafiyet degil (Dusuk efor)
+
+### T24 — Grid Doluluk Metrigi
+
+- [ ] **GD.BL19 — "Clean Board" → "Room to Grow" etiket degisikligi:** Dusuk doluluk + dusuk skor kombinasyonunda negatif algi riski (XS efor)
+- [ ] **GD.BL20 — Alt esigi %30 → %20'ye cek:** Gercek "temiz" oyunu dogru yakalamak icin (XS efor)

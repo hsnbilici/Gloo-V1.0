@@ -99,6 +99,7 @@ class GlooGame {
   void Function(List<(int, int, int, int)> moves)? onGravityApplied;
   void Function(int amount)? onJelEnergyEarned;
   void Function(GelColor resultColor, (int, int) position)? onColorSynthesis;
+  void Function(int step, int linesCleared)? onCascadeStep;
 
   int get score => _scoreSystem.score;
   int get highScore => _scoreSystem.highScore;
@@ -282,6 +283,7 @@ class GlooGame {
       difficulty: difficulty,
       gamesPlayed: _totalGamesPlayed,
       availableColors: levelData?.availableColors,
+      mode: mode,
     );
   }
 
@@ -439,6 +441,7 @@ class GlooGame {
 
       iterations++;
       _processLineClear(cascadeClear, isCascade: true);
+      onCascadeStep?.call(iterations, cascadeClear.totalLines);
     }
   }
 

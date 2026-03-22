@@ -36,6 +36,14 @@ class StringsAr extends AppStrings {
   @override
   String get gameOverMaxCombo => 'Max Combo';
   @override
+  String get gridFillClean => 'Clean Board';
+  @override
+  String get gridFillGood => 'Well Managed';
+  @override
+  String get gridFillCrowded => 'Getting Crowded';
+  @override
+  String get gridFillFull => 'Very Full';
+  @override
   String get gameOverTipSynthesis =>
       'Tip: Place same-colored gels adjacent to create new colors!';
   @override

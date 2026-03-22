@@ -183,11 +183,14 @@ class GameDuelController {
       outcome = DuelOutcome.draw;
     }
 
-    final eloChange = EloSystem.calculateChange(
+    final rawEloChange = EloSystem.calculateChange(
       playerElo: playerElo,
       opponentElo: opponentElo,
       outcome: outcome,
     );
+    // Bot maçlarından ELO kazanımını %50 azalt (inflasyon önlemi)
+    final eloChange =
+        (isBot && rawEloChange > 0) ? (rawEloChange ~/ 2) : rawEloChange;
     final gelReward = EloSystem.calculateGelReward(outcome);
     final newElo = (playerElo + eloChange).clamp(0, 9999);
 

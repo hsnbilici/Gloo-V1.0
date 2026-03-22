@@ -227,6 +227,48 @@ void main() {
       );
     });
 
+    // ── onCascadeStep callback ────────────────────────────────────────────
+
+    test('onCascadeStep fires with correct step number during cascade', () {
+      final game = _buildCascadeGame();
+
+      final steps = <(int, int)>[];
+      game.onCascadeStep = (step, linesCleared) {
+        steps.add((step, linesCleared));
+      };
+
+      game.placePiece([(3, 3)], GelColor.blue);
+
+      expect(steps, hasLength(1),
+          reason: 'One cascade iteration produces one onCascadeStep call');
+      expect(steps.first.$1, 1, reason: 'First cascade step is 1');
+      expect(steps.first.$2, 1,
+          reason: 'Cascade cleared exactly 1 line');
+    });
+
+    test('onCascadeStep does not fire when no cascade occurs', () {
+      const level =
+          LevelData(id: 998, rows: 5, cols: 4, targetScore: 999999);
+      final game = GlooGame(mode: GameMode.level, levelData: level);
+      game.startGame();
+
+      final gm = game.gridManager;
+      gm.setCell(3, 0, GelColor.red);
+      gm.setCell(3, 1, GelColor.red);
+      gm.setCell(3, 2, GelColor.red);
+
+      final steps = <(int, int)>[];
+      game.onCascadeStep = (step, linesCleared) {
+        steps.add((step, linesCleared));
+      };
+
+      game.placePiece([(3, 3)], GelColor.red);
+
+      expect(steps, isEmpty,
+          reason: 'No gravity cells means no cascade — onCascadeStep '
+              'should not fire');
+    });
+
     // ── Safety cap ────────────────────────────────────────────────────────
 
     test('loop completes without hanging (safety cap ≤ 20 iterations)', () {

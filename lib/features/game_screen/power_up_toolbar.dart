@@ -169,7 +169,7 @@ class _PowerUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canUse = powerUpSystem.canUse(type);
-    final def = kPowerUpDefs[type]!;
+    final effectiveCost = powerUpSystem.getEffectiveCost(type);
     final cooldown = powerUpSystem.getCooldown(type);
     final colors = kPowerUpColors[type]!;
     final primary = colors.$1;
@@ -286,7 +286,7 @@ class _PowerUpButton extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    '${def.cost}',
+                    '$effectiveCost',
                     style: TextStyle(
                       color: canUse ? primary : kMuted.withValues(alpha: 0.5),
                       fontSize: 9,
