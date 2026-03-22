@@ -16,6 +16,8 @@ import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
 import '../../game/economy/currency_manager.dart';
 import '../../game/levels/level_progression.dart';
+import '../../audio/audio_manager.dart';
+import '../../core/constants/audio_constants.dart';
 import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
@@ -59,6 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
       await _continueStartupFlow(repo);
     });
+    AudioManager().playMusic(AudioPaths.bgMenuLofi);
   }
 
   Future<void> _continueStartupFlow(LocalRepository repo) async {

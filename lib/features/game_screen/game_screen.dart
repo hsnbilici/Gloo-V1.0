@@ -26,7 +26,9 @@ import '../../providers/locale_provider.dart';
 import '../../providers/quest_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import '../../audio/audio_manager.dart';
 import '../../audio/sound_bank.dart';
+import '../../core/constants/audio_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../viral/clip_recorder.dart';
 import '../../viral/share_manager.dart';
@@ -245,6 +247,14 @@ class _GameScreenState extends ConsumerState<GameScreen>
         }
       });
     }
+
+    // Mod bazlı müzik
+    final musicPath = switch (widget.mode) {
+      GameMode.zen => AudioPaths.bgZenMode,
+      GameMode.timeTrial || GameMode.duel => AudioPaths.bgGameTension,
+      _ => AudioPaths.bgGameRelax,
+    };
+    AudioManager().playMusic(musicPath);
   }
 
   @override
@@ -526,6 +536,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     duelController?.dispose();
     effectManager.dispose();
     clipRecorder.dispose();
+    AudioManager().playMusic(AudioPaths.bgMenuLofi);
     super.dispose();
   }
 }

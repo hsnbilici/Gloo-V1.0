@@ -353,6 +353,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     game.onGameOver = () {
       if (!mounted) return;
       soundBank.onGameOver();
+      AudioManager().pauseMusic();
       final score = game.score;
       // Quest tracking: play games + reach score
       _trackQuest(QuestType.playGames);
