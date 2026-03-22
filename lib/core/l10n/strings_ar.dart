@@ -417,6 +417,8 @@ class StringsAr extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'الدمج يغيّر ألوان الصف — خطّط لصفوفك!';
+  @override
+  String get tipEpicApproach => 'على وشك — واصل السلسلة للكومبو الملحمي!';
 
   @override
   String get collectionComplete => 'تم جمع جميع الألوان! +50 جل كمكافأة!';

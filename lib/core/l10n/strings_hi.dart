@@ -413,6 +413,8 @@ class StringsHi extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'मिलाने से पंक्ति के रंग बदल जाते हैं — अपनी लाइनें योजना बनाओ!';
+  @override
+  String get tipEpicApproach => 'लगभग हो गया — Epic के लिए चेन बनाए रखो!';
 
   @override
   String get collectionComplete => 'सभी रंग एकत्र किए! +50 जेल पुरस्कार मिला!';

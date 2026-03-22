@@ -414,6 +414,8 @@ class StringsPt extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'Misturar muda as cores de uma linha — planeje suas linhas!';
+  @override
+  String get tipEpicApproach => 'Quase lá — mantenha a corrente para o Epic!';
 
   @override
   String get collectionComplete =>

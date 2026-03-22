@@ -406,6 +406,8 @@ class StringsZh extends AppStrings {
   String get toastSynthesis => '颜色合成！';
   @override
   String get tipSynthesisTradeoff => '混合会改变一行中的颜色——规划好你的行！';
+  @override
+  String get tipEpicApproach => '就差一点——保持连击冲击Epic！';
 
   @override
   String get collectionComplete => '所有颜色已收集！+50 凝胶奖励已领取！';

@@ -409,6 +409,8 @@ class StringsJa extends AppStrings {
   String get toastSynthesis => 'カラー合成！';
   @override
   String get tipSynthesisTradeoff => '混合すると列の色が変わります — ラインを計画しよう！';
+  @override
+  String get tipEpicApproach => 'もう少し — チェーンを続けてEpicを目指そう！';
 
   @override
   String get collectionComplete => '全色コンプリート！+50 ジェル報酬獲得！';

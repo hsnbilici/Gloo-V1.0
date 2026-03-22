@@ -410,6 +410,8 @@ class StringsKo extends AppStrings {
   String get toastSynthesis => '색상 합성!';
   @override
   String get tipSynthesisTradeoff => '혼합하면 행의 색이 바뀝니다 — 라인을 계획하세요!';
+  @override
+  String get tipEpicApproach => '거의 다 왔어요 — Epic을 위해 체인을 이어가세요!';
 
   @override
   String get collectionComplete => '모든 색상 수집 완료! +50 젤 보상 획득!';

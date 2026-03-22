@@ -174,6 +174,18 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         );
       }
 
+      // Epic yaklaşım motivasyon toast'ı — large tier + 6+ kombo, 3 kez sınırlı
+      if (combo.tier == ComboTier.large && combo.size >= 6) {
+        final repo = _cachedRepo;
+        if (repo != null) {
+          final tipShown = repo.getTipShownCount('epic_approach');
+          if (tipShown < 3) {
+            repo.incrementTipShown('epic_approach');
+            showToast(ref.read(stringsProvider).tipEpicApproach);
+          }
+        }
+      }
+
       if (mounted) {
         // A11y: announce combo tier to screen readers (medium+ only)
         if (combo.tier.index >= ComboTier.medium.index) {

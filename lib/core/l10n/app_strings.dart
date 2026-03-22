@@ -266,6 +266,7 @@ abstract class AppStrings {
   String get toastFrozen;
   String get toastSynthesis;
   String get tipSynthesisTradeoff;
+  String get tipEpicApproach;
 
   // Koleksiyon tamamlama
   String get collectionComplete;

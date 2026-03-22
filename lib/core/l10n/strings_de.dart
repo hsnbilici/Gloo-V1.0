@@ -417,6 +417,8 @@ class StringsDe extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'Mischen ändert Farben in einer Reihe — plane deine Linien!';
+  @override
+  String get tipEpicApproach => 'Fast geschafft — halt die Kette für Epic!';
 
   @override
   String get collectionComplete =>

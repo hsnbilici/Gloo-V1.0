@@ -418,6 +418,8 @@ class StringsRu extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'Смешивание меняет цвета в ряду — планируй свои линии!';
+  @override
+  String get tipEpicApproach => 'Почти! — удержи цепочку для Epic!';
 
   @override
   String get collectionComplete =>

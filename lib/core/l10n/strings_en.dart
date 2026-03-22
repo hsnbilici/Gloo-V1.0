@@ -409,6 +409,8 @@ class StringsEn extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'Mixing changes colors in a row — plan your lines!';
+  @override
+  String get tipEpicApproach => 'Almost there — keep the chain for Epic!';
 
   @override
   String get collectionComplete =>

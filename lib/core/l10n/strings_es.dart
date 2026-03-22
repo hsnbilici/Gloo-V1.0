@@ -419,6 +419,8 @@ class StringsEs extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       '¡Mezclar cambia los colores de una fila — planifica tus líneas!';
+  @override
+  String get tipEpicApproach => '¡Casi ahí — mantén la cadena para Epic!';
 
   @override
   String get collectionComplete =>

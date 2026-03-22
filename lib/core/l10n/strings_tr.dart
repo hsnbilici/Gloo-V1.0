@@ -412,6 +412,8 @@ class StringsTr extends AppStrings {
   @override
   String get tipSynthesisTradeoff =>
       'Sentez satırdaki renkleri değiştirir — satırlarını planla!';
+  @override
+  String get tipEpicApproach => 'Neredeyse — zinciri sürdür, Epic kombo!';
 
   @override
   String get collectionComplete =>
