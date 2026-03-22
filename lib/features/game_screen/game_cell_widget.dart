@@ -248,6 +248,19 @@ class GameCellWidget extends ConsumerWidget {
             children: [
               cellContent,
               if (typeOverlay != null) Positioned.fill(child: typeOverlay),
+              if (data.isCompletionPreview)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(UIConstants.radiusXs),
+                      border: Border.all(
+                        color: kGreen.withValues(alpha: 0.55),
+                        width: 1.5,
+                      ),
+                      color: kGreen.withValues(alpha: 0.10),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

@@ -84,6 +84,44 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
       }
     }
 
+    // Preview-time line completion hint: highlight rows that would be
+    // completed if the current preview piece is placed.
+    if (previewCells.isNotEmpty && previewValid) {
+      for (int r = 0; r < rows; r++) {
+        bool rowComplete = true;
+        for (int c = 0; c < cols; c++) {
+          final gridCell = game.gridManager.getCell(r, c);
+          if (gridCell.type == CellType.stone) continue;
+          final filled = !gridCell.isEmpty || previewCells.contains((r, c));
+          if (!filled) {
+            rowComplete = false;
+            break;
+          }
+        }
+        if (rowComplete) {
+          for (int c = 0; c < cols; c++) {
+            final key = (r, c);
+            final existing = cells[key];
+            if (existing != null) {
+              cells[key] = CellRenderData(
+                color: existing.color,
+                type: existing.type,
+                iceLayer: existing.iceLayer,
+                lockedColor: existing.lockedColor,
+                isPreview: existing.isPreview,
+                previewValid: existing.previewValid,
+                previewSlotColor: existing.previewSlotColor,
+                isRecentlyPlaced: existing.isRecentlyPlaced,
+                waveDistance: existing.waveDistance,
+                isInteractive: existing.isInteractive,
+                isCompletionPreview: true,
+              );
+            }
+          }
+        }
+      }
+    }
+
     // Nearly-full row detection: ≤2 empty playable cells (not fully filled)
     for (int r = 0; r < rows; r++) {
       int filled = 0;
@@ -336,10 +374,9 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               onDragEnd: (index, wasAccepted) {
                 if (!wasAccepted) onDragCancelled(index);
               },
-              nextShapeSilhouette:
-                  game.powerUpSystem.peekedShapes == null
-                      ? game.nextShapeSilhouette
-                      : null,
+              nextShapeSilhouette: game.powerUpSystem.peekedShapes == null
+                  ? game.nextShapeSilhouette
+                  : null,
             ),
             const SizedBox(height: 16),
           ],

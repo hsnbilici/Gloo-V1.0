@@ -597,4 +597,10 @@ class StringsHi extends AppStrings {
 
   @override
   String get duelRematch => '\u092b\u093f\u0930 \u0938\u0947 \u0916\u0947\u0932\u0947\u0902';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'दैनिक क्वेस्ट';
+  @override
+  String get questsCompleted => 'पूर्ण';
 }

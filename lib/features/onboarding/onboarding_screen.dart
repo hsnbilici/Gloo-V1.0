@@ -198,6 +198,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           itemBuilder: (context, i) {
                             if (i < 3) {
                               return _StepPage(
+                                stepIndex: i,
                                 step: _StepData(
                                   icon: _kStepMeta[i].icon,
                                   color: _kStepMeta[i].color,
@@ -568,9 +569,10 @@ class _PrefToggle extends StatelessWidget {
 // ─── Tek adım sayfası ─────────────────────────────────────────────────────────
 
 class _StepPage extends StatelessWidget {
-  const _StepPage({required this.step});
+  const _StepPage({required this.step, required this.stepIndex});
 
   final _StepData step;
+  final int stepIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -581,37 +583,22 @@ class _StepPage extends StatelessWidget {
     final textSecondary = resolveColor(brightness,
         dark: Colors.white.withValues(alpha: 0.60), light: kTextSecondaryLight);
     final rm = shouldReduceMotion(context);
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: hPadding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Büyük ikon dairesi
-          Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: step.color.withValues(alpha: 0.10),
-              border: Border.all(
-                color: step.color.withValues(alpha: 0.35),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: step.color.withValues(alpha: 0.22),
-                  blurRadius: 40,
-                  spreadRadius: 4,
-                ),
-              ],
-            ),
-            child: Icon(step.icon, color: step.color, size: 44),
-          ).animateOrSkip(reduceMotion: rm).fadeIn(duration: 320.ms).scale(
-                begin: const Offset(0.6, 0.6),
-                duration: 380.ms,
+          const SizedBox(height: 24),
+          // Mini animated demo
+          _MiniGridDemo(stepIndex: stepIndex, color: step.color)
+              .animateOrSkip(reduceMotion: rm)
+              .fadeIn(duration: 400.ms)
+              .scale(
+                begin: const Offset(0.85, 0.85),
+                duration: 400.ms,
                 curve: Curves.easeOutBack,
               ),
-          const SizedBox(height: 36),
+          const SizedBox(height: 28),
           // Başlık
           Text(
             step.title,
@@ -656,8 +643,184 @@ class _StepPage extends StatelessWidget {
                   end: 0,
                   duration: 300.ms,
                   curve: Curves.easeOutCubic),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
+}
+
+// ─── Mini grid demo for onboarding steps ─────────────────────────────────────
+
+class _MiniGridDemo extends StatefulWidget {
+  const _MiniGridDemo({required this.stepIndex, required this.color});
+
+  final int stepIndex;
+  final Color color;
+
+  @override
+  State<_MiniGridDemo> createState() => _MiniGridDemoState();
+}
+
+class _MiniGridDemoState extends State<_MiniGridDemo>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  static const _rows = 4;
+  static const _cols = 4;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  // Step 0: cells appear one by one filling a row
+  // Step 1: two rows flash in sequence (combo)
+  // Step 2: two primary colors merge into a new color
+  List<List<_DemoCell>> _buildGrid() {
+    final grid = List.generate(
+      _rows,
+      (_) => List.generate(_cols, (_) => const _DemoCell(null, false)),
+    );
+
+    switch (widget.stepIndex) {
+      case 0:
+        // Bottom row fills progressively
+        final progress = _ctrl.value;
+        final filledCount = (progress * (_cols + 1)).floor().clamp(0, _cols);
+        for (int c = 0; c < filledCount; c++) {
+          grid[_rows - 1][c] = _DemoCell(widget.color, false);
+        }
+        // Show row clear flash when full
+        if (filledCount >= _cols) {
+          for (int c = 0; c < _cols; c++) {
+            grid[_rows - 1][c] = _DemoCell(widget.color, true);
+          }
+        }
+        // Some cells in other rows for context
+        grid[1][0] = _DemoCell(kColorChef.withValues(alpha: 0.5), false);
+        grid[2][1] = _DemoCell(kColorTimeTrial.withValues(alpha: 0.5), false);
+        grid[2][3] = _DemoCell(kColorZen.withValues(alpha: 0.5), false);
+      case 1:
+        // Two rows showing combo flash in sequence
+        final progress = _ctrl.value;
+        final phase1 = (progress * 2).clamp(0.0, 1.0);
+        final phase2 = ((progress - 0.5) * 2).clamp(0.0, 1.0);
+        for (int c = 0; c < _cols; c++) {
+          grid[_rows - 1][c] = _DemoCell(
+            widget.color.withValues(alpha: phase1),
+            phase1 > 0.8,
+          );
+          grid[_rows - 2][c] = _DemoCell(
+            widget.color.withValues(alpha: phase2),
+            phase2 > 0.8,
+          );
+        }
+        // Static cells above
+        grid[0][1] = _DemoCell(kColorClassic.withValues(alpha: 0.4), false);
+        grid[1][0] = _DemoCell(kColorChef.withValues(alpha: 0.4), false);
+        grid[1][2] = _DemoCell(kColorZen.withValues(alpha: 0.4), false);
+      case 2:
+        // Color synthesis: red + yellow → orange
+        final progress = _ctrl.value;
+        const red = Color(0xFFEF5350);
+        const yellow = Color(0xFFFFEB3B);
+        const orange = Color(0xFFFF9800);
+        if (progress < 0.4) {
+          // Show two primaries adjacent
+          grid[1][1] = const _DemoCell(red, false);
+          grid[1][2] = const _DemoCell(yellow, false);
+        } else if (progress < 0.7) {
+          // Merging — both glow
+          grid[1][1] = const _DemoCell(red, true);
+          grid[1][2] = const _DemoCell(yellow, true);
+        } else {
+          // Result — orange
+          grid[1][1] = const _DemoCell(orange, false);
+          grid[1][2] = const _DemoCell(orange, false);
+        }
+        // Context cells
+        grid[2][0] = _DemoCell(kColorClassic.withValues(alpha: 0.3), false);
+        grid[3][3] = _DemoCell(kColorTimeTrial.withValues(alpha: 0.3), false);
+    }
+    return grid;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, _) {
+        final grid = _buildGrid();
+        return Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(
+              color: widget.color.withValues(alpha: 0.20),
+            ),
+          ),
+          child: SizedBox(
+            width: 140,
+            height: 140,
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _cols,
+                crossAxisSpacing: 3,
+                mainAxisSpacing: 3,
+              ),
+              itemCount: _rows * _cols,
+              itemBuilder: (context, index) {
+                final r = index ~/ _cols;
+                final c = index % _cols;
+                final cell = grid[r][c];
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  decoration: BoxDecoration(
+                    color: cell.color ?? Colors.white.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(4),
+                    border: cell.isGlowing
+                        ? Border.all(
+                            color: Colors.white.withValues(alpha: 0.6),
+                            width: 1.5,
+                          )
+                        : Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                            width: 0.5,
+                          ),
+                    boxShadow: cell.isGlowing
+                        ? [
+                            BoxShadow(
+                              color: (cell.color ?? Colors.white)
+                                  .withValues(alpha: 0.5),
+                              blurRadius: 8,
+                            ),
+                          ]
+                        : null,
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DemoCell {
+  const _DemoCell(this.color, this.isGlowing);
+  final Color? color;
+  final bool isGlowing;
 }

@@ -594,4 +594,10 @@ class StringsKo extends AppStrings {
 
   @override
   String get duelRematch => '\uc7ac\uacbd\uae30';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => '일일 퀘스트';
+  @override
+  String get questsCompleted => '완료';
 }

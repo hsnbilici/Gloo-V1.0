@@ -19,21 +19,21 @@ void main() {
   group('OnboardingScreen', () {
     testWidgets('shows GLOO logo text', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('GLOO'), findsOneWidget);
     });
 
     testWidgets('shows skip button', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('Skip'), findsOneWidget);
     });
 
     testWidgets('shows first step title and description', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('Place Gels'), findsOneWidget);
       expect(
@@ -47,7 +47,7 @@ void main() {
 
     testWidgets('shows next button on first page (not start)', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       expect(find.text('Next'), findsOneWidget);
       expect(find.text('Play!'), findsNothing);
@@ -55,7 +55,7 @@ void main() {
 
     testWidgets('shows 4 page dots', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       // 4 dot indicators: 1 active (width 22) + 3 inactive (width 6)
       // AnimatedContainer widgets as dot indicators
@@ -65,17 +65,17 @@ void main() {
       expect(dots, findsWidgets);
     });
 
-    testWidgets('shows step icons', (tester) async {
+    testWidgets('shows mini grid demo on first step', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
-      // First step icon: grid_4x4_rounded
-      expect(find.byIcon(Icons.grid_4x4_rounded), findsOneWidget);
+      // First step has a GridView for the mini demo
+      expect(find.byType(GridView), findsOneWidget);
     });
 
     testWidgets('skip button has Semantics with button role', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       final semantics = find.bySemanticsLabel('Skip');
       expect(semantics, findsOneWidget);
@@ -83,7 +83,7 @@ void main() {
 
     testWidgets('next button has Semantics with button role', (tester) async {
       await tester.pumpWidget(buildApp());
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
 
       final semantics = find.bySemanticsLabel('Next');
       expect(semantics, findsOneWidget);

@@ -600,4 +600,10 @@ class StringsFr extends AppStrings {
 
   @override
   String get duelRematch => 'Revanche';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'Quetes quotidiennes';
+  @override
+  String get questsCompleted => 'Termine';
 }

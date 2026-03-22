@@ -599,4 +599,10 @@ class StringsPt extends AppStrings {
 
   @override
   String get duelRematch => 'Revanche';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'Missoes diarias';
+  @override
+  String get questsCompleted => 'Concluido';
 }

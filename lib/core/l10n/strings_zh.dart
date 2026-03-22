@@ -590,4 +590,10 @@ class StringsZh extends AppStrings {
 
   @override
   String get duelRematch => '\u518d\u6765\u4e00\u5c40';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => '每日任务';
+  @override
+  String get questsCompleted => '已完成';
 }

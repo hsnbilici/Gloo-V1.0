@@ -1,9 +1,18 @@
 # Gloo v1.0 — Yol Haritasi
 
-> Son guncelleme: 2026-03-21
-> **Durum:** 129/133 gorev tamamlandi | 7 Expert Audit + 1 UI/UX Audit yapildi
-> flutter analyze: 0 error | flutter test: 2086 (golden haric)
+> Son guncelleme: 2026-03-22
+> **Durum:** 132/136 gorev tamamlandi | 7 Expert Audit + 1 UI/UX Audit yapildi
+> flutter analyze: 0 error | flutter test: 2127 (golden haric)
 > **Proje skoru:** 98 / 100 (expert audit sonrasi)
+
+---
+
+## Game Design Sprint (2026-03-22)
+
+- [x] **GD.MO4+RO9+MGO4 — Gorev sistemi UI entegrasyonu:** Quest provider, HomeScreen quest bar, game callback wiring, reward distribution
+- [x] **GD.RO1 — Onboarding interaktif:** Mini animated grid demo her adimda (cell placement, combo, color synthesis)
+- [x] **GD.BL30 — Preview-time line completion hint:** Satir tamamlama ipucu yesil border overlay
+- [ ] **GD.MGO7 — Ada binalari gating:** BLOCKED — Ada sistemi mevcut ama MetaGameBar HomeScreen'den cikarilmis, core loop'a entegre degil
 
 ---
 
@@ -193,7 +202,7 @@
 - [x] **GD.MO1 — [BUG] `applyGlooPlusBonus` cagrisini ekle:** `_clearAndScore()` veya game-end callback'inde (Dusuk efor, HEMEN) ✅
 - [x] **GD.MO2 — Rewarded reklam → power-up UI bagla:** Game Over'da "reklam izle = ucretsiz Bomb" butonu (Dusuk efor)
 - [x] **GD.MO3 — Level tamamlama odulleri:** `levelId * 2` Jel Ozu, Gloo+ bonus otomatik (Dusuk efor) ✅ (T32)
-- [ ] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
+- [x] **GD.MO4 — Gorev sistemini UI'a bagla:** `kDailyQuestPool`'dan gunluk 3 gorev, HomeScreen'e kart (Orta efor)
 - [x] **GD.MO5 — Jel Ozu consumable IAP ekle:** 100 = $0.99, 500 = $3.99 (Dusuk efor)
 - [x] **GD.MO6 — Gloo+ deger teklifini guclendir:** %50 bonus aktif et, 2x gorev odulu, ozel gorevler (Dusuk-Orta efor)
 - [x] **GD.MO7 — Enflasyon sistemini netlistir:** `inflatedCost` power-up'lara baglandi + formul 1000/2x'e yumusatildi (Dusuk efor) ✅ (T23)
@@ -360,7 +369,7 @@
 ### Oneriler (Oncelik Sirasina Gore)
 
 **P0 — Hemen:**
-- [ ] **GD.RO1 — Onboarding'i interaktif yap:** Her sayfaya animasyonlu mini-demo ekle (Orta efor)
+- [x] **GD.RO1 — Onboarding'i interaktif yap:** Her sayfaya animasyonlu mini-demo ekle (Orta efor)
 - [ ] **GD.RO2 — "Guided First Game" tasarla:** Ilk oyunda kasitli renkler + sentez toast'i (Buyuk efor)
 - [x] **GD.RO3 — Dialog zincirini birlestir:** 3 popup → 1 combined dialog (Kucuk efor) ✅
 - [x] **GD.RO4 — MetaGameBar'i gizle veya "Coming Soon" yap:** Hayalet sistemleri sakla (Kucuk efor) ✅
@@ -370,7 +379,7 @@
 - [ ] **GD.RO6 — Push notification altyapisi kur:** firebase_messaging + D1/D2/D3 senaryolari (Orta efor)
 - [x] **GD.RO7 — Progressive mod acilimi:** Classic → 3 oyun sonra Color Chef → 5 sonra Time Trial (Orta efor)
 - [x] **GD.RO8 — Game Over'da ozet ekle:** "4 satir, 1 sentez, %87 dolu" + ipucu (Kucuk efor) ✅
-- [ ] **GD.RO9 — Gunluk gorev sistemini UI'a bagla:** HomeScreen'de mini progress (Orta efor)
+- [x] **GD.RO9 — Gunluk gorev sistemini UI'a bagla:** HomeScreen'de mini progress (Orta efor)
 - [x] **GD.RO10 — "Beat your score" karti Home'a ekle:** "Son skor: 450 | Rekor: 1200" (Kucuk efor) ✅
 
 **P2 — Gelecek Sprint:**
@@ -419,7 +428,7 @@
 - [x] **GD.MGO3 — MetaGameBar'i kosullu goster:** Calismayan sistemleri gizle veya "Coming Soon" (XS efor) ✅
 
 **Bu Sprint (S-M):**
-- [ ] **GD.MGO4 — Gorev sistemi entegrasyonu:** GlooGame callback + HomeScreen widget + odul dagitim (M efor)
+- [x] **GD.MGO4 — Gorev sistemi entegrasyonu:** GlooGame callback + HomeScreen widget + odul dagitim (M efor)
 - [x] **GD.MGO5 — Season Pass XP kaynagi:** Game Over'da score/100 XP (S efor) ✅ (T33)
 - [x] **GD.MGO6 — Level tamamlama odulleri:** levelId * 2 Jel Ozu (S efor) ✅ (T32)
 
@@ -526,7 +535,7 @@
 ### T31 — Siluet Preview
 
 - [x] **GD.BL29 — Silueti gamesPlayed < 5 ise gizle:** Yeni oyuncu icin bilissel yuk azaltma (XS efor)
-- [ ] **GD.BL30 — Preview-time line completion hint:** Sekil preview'i satiri tamamlayacaksa "temizlenecek" sinyali goster (M efor)
+- [x] **GD.BL30 — Preview-time line completion hint:** Sekil preview'i satiri tamamlayacaksa "temizlenecek" sinyali goster (M efor)
 
 ---
 

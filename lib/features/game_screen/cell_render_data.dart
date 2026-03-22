@@ -17,6 +17,7 @@ class CellRenderData {
     this.waveDistance = -1,
     this.isInteractive = false,
     this.isNearlyFullRow = false,
+    this.isCompletionPreview = false,
   });
 
   final GelColor? color;
@@ -30,6 +31,7 @@ class CellRenderData {
   final int waveDistance;
   final bool isInteractive;
   final bool isNearlyFullRow;
+  final bool isCompletionPreview;
 
   @override
   bool operator ==(Object other) =>
@@ -45,7 +47,8 @@ class CellRenderData {
           isRecentlyPlaced == other.isRecentlyPlaced &&
           waveDistance == other.waveDistance &&
           isInteractive == other.isInteractive &&
-          isNearlyFullRow == other.isNearlyFullRow;
+          isNearlyFullRow == other.isNearlyFullRow &&
+          isCompletionPreview == other.isCompletionPreview;
 
   @override
   int get hashCode => Object.hash(
@@ -60,5 +63,6 @@ class CellRenderData {
         waveDistance,
         isInteractive,
         isNearlyFullRow,
+        isCompletionPreview,
       );
 }

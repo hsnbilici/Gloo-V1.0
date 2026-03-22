@@ -603,4 +603,10 @@ class StringsRu extends AppStrings {
 
   @override
   String get duelRematch => '\u0420\u0435\u0432\u0430\u043d\u0448';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'Ежедневные задания';
+  @override
+  String get questsCompleted => 'Выполнено';
 }

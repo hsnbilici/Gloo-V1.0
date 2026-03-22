@@ -597,4 +597,10 @@ class StringsTr extends AppStrings {
 
   @override
   String get duelRematch => 'Tekrar Mac';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'Gunluk Gorevler';
+  @override
+  String get questsCompleted => 'Tamamlandi';
 }

@@ -54,6 +54,23 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
   LocalRepository? _cachedRepo;
 
+  /// Track quest progress and grant reward if a quest was just completed.
+  void _trackQuest(QuestType type, {int amount = 1}) {
+    final repo = _cachedRepo;
+    if (repo == null) return;
+    final questState = ref.read(questProvider).valueOrNull;
+    if (questState == null) return;
+    incrementQuestProgress(repo, questState, type, amount: amount).then(
+      (reward) {
+        if (reward > 0) {
+          game.currencyManager.earnFromLineClear(reward);
+        }
+        // Refresh quest provider
+        ref.invalidate(questProvider);
+      },
+    );
+  }
+
   void setupCallbacks() {
     // Repo'yu bir kez resolve et — callback'lerde tekrar future.then() gerekmez
     ref.read(localRepositoryProvider.future).then((repo) {
@@ -112,10 +129,19 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       if (widget.mode == GameMode.duel && clearResult.totalLines > 0) {
         duelController?.sendObstacles(clearResult.totalLines, 'small');
       }
+
+      // Quest tracking: clear lines
+      if (clearResult.totalLines > 0) {
+        _trackQuest(QuestType.clearLines, amount: clearResult.totalLines);
+      }
     };
 
     game.onCombo = (combo) {
       clipRecorder.onCombo(combo);
+      // Quest tracking: combo (medium+ counts)
+      if (combo.tier.index >= ComboTier.medium.index) {
+        _trackQuest(QuestType.reachCombo);
+      }
       if (mounted) {
         setState(() {
           activeCombo = combo;
@@ -285,6 +311,8 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onColorSynthesis = (resultColor, position) {
       soundBank.onSynthesis();
+      // Quest tracking: synthesis
+      _trackQuest(QuestType.makeSyntheses);
       if (!mounted) return;
       setState(() {
         synthesisBlooms.add((
@@ -321,6 +349,15 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     game.onGameOver = () {
       if (!mounted) return;
       final score = game.score;
+      // Quest tracking: play games + reach score
+      _trackQuest(QuestType.playGames);
+      if (score >= 800) {
+        _trackQuest(QuestType.reachScore);
+      }
+      // Daily puzzle quest
+      if (widget.mode == GameMode.daily) {
+        _trackQuest(QuestType.completeDailyPuzzle);
+      }
       final repo = _cachedRepo;
       if (repo != null) {
         repo.saveScore(mode: widget.mode.name, value: score);

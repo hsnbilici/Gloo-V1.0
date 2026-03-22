@@ -25,6 +25,7 @@ import 'widgets/deep_background.dart';
 import 'widgets/dialogs.dart';
 import 'widgets/gel_logo.dart';
 import 'widgets/mode_card.dart';
+import 'widgets/quest_bar.dart';
 import 'widgets/streak_badge.dart';
 import 'widgets/streak_reward_dialog.dart';
 
@@ -232,6 +233,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             children: [
                               DailyBanner(label: l.dailyTitle)
                                   .animateOrSkip(reduceMotion: rm, delay: 60.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.08,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 8),
+                              QuestBar(brightness: brightness)
+                                  .animateOrSkip(reduceMotion: rm, delay: 70.ms)
                                   .fadeIn(duration: 350.ms)
                                   .slideY(
                                     begin: 0.08,

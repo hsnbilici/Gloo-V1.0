@@ -381,6 +381,10 @@ abstract class AppStrings {
   // GD.PO10: Rematch
   String get duelRematch;
 
+  // GD.MO4: Daily Quests
+  String get questsTitle;
+  String get questsCompleted;
+
   /// GelColor enum'undan çevrilmiş renk adını döner.
   String colorName(GelColor color) => switch (color) {
         GelColor.red => colorRed,

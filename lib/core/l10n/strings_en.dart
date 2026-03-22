@@ -598,4 +598,10 @@ class StringsEn extends AppStrings {
   // GD.PO10: Rematch
   @override
   String get duelRematch => 'Rematch';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'Daily Quests';
+  @override
+  String get questsCompleted => 'Completed';
 }

@@ -601,4 +601,10 @@ class StringsAr extends AppStrings {
 
   @override
   String get duelRematch => '\u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u0628\u0627\u0631\u0627\u0629';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'المهام اليومية';
+  @override
+  String get questsCompleted => 'مكتمل';
 }

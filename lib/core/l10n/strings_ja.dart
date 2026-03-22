@@ -593,4 +593,10 @@ class StringsJa extends AppStrings {
 
   @override
   String get duelRematch => '\u518d\u6226';
+
+  // GD.MO4: Daily Quests
+  @override
+  String get questsTitle => 'デイリークエスト';
+  @override
+  String get questsCompleted => '完了';
 }
