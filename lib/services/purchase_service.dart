@@ -126,8 +126,9 @@ class PurchaseService {
       // Ürünleri yükle
       final response = await _iap.queryProductDetails(allProductIds);
       if (response.notFoundIDs.isNotEmpty) {
-        if (kDebugMode)
+        if (kDebugMode) {
           debugPrint('PurchaseService: not found: ${response.notFoundIDs}');
+        }
       }
       for (final product in response.productDetails) {
         _products[product.id] = product;
@@ -379,8 +380,90 @@ class PurchaseService {
   }
 
   // ── Fiyat yardımcıları ─────────────────────────────────────────────────
-  /// Mağaza fiyatını döner veya varsayılan gösterir.
-  String priceOf(String productId, {String fallback = '—'}) {
-    return _products[productId]?.price ?? fallback;
+
+  /// USD bazında varsayılan fiyatlar (store'dan yüklenemezse locale'e çevrilir).
+  static const _kBasePricesUsd = <String, double>{
+    kRemoveAds: 2.99,
+    kSoundCrystal: 1.99,
+    kSoundForest: 1.99,
+    kTexturePack: 2.99,
+    kStarterPack: 4.99,
+    kGlooPlusMonthly: 1.99,
+    kGlooPlusQuarter: 4.99,
+    kGlooPlusYearly: 9.99,
+    kJelOzu100: 0.99,
+    kJelOzu500: 3.99,
+  };
+
+  /// Yaklaşık USD→yerel para birimi çarpanları.
+  /// Store bağlantısı yokken kullanıcıya kendi para biriminde gösterim sağlar.
+  static const _kCurrencyRates = <String, (String symbol, double rate)>{
+    'TRY': ('₺', 38.0),
+    'EUR': ('€', 0.92),
+    'GBP': ('£', 0.79),
+    'JPY': ('¥', 155.0),
+    'KRW': ('₩', 1350.0),
+    'CNY': ('¥', 7.25),
+    'INR': ('₹', 83.5),
+    'BRL': ('R\$', 5.0),
+    'RUB': ('₽', 92.0),
+    'SAR': ('﷼', 3.75),
+    'AED': ('د.إ', 3.67),
+  };
+
+  /// Cihaz locale'inden para birimi kodunu tahmin eder.
+  static String _localeCurrencyCode() {
+    final locale = PlatformDispatcher.instance.locale;
+    // Bölge koduna göre para birimi eşleme
+    return switch (locale.countryCode?.toUpperCase()) {
+      'TR' => 'TRY',
+      'DE' || 'FR' || 'ES' || 'IT' || 'NL' || 'PT' || 'AT' || 'BE' ||
+      'FI' || 'GR' || 'IE' => 'EUR',
+      'GB' => 'GBP',
+      'JP' => 'JPY',
+      'KR' => 'KRW',
+      'CN' => 'CNY',
+      'IN' => 'INR',
+      'BR' => 'BRL',
+      'RU' => 'RUB',
+      'SA' => 'SAR',
+      'AE' => 'AED',
+      _ => 'USD',
+    };
+  }
+
+  /// Baz fiyatı cihaz locale'ine göre formatlar.
+  static String _formatLocalPrice(double usdPrice) {
+    final code = _localeCurrencyCode();
+    if (code == 'USD') return '\$$usdPrice';
+
+    final entry = _kCurrencyRates[code];
+    if (entry == null) return '\$$usdPrice';
+
+    final (symbol, rate) = entry;
+    final localPrice = (usdPrice * rate);
+
+    // Tam sayıya yuvarla (JPY, KRW gibi düşük değerli birimler için)
+    if (rate >= 100) {
+      final rounded = ((localPrice / 10).round() * 10);
+      return '$symbol$rounded';
+    }
+
+    // 2 ondalık basamak
+    return '$symbol${localPrice.toStringAsFixed(2)}';
+  }
+
+  /// Mağaza fiyatını döner; store'dan yüklenememişse cihaz locale'ine
+  /// göre yaklaşık yerel fiyat gösterir.
+  String priceOf(String productId, {String? fallback}) {
+    final storePrice = _products[productId]?.price;
+    if (storePrice != null) return storePrice;
+
+    if (fallback != null) return fallback;
+
+    final basePrice = _kBasePricesUsd[productId];
+    if (basePrice != null) return _formatLocalPrice(basePrice);
+
+    return '—';
   }
 }

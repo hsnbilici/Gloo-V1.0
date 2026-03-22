@@ -69,10 +69,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     AudioManager().playMusic(AudioPaths.bgMenuLofi);
     // Schedule notification reminders
     if (!kIsWeb) {
-      final notif = ref.read(notificationServiceProvider);
-      final l = ref.read(stringsProvider);
-      notif.scheduleStreakReminder(title: l.notifStreakTitle, body: l.notifStreakBody);
-      notif.scheduleDailyPuzzleReminder(title: l.notifDailyTitle, body: l.notifDailyBody);
+      try {
+        final notif = ref.read(notificationServiceProvider);
+        final l = ref.read(stringsProvider);
+        notif.scheduleStreakReminder(title: l.notifStreakTitle, body: l.notifStreakBody);
+        notif.scheduleDailyPuzzleReminder(title: l.notifDailyTitle, body: l.notifDailyBody);
+      } catch (e) {
+        if (kDebugMode) debugPrint('HomeScreen: notification schedule error: $e');
+      }
     }
   }
 

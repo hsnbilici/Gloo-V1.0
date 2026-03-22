@@ -215,8 +215,11 @@ void main() {
     });
 
     // ── priceOf ─────────────────────────────────────────────────────────────
-    test('priceOf returns default fallback when products not loaded', () {
-      expect(_ps.priceOf(PurchaseService.kRemoveAds), '\u2014');
+    test('priceOf returns locale-aware price when products not loaded', () {
+      // Store'dan yüklenemediğinde cihaz locale'ine göre yaklaşık fiyat döner
+      final price = _ps.priceOf(PurchaseService.kRemoveAds);
+      expect(price, isNotEmpty);
+      expect(price, isNot('\u2014'));
     });
 
     test('priceOf returns custom fallback', () {
@@ -370,8 +373,10 @@ void main() {
       expect(_ps.priceOf(''), '\u2014');
     });
 
-    test('priceOf returns fallback with no products loaded', () {
-      expect(_ps.priceOf(PurchaseService.kGlooPlusMonthly), '\u2014');
+    test('priceOf returns locale-aware price with no products loaded', () {
+      final price = _ps.priceOf(PurchaseService.kGlooPlusMonthly);
+      expect(price, isNotEmpty);
+      expect(price, isNot('\u2014'));
     });
   });
 

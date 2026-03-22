@@ -533,9 +533,13 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
       // Schedule comeback notification
       if (!kIsWeb) {
-        final notif = ref.read(notificationServiceProvider);
-        final l = ref.read(stringsProvider);
-        notif.scheduleComebackNotification(title: l.notifComebackTitle, body: l.notifComebackBody);
+        try {
+          final notif = ref.read(notificationServiceProvider);
+          final l = ref.read(stringsProvider);
+          notif.scheduleComebackNotification(title: l.notifComebackTitle, body: l.notifComebackBody);
+        } catch (e) {
+          if (kDebugMode) debugPrint('GameCallbacks: comeback notification error: $e');
+        }
       }
 
       handleGameOverDialog();

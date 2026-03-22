@@ -333,7 +333,9 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 - **`update-elo`**: Server-side ELO hesaplama (dinamik K-Factor: <800→40, 800-1199→32, 1200-1599→28, 1600+→24). `pvp_matches` tablosundan opponent resolve, rate limiting (3/dk/user), `elo_updates` audit tablosu. Bot maclarinda fallback: dogrudan profile guncelle.
 - **`verify-purchase`**: IAP receipt dogrulama. Android: Google Play Developer API v3 (purchaseToken). iOS: App Store Server API v2 (transactionId). Credentials yoksa graceful fallback. `purchase_verifications` audit tablosu.
 - **`redeem-code`**: Promosyon kodu dogrulama ve urun kilit acma.
-- **`get_user_rank` (SQL RPC)**: `supabase/migrations/20260321_get_user_rank.sql` — PL/pgSQL function, tek sorgu ile rank + total doner. `RemoteRepository.getUserRank()` bunu kullanir.
+- **`get_user_rank` (SQL RPC)**: `supabase/migrations/20260322_fix_leaderboard.sql` — PL/pgSQL function, unique kullanici bazli rank hesaplar. Weekly filtre hem kendi skora hem rank'e uygulanir. `RemoteRepository.getUserRank()` bunu kullanir.
+- **`leaderboard_view`** (SQL View): SECURITY DEFINER, `DISTINCT ON (user_id, mode)` — kullanici basina en iyi skor. `profiles` RLS'i bypass eder.
+- **`elo_leaderboard_view`** (SQL View): SECURITY DEFINER — PvP ELO siralamasi icin `profiles` RLS bypass. `RemoteRepository.getEloLeaderboard()` bunu kullanir.
 
 ### GDPR Veri Export
 
@@ -413,9 +415,11 @@ Level 50 sonrasi Ascension tier'lari. `getLevel(id, ascension:)` ile hedef skor 
 
 8 sentez rengi tamamlandiginda +50 Jel Ozu odul (tek seferlik). `isCollectionRewardClaimed()`/`setCollectionRewardClaimed()` ile persist. Collection ekraninda altin banner.
 
-### PvP ELO Leaderboard
+### Leaderboard Sistemi
 
-LeaderboardScreen'de 3. tab: `RemoteRepository.getEloLeaderboard()` ile profiles tablosundan ELO siralamasi. Kullanicinin kendi sirasi gosterilir. Haftalik/tum zamanlar toggle PvP tab'inda gizli.
+LeaderboardScreen 3 tab: Classic, TimeTrial, PvP ELO. Classic/TimeTrial `leaderboard_view` (SECURITY DEFINER) uzerinden — `DISTINCT ON (user_id, mode)` ile kullanici basina en iyi skor. PvP `elo_leaderboard_view` (SECURITY DEFINER) uzerinden — `profiles` RLS (`auth.uid() = id`) bypass eder. `get_user_rank` RPC unique kullanici bazli rank hesaplar, weekly filtre hem kendi skora hem rank'e uygulanir. `_currentMode` `GameMode.classic.name` / `GameMode.timeTrial.name` kullanir (enum case-sensitive). Kullanici satiri cyan vurgu + "YOU" badge ile ayirt edilir. `UserRankBanner` skor gosterir. PvP skorlari "X ELO" formatinda.
+
+**Username sync:** Settings'te isim degisikliginde `ensureProfile(username:)` ile Supabase `profiles` tablosuna senkronize edilir. Aksi halde leaderboard eski ismi gosterir.
 
 ### Notification Service
 

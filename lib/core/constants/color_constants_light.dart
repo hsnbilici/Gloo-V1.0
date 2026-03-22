@@ -15,17 +15,17 @@ import 'package:flutter/material.dart';
 //   kCardBgLight          (0xFFFFFFFF)  L = 1.0000
 //   kTextPrimaryLight     (0xFF1A1A2E)  L = 0.0116
 //   kTextSecondaryLight   (0xFF4A4A6A)  L = 0.0741
-//   kCyanLight            (0xFF0097A7)  L = 0.2491
-//   kMutedLight           (0xFF7A8FA0)  L = 0.2632
-//   kGoldLight            (0xFFC88A00)  L = 0.3048
-//   kOrangeLight          (0xFFE65100)  L = 0.2270
+//   kCyanLight            (0xFF00778A)  L = 0.1503
+//   kMutedLight           (0xFF5C6F7E)  L = 0.1515
+//   kGoldLight            (0xFF8B6300)  L = 0.1441
+//   kOrangeLight          (0xFFC43E00)  L = 0.1518
 //   kGreenLight           (0xFF1B7A3D)  L = 0.1450
 //   kRedLight             (0xFFC62828)  L = 0.1368
-//   kYellowLight          (0xFFB8860B)  L = 0.2730
+//   kYellowLight          (0xFF7A5A00)  L = 0.1145
 //   kPinkLight            (0xFFC2185B)  L = 0.1287
 //   kLavenderLight        (0xFF5E35B1)  L = 0.0810
 //   kColorClassicLight    (0xFFC62828)  L = 0.1368  (same as kRedLight)
-//   kColorChefLight       (0xFFEF6C00)  L = 0.2909
+//   kColorChefLight       (0xFFB85000)  L = 0.1593
 //   kColorTimeTrialLight  (0xFF1565C0)  L = 0.1331
 //   kColorZenLight        (0xFF2E7D32)  L = 0.1450  (same as kGreenLight)
 //
@@ -38,38 +38,24 @@ import 'package:flutter/material.dart';
 // kBgLight     + kLavenderLight                         7.38:1  PASS     PASS
 // kBgLight     + kColorTimeTrialLight                   5.28:1  PASS     PASS
 // kBgLight     + kColorZenLight                         4.96:1  PASS     PASS
-// kBgLight     + kCyanLight                             3.23:1  FAIL(!)  PASS
-// kBgLight     + kMutedLight                            3.08:1  FAIL(!)  PASS
-// kBgLight     + kGoldLight                             2.72:1  FAIL(!)  FAIL(!)
-// kBgLight     + kOrangeLight                           3.49:1  FAIL(!)  PASS
-// kBgLight     + kYellowLight                           2.99:1  FAIL(!)  FAIL(!)
-// kBgLight     + kColorChefLight                        2.83:1  FAIL(!)  FAIL(!)
+// kBgLight     + kCyanLight                             4.82:1  PASS     PASS
+// kBgLight     + kMutedLight                            4.79:1  PASS     PASS
+// kBgLight     + kGoldLight                             4.98:1  PASS     PASS
+// kBgLight     + kOrangeLight                           4.79:1  PASS     PASS
+// kBgLight     + kYellowLight                           5.87:1  PASS     PASS
+// kBgLight     + kColorChefLight                        4.62:1  PASS     PASS
 // kSurfaceLight + kTextPrimaryLight                    17.04:1  PASS     PASS
 // kSurfaceLight + kTextSecondaryLight                   8.49:1  PASS     PASS
-// kSurfaceLight + kMutedLight                           3.35:1  FAIL(!)  PASS
-// kSurfaceLight + kCyanLight                            3.51:1  FAIL(!)  PASS
-// kSurfaceLight + kGoldLight                            2.96:1  FAIL(!)  FAIL(!)
-// kSurfaceLight + kOrangeLight                          3.79:1  FAIL(!)  PASS
-// kSurfaceLight + kYellowLight                          3.25:1  FAIL(!)  PASS
-// kSurfaceLight + kColorChefLight                       3.08:1  FAIL(!)  PASS
+// kSurfaceLight + kMutedLight                           5.21:1  PASS     PASS
+// kSurfaceLight + kCyanLight                            5.24:1  PASS     PASS
+// kSurfaceLight + kGoldLight                            5.41:1  PASS     PASS
+// kSurfaceLight + kOrangeLight                          5.20:1  PASS     PASS
+// kSurfaceLight + kYellowLight                          6.38:1  PASS     PASS
+// kSurfaceLight + kColorChefLight                       5.02:1  PASS     PASS
 // kCardBgLight  + kTextPrimaryLight                    17.04:1  PASS     PASS
-// kCardBgLight  + kMutedLight                           3.35:1  FAIL(!)  PASS
+// kCardBgLight  + kMutedLight                           5.21:1  PASS     PASS
 //
-// WARNINGS:
-// ! kGoldLight  on any light bg — 2.72–2.96:1 — FAILS both thresholds.
-//     Do NOT use for text. For decorative / icon use only; pair with a
-//     contrasting text colour (e.g. kTextPrimaryLight) if a label is needed.
-// ! kYellowLight on any light bg — 2.99–3.25:1 — FAILS normal-text AA.
-//     Large text / icons only. Avoid for body copy.
-// ! kColorChefLight on light bg — 2.83–3.08:1 — FAILS normal-text AA.
-//     Mode badge / large accent only; never use as label text.
-// ! kCyanLight / kOrangeLight on light bg — 3.23–3.79:1 — FAIL normal text.
-//     Large text (>= 18px regular or >= 14px bold) or graphics only.
-// ! kMutedLight on kSurfaceLight / kCardBgLight — 3.35:1 — FAIL normal text.
-//     Intended for secondary captions; keep at >= 14px bold or use
-//     kTextSecondaryLight (7.79:1) for smaller labels.
-// NOTE: kSurfaceLightSecondary (0xFFF0F0F5) is used as card/cell bg, not for
-//     text, so its own contrast vs kBgLight is not a text-contrast concern.
+// All accent colours now pass WCAG AA for normal text (>= 4.5:1).
 // ────────────────────────────────────────────────────────────────────────────
 
 // ─── Arka plan ──────────────────────────────────────────────────────────────
@@ -82,11 +68,10 @@ const Color kTextPrimaryLight = Color(0xFF1A1A2E);
 const Color kTextSecondaryLight = Color(0xFF4A4A6A);
 
 // ─── Aksan (accent) — koyu temadaki ayni renkler, kontrast ayarli ────────
-const Color kCyanLight = Color(0xFF0097A7);
-const Color kMutedLight = Color(0xFF7A8FA0);
-/// WARNING: WCAG AA FAIL on light backgrounds — DO NOT use for text.
-const Color kGoldLight = Color(0xFFC88A00);
-const Color kOrangeLight = Color(0xFFE65100);
+const Color kCyanLight = Color(0xFF00778A);
+const Color kMutedLight = Color(0xFF5C6F7E);
+const Color kGoldLight = Color(0xFF8B6300);
+const Color kOrangeLight = Color(0xFFC43E00);
 
 /// Yesil — basari, tamamlanma gostergeleri (kGreen'in aydinlik karsiti).
 const Color kGreenLight = Color(0xFF1B7A3D);
@@ -94,9 +79,8 @@ const Color kGreenLight = Color(0xFF1B7A3D);
 /// Kirmizi — hata, kayip (kRed'in aydinlik karsiti).
 const Color kRedLight = Color(0xFFC62828);
 
-/// WARNING: WCAG AA FAIL on light backgrounds — DO NOT use for text.
 /// Sari — dikkat, uyari (kYellow'un aydinlik karsiti).
-const Color kYellowLight = Color(0xFFB8860B);
+const Color kYellowLight = Color(0xFF7A5A00);
 
 /// Pembe — vurgu, season pass (kPink'in aydinlik karsiti).
 const Color kPinkLight = Color(0xFFC2185B);
@@ -109,7 +93,7 @@ const Color kCoralLight = Color(0xFFD32F2F);
 
 // ─── Mod renkleri (aydinlik arka plan uzerinde okunabilir) ────────────────
 const Color kColorClassicLight = Color(0xFFC62828);
-const Color kColorChefLight = Color(0xFFEF6C00);
+const Color kColorChefLight = Color(0xFFB85000);
 const Color kColorTimeTrialLight = Color(0xFF1565C0);
 const Color kColorZenLight = Color(0xFF2E7D32);
 

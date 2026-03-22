@@ -29,83 +29,53 @@ class DailyBanner extends ConsumerWidget {
       dark: Colors.white,
       light: kTextPrimaryLight,
     );
-    final subtitleColor = resolveColor(
-      brightness,
-      dark: Colors.white.withValues(alpha: 0.40),
-      light: kTextSecondaryLight,
-    );
-
     return Semantics(
       label: label,
       button: true,
       child: GestureDetector(
         onTap: () => context.push('/daily'),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(UIConstants.radiusLg),
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
             gradient: LinearGradient(
               begin: gradBegin,
               end: gradEnd,
               colors: [
-                _kAccent.withValues(alpha: 0.12),
-                _kAccent.withValues(alpha: 0.03),
+                _kAccent.withValues(alpha: 0.10),
+                _kAccent.withValues(alpha: 0.02),
                 Colors.transparent,
               ],
               stops: const [0.0, 0.4, 1.0],
             ),
-            border: Border.all(color: _kAccent.withValues(alpha: 0.25)),
+            border: Border.all(color: _kAccent.withValues(alpha: 0.20)),
           ),
           child: Row(
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: _kAccent.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(UIConstants.radiusMd),
-                  border: Border.all(color: _kAccent.withValues(alpha: 0.30)),
-                ),
-                child: Icon(
-                  completed
-                      ? Icons.check_circle_rounded
-                      : Icons.calendar_today_rounded,
-                  color: completed ? kColorChef : _kAccent,
-                  size: 18,
-                ),
+              Icon(
+                completed
+                    ? Icons.check_circle_rounded
+                    : Icons.calendar_today_rounded,
+                color: completed ? kColorChef : _kAccent,
+                size: 18,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: titleColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 1),
-                    Text(
-                      completed ? fmt(score) : todayLabel(),
-                      style: TextStyle(
-                        color: completed ? kColorChef : subtitleColor,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  completed ? '$label — ${fmt(score)}' : '$label — ${todayLabel()}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: titleColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               Icon(
                 directionalChevronIcon(Directionality.of(context)),
-                color: _kAccent.withValues(alpha: 0.60),
-                size: 20,
+                color: _kAccent.withValues(alpha: 0.50),
+                size: 18,
               ),
             ],
           ),

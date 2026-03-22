@@ -311,7 +311,7 @@ void main() {
   group('Quest definitions', () {
     test('daily quest pool has entries', () {
       expect(kDailyQuestPool, isNotEmpty);
-      expect(kDailyQuestPool.length, 6);
+      expect(kDailyQuestPool.length, 12);
     });
 
     test('weekly quest pool has entries', () {

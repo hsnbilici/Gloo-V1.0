@@ -15,6 +15,9 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
   set previewAnchor((int, int)? value);
   AnimationController get breathCtrl;
   Set<(int, int)> get recentlyPlacedCells;
+  Set<(int, int)> get synthesisGlowCells;
+  Timer? get synthesisGlowTimer;
+  set synthesisGlowTimer(Timer? value);
   int get waveKey;
   PowerUpType? get activePowerUpMode;
   List<({int row, int col, Color color, int key, Duration delay})>
@@ -80,6 +83,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
           isRecentlyPlaced: isPlaced,
           waveDistance: waveDist,
           isInteractive: isInteractive,
+          isSynthesisResult: synthesisGlowCells.contains((r, c)),
         );
       }
     }
@@ -115,6 +119,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                 waveDistance: existing.waveDistance,
                 isInteractive: existing.isInteractive,
                 isCompletionPreview: true,
+                isSynthesisResult: existing.isSynthesisResult,
               );
             }
           }
@@ -150,6 +155,8 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               waveDistance: existing.waveDistance,
               isInteractive: existing.isInteractive,
               isNearlyFullRow: true,
+              isCompletionPreview: existing.isCompletionPreview,
+              isSynthesisResult: existing.isSynthesisResult,
             );
           }
         }

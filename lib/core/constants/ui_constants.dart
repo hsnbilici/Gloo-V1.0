@@ -24,7 +24,7 @@ abstract final class UIConstants {
   static const double radiusXxs = 2.0;
 
   /// Izgara hücreleri, küçük etiketler, track/bar köşeleri.
-  static const double radiusXs = 4.0;
+  static const double radiusXs = 6.0;
 
   /// Rozetler, küçük butonlar, mod etiketleri.
   static const double radiusSm = 8.0;

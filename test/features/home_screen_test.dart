@@ -114,7 +114,8 @@ void main() {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Daily Puzzle'), findsOneWidget);
+      // DailyBanner artık "Daily Puzzle — tarih" formatında tek satır
+      expect(find.textContaining('Daily Puzzle'), findsOneWidget);
     });
   });
 }

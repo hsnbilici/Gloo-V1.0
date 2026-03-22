@@ -84,6 +84,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               int.tryParse(state.pathParameters['levelId'] ?? '1') ?? 1;
           final levelData = LevelProgression.getLevel(levelId);
           return GameScreen(
+            key: ValueKey('level_$levelId'),
             mode: GameMode.level,
             levelData: levelData,
           );
