@@ -27,6 +27,9 @@ enum NotificationType {
 /// `firebase_messaging` entegrasyonu hazır olduğunda bu interface'i
 /// implemente eden sınıf oluşturulacak.
 abstract class NotificationService {
+  /// Servisi başlat (firebase_messaging + flutter_local_notifications kurulumu).
+  Future<void> initialize();
+
   /// Bildirim izni iste. `true` dönerse izin verilmiş demektir.
   Future<bool> requestPermission();
 
@@ -68,6 +71,9 @@ abstract class NotificationService {
 
 /// Stub implementasyon — firebase_messaging eklenene kadar no-op.
 class StubNotificationService implements NotificationService {
+  @override
+  Future<void> initialize() async {}
+
   @override
   Future<bool> requestPermission() async => false;
 
