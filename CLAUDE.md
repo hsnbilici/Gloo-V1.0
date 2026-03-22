@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (2127 test)
+flutter test                                   # tum testler (2151 test)
 flutter test --exclude-tags=golden             # CI'da (golden platform-bagimli)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
@@ -54,8 +54,8 @@ app/ → features/ → providers/ → game/ → core/
 - `game/` — Saf Dart oyun motoru (Flutter'dan bagimsiz). GlooGame, GridManager, systems, shapes, levels, economy, pvp, physics.
 - `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin ile bolunmus: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`. `shop/` 1 part mixin: `shop_logic.dart`. Ek: `tutorial_overlay.dart`, `share_prompt_dialog.dart`, `effects/confetti_effect.dart`. `GameCellWidget` bir `ConsumerWidget` — `gridStateProvider.select((s) => s[(row, col)])` ile per-cell rebuild izolasyonu saglar. `CellRenderData` immutable value class (`cell_render_data.dart`) diff icin `==`/`hashCode` override eder.
 - `data/` — `local/` (SharedPreferences), `remote/` (Supabase). Tum remote metodlarda `isConfigured` guard zorunlu.
-- `services/` — AnalyticsService (Firebase), AdManager, PurchaseService, NotificationService (stub — firebase_messaging bekliyor).
-- `providers/` — Riverpod: game, audio, user, locale, pvp, quest, service providers. `gridStateProvider` (`grid_state_provider.dart`) — `GridStateNotifier` ile per-cell `CellRenderData` map'i tutar; `syncGridState()` ile `game_grid_builder.dart`'tan push edilir. `questProvider` — gunluk 3 gorev ilerlemesi. `maxCompletedLevelProvider` — level ilerleme durumu.
+- `services/` — AnalyticsService (Firebase), AdManager, PurchaseService, NotificationService (`FirebaseNotificationService` + `StubNotificationService`). `AudioPackage` enum ile ses paketi swap mekanizmasi.
+- `providers/` — Riverpod: game, audio, user, locale, pvp, quest, service, notification providers. `gridStateProvider` (`grid_state_provider.dart`) — `GridStateNotifier` ile per-cell `CellRenderData` map'i tutar; `syncGridState()` ile `game_grid_builder.dart`'tan push edilir. `CellRenderData.copyWith()` ile reconstruction bloklari sadelesti. `questProvider` — gunluk 3 + haftalik 5 gorev ilerlemesi (ISO week bazli reset, `quest.id` bazli progress key). `maxCompletedLevelProvider` — level ilerleme durumu. `notificationServiceProvider` — `kIsWeb` guard ile stub/firebase secimi.
 
 ### Oyun Motoru
 
@@ -131,7 +131,7 @@ Renk adlari l10n uzerinden: `AppStrings.colorName(GelColor)`. `GelColor` uzerind
 
 UI palet sabitleri `color_constants.dart`'ta (75+ sabit): `kBgDark`, `kCyan`, `kMuted`, `kOrange`, `kModeColors`, `kSurfaceDark`, `kIceBlue`, `kAmber`, `kPowerUp*`, `kGreen`, `kGold`, `kPink`, `kColorDuel` vb. Ekranlarda `Color(0x...)` literal kullanma — `color_constants.dart`'a sabit ekle ve import et. Dosya basinda WCAG AA kontrast matrisi mevcut (53+ renk cifti audit); yeni renk eklerken matrisi guncelle.
 
-Aydinlik tema sabitleri `color_constants_light.dart`'ta: `kBgLight`, `kSurfaceLight`, `kTextPrimaryLight`, `kTextSecondaryLight`, `kCardBgLight`, `kCardBorderLight`, `kMutedLight`, mod renkleri (`kColorClassicLight` vb.).
+Aydinlik tema sabitleri `color_constants_light.dart`'ta: `kBgLight`, `kSurfaceLight`, `kTextPrimaryLight`, `kTextSecondaryLight`, `kCardBgLight`, `kCardBorderLight`, `kMutedLight`, mod renkleri (`kColorClassicLight` vb.). **Tum accent renkler WCAG AA PASS (4.5:1+)** — kGoldLight, kYellowLight, kColorChefLight, kCyanLight, kMutedLight, kOrangeLight koyulastirilerek duzeltildi.
 
 **Theme-aware renk kullanimi:** `resolveColor(brightness, dark: kBgDark, light: kBgLight)` helper'i ile. `brightness = Theme.of(context).brightness` ile alinir. Oyun ekrani her zaman karanlik tema kullanir.
 
@@ -178,14 +178,14 @@ GoRouter (`lib/app/router.dart`). **ONEMLI:** Spesifik rotalar genel `/game/:mod
 
 ### UI Sabitleri (`ui_constants.dart`)
 
-- `AnimationDurations` abstract final class — 16 named duration sabiti (80ms→2500ms). Magic number yerine bunu kullan: `AnimationDurations.quick`, `.dialog`, `.waveClear`, `.toast`, `.breathCycle` vb.
+- `AnimationDurations` abstract final class — 17 named duration sabiti (80ms→2500ms). Magic number yerine bunu kullan: `AnimationDurations.quick`, `.dialog`, `.waveClear`, `.toast`, `.breathCycle`, `.synthesisPulse` vb.
 - `Spacing` abstract final class — 8 dikey bosluk sabiti (xxs=2 → xxxl=32). `SizedBox(height: 16)` yerine `SizedBox(height: Spacing.lg)` kullan.
 - `AppTextStyles` abstract final class — 8 semantik text style (displayLarge 32px → micro 9px). Display/heading tier (displayLarge, heading, subheading) `fontFamily: 'Syne'` (marka fontu). Body/label tier (body, bodySecondary, label, caption, micro) platform default font (CJK/Kiril/Arapca uyumu). Inline `TextStyle(fontSize: 18, fontWeight: FontWeight.w800)` yerine `AppTextStyles.heading` kullan.
 - `kAppName` (`app_constants.dart`) — Marka adi sabiti. Hardcoded `'GLOO'` yerine bunu kullan.
 
 ### GameEffectManager
 
-`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `breathCtrl` (nefes animasyonu) sahiplenir, gecici efektler icin `createTransient()` factory. `GameScreen.initState`'te `effectManager = GameEffectManager(this)` ile olusturulur. SquashStretchCell/WaveRipple lazy controller pattern kullanir: nullable `_ctrl?` + `_ensureController()` factory — controller yalnizca animasyon gerektiginde allocate edilir.
+`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `breathCtrl` (nefes animasyonu) sahiplenir, gecici efektler icin `createTransient()` factory. `GameScreen.initState`'te `effectManager = GameEffectManager(this)` ile olusturulur. SquashStretchCell/WaveRipple/SynthesisPulseCell lazy controller pattern kullanir: nullable `_ctrl?` + `_ensureController()` factory — controller yalnizca animasyon gerektiginde allocate edilir. `SynthesisPulseCell`: sentez aninda 300ms scale pulse (1.0→1.08→1.0, `easeOutBack`). `GelCellPainter.isGlowing`: sentez hucresinde specular 0.90, glow blur 12, cache invalidation `_cachedGlowState` ile.
 
 ### ShapeGenerator
 
@@ -375,11 +375,11 @@ ColorChef 3 oyun sonra, TimeTrial 5 oyun sonra acilir. `getTotalGamesPlayed()` i
 
 ### Gorev Sistemi
 
-`quest_provider.dart`: Gunluk 3 gorev, seed-bazli secim (`kDailyQuestPool`). 5 gorev tipi: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`. SharedPreferences'ta progress persist. `QuestBar` widget HomeScreen'de gosterilir. `game_callbacks.dart`'ta 5 callback'e entegre: `onLineClear`, `onCombo`, `onColorSynthesis`, `onGameOver`. Tamamlanan gorev Jel Ozu odulu verir.
+`quest_provider.dart`: Gunluk 3 gorev (12 havuzdan seed-bazli secim, `kDailyQuestPool`) + haftalik 5 gorev (`kWeeklyQuestPool`, ISO week bazli). 6 gorev tipi: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`, `completeDailyPuzzle`. Her Quest'in unique `id` alani var — progress key olarak kullanilir (`quest.id` bazli, eski `type_name_d` formati migration ile donusturuldu). Haftalik progress ayri persist edilir (`weekly_quest_progress`), hafta degisiminde sifirlanir. `QuestBar` widget HomeScreen'de gunluk (kGold) + haftalik (kOrange) progress bar gosterir. `game_callbacks.dart`'ta 6 callback'e entegre. Tamamlanan gorev Jel Ozu odulu verir.
 
 ### MetaGameBar
 
-`meta_game_bar.dart` widget dosyasi mevcut ama `home_screen.dart`'tan cagrisi kaldirildi. Ada/Karakter/SeasonPass sistemleri core loop'a entegre edilene kadar gizli tutuluyor. Route'lar (`/island`, `/character`, `/season-pass`) hala aktif.
+`meta_game_bar.dart`: HomeScreen'de QuestBar altinda, Ada/Karakter/SeasonPass navigasyonu. 3 `MetaItem` (terrain/person/military_tech ikonu) ile `/island`, `/character`, `/season-pass` route'larina yonlendirir. Tema-aware renkler (`kGreen`, `kLavender`, `kGold`). `GelPersonality` sistemi: 8 sentez rengine kisilik arketipleri (Maceracı, Bilge, Gizemli vb.), CharacterScreen'de personality chip'ler olarak gosterilir. Ada core loop: Game over'da `IslandState.tickPassiveProduction()` ile pasif Jel uretimi. `Building.costForLevel` exponential formul (`baseCost * pow(costMultiplier, level)`).
 
 ### Hover/Focus/Press Destegi (Web/Desktop)
 
@@ -423,4 +423,16 @@ LeaderboardScreen 3 tab: Classic, TimeTrial, PvP ELO. Classic/TimeTrial `leaderb
 
 ### Notification Service
 
-`lib/services/notification_service.dart`: `NotificationService` abstract interface + `StubNotificationService` no-op. 3 senaryo: `streakReminder` (20:00), `dailyPuzzle` (10:00), `comeback` (3 gun inaktif). firebase_messaging entegrasyonu bekleniyor.
+`lib/services/notification_service.dart`: `NotificationService` abstract interface + `StubNotificationService` (web) + `FirebaseNotificationService` (native). `firebase_messaging` + `flutter_local_notifications` + `timezone` paketleri. 3 senaryo: `streakReminder` (20:00 her gun), `dailyPuzzle` (10:00 her gun), `comeback` (3 gun inaktif). `initialize()` → timezone init + local notification kanal + FCM permission + token fetch. `onTokenChanged` callback ile Supabase `device_tokens` tablosuna token sync. `onTokenRefresh` listener dispose'da cancel edilir. HomeScreen'de `WidgetsBindingObserver` ile lifecycle yonetimi: resumed → comeback iptal, paused → comeback zamanla. Settings'te notification toggle (`cancelAll()` / reschedule). Android: `POST_NOTIFICATIONS` + `RECEIVE_BOOT_COMPLETED` + `WAKE_LOCK`. iOS: `UIBackgroundModes: remote-notification` + `Runner.entitlements` (aps-environment: development, release icin production'a cevirilmeli). **Harici gereksinimler:** APNs sertifikasi (p8 key) Firebase'e yuklenmeli, Firebase Console'da Cloud Messaging aktif edilmeli.
+
+### Ses Paketi Sistemi
+
+`AudioPackage` enum (`audio_constants.dart`): `standard`, `crystalAsmr`, `deepForest`. `AudioPaths.resolveSfxPath(baseName, package)` ile paket-bazli asset path. `AudioManager.setAudioPackage(package)` ile runtime degistirme — SFX cache temizlenir, sonraki play yeni path'ten yukler. Fallback: paket dosyasi yoksa standard path'e doner. `LocalRepository.getAudioPackage()`/`saveAudioPackage()` ile persist. `main.dart`'ta startup'ta yuklenir.
+
+### Viral Pipeline
+
+- `ShareManager.shareScore()/shareDailyResult()/shareComboResult()/shareCollection()`: Tum share metodlari `AppStrings l` parametresi alir, 12 dile lokalize. `_modeName(AppStrings, String)` ile mod isimleri l10n uzerinden cevriliyor.
+- `buildDailyEmojiGrid(grid, score)`: Wordle formatinda emoji grid — GelColor→emoji mapping (🟥🟨🟦⬜🟧🟩🟪💗), yildiz derecesi (1-3 ⭐), max 5 satir + overflow label.
+- `shareCollection(l:, discoveredColors:)`: Kesfedilen sentez renklerini emoji formatinda paylasir (`kAppName Collection: N/8`).
+- `ConfettiEffect`: High score asildiginda 40 particle CustomPaint patlamasi. Oyun basina bir kez tetiklenir (`confettiKey == 0` guard).
+- `BombExplosionEffect`: 100ms freeze-frame delay (`Future.delayed`) animasyon oncesi dramatik etki.
