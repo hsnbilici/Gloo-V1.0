@@ -60,7 +60,6 @@ abstract final class AudioPaths {
   static String get gravityDrop => '$_sfx/gravity_drop.$_sfxExt';
 
   // Renk sentezi
-  static String get colorSynth => '$_sfx/color_synth.$_sfxExt';
   static String get colorSynthesis => '$_sfx/color_synthesis.$_sfxExt';
 
   // PvP sesleri

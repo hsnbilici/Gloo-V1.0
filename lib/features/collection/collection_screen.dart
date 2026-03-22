@@ -11,6 +11,7 @@ import '../../core/layout/rtl_helpers.dart';
 import '../../core/utils/motion_utils.dart';
 import '../shared/glow_orb.dart';
 import '../../providers/locale_provider.dart';
+import '../../audio/sound_bank.dart';
 import '../../providers/user_provider.dart';
 
 /// Nadir renk kombinasyonları koleksiyon/albüm ekranı.
@@ -47,6 +48,7 @@ class CollectionScreen extends ConsumerWidget {
 
     // Auto-claim completion reward (50 Jel Ozu)
     if (allCollected && !rewardClaimed && repo != null) {
+      SoundBank().onLevelComplete();
       Future.microtask(() async {
         await repo.setCollectionRewardClaimed();
         final current = await repo.getGelOzu();

@@ -79,6 +79,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       (reward) {
         if (reward > 0) {
           game.currencyManager.earnFromLineClear(reward);
+          soundBank.onGelOzuEarn();
         }
         // Refresh quest provider
         ref.invalidate(questProvider);

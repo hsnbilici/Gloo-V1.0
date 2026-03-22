@@ -167,6 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     required int streak,
     required int reward,
   }) async {
+    _soundBank.onLevelComplete();
     final l = ref.read(stringsProvider);
     if (!mounted) return;
     await showDialog<void>(
@@ -312,8 +313,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ? l.modeLockedGames(3 - gamesPlayed)
                                     : null,
                                 onTap: () {
+                                  _soundBank.onButtonTap();
                                   if (!chefLocked) {
-                                    _soundBank.onButtonTap();
                                     context
                                         .go('/game/${GameMode.colorChef.name}');
                                   }
@@ -339,8 +340,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ? l.modeLockedGames(5 - gamesPlayed)
                                     : null,
                                 onTap: () {
+                                  _soundBank.onButtonTap();
                                   if (!timeTrialLocked) {
-                                    _soundBank.onButtonTap();
                                     context
                                         .go('/game/${GameMode.timeTrial.name}');
                                   }
