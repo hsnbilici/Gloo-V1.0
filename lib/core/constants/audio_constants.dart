@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/game_mode.dart';
+
 /// Kullanılabilir ses paketleri.
 enum AudioPackage {
   standard,     // Varsayılan jel sesleri
@@ -62,6 +64,23 @@ abstract final class AudioPaths {
   static const String bgGameRelax = '$_music/game_relax.mp3';
   static const String bgGameTension = '$_music/game_tension.mp3';
   static const String bgZenMode = '$_music/zen_ambient.mp3';
+  static const String bgColorChef = '$_music/colorchef_groove.mp3';
+  static const String bgLevelQuest = '$_music/level_quest.mp3';
+  static const String bgDailyRitual = '$_music/daily_ritual.mp3';
+  static const String bgDuelArena = '$_music/duel_arena.mp3';
+  static const String bgMenuChill = '$_music/menu_chill.mp3';
+  static const String bgTensionEscalation = '$_music/tension_escalation.mp3';
+
+  /// Oyun moduna göre müzik path'ini döner.
+  static String musicForMode(GameMode mode) => switch (mode) {
+    GameMode.zen => bgZenMode,
+    GameMode.timeTrial => bgGameTension,
+    GameMode.duel => bgDuelArena,
+    GameMode.colorChef => bgColorChef,
+    GameMode.level => bgLevelQuest,
+    GameMode.daily => bgDailyRitual,
+    _ => bgGameRelax,
+  };
 
   // Buz kirilmasi
   static String get iceBreak => '$_sfx/ice_break.$_sfxExt';
