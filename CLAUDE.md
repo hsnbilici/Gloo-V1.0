@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (2151 test)
+flutter test                                   # tum testler (2155 test)
 flutter test --exclude-tags=golden             # CI'da (golden platform-bagimli)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
@@ -185,7 +185,7 @@ GoRouter (`lib/app/router.dart`). **ONEMLI:** Spesifik rotalar genel `/game/:mod
 
 ### GameEffectManager
 
-`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `breathCtrl` (nefes animasyonu) sahiplenir, gecici efektler icin `createTransient()` factory. `GameScreen.initState`'te `effectManager = GameEffectManager(this)` ile olusturulur. SquashStretchCell/WaveRipple/SynthesisPulseCell lazy controller pattern kullanir: nullable `_ctrl?` + `_ensureController()` factory — controller yalnizca animasyon gerektiginde allocate edilir. `SynthesisPulseCell`: sentez aninda 300ms scale pulse (1.0→1.08→1.0, `easeOutBack`). `GelCellPainter.isGlowing`: sentez hucresinde specular 0.90, glow blur 12, cache invalidation `_cachedGlowState` ile.
+`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `breathCtrl` (nefes animasyonu) sahiplenir, gecici efektler icin `createTransient()` factory. `GameScreen.initState`'te `effectManager = GameEffectManager(this)` ile olusturulur. SquashStretchCell/WaveRipple/SynthesisPulseCell lazy controller pattern kullanir: nullable `_ctrl?` + `_ensureController()` factory — controller yalnizca animasyon gerektiginde allocate edilir. `SynthesisPulseCell`: sentez aninda `AnimationDurations.synthesisPulse` (300ms) scale pulse (1.0→1.08→1.0, `easeOutBack`). `GelCellPainter.isGlowing`: sentez hucresinde specular 0.90, glow blur 12, cache invalidation `_cachedGlowState` ile. `GelCellPainter.isRecentlyPlaced`: yerlestirme aninda specular Y +5%, glow alpha +10%, ic parlama +30% — nefes animasyonuyla module. `CellBurstEffect.intensity`: satir temizleme parcacik yogunlugu — 2+ satir 1.5x, 4+ satir 2.0x. `LineSweepEffect`: coklu satir (2+) temizlemede yatay beyaz gradient sweep, `AnimationDurations.lineSweep` (300ms), RTL destegi, reduce motion guard. `CellRenderData.copyWith()` ile reconstruction bloklari sadelesti — yeni boolean flag eklerken flag kaybi riski onlendi.
 
 ### ShapeGenerator
 
@@ -295,7 +295,7 @@ final l = ref.watch(stringsProvider);
 Text(l.scoreLabel)
 ```
 
-Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula. Renk adlari icin `AppStrings.colorName(GelColor)` helper metodu mevcut. ELO lig isimleri icin `EloLeague.leagueName(AppStrings l)` metodu kullanilir (L.18) — `displayName` getter'i kaldirildi.
+Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strings_*.dart`'a override, (3) cevirileri dogrula. Renk adlari icin `AppStrings.colorName(GelColor)` helper metodu mevcut. ELO lig isimleri icin `EloLeague.leagueName(AppStrings l)` metodu kullanilir — `displayName` getter'i kaldirildi. `eloDisplay(int elo)` interpolated metod ile her dil kendi kelime sirasini koruyor. Mod flavor text'leri `modeClassicFlavor` vb. ile mod isimlerine dunya dili alt basligi. Kisilik isimleri `personalityOrange` vb. ile 8 arketip 12 dilde. `kColorChefLevels`: 40 bolum (20→40 genisletildi, 4 zorluk bandinda kademeli artis).
 
 ## Linting
 
@@ -349,7 +349,7 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 ### Ilk Acilis Akisi
 
-Onboarding (4 sayfa: 3 tanitim + 1 tercihler) → HomeScreen. Sayfa 1'de `_InteractivePlaceDemo`: 5x5 mini grid, L-shape ghost cell'ler pulse animasyonuyla davet eder, tap → yerlesme → satir glow → "Harika!" + replay. `FractionallySizedBox(0.45)` + `AspectRatio(1.0)` ile responsive. Reduce motion'da pulse durur, sabit alpha. GDPR uyumlu: analytics consent + renk koru modu toggle yalnizca kullanici 4. sayfaya ulasirsa kaydedilir (`_kTotalPages = 4`). Skip edilirse HomeScreen'deki dialog akisi: (1) ConsentDialog, (2) ATT (iOS). Colorblind prompt Game Over'da oyun 2-5 arasinda gosterilir (inline, tek seferlik). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder.
+Onboarding (5 sayfa: 3 tanitim + 1 lore + 1 tercihler) → HomeScreen. Sayfa 1'de `_InteractivePlaceDemo`: 5x5 mini grid, L-shape ghost cell'ler pulse animasyonuyla davet eder, tap → yerlesme → satir glow → "Harika!" + replay. `FractionallySizedBox(0.45)` + `AspectRatio(1.0)` ile responsive. Reduce motion'da pulse durur, sabit alpha. GDPR uyumlu: analytics consent + renk koru modu toggle yalnizca kullanici 5. sayfaya ulasirsa kaydedilir (`_kTotalPages = 5`). Sayfa 2 lore sayfasi: "Renklerin canli oldugu bir dunyada..." minimal dunya tanitimi + 4 birincil renk sentez demo. `_kStepPageIndices = [0, 2, 3]` ile tutorial step sayfalari lore sayfasindan sonraya kaydirildi. InteractivePlaceDemo'da 3 GlowOrb (kCyan, kPink, kGold) + ambient glow + "Harika!" kGold. Skip edilirse HomeScreen'deki dialog akisi: (1) ConsentDialog, (2) ATT (iOS). Colorblind prompt Game Over'da oyun 2-5 arasinda gosterilir (inline, tek seferlik). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder. `kWorldTips` (`tips.dart`): 4 dunya odakli tip (tipWorldColors/Synthesis/Jel/Island) — Game Over overlay'de rastgele gosterilir, muted italic stil.
 
 ### Viral Pipeline
 
@@ -375,7 +375,7 @@ ColorChef 3 oyun sonra, TimeTrial 5 oyun sonra acilir. `getTotalGamesPlayed()` i
 
 ### Gorev Sistemi
 
-`quest_provider.dart`: Gunluk 3 gorev (12 havuzdan seed-bazli secim, `kDailyQuestPool`) + haftalik 5 gorev (`kWeeklyQuestPool`, ISO week bazli). 6 gorev tipi: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`, `completeDailyPuzzle`. Her Quest'in unique `id` alani var — progress key olarak kullanilir (`quest.id` bazli, eski `type_name_d` formati migration ile donusturuldu). Haftalik progress ayri persist edilir (`weekly_quest_progress`), hafta degisiminde sifirlanir. `QuestBar` widget HomeScreen'de gunluk (kGold) + haftalik (kOrange) progress bar gosterir. `game_callbacks.dart`'ta 6 callback'e entegre. Tamamlanan gorev Jel Ozu odulu verir.
+`quest_provider.dart`: Gunluk 3 gorev (12 havuzdan seed-bazli secim, `kDailyQuestPool`) + haftalik 5 gorev (`kWeeklyQuestPool`, ISO week bazli — `_isoYearWeek(DateTime)` Thursday-based hesaplama). 6 gorev tipi: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`, `completeDailyPuzzle`. Her Quest'in unique `id` alani var — progress key olarak kullanilir (`quest.id` bazli, eski `type_name_d` formati migration ile donusturuldu). Haftalik progress ayri persist edilir (`weekly_quest_progress`), hafta degisiminde sifirlanir. `QuestBar` widget HomeScreen'de gunluk (kGold) + haftalik (kOrange) progress bar gosterir. Daily puzzle kisayolu QuestBar sol tarafina gomuldu (`DailyBanner` kaldirildi). `game_callbacks.dart`'ta 6 callback'e entegre. Ogretici toast'lar: sentez-temizleme trade-off (oyun 3-8, 2 gosterim), epic kombo yaklasim motivasyonu (large 6+, 3 gosterim, Duel'da devre disi). Tamamlanan gorev Jel Ozu odulu verir.
 
 ### MetaGameBar
 
@@ -417,7 +417,7 @@ Level 50 sonrasi Ascension tier'lari. `getLevel(id, ascension:)` ile hedef skor 
 
 ### Leaderboard Sistemi
 
-LeaderboardScreen 3 tab: Classic, TimeTrial, PvP ELO. Classic/TimeTrial `leaderboard_view` (SECURITY DEFINER) uzerinden — `DISTINCT ON (user_id, mode)` ile kullanici basina en iyi skor. PvP `elo_leaderboard_view` (SECURITY DEFINER) uzerinden — `profiles` RLS (`auth.uid() = id`) bypass eder. `get_user_rank` RPC unique kullanici bazli rank hesaplar, weekly filtre hem kendi skora hem rank'e uygulanir. `_currentMode` `GameMode.classic.name` / `GameMode.timeTrial.name` kullanir (enum case-sensitive). Kullanici satiri cyan vurgu + "YOU" badge ile ayirt edilir. `UserRankBanner` skor gosterir. PvP skorlari "X ELO" formatinda.
+LeaderboardScreen 3 tab: Classic, TimeTrial, PvP ELO. Classic/TimeTrial `leaderboard_view` (SECURITY DEFINER) uzerinden — `DISTINCT ON (user_id, mode)` ile kullanici basina en iyi skor. PvP `elo_leaderboard_view` (SECURITY DEFINER) uzerinden — `profiles` RLS (`auth.uid() = id`) bypass eder. `get_user_rank` RPC unique kullanici bazli rank hesaplar, weekly filtre hem kendi skora hem rank'e uygulanir. `_currentMode` `GameMode.classic.name` / `GameMode.timeTrial.name` kullanir (enum case-sensitive). Kullanici satiri cyan vurgu + "YOU" badge ile ayirt edilir. `UserRankBanner` skor gosterir. PvP skorlari `l.eloDisplay(elo)` formatinda (eski "X ELO" → her dil kendi kelime sirasinda: EN "X Power", TR "X Guc", JP "pawa X").
 
 **Username sync:** Settings'te isim degisikliginde `ensureProfile(username:)` ile Supabase `profiles` tablosuna senkronize edilir. Aksi halde leaderboard eski ismi gosterir.
 
