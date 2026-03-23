@@ -259,9 +259,9 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
       final filled = game.gridManager.filledCells;
       final ratio = filled / total;
       if (ratio >= 0.70) {
-        AudioManager().crossfadeMusic(AudioPaths.bgGameTension);
+        AudioManager().crossfadeMusic(AudioPaths.bgTensionEscalation);
       } else if (ratio < 0.60) {
-        AudioManager().crossfadeMusic(AudioPaths.bgGameRelax);
+        AudioManager().crossfadeMusic(AudioPaths.musicForMode(widget.mode));
       }
     }
   }

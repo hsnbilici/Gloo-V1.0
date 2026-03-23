@@ -260,12 +260,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
     }
 
     // Mod bazlı müzik
-    final musicPath = switch (widget.mode) {
-      GameMode.zen => AudioPaths.bgZenMode,
-      GameMode.timeTrial || GameMode.duel => AudioPaths.bgGameTension,
-      _ => AudioPaths.bgGameRelax,
-    };
-    AudioManager().playMusic(musicPath);
+    AudioManager().playMusic(AudioPaths.musicForMode(widget.mode));
   }
 
   @override
@@ -563,7 +558,10 @@ class _GameScreenState extends ConsumerState<GameScreen>
     effectManager.dispose();
     clipRecorder.dispose();
     AudioManager().setMusicSpeed(1.0);
-    AudioManager().playMusic(AudioPaths.bgMenuLofi);
+    final hour = DateTime.now().hour;
+    AudioManager().playMusic(
+      (hour >= 21 || hour < 6) ? AudioPaths.bgMenuChill : AudioPaths.bgMenuLofi,
+    );
     super.dispose();
   }
 }

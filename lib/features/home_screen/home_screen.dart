@@ -68,7 +68,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       }
       await _continueStartupFlow(repo);
     });
-    AudioManager().playMusic(AudioPaths.bgMenuLofi);
+    final hour = DateTime.now().hour;
+    AudioManager().playMusic(
+      (hour >= 21 || hour < 6) ? AudioPaths.bgMenuChill : AudioPaths.bgMenuLofi,
+    );
     // Initialize + schedule notification reminders
     if (!kIsWeb) {
       _initNotifications();
