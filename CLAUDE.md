@@ -221,6 +221,10 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 
 `syncGridState()`'te preview hucreleri aktifken, her satir icin preview + mevcut hucrelerin satiri tamamlayip tamamlamadigi kontrol edilir. Tamamlayacaksa `isCompletionPreview: true` ile yesil border + tint gosterilir.
 
+### Drag-and-Drop Projeksiyon
+
+`game_grid_builder.dart`: `_dragOffsetToCell()` helper. Flutter `DragTargetDetails.offset` feedback widget'inin sol-ust kosesini verir, parmak feedback'in merkezine yapisir. Seklin grid hucre boyutundaki yari genislik/yuksekligi offset'e eklenerek parmak konumu seklin merkez hucresine eslenir. `clampAnchor()` (`game_interactions.dart`) merkez konumdan sol-ust anchor'a cevirir. Bu sayede sekil nereden tutulursa tutulsun iz dusum dogru olusur. `Draggable<int>` feedback: `Transform.scale(1.8)` ile buyutulmus `ShapePreview`. El (hand) widget: `shape_hand.dart`.
+
 ### DuelState.copyWith Sentinel Deseni
 
 `DuelState.copyWith` nullable alanlari (`matchId`, `seed`, `opponentElo`) icin `_Absent` sentinel sinifi kullanir. Bu, `copyWith(matchId: null)` ile "alanı null yap" ve `copyWith()` ile "alani degistirme" arasindaki farki korur.

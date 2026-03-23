@@ -94,15 +94,19 @@ class ShapeHand extends StatelessWidget {
             onTap: () => onSlotTap(i),
             child: Draggable<int>(
               data: i,
+              dragAnchorStrategy: pointerDragAnchorStrategy,
               onDragStarted: () => onDragStarted?.call(i),
               onDragEnd: (details) => onDragEnd?.call(i, details.wasAccepted),
               feedback: Material(
                 color: Colors.transparent,
                 child: Opacity(
                   opacity: 0.75,
-                  child: Transform.scale(
-                    scale: 1.8,
-                    child: ShapePreview(shape: shape, color: color),
+                  child: FractionalTranslation(
+                    translation: const Offset(-0.5, -0.5),
+                    child: Transform.scale(
+                      scale: 1.8,
+                      child: ShapePreview(shape: shape, color: color),
+                    ),
                   ),
                 ),
               ),
