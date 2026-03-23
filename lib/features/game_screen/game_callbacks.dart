@@ -182,7 +182,14 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onCombo = (combo) {
       clipRecorder.onCombo(combo);
-      soundBank.onCombo(combo);
+      // Ödül seviyesi: epic komboda 80ms sessizlik — dramatik etki
+      if (combo.tier == ComboTier.epic) {
+        Future.delayed(const Duration(milliseconds: 80), () {
+          if (mounted) soundBank.onCombo(combo);
+        });
+      } else {
+        soundBank.onCombo(combo);
+      }
       // Quest tracking: combo (medium+ counts)
       if (combo.tier.index >= ComboTier.medium.index) {
         _trackQuest(QuestType.reachCombo);
@@ -385,7 +392,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     // Seviye tamamlama
     game.onLevelComplete = () {
       if (!mounted) return;
-      soundBank.onLevelComplete();
+      // Ödül seviyesi: 100ms sessizlik — dramatik etki
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) soundBank.onLevelComplete();
+      });
       final levelId = widget.levelData?.id ?? 0;
       final score = game.score;
       _cachedRepo?.setLevelCompleted(levelId, score);
@@ -515,7 +525,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
 
     game.onGameOver = () {
       if (!mounted) return;
-      soundBank.onGameOver();
+      // Ödül seviyesi: 150ms sessizlik — dramatik etki
+      Future.delayed(const Duration(milliseconds: 150), () {
+        if (mounted) soundBank.onGameOver();
+      });
       AudioManager().fadeOutMusic(const Duration(milliseconds: 800));
       // A11y: announce game over with final score to screen readers
       final goL = ref.read(stringsProvider);
