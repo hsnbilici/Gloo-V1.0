@@ -47,6 +47,50 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
 
   final GlobalKey _gridKey = GlobalKey();
 
+  /// Drag feedback offset'inden grid hücre koordinatına çevirir.
+  ///
+  /// Flutter'ın [DragTargetDetails.offset] feedback widget'ının sol-üst
+  /// köşesinin global konumudur. Parmak feedback'in merkezine yapışır.
+  /// Şeklin merkezini grid'e eşleştirmek için feedback'in yarı boyutunu
+  /// (şeklin grid hücre cinsinden yarı genişlik/yüksekliği) ekleriz.
+  /// Bu sayede şeklin neresinden tutulursa tutulsun iz düşüm doğru olur.
+  (int row, int col) _dragOffsetToCell(
+    Offset globalOffset,
+    double cell,
+    double gap,
+    int cols,
+    int rows,
+  ) {
+    final box =
+        _gridKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null) return (0, 0);
+
+    // Seçili şeklin boyutları — feedback merkezini anchor'a çevirmek için
+    final shape =
+        selectedSlot != null ? hand[selectedSlot!]?.$1 : null;
+    final shapeHalfW = shape != null
+        ? (shape.colCount - 1) * (cell + gap) / 2
+        : 0.0;
+    final shapeHalfH = shape != null
+        ? (shape.rowCount - 1) * (cell + gap) / 2
+        : 0.0;
+
+    final local = box.globalToLocal(globalOffset);
+    // Feedback sol-üst → parmak konumu (merkez) → şeklin merkez hücresi
+    // Parmak = offset + feedbackHalfSize. feedbackHalfSize ≈ şeklin
+    // grid hücre cinsinden yarı boyutu (scale farkı Draggable tarafından
+    // zaten hesaba katılmış — details.offset feedback'in sol-üstü).
+    // Anchor (sol-üst) = parmak pozisyonu, shape yarı boyutunu çıkar değil
+    // EKLEriz çünkü details.offset zaten feedback sol-üstü.
+    // Asıl formül: hücre = (local + feedbackHalf) / cellStep
+    // feedbackHalf ≈ şeklin grid boyutunun yarısı
+    final cx = local.dx + shapeHalfW + (cell + gap) / 2;
+    final cy = local.dy + shapeHalfH + (cell + gap) / 2;
+    final c = (cx / (cell + gap)).floor().clamp(0, cols - 1);
+    final r = (cy / (cell + gap)).floor().clamp(0, rows - 1);
+    return (r, c);
+  }
+
   void syncGridState() {
     final rows = game.gridManager.rows;
     final cols = game.gridManager.cols;
@@ -186,25 +230,15 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
                       child: DragTarget<int>(
                     onWillAcceptWithDetails: (_) => selectedSlot != null,
                     onMove: (details) {
-                      final box = _gridKey.currentContext?.findRenderObject()
-                          as RenderBox?;
-                      if (box == null) return;
-                      final local = box.globalToLocal(details.offset);
-                      final c =
-                          (local.dx / (cell + gap)).floor().clamp(0, cols - 1);
-                      final r =
-                          (local.dy / (cell + gap)).floor().clamp(0, rows - 1);
+                      final (r, c) = _dragOffsetToCell(
+                        details.offset, cell, gap, cols, rows,
+                      );
                       onDragOver(r, c);
                     },
                     onAcceptWithDetails: (details) {
-                      final box = _gridKey.currentContext?.findRenderObject()
-                          as RenderBox?;
-                      if (box == null) return;
-                      final local = box.globalToLocal(details.offset);
-                      final c =
-                          (local.dx / (cell + gap)).floor().clamp(0, cols - 1);
-                      final r =
-                          (local.dy / (cell + gap)).floor().clamp(0, rows - 1);
+                      final (r, c) = _dragOffsetToCell(
+                        details.offset, cell, gap, cols, rows,
+                      );
                       onDragDrop(r, c);
                     },
                     onLeave: (_) => setState(() {
