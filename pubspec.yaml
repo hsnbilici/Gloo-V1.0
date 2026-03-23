@@ -21,6 +21,7 @@ dependencies:
 
   # Navigasyon
   go_router: ^13.2.0
+  app_links: ^6.3.2          # Deep link handling (Android App Links / iOS Universal Links)
 
   # Yardımcı
   equatable: ^2.0.5

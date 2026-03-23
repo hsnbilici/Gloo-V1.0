@@ -6,6 +6,7 @@ import '../core/constants/color_constants.dart';
 import '../core/constants/color_constants_light.dart';
 import '../providers/locale_provider.dart';
 import '../providers/theme_provider.dart';
+import 'deep_link_handler.dart';
 import 'router.dart';
 
 /// Body text stillerinde platform default fontunu kullanan TextTheme.
@@ -20,14 +21,35 @@ TextTheme _bodySystemFontTextTheme(Brightness brightness) {
       );
 }
 
-class GlooApp extends ConsumerWidget {
+class GlooApp extends ConsumerStatefulWidget {
   const GlooApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GlooApp> createState() => _GlooAppState();
+}
+
+class _GlooAppState extends ConsumerState<GlooApp> {
+  late final DeepLinkHandler _deepLinkHandler;
+  bool _deepLinkListenerStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _deepLinkHandler = DeepLinkHandler();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
+
+    // Start listening once the router is available. Guard against re-entry
+    // on subsequent builds (provider rebuilds).
+    if (!_deepLinkListenerStarted) {
+      _deepLinkListenerStarted = true;
+      _deepLinkHandler.listen(router);
+    }
 
     return MaterialApp.router(
       title: 'Gloo',

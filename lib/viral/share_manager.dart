@@ -8,7 +8,8 @@ import '../services/analytics_service.dart';
 
 class ShareManager {
   static const String _hashtags = '#Gloo #ASMR #satisfying #puzzle #colorsort';
-  static const String _appUrl = 'https://gloo.app';
+  static const String _appUrl = 'https://gloogame.com';
+  static const String _shareBaseUrl = 'https://gloogame.com/share';
 
   final AnalyticsService _analytics;
 
@@ -57,9 +58,11 @@ class ShareManager {
     final emojiGrid = grid != null ? buildDailyEmojiGrid(grid, score) : null;
     final caption = l.shareDailyCaption(dateLabel, _formatScore(score));
     final challenge = l.shareDailyChallenge;
+    // Deep link: recipients can tap to open the same daily puzzle directly.
+    final dailyLink = '$_shareBaseUrl/daily?date=${Uri.encodeComponent(dateLabel)}';
     final text = emojiGrid != null
-        ? '$caption\n$emojiGrid\n$challenge $_appUrl\n\n$_hashtags'
-        : '$caption $challenge $_appUrl\n\n$_hashtags';
+        ? '$caption\n$emojiGrid\n$challenge $dailyLink\n\n$_hashtags'
+        : '$caption $challenge $dailyLink\n\n$_hashtags';
     await Share.share(text);
   }
 
