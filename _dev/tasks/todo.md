@@ -1,15 +1,8 @@
 # Gloo v1.0 — Kalan Gorevler
 
 > Son guncelleme: 2026-03-23
-> **Test:** 2151/2151 PASS | **Yaratici Skor:** 4.0/5.0
-
----
-
-## Backlog (Code Review Onerileri — Dusuk Oncelik)
-
-- [ ] **CR.31-S1 — kWorldTips UI entegrasyonu:** `tips.dart`'taki 4 tip tanimli ama hicbir widget tarafindan tuketilmiyor. Loading screen veya game-over tip olarak bagla.
-- [ ] **CR.31-S2 — Epic toast Duel modu guard:** Duel'da zaman baskisi altinda motivasyon toast'i dikkat dagitabilir. `widget.mode != GameMode.duel` guard ekle.
-- [ ] **CR.31-S3 — rankLabel kelime sirasi l10n:** `'$elo ${l.rankLabel}'` format tum dillerde dogru olmayabilir (JP/KO). `eloDisplay(int)` interpolated l10n metodu tercih et.
+> **Test:** 2155/2155 PASS | **Yaratici Skor:** 4.0/5.0
+> **Durum:** Tum kod gorevleri + backlog tamamlandi
 
 ---
 
