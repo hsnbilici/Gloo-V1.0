@@ -161,6 +161,80 @@ void main() {
     });
   });
 
+  // ─── LineSweepEffect ──────────────────────────────────────────────────
+
+  group('LineSweepEffect', () {
+    testWidgets('renders without error', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LineSweepEffect(
+            cols: 8,
+            cellSize: 40,
+            gap: 4,
+            onDismiss: () {},
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('calls onDismiss on completion', (tester) async {
+      var dismissed = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LineSweepEffect(
+            cols: 8,
+            cellSize: 40,
+            gap: 4,
+            onDismiss: () => dismissed = true,
+          ),
+        ),
+      );
+      // Animation duration is 300ms — pumpAndSettle drives to completion
+      await tester.pumpAndSettle();
+      expect(dismissed, isTrue);
+    });
+
+    testWidgets('disposes cleanly', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LineSweepEffect(
+            cols: 8,
+            cellSize: 40,
+            gap: 4,
+            onDismiss: () {},
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpWidget(
+        const MaterialApp(home: SizedBox()),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('respects reduce motion — immediate dismiss', (tester) async {
+      var dismissed = false;
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(disableAnimations: true),
+          child: MaterialApp(
+            home: LineSweepEffect(
+              cols: 8,
+              cellSize: 40,
+              gap: 4,
+              onDismiss: () => dismissed = true,
+            ),
+          ),
+        ),
+      );
+      await tester.pump(); // postFrameCallback fires
+      expect(dismissed, isTrue);
+    });
+  });
+
   // ─── ColorSynthesisBloomEffect ────────────────────────────────────────
 
   group('ColorSynthesisBloomEffect', () {

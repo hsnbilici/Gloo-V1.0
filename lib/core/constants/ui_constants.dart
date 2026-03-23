@@ -177,6 +177,9 @@ abstract final class AnimationDurations {
   /// Synthesis pulse cell scale animation.
   static const Duration synthesisPulse = Duration(milliseconds: 300);
 
+  /// Line sweep effect across cleared row (multi-line clear).
+  static const Duration lineSweep = Duration(milliseconds: 300);
+
   /// Dialog show/hide transitions.
   static const Duration dialog = Duration(milliseconds: 380);
 

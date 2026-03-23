@@ -160,7 +160,6 @@ class UserRankBanner extends StatelessWidget {
     required this.label,
     this.score,
     this.isPvp = false,
-    this.rankLabel = 'Power',
     this.strings,
   });
 
@@ -168,7 +167,6 @@ class UserRankBanner extends StatelessWidget {
   final String label;
   final int? score;
   final bool isPvp;
-  final String rankLabel;
   final AppStrings? strings;
 
   @override
@@ -229,7 +227,7 @@ class UserRankBanner extends StatelessWidget {
           if (score != null)
             Text(
               isPvp
-                  ? (strings?.eloDisplay(score!) ?? '$score $rankLabel')
+                  ? (strings?.eloDisplay(score!) ?? '${score!} ELO')
                   : _formatScore(score!),
               style: const TextStyle(
                 color: kCyan,
@@ -257,7 +255,6 @@ class ScoreRow extends StatelessWidget {
     required this.score,
     this.isCurrentUser = false,
     this.isPvp = false,
-    this.rankLabel = 'Power',
     this.strings,
   });
 
@@ -266,7 +263,6 @@ class ScoreRow extends StatelessWidget {
   final int score;
   final bool isCurrentUser;
   final bool isPvp;
-  final String rankLabel;
   final AppStrings? strings;
 
   Color get _rankColor {
@@ -312,7 +308,7 @@ class ScoreRow extends StatelessWidget {
     }
 
     final scoreText = isPvp
-        ? (strings?.eloDisplay(score) ?? '$score $rankLabel')
+        ? (strings?.eloDisplay(score) ?? '$score ELO')
         : _formatScore(score);
 
     return Semantics(

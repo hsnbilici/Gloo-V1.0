@@ -169,11 +169,14 @@ class QuestBar extends ConsumerWidget {
               // ── Weekly row ───────────────────────────────────────────────
               if (state.weeklyQuests.isNotEmpty) ...[
                 const SizedBox(height: 6),
-                _WeeklyRow(
-                  state: state,
-                  mutedColor: mutedColor,
-                  textColor: textColor,
-                  weeklyLabel: l.weeklyQuestsTitle,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: _WeeklyRow(
+                    state: state,
+                    mutedColor: mutedColor,
+                    textColor: textColor,
+                    weeklyLabel: l.weeklyQuestsTitle,
+                  ),
                 ),
               ],
             ],

@@ -622,7 +622,7 @@ class _LineSweepEffectState extends State<LineSweepEffect>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: AnimationDurations.synthesisPulse,
+      duration: AnimationDurations.lineSweep,
     )..forward();
     _ctrl.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) widget.onDismiss();
