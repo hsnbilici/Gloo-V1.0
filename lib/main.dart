@@ -10,21 +10,12 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'app/app.dart';
 import 'core/constants/color_constants.dart';
 import 'core/l10n/app_strings.dart';
 import 'core/network/certificate_pinner.dart';
 import 'core/network/pinned_http_overrides.dart';
-import 'data/local/local_repository.dart';
-import 'data/remote/supabase_client.dart';
 import 'firebase_options.dart';
-import 'providers/theme_provider.dart';
-import 'audio/audio_manager.dart';
-import 'services/ad_manager.dart';
-import 'services/consent_service.dart';
-import 'services/purchase_service.dart';
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -68,41 +59,6 @@ Future<void> main() async {
       // Firebase henuz yapilandirilmamis — uygulama calismaya devam eder
     }
 
-    // UMP consent — AdMob'dan önce çalışmalı (EEA/UK GDPR zorunluluğu)
-    if (!kIsWeb) {
-      try {
-        await ConsentService().initialize();
-      } catch (_) {
-        // UMP hatası — uygulama çalışmaya devam eder
-      }
-    }
-
-    // Supabase, AdMob, IAP birbirinden bagimsiz — paralel baslatma
-    try {
-      await Future.wait([
-        SupabaseConfig.initialize(),
-        AudioManager().initialize(),
-        if (!kIsWeb) AdManager().initialize(),
-        if (!kIsWeb) PurchaseService().initialize(),
-      ]);
-    } catch (_) {
-      // Ag baglantisi yok veya servis down — uygulama calismaya devam eder
-    }
-
-    // Onceki oturumdan kalan dogrulanamamis IAP'leri yeniden dogrula
-    // ve suresi dolmus abonelikleri temizle
-    if (!kIsWeb) {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        final localRepo = LocalRepository(prefs);
-        await PurchaseService().loadPendingVerifications(localRepo);
-        await PurchaseService().syncLocalProducts(localRepo);
-        await AdManager().restoreDailyCaps(prefs);
-      } catch (_) {
-        // Network hatasi — sonraki baslatmada tekrar denenir
-      }
-    }
-
     if (!kIsWeb) {
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -118,18 +74,6 @@ Future<void> main() async {
     }
 
     FlutterNativeSplash.remove();
-
-    // Kalici tema modunu runApp oncesi yukle — sistem temasina geri donusu onler
-    ThemeMode savedThemeMode = ThemeMode.dark;
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final repo = LocalRepository(prefs);
-      savedThemeMode = repo.getThemeMode();
-      // Ses paketini yükle ve AudioManager singleton'ına uygula
-      AudioManager().setAudioPackage(repo.getAudioPackage());
-    } catch (_) {
-      // Okuma basarisiz — varsayilan karanlik temaya devam et
-    }
 
     // Widget build hatalarinda kullanici dostu hata ekrani
     ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -175,11 +119,6 @@ Future<void> main() async {
 
     runApp(
       ProviderScope(
-        overrides: [
-          themeModeProvider.overrideWith(
-            () => ThemeModeNotifier(savedThemeMode),
-          ),
-        ],
         child: const GlooApp(),
       ),
     );

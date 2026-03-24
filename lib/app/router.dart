@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../features/daily_puzzle/daily_puzzle_screen.dart';
 import '../features/game_screen/game_screen.dart';
 import '../features/home_screen/home_screen.dart';
+import '../features/loading/loading_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../game/levels/level_progression.dart';
 import '../core/models/game_mode.dart';
@@ -32,7 +33,7 @@ class _SoundNavigatorObserver extends NavigatorObserver {
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/loading',
     observers: [_SoundNavigatorObserver()],
     errorBuilder: (context, state) => Scaffold(
       body: Center(
@@ -58,6 +59,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ),
     routes: [
+      GoRoute(
+        path: '/loading',
+        builder: (context, state) => const LoadingScreen(),
+      ),
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeScreen(),
