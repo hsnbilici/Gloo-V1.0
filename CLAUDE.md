@@ -406,6 +406,14 @@ Onboarding 5 sayfa (3 tanitim + 1 lore + 1 tercihler) → HomeScreen. GDPR: cons
 - **Ascension:** Level 50 sonrasi tier'lar. Hedef skor +%25/tier, hamle -%10/tier (cap -%50).
 - **Collection Odulleri:** 8 sentez rengi tamamlandiginda +50 Jel Ozu (tek seferlik).
 
+### Arkadaş Sistemi (CD.27a)
+
+`lib/data/remote/friend_repository.dart`: `FriendRepository` — follow/unfollow, searchByCode/Username, getFollowing/Followers, getFriendsLeaderboard, getFriendsRank. `lib/providers/friend_provider.dart`: `FriendsState` (following, followers, myCode, mutualFriends).
+
+Hibrit model: tek yonlu follow + karsilikli olunca "arkadas". `follows` tablosu (follower_id, following_id). Max 100 follow (Supabase trigger). Friend code: `GLO-XXXX` (profiles.friend_code UNIQUE). Username arama: `ilike`, min 3 karakter, debounce 300ms.
+
+`FriendsScreen` (`/friends`): kod paylasma + kod/username arama + arkadas/takip/takipci listeleri. Deep link: `/friend/:code`. `WeeklyRivalCard`: HomeScreen'de haftalik rank + en yakin rakip. Leaderboard 4. tab: Friends.
+
 ### Leaderboard Sistemi
 
 3 tab: Classic, TimeTrial, PvP ELO. SQL view'lar (SECURITY DEFINER) `profiles` RLS'i bypass eder. `_currentMode` enum case-sensitive. PvP skorlari `l.eloDisplay(elo)` ile lokalize. **Username sync:** Settings'te isim degisikligi `ensureProfile(username:)` ile Supabase'e senkronize edilmeli — aksi halde leaderboard eski ismi gosterir.
