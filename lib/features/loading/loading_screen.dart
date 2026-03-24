@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../audio/audio_manager.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
 import '../../core/utils/motion_utils.dart';
@@ -148,26 +149,22 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
       ]);
     } catch (_) {}
 
-    // IAP pending verifications + ad caps
-    if (!kIsWeb) {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        final localRepo = LocalRepository(prefs);
-        await PurchaseService().loadPendingVerifications(localRepo);
-        await PurchaseService().syncLocalProducts(localRepo);
-        await AdManager().restoreDailyCaps(prefs);
-      } catch (_) {}
-    }
-
-    // Theme + audio package
+    // SharedPreferences + LocalRepository (tek instance)
     try {
       final prefs = await SharedPreferences.getInstance();
       final repo = LocalRepository(prefs);
       _repo = repo;
 
+      // IAP pending verifications + ad caps
+      if (!kIsWeb) {
+        await PurchaseService().loadPendingVerifications(repo);
+        await PurchaseService().syncLocalProducts(repo);
+        await AdManager().restoreDailyCaps(prefs);
+      }
+
+      // Theme + audio package
       final savedThemeMode = repo.getThemeMode();
       ref.read(themeModeProvider.notifier).setThemeMode(savedThemeMode);
-
       AudioManager().setAudioPackage(repo.getAudioPackage());
     } catch (_) {}
 
@@ -234,7 +231,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
     final rm = shouldReduceMotion(context);
 
     return Semantics(
-      label: 'GLOO loading',
+      label: '$kAppName loading',
       child: Scaffold(
         backgroundColor: kBgDark,
         body: IgnorePointer(

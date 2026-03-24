@@ -302,8 +302,9 @@ class ShapeGenerator {
       return colors[_rng.nextInt(colors.length)];
     }
 
-    // Adaptif: synthesisFriendly false → düz rastgele (ters ağırlık kapalı)
-    if (adaptiveModifiers != null && !adaptiveModifiers!.synthesisFriendly) {
+    // Adaptif: synthesisFriendly false → düz rastgele (yüksek beceri bandı)
+    // synthesisFriendly null → nötr, mevcut ters ağırlık korunur
+    if (adaptiveModifiers?.synthesisFriendly == false) {
       return colors[_rng.nextInt(colors.length)];
     }
 

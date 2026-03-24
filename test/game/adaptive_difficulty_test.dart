@@ -120,7 +120,7 @@ void main() {
 
       expect(mods.smallShapeBonus, equals(0.0));
       expect(mods.largeShapeBonus, equals(0.0));
-      expect(mods.synthesisFriendly, isFalse);
+      expect(mods.synthesisFriendly, isNull); // nötr — mevcut davranış korunur
       expect(mods.comboSetup, isFalse);
       expect(mods.pressureMercy, isFalse);
     });

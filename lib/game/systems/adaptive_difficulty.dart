@@ -5,7 +5,7 @@ class DifficultyModifiers {
   const DifficultyModifiers({
     this.smallShapeBonus = 0.0,
     this.largeShapeBonus = 0.0,
-    this.synthesisFriendly = false,
+    this.synthesisFriendly,
     this.comboSetup = false,
     this.pressureMercy = false,
   });
@@ -14,7 +14,7 @@ class DifficultyModifiers {
   const DifficultyModifiers.neutral()
       : smallShapeBonus = 0.0,
         largeShapeBonus = 0.0,
-        synthesisFriendly = false,
+        synthesisFriendly = null,
         comboSetup = false,
         pressureMercy = false;
 
@@ -24,10 +24,14 @@ class DifficultyModifiers {
   /// Added to large shape weight (+0.0 to +0.20).
   final double largeShapeBonus;
 
-  /// When true, synthesis-friendly colors receive a +30% weight boost.
-  final bool synthesisFriendly;
+  /// Synthesis renk ağırlıklandırması:
+  /// - `true` → sentez-dostu renklere +%30 boost (düşük beceri)
+  /// - `null` → nötr, mevcut ters ağırlık sistemi aynen çalışır
+  /// - `false` → ters ağırlık kapalı, düz rastgele (yüksek beceri)
+  final bool? synthesisFriendly;
 
   /// When true, shapes that fit near-full rows are favoured.
+  /// TODO: CD.28 Phase 2 — henüz ShapeGenerator'da consume edilmiyor.
   final bool comboSetup;
 
   /// When true, a small shape is guaranteed when the grid is >60% full.
@@ -67,8 +71,15 @@ class AdaptiveDifficulty {
       largeShapeBonus = 0.0;
     }
 
-    // synthesisSkill axis
-    final synthesisFriendly = synth < _lowThreshold;
+    // synthesisSkill axis: true (boost) / null (nötr) / false (disable)
+    final bool? synthesisFriendly;
+    if (synth < _lowThreshold) {
+      synthesisFriendly = true;
+    } else if (synth > _highThreshold) {
+      synthesisFriendly = false;
+    } else {
+      synthesisFriendly = null; // nötr — mevcut ters ağırlık korunur
+    }
 
     // comboSkill axis
     final comboSetup = combo < _lowThreshold;

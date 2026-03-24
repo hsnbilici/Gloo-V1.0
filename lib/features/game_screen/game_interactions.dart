@@ -284,8 +284,21 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   }
 
   void onDragOver(int row, int col) {
+    if (selectedSlot == null) return;
+    final slot = hand[selectedSlot!];
+    if (slot == null) return;
+
+    final (shape, color) = slot;
+    final (ar, ac) = _dragAnchor(shape, row, col);
+    final cells = shape.at(ar, ac);
     final prevAnchor = previewAnchor;
-    onCellHover(row, col);
+
+    setState(() {
+      previewCells = cells.toSet();
+      previewValid = game.gridManager.canPlace(cells, color);
+      previewAnchor = (ar, ac);
+    });
+
     // Haptic snap when anchor position changes during drag
     if (previewAnchor != null && previewAnchor != prevAnchor) {
       soundBank.onDragSnap();
@@ -298,7 +311,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     if (slot == null) return;
 
     final (shape, color) = slot;
-    final (ar, ac) = clampAnchor(shape, row, col);
+    final (ar, ac) = _dragAnchor(shape, row, col);
     final cells = shape.at(ar, ac);
     final canPlace = game.gridManager.canPlace(cells, color);
 
@@ -337,5 +350,14 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     final maxRow = game.gridManager.rows - shape.rowCount;
     final maxCol = game.gridManager.cols - shape.colCount;
     return (row.clamp(0, maxRow), col.clamp(0, maxCol));
+  }
+
+  /// Sürükleme sırasında pointer → anchor dönüşümü.
+  /// Feedback widget parmağa merkezli olduğu için, şeklin merkezini
+  /// pointer konumuna hizalar (1-2'li şekillerde fark yok, 3-4'lülerde kritik).
+  (int, int) _dragAnchor(GelShape shape, int row, int col) {
+    final centeredRow = row - shape.rowCount ~/ 2;
+    final centeredCol = col - shape.colCount ~/ 2;
+    return clampAnchor(shape, centeredRow, centeredCol);
   }
 }

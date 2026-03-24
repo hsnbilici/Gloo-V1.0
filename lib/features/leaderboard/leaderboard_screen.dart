@@ -60,50 +60,61 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
 
   Future<void> _fetchData() async {
     setState(() => _loading = true);
-    if (_isPvpTab) {
-      final scores =
-          await ref.read(remoteRepositoryProvider).getEloLeaderboard();
-      if (!mounted) return;
-      final userId = ref.read(currentUserIdProvider);
-      int? pvpRank;
-      int? pvpScore;
-      if (userId != null) {
-        final idx = scores.indexWhere((e) => e.userId == userId);
-        if (idx >= 0) {
-          pvpRank = idx + 1;
-          pvpScore = scores[idx].score;
+    try {
+      if (_isPvpTab) {
+        final scores =
+            await ref.read(remoteRepositoryProvider).getEloLeaderboard();
+        if (!mounted) return;
+        final userId = ref.read(currentUserIdProvider);
+        int? pvpRank;
+        int? pvpScore;
+        if (userId != null) {
+          final idx = scores.indexWhere((e) => e.userId == userId);
+          if (idx >= 0) {
+            pvpRank = idx + 1;
+            pvpScore = scores[idx].score;
+          }
         }
+        setState(() {
+          _scores = scores;
+          _userRank = pvpRank;
+          _userScore = pvpScore;
+          _loading = false;
+        });
+      } else {
+        final results = await Future.wait([
+          ref
+              .read(remoteRepositoryProvider)
+              .getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
+          ref
+              .read(remoteRepositoryProvider)
+              .getUserRank(mode: _currentMode, weekly: _weekly),
+        ]);
+        if (!mounted) return;
+        final fetchedScores = results[0] as List<LeaderboardEntry>;
+        final fetchedRank = results[1] as int?;
+        final userId = ref.read(currentUserIdProvider);
+        int? fetchedScore;
+        if (userId != null) {
+          final match = fetchedScores.where((e) => e.userId == userId);
+          if (match.isNotEmpty) fetchedScore = match.first.score;
+        }
+        setState(() {
+          _scores = fetchedScores;
+          _userRank = fetchedRank;
+          _userScore = fetchedScore;
+          _loading = false;
+        });
       }
-      setState(() {
-        _scores = scores;
-        _userRank = pvpRank;
-        _userScore = pvpScore;
-        _loading = false;
-      });
-    } else {
-      final results = await Future.wait([
-        ref
-            .read(remoteRepositoryProvider)
-            .getGlobalLeaderboard(mode: _currentMode, weekly: _weekly),
-        ref
-            .read(remoteRepositoryProvider)
-            .getUserRank(mode: _currentMode, weekly: _weekly),
-      ]);
-      if (!mounted) return;
-      final fetchedScores = results[0] as List<LeaderboardEntry>;
-      final fetchedRank = results[1] as int?;
-      final userId = ref.read(currentUserIdProvider);
-      int? fetchedScore;
-      if (userId != null) {
-        final match = fetchedScores.where((e) => e.userId == userId);
-        if (match.isNotEmpty) fetchedScore = match.first.score;
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _scores = [];
+          _userRank = null;
+          _userScore = null;
+          _loading = false;
+        });
       }
-      setState(() {
-        _scores = fetchedScores;
-        _userRank = fetchedRank;
-        _userScore = fetchedScore;
-        _loading = false;
-      });
     }
   }
 

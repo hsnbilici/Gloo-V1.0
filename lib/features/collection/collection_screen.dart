@@ -130,20 +130,44 @@ class CollectionScreen extends ConsumerWidget {
       body: Stack(
         children: [
           const _CollectionBackground(),
-          found == 0
-              ? Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: hPadding),
-                    child: Text(
-                      l.collectionEmpty,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: kMuted, fontSize: 14, height: 1.5),
-                    ),
-                  ),
-                )
-              : Column(
+          Column(
                   children: [
+                    // Boş koleksiyon ipucu
+                    if (found == 0)
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(hPadding, 12, hPadding, 0),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: kCyan.withValues(alpha: 0.06),
+                            borderRadius:
+                                BorderRadius.circular(UIConstants.radiusMd),
+                            border: Border.all(
+                                color: kCyan.withValues(alpha: 0.20)),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.lightbulb_outline_rounded,
+                                  color: kCyan.withValues(alpha: 0.70),
+                                  size: 18),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: Text(
+                                  l.collectionEmpty,
+                                  style: TextStyle(
+                                    color: kCyan.withValues(alpha: 0.70),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     if (allCollected)
                       Padding(
                         padding: EdgeInsets.fromLTRB(hPadding, 12, hPadding, 0),
@@ -364,18 +388,31 @@ class _ColorCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          // Sentez formülü veya durum etiketi
-          if (isDiscovered && recipe != null)
+          // Sentez formülü — keşfedilmiş ve kilitli kartlarda göster
+          if (recipe != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _MiniColorDot(color: recipe!.$1.displayColor),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child:
-                      Text('+', style: TextStyle(color: kMuted, fontSize: 10)),
+                _MiniColorDot(
+                  color: isDiscovered
+                      ? recipe!.$1.displayColor
+                      : recipe!.$1.displayColor.withValues(alpha: 0.35),
                 ),
-                _MiniColorDot(color: recipe!.$2.displayColor),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Text('+',
+                      style: TextStyle(
+                        color: isDiscovered
+                            ? kMuted
+                            : kMuted.withValues(alpha: 0.40),
+                        fontSize: 10,
+                      )),
+                ),
+                _MiniColorDot(
+                  color: isDiscovered
+                      ? recipe!.$2.displayColor
+                      : recipe!.$2.displayColor.withValues(alpha: 0.35),
+                ),
               ],
             )
           else

@@ -36,10 +36,10 @@ class SkillRadarChart extends StatelessWidget {
     );
 
     return Semantics(
-      label: 'Skill profile: grid ${(gridEfficiency * 100).round()}%, '
-          'synthesis ${(synthesisSkill * 100).round()}%, '
-          'combo ${(comboSkill * 100).round()}%, '
-          'pressure ${(pressureResilience * 100).round()}%',
+      label: '${labels[0]} ${(gridEfficiency * 100).round()}%, '
+          '${labels[1]} ${(synthesisSkill * 100).round()}%, '
+          '${labels[2]} ${(comboSkill * 100).round()}%, '
+          '${labels[3]} ${(pressureResilience * 100).round()}%',
       child: SizedBox(
         width: chartSize,
         height: chartSize,

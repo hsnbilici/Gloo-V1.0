@@ -32,17 +32,23 @@ void main() {
       expect(level.targetScore, 200);
     });
 
-    test('levels 1-20 have no special cells (learning phase)', () {
-      // Ilk 20 seviyede sadece normal hucreler (bazilari bos specialCells)
-      for (int i = 1; i <= 20; i++) {
+    test('levels 1-10 have no special cells (pure learning phase)', () {
+      for (int i = 1; i <= 10; i++) {
         final level = LevelProgression.getLevel(i)!;
-        // Some predefined levels in 1-20 may have empty specialCells
-        if (level.specialCells.isNotEmpty) {
-          // Eger varsa bile ice olmamali (21+ icin)
-          // Aslinda 1-20 arasinda hicbir ozel hucre yok
-          fail('Level $i should not have special cells');
-        }
+        expect(level.specialCells, isEmpty,
+            reason: 'Level $i should not have special cells');
       }
+    });
+
+    test('levels 11-20 introduce variety (some have special cells)', () {
+      // Level 11-20 artik cesitlilik iceriyor (buz, tas, renk kisitlamasi)
+      final hasSpecial = <int>[];
+      for (int i = 11; i <= 20; i++) {
+        final level = LevelProgression.getLevel(i)!;
+        if (level.specialCells.isNotEmpty) hasSpecial.add(i);
+      }
+      expect(hasSpecial, isNotEmpty,
+          reason: 'Some levels 11-20 should have special cells');
     });
 
     test('levels 21+ introduce ice cells', () {
@@ -77,17 +83,23 @@ void main() {
 
     test('target scores increase within sections (breathing rooms excluded)',
         () {
-      // Her 10'lu bolum icinde (breathing room haric) skor artar
-      // Ama bir bolumden digerine gecerken breathing room sonrasi
-      // skor dusebilir (yeni bolumun baslangici)
-      for (final range in [(1, 9), (11, 19), (21, 29), (31, 39), (41, 49)]) {
-        int prevScore = 0;
-        for (int i = range.$1; i <= range.$2; i++) {
-          final level = LevelProgression.getLevel(i)!;
-          expect(level.targetScore, greaterThanOrEqualTo(prevScore),
-              reason: 'Level $i score should be >= previous in section');
-          prevScore = level.targetScore;
-        }
+      // Bolum 1 (1-9): saf ogrenme, monoton artis
+      int prevScore = 0;
+      for (int i = 1; i <= 9; i++) {
+        final level = LevelProgression.getLevel(i)!;
+        expect(level.targetScore, greaterThanOrEqualTo(prevScore),
+            reason: 'Level $i score should be >= previous in learning section');
+        prevScore = level.targetScore;
+      }
+      // Bolum 2+ (11-49): cesitlilik var — her bolumun son seviyesi
+      // ilk seviyesinden yuksek olmali (kesin monoton artis degil,
+      // cunku farkli zorluk turleri farkli puan hedefleri getirir)
+      for (final range in [(21, 29), (31, 39), (41, 49)]) {
+        final first = LevelProgression.getLevel(range.$1)!;
+        final last = LevelProgression.getLevel(range.$2)!;
+        expect(last.targetScore, greaterThanOrEqualTo(first.targetScore),
+            reason:
+                'Section end (${range.$2}) score >= section start (${range.$1})');
       }
     });
 

@@ -234,9 +234,23 @@ class _GameScreenState extends ConsumerState<GameScreen>
     );
     game.currencyManager.isGlooPlus = ref.read(appSettingsProvider).glooPlus;
 
+    // Adaptif zorluk: profil senkron yükle (ilk el için hazır olmalı)
+    final syncRepo = ref.read(localRepositoryProvider).valueOrNull;
+    if (syncRepo != null) {
+      _skillProfile = syncRepo.getSkillProfile().applyCooldown();
+      skillProfileForCallbacks = _skillProfile;
+      final isAdaptiveMode = widget.mode != GameMode.level &&
+          widget.mode != GameMode.daily &&
+          widget.mode != GameMode.duel;
+      if (isAdaptiveMode) {
+        game.shapeGenerator.adaptiveModifiers =
+            AdaptiveDifficulty.calculate(_skillProfile!);
+      }
+    }
+
     effectManager = GameEffectManager(this);
 
-    // Kalici verileri yukle
+    // Kalici verileri yukle (async — high score, currency vb.)
     ref.read(localRepositoryProvider.future).then((repo) async {
       _cachedRepo = repo;
       final saved = await repo.getHighScore(widget.mode.name);
@@ -246,15 +260,17 @@ class _GameScreenState extends ConsumerState<GameScreen>
       final lifetime = await repo.getLifetimeEarnings();
       game.currencyManager.setLifetimeEarnings(lifetime);
 
-      // Adaptif zorluk: profil yükle + kaldıraç hesapla
-      _skillProfile = repo.getSkillProfile().applyCooldown();
-      skillProfileForCallbacks = _skillProfile;
-      final isAdaptiveMode = widget.mode != GameMode.level &&
-          widget.mode != GameMode.daily &&
-          widget.mode != GameMode.duel;
-      if (isAdaptiveMode) {
-        game.shapeGenerator.adaptiveModifiers =
-            AdaptiveDifficulty.calculate(_skillProfile!);
+      // Profil async yoldan da yükle (syncRepo null ise fallback)
+      if (_skillProfile == null) {
+        _skillProfile = repo.getSkillProfile().applyCooldown();
+        skillProfileForCallbacks = _skillProfile;
+        final isAdaptiveMode = widget.mode != GameMode.level &&
+            widget.mode != GameMode.daily &&
+            widget.mode != GameMode.duel;
+        if (isAdaptiveMode) {
+          game.shapeGenerator.adaptiveModifiers =
+              AdaptiveDifficulty.calculate(_skillProfile!);
+        }
       }
     });
 

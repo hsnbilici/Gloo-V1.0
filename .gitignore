@@ -23,6 +23,8 @@ build/
 CLAUDE.md
 _dev/
 supabase/
+.superpowers
+.gitinore
 
 # macOS
 .DS_Store

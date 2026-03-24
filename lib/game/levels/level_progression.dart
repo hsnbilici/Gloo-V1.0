@@ -273,21 +273,69 @@ final List<LevelData> _predefinedLevels = [
       targetScore: 300,
       microTask: 'levelMicroTask10'),
 
-  // --- Bölüm 2: Standart oyun (11-20) ---
-  const LevelData(id: 11, rows: 8, cols: 8, targetScore: 650),
-  const LevelData(id: 12, rows: 8, cols: 8, targetScore: 700),
-  const LevelData(id: 13, rows: 9, cols: 8, targetScore: 750),
-  const LevelData(id: 14, rows: 9, cols: 8, targetScore: 800),
+  // --- Bölüm 2: Çeşitlilik tanıtımı (11-20) ---
+  const LevelData(id: 11, rows: 8, cols: 8, targetScore: 650, maxMoves: 30),
+  const LevelData(
+      id: 12,
+      rows: 7,
+      cols: 7,
+      targetScore: 600,
+      availableColors: [GelColor.red, GelColor.yellow, GelColor.blue]),
+  const LevelData(
+      id: 13,
+      rows: 9,
+      cols: 8,
+      targetScore: 750,
+      maxMoves: 28,
+      specialCells: {
+        (4, 3): CellConfig(type: CellType.ice, iceLayer: 1),
+        (4, 4): CellConfig(type: CellType.ice, iceLayer: 1),
+      }),
+  const LevelData(
+      id: 14,
+      rows: 8,
+      cols: 6,
+      targetScore: 700,
+      description: 'Dar ızgara — alan yönetimi!'),
   const LevelData(
       id: 15,
       rows: 9,
       cols: 8,
       targetScore: 850,
-      availableColors: [GelColor.red, GelColor.yellow, GelColor.blue]),
-  const LevelData(id: 16, rows: 10, cols: 8, targetScore: 900),
-  const LevelData(id: 17, rows: 10, cols: 8, targetScore: 950),
-  const LevelData(id: 18, rows: 10, cols: 8, targetScore: 1000),
-  const LevelData(id: 19, rows: 10, cols: 8, targetScore: 1050),
+      availableColors: [GelColor.red, GelColor.yellow, GelColor.blue],
+      maxMoves: 25),
+  const LevelData(
+      id: 16,
+      rows: 10,
+      cols: 8,
+      targetScore: 900,
+      specialCells: {
+        (2, 2): CellConfig(type: CellType.ice, iceLayer: 1),
+        (7, 5): CellConfig(type: CellType.ice, iceLayer: 1),
+      }),
+  const LevelData(
+      id: 17,
+      rows: 8,
+      cols: 8,
+      targetScore: 800,
+      maxMoves: 22,
+      description: 'Az hamle, yüksek hedef!'),
+  const LevelData(
+      id: 18,
+      rows: 10,
+      cols: 7,
+      targetScore: 950,
+      specialCells: {
+        (3, 3): CellConfig(type: CellType.stone),
+        (6, 3): CellConfig(type: CellType.stone),
+      }),
+  const LevelData(
+      id: 19,
+      rows: 10,
+      cols: 8,
+      targetScore: 1050,
+      availableColors: [GelColor.blue, GelColor.white],
+      maxMoves: 30),
   // Breathing room
   const LevelData(id: 20, rows: 8, cols: 6, targetScore: 500),
 

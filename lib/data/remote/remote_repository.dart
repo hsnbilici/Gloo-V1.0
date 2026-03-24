@@ -79,25 +79,43 @@ class RemoteRepository implements IRemoteRepository {
     int limit = 50,
     bool weekly = false,
   }) async {
-    if (!isConfigured) return [];
+    if (!isConfigured) {
+      if (kDebugMode) debugPrint('Leaderboard: not configured');
+      return [];
+    }
     try {
-      var query = _client
+      // Weekly filtreyi view üstünde uygulamak DISTINCT ON ile çakışır.
+      // Tüm sonuçları çekip, weekly ise client tarafında filtrele.
+      final data = await _client
           .from('leaderboard_view')
           .select('id, user_id, mode, score, created_at, username')
-          .eq('mode', mode);
+          .eq('mode', mode)
+          .order('score', ascending: false)
+          .limit(weekly ? limit * 3 : limit); // weekly'de daha fazla çek
 
-      if (weekly) {
-        final weekAgo =
-            DateTime.now().subtract(const Duration(days: 7)).toIso8601String();
-        query = query.gte('created_at', weekAgo);
-      }
-
-      final data = await query.order('score', ascending: false).limit(limit);
-
-      return (data as List)
+      var entries = (data as List)
           .map((e) =>
               LeaderboardEntry.fromMap(Map<String, dynamic>.from(e as Map)))
           .toList();
+
+      // Weekly filtre: client-side (view DISTINCT ON en yüksek skoru döndürüyor,
+      // created_at bu skorun tarihini içeriyor — hafta dışı en yüksek skorlar
+      // weekly filtreyle kayboluyordu)
+      if (weekly) {
+        final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+        entries = entries
+            .where((e) => e.createdAt != null && e.createdAt!.isAfter(weekAgo))
+            .toList();
+      }
+
+      if (entries.length > limit) entries = entries.sublist(0, limit);
+
+      if (kDebugMode) {
+        debugPrint(
+            'Leaderboard: mode=$mode weekly=$weekly entries=${entries.length}');
+      }
+
+      return entries;
     } catch (e) {
       if (kDebugMode)
         debugPrint('RemoteRepository.getGlobalLeaderboard error: $e');

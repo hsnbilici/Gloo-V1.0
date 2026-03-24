@@ -228,7 +228,7 @@ void main() {
       // Hiçbir null/hata karakteri yok
       expect(result, isNotEmpty);
       // Her renk için bir emoji satırı içermeli
-      for (final color in GelColor.values) {
+      for (final _ in GelColor.values) {
         expect(result, isNotEmpty); // buildDailyEmojiGrid çökmedi
       }
     });
