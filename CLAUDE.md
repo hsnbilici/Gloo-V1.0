@@ -4,6 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **GitHub:** `https://github.com/hsnbilici/Gloo-V1.0.git` (branch: `main`)
 
+## Proje Dokumantasyonu
+
+- `_dev/tasks/todo.md` — Kalan gorevler ve ilerleme takibi
+- `_dev/tasks/creative_director_report.md` — Yaratici yonetmen raporu (v0.4, skor 4.1/5.0)
+- `_dev/briefs/` — Sanatci/tasarimci brief'leri (karakter, ada, ses, season pass)
+- `_dev/docs/GDD.md` — Game Design Document
+- `_dev/docs/TECHNICAL_ARCHITECTURE.md` — Teknik mimari dokumani
+
 ## Komutlar
 
 ```bash
@@ -52,10 +60,10 @@ app/ → features/ → providers/ → game/ → core/
 
 - `core/` — Saf Dart; Flutter bagimliligi yok. Sabitler, utils, l10n, extensions.
 - `game/` — Saf Dart oyun motoru (Flutter'dan bagimsiz). GlooGame, GridManager, systems, shapes, levels, economy, pvp, physics.
-- `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin ile bolunmus: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`. `shop/` 1 part mixin: `shop_logic.dart`. Ek: `tutorial_overlay.dart`, `share_prompt_dialog.dart`, `effects/confetti_effect.dart`. `GameCellWidget` bir `ConsumerWidget` — `gridStateProvider.select((s) => s[(row, col)])` ile per-cell rebuild izolasyonu saglar. `CellRenderData` immutable value class (`cell_render_data.dart`) diff icin `==`/`hashCode` override eder.
+- `features/` — Flutter widget'lari (14 ekran). `game_screen/` 3 part mixin: `game_callbacks.dart`, `game_interactions.dart`, `game_grid_builder.dart`. `GameCellWidget` `ConsumerWidget` — `gridStateProvider.select((s) => s[(row, col)])` ile per-cell rebuild izolasyonu. `CellRenderData` immutable value class, `==`/`hashCode` override.
 - `data/` — `local/` (SharedPreferences), `remote/` (Supabase). Tum remote metodlarda `isConfigured` guard zorunlu.
 - `services/` — AnalyticsService (Firebase), AdManager, PurchaseService, NotificationService (`FirebaseNotificationService` + `StubNotificationService`). `AudioPackage` enum ile ses paketi swap mekanizmasi.
-- `providers/` — Riverpod: game, audio, user, locale, pvp, quest, service, notification providers. `gridStateProvider` (`grid_state_provider.dart`) — `GridStateNotifier` ile per-cell `CellRenderData` map'i tutar; `syncGridState()` ile `game_grid_builder.dart`'tan push edilir. `CellRenderData.copyWith()` ile reconstruction bloklari sadelesti. `questProvider` — gunluk 3 + haftalik 5 gorev ilerlemesi (ISO week bazli reset, `quest.id` bazli progress key). `maxCompletedLevelProvider` — level ilerleme durumu. `notificationServiceProvider` — `kIsWeb` guard ile stub/firebase secimi.
+- `providers/` — Riverpod: game, audio, user, locale, pvp, quest, service, notification providers. `gridStateProvider` — per-cell `CellRenderData` map, `syncGridState()` ile push edilir. `notificationServiceProvider` — `kIsWeb` guard ile stub/firebase secimi.
 
 ### Oyun Motoru
 
@@ -185,21 +193,13 @@ GoRouter (`lib/app/router.dart`). **ONEMLI:** Spesifik rotalar genel `/game/:mod
 
 ### GameEffectManager
 
-`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `breathCtrl` (nefes animasyonu) sahiplenir, gecici efektler icin `createTransient()` factory. `GameScreen.initState`'te `effectManager = GameEffectManager(this)` ile olusturulur. SquashStretchCell/WaveRipple/SynthesisPulseCell lazy controller pattern kullanir: nullable `_ctrl?` + `_ensureController()` factory — controller yalnizca animasyon gerektiginde allocate edilir. `SynthesisPulseCell`: sentez aninda `AnimationDurations.synthesisPulse` (300ms) scale pulse (1.0→1.08→1.0, `easeOutBack`). `GelCellPainter.isGlowing`: sentez hucresinde specular 0.90, glow blur 12, cache invalidation `_cachedGlowState` ile. `GelCellPainter.isRecentlyPlaced`: yerlestirme aninda specular Y +5%, glow alpha +10%, ic parlama +30% — nefes animasyonuyla module. `CellBurstEffect.intensity`: satir temizleme parcacik yogunlugu — 2+ satir 1.5x, 4+ satir 2.0x. `LineSweepEffect`: coklu satir (2+) temizlemede yatay beyaz gradient sweep, `AnimationDurations.lineSweep` (300ms), RTL destegi, reduce motion guard. `CellRenderData.copyWith()` ile reconstruction bloklari sadelesti — yeni boolean flag eklerken flag kaybi riski onlendi.
+`game_effect_manager.dart`: Merkezi `AnimationController` yonetimi. `GameScreen.initState`'te olusturulur. Lazy controller pattern: nullable `_ctrl?` + `_ensureController()` — controller yalnizca animasyon gerektiginde allocate edilir. `CellRenderData.copyWith()` ile reconstruction — yeni boolean flag eklerken flag kaybi riski onlendi.
 
 ### ShapeGenerator
 
-`ShapeGenerator` instance-based (M.17). `GlooGame` constructor'inda opsiyonel: `GlooGame({..., ShapeGenerator? shapeGenerator})`. Stateful metodlar (generateSmartHand, recordLoss/Win/Clear) instance uzerinden. Stateless metodlar (getDifficulty, generateSeededHand, todaySeed) static kalir. Testlerde izole state icin `ShapeGenerator(rng: Random(42))` kullanilabilir.
+`ShapeGenerator` instance-based. Stateful metodlar instance uzerinden, stateless (getDifficulty, generateSeededHand, todaySeed) static. Testlerde `ShapeGenerator(rng: Random(42))` ile izole state. `availableColors` opsiyonel — `null` → `kPrimaryColors`. `betterHandBonus` talent sisteminden gelir, seeded modlarda (Daily/Duel) gecerli degil.
 
-`availableColors` (L.15): `generateSmartHand`, `generateSeededHand` ve tum ic renk secim metodlari opsiyonel `List<GelColor>? availableColors` parametresi alir. `null` → `kPrimaryColors` (4 birincil renk). `GlooGame.generateNextHand()` bu degeri `levelData?.availableColors`'dan alir. Level modunda per-level renk kisitlamasi mumkun.
-
-`betterHandBonus` (double): `ShapeGenerator` constructor parametresi. Talent sisteminden gelir. `_weightedRandomShape`'te kucuk sekil olasiligini artirip buyuk sekli azaltir. Seeded modlarda (Daily/Duel) gecerli degil.
-
-**Yeni oyuncu korumasi:** `gamesPlayed < 5` ise kademeli ramp: oyun 0-2 → %80/%15/%5, oyun 3 → %70/%20/%10, oyun 4 → %55/%30/%15, oyun 5+ → normal. Level, Daily, Duel modlari muaf (kendi zorluk egrisi/seed'i var). ColorChef modunda ayri agirliklar: %35 kucuk / %50 orta / %15 buyuk (sentez firsati icin, zorluktan bagimsiz).
-
-**Ilk oyun kesfi:** `gamesPlayed == 0 && classic && grid bos` ise ilk el red+yellow+red zorlanir → dogal sentez kesfi (orange).
-
-**Siradaki sekil silueti:** `GlooGame.nextShapeSilhouette` — her `generateNextHand()` sonrasi bir sonraki el icin sekil silueti on-uretilir. `gamesPlayed < 5` ise null (bilissel yuk azaltma). Peek power-up aktifken gizli. `ShapeHand` widget'inda 36x36 muted preview olarak gosterilir.
+**Yeni oyuncu korumasi:** `gamesPlayed < 5` ise kademeli zorluk rampi. Level/Daily/Duel muaf. ColorChef ayri agirliklar (sentez firsati icin). **Ilk oyun:** `gamesPlayed == 0 && classic` ise ilk el red+yellow+red → dogal sentez kesfi. **Siradaki sekil silueti:** `gamesPlayed < 5` ise null (bilissel yuk azaltma), peek power-up aktifken gizli.
 
 ### Level 41-50 Dengesi
 
@@ -211,7 +211,7 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 
 ### Cascade Pacing
 
-`onCascadeStep(int step, int linesCleared)` callback — her cascade adiminda fire eder. UI katmaninda `step * 180ms` delay ile staggered SFX. Reduce Motion aktifken delay 0. `SoundBank.onLineClear(lines:, pitch:)` ile artan pitch: `1.0 + (step-1) * 0.08`, cap 1.3x. `AudioManager.playSfx(speed:)` opsiyonel speed parametresi.
+`onCascadeStep(int step, int linesCleared)` callback — staggered SFX + artan pitch. Reduce Motion aktifken delay 0.
 
 ### Dinamik K-Factor ELO
 
@@ -219,15 +219,15 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 
 ### Preview-time Line Completion Hint
 
-`syncGridState()`'te preview hucreleri aktifken, her satir icin preview + mevcut hucrelerin satiri tamamlayip tamamlamadigi kontrol edilir. Tamamlayacaksa `isCompletionPreview: true` ile yesil border + tint gosterilir.
+`syncGridState()`'te preview + mevcut hucreler satiri tamamlayacaksa `isCompletionPreview: true` → yesil border + tint.
 
 ### Drag-and-Drop Projeksiyon
 
-`game_grid_builder.dart`: `_dragOffsetToCell()` helper. Flutter `DragTargetDetails.offset` feedback widget'inin sol-ust kosesini verir, parmak feedback'in merkezine yapisir. Seklin grid hucre boyutundaki yari genislik/yuksekligi offset'e eklenerek parmak konumu seklin merkez hucresine eslenir. `clampAnchor()` (`game_interactions.dart`) merkez konumdan sol-ust anchor'a cevirir. Bu sayede sekil nereden tutulursa tutulsun iz dusum dogru olusur. `Draggable<int>` feedback: `Transform.scale(1.8)` ile buyutulmus `ShapePreview`. El (hand) widget: `shape_hand.dart`.
+`shape_hand.dart` + `game_grid_builder.dart` + `clampAnchor()` (`game_interactions.dart`). Sekil nereden tutulursa tutulsun iz dusum dogru olusur. Feedback widget grid hucre boyutuna oranli scale (`gridCellSize / ShapePreview.cellSize`, clamp 1.2-3.0x). Drag lifecycle haptic'leri: `dragStart` (selectionClick), `dragSnap` (lightImpact — anchor degisiminde), `dragInvalid` (double mediumImpact + nearMissTension SFX — gecersiz birakma/iptal). `_PlacementFadeIn`: preview alpha'dan (0.50) tam opakliga 180ms fade-in gecisi (`game_cell_widget.dart`).
 
 ### DuelState.copyWith Sentinel Deseni
 
-`DuelState.copyWith` nullable alanlari (`matchId`, `seed`, `opponentElo`) icin `_Absent` sentinel sinifi kullanir. Bu, `copyWith(matchId: null)` ile "alanı null yap" ve `copyWith()` ile "alani degistirme" arasindaki farki korur.
+Nullable alanlar icin `_Absent` sentinel — `copyWith(matchId: null)` (null yap) vs `copyWith()` (degistirme) ayrimi.
 
 ## Onemli Kisitlamalar
 
@@ -279,16 +279,13 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 ### Ses ve Haptik
 - `AudioManager` (`lib/audio/audio_manager.dart`): Singleton. `assets/audio/sfx/` (32 dosya) ve `assets/audio/music/` (4 dosya). 8 kanal SFX havuzu (round-robin), pitch varyasyonu (0.92-1.08x). `main.dart`'ta `Future.wait` icinde `initialize()` cagriliyor (iOS audio session). Dosya bulunamazsa sessizce atlar.
 - `.ogg` iOS'ta native desteklenmez — `.ogg` + `.m4a` ikili format. Web'de `kIsWeb` guard ile `.m4a` fallback (Safari .ogg desteklemez).
-- `HapticManager`: 14 haptic profil, tam implementasyon.
-- **SoundBank** (`lib/audio/sound_bank.dart`): 19 metod, %100 tetikleniyor. Tum game callback'leri `game_callbacks.dart`'ta, power-up'lar `game_interactions.dart`'ta, PvP `game_duel_controller.dart`'ta baglanmis.
-  - Oyun: `onGelPlaced`, `onGelMerge(mergeCount:)`, `onLineClear(lines:, pitch:)`, `onCombo(combo)`, `onSynthesis`, `onNearMiss(survived:)`, `onGameOver`, `onLevelComplete`, `onGelOzuEarn`
-  - Power-up: `onPowerUpActivate`, `onBombExplosion`, `onRotate`, `onUndo`, `onFreeze`
-  - PvP: `onPvpVictory`, `onPvpDefeat`, `onPvpObstacleSent`, `onPvpObstacleReceived`
-  - Ozel: `onIceBreak`, `onGravityDrop`, `onStoneBroken`, `onButtonTap`
-- **Muzik**: Mod bazli — HomeScreen: `menu_lofi`, Zen: `zen_ambient`, TimeTrial/Duel: `game_tension`, diger: `game_relax`. Game Over'da `fadeOutMusic(800ms)`. Replay'de `resumeMusic()`.
-- **Adaptif muzik**: (1) Grid %70+ doluyken `crossfadeMusic()` ile relax→tension gecisi (hysteresis %60 geri), (2) Duel son 30sn / TimeTrial son 15sn muzik tempo 1.15x, (3) Epic/large kombo muzik volume swell (0.4→0.6, 800ms), (4) Epic/large kombo + bomba ducking (%50 volume, 500ms).
-- **Debounce/Guard**: GelOzu SFX (300ms Timer), ice/gravity (50ms timestamp), combo swell (iptal edilebilir Timer), fade (`_isFading` flag + `finally`).
-- **UI sesleri**: HomeScreen (6 ModeCard), Settings (6 toggle), Shop (buy), LevelSelect (level cell). Ekran gecislerinde GoRouter `_SoundNavigatorObserver` ile `undo_whoosh` (%40 vol).
+- `HapticManager`: 17 haptic profil (14 temel + 3 drag: `dragStart`, `dragSnap`, `dragInvalid`).
+- **SoundBank** (`lib/audio/sound_bank.dart`): 22 metod (19 temel + 3 drag: `onDragStart`, `onDragSnap`, `onDragInvalid`). Game callback'leri `game_callbacks.dart`'ta, power-up'lar `game_interactions.dart`'ta, PvP `game_duel_controller.dart`'ta baglanmis.
+- **Muzik**: `AudioPaths.musicForMode(GameMode)` ile mod-bazli secim. HomeScreen gece (21:00-06:00) `menu_chill`, gunduz `menu_lofi`. Grid %70+→`tension_escalation` crossfade (hysteresis %60 geri). Game Over'da `fadeOutMusic`. Replay'de `resumeMusic()`.
+- **Sessizlik gap'leri**: Dramatik etki icin SFX oncesi `Future.delayed` (game_over, combo_epic, level_complete).
+- **Adaptif muzik**: Grid doluluk crossfade, son saniye tempo artisi, kombo volume swell, bomba ducking.
+- **Debounce/Guard**: GelOzu SFX, ice/gravity, combo swell, fade icin guard'lar mevcut.
+- **UI sesleri**: Ekran gecislerinde `_SoundNavigatorObserver` ile ses.
 
 ## l10n
 
@@ -353,90 +350,54 @@ Yeni string eklemek: (1) `app_strings.dart`'a abstract getter, (2) tum 12 `strin
 
 ### Ilk Acilis Akisi
 
-Onboarding (5 sayfa: 3 tanitim + 1 lore + 1 tercihler) → HomeScreen. Sayfa 1'de `_InteractivePlaceDemo`: 5x5 mini grid, L-shape ghost cell'ler pulse animasyonuyla davet eder, tap → yerlesme → satir glow → "Harika!" + replay. `FractionallySizedBox(0.45)` + `AspectRatio(1.0)` ile responsive. Reduce motion'da pulse durur, sabit alpha. GDPR uyumlu: analytics consent + renk koru modu toggle yalnizca kullanici 5. sayfaya ulasirsa kaydedilir (`_kTotalPages = 5`). Sayfa 2 lore sayfasi: "Renklerin canli oldugu bir dunyada..." minimal dunya tanitimi + 4 birincil renk sentez demo. `_kStepPageIndices = [0, 2, 3]` ile tutorial step sayfalari lore sayfasindan sonraya kaydirildi. InteractivePlaceDemo'da 3 GlowOrb (kCyan, kPink, kGold) + ambient glow + "Harika!" kGold. Skip edilirse HomeScreen'deki dialog akisi: (1) ConsentDialog, (2) ATT (iOS). Colorblind prompt Game Over'da oyun 2-5 arasinda gosterilir (inline, tek seferlik). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder. `kWorldTips` (`tips.dart`): 4 dunya odakli tip (tipWorldColors/Synthesis/Jel/Island) — Game Over overlay'de rastgele gosterilir, muted italic stil.
+Onboarding 5 sayfa (3 tanitim + 1 lore + 1 tercihler) → HomeScreen. GDPR: consent yalnizca 5. sayfaya ulasirsa kaydedilir. Skip → HomeScreen dialog akisi: (1) ConsentDialog, (2) ATT (iOS). `_continueStartupFlow()` `repo.getConsentShown()` kontrol eder. Colorblind prompt Game Over'da oyun 2-5 arasinda (inline, tek seferlik).
 
 ### Viral Pipeline
 
-- `ShareManager.shareScore()/shareDailyResult()`: Tum share metodlari `AppStrings l` parametresi alir, 12 dile lokalize. `_modeName(AppStrings, String)` ile mod isimleri l10n uzerinden cevriliyor.
-- `ConfettiEffect`: High score asildiginda 40 particle CustomPaint patlamasi. Oyun basina bir kez tetiklenir (`confettiKey == 0` guard).
-- `BombExplosionEffect`: 100ms freeze-frame delay (`Future.delayed`) animasyon oncesi dramatik etki.
+- `ShareManager`: Tum share metodlari `AppStrings l` parametresi alir, 12 dile lokalize.
+- `ConfettiEffect`: High score'da tek seferlik (`confettiKey == 0` guard).
+- `BombExplosionEffect`: Freeze-frame delay sonra animasyon.
 
-### HomeScreen Score Chip
+### HomeScreen Ozellikleri
 
-Classic ModeCard altinda `_ClassicScoreChip` — son skor ve rekor gosterir ("Last: X | Best: Y"). Skor 0 ise gizli. "So close" state: lastScore >= highScore * 0.8 ise amber renk + "Beat it?" etiketi. Yeni rekor ise "New best!" gold text. `LocalRepository.getLastScore(mode)` / `saveLastScore()` ile persist.
-
-### Per-Mode Progress Chips
-
-Level ModeCard altinda `_LevelProgressChip` ("Level X/50"), Duel altinda `_DuelEloChip` ("X ELO"). Deger 0 ise gizli.
-
-### Quick Play
-
-`_QuickPlayBanner`: HomeScreen'de QuestBar altinda, son oynanan modu hatirlayip hizli erisim saglar. `LocalRepository.getLastPlayedMode()`/`saveLastPlayedMode()` ile persist. `gamesPlayed < 3` ise gizli. Kilitli modlar filtrelenir. Level → `/levels`, Duel → `/pvp-lobby`, diger → `/game/:mode`. Mod accent rengi + `directionalChevronIcon` (RTL-safe).
-
-### Progressive Mod Acilimi
-
-ColorChef 3 oyun sonra, TimeTrial 5 oyun sonra acilir. `getTotalGamesPlayed()` ile kontrol. Kilitli ModeCard'da "X oyun daha oyna" etiketi gosterilir.
+- `_ClassicScoreChip`: Son skor + rekor. "So close" state (lastScore >= highScore * 0.8). `LocalRepository.getLastScore/saveLastScore`.
+- `_LevelProgressChip` / `_DuelEloChip`: Per-mode progress, deger 0 ise gizli.
+- `_QuickPlayBanner`: Son oynanan mod, `gamesPlayed < 3` ise gizli, kilitli modlar filtrelenir.
+- **Progressive Mod Acilimi:** ColorChef 3, TimeTrial 5 oyun sonra acilir.
 
 ### Gorev Sistemi
 
-`quest_provider.dart`: Gunluk 3 gorev (12 havuzdan seed-bazli secim, `kDailyQuestPool`) + haftalik 5 gorev (`kWeeklyQuestPool`, ISO week bazli — `_isoYearWeek(DateTime)` Thursday-based hesaplama). 6 gorev tipi: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`, `completeDailyPuzzle`. Her Quest'in unique `id` alani var — progress key olarak kullanilir (`quest.id` bazli, eski `type_name_d` formati migration ile donusturuldu). Haftalik progress ayri persist edilir (`weekly_quest_progress`), hafta degisiminde sifirlanir. `QuestBar` widget HomeScreen'de gunluk (kGold) + haftalik (kOrange) progress bar gosterir. Daily puzzle kisayolu QuestBar sol tarafina gomuldu (`DailyBanner` kaldirildi). `game_callbacks.dart`'ta 6 callback'e entegre. Ogretici toast'lar: sentez-temizleme trade-off (oyun 3-8, 2 gosterim), epic kombo yaklasim motivasyonu (large 6+, 3 gosterim, Duel'da devre disi). Tamamlanan gorev Jel Ozu odulu verir.
+`quest_provider.dart`: Gunluk 3 + haftalik 5 gorev (`quest.id` bazli progress key, ISO week reset). 6 tip: `clearLines`, `reachScore`, `playGames`, `makeSyntheses`, `reachCombo`, `completeDailyPuzzle`. `QuestBar` HomeScreen'de progress bar gosterir, Daily puzzle kisayolu QuestBar'a gomulu. `game_callbacks.dart`'ta 6 callback'e entegre. Tamamlanan gorev Jel Ozu odulu verir.
 
 ### MetaGameBar
 
-`meta_game_bar.dart`: HomeScreen'de QuestBar altinda, Ada/Karakter/SeasonPass navigasyonu. 3 `MetaItem` (terrain/person/military_tech ikonu) ile `/island`, `/character`, `/season-pass` route'larina yonlendirir. Tema-aware renkler (`kGreen`, `kLavender`, `kGold`). `GelPersonality` sistemi: 8 sentez rengine kisilik arketipleri (Maceracı, Bilge, Gizemli vb.), CharacterScreen'de personality chip'ler olarak gosterilir. Ada core loop: Game over'da `IslandState.tickPassiveProduction()` ile pasif Jel uretimi. `Building.costForLevel` exponential formul (`baseCost * pow(costMultiplier, level)`).
+`meta_game_bar.dart`: Ada/Karakter/SeasonPass navigasyonu → `/island`, `/character`, `/season-pass`. `GelPersonality`: 8 sentez rengine kisilik arketipleri. Ada core loop: Game over'da pasif Jel uretimi. `Building.costForLevel` exponential formul.
 
 ### Hover/Focus/Press Destegi (Web/Desktop)
 
-Tum interaktif widget'lar `MouseRegion` + `_hovered` state ile hover destekler: ModeCard, BottomItem, ActionButton, PowerUpButton, DialogBtn, ProductTile, SettingsTile, PauseBtn, ShareButton, BackButton vb. Hover state `AnimatedContainer` kullanMAZ — performans icin plain `Container` + `AnimatedScale` (sadece press) kullanilir.
-
-**Press standardı:** Tüm butonlar `AnimatedScale(scale: _pressed ? 0.96 : 1.0, duration: 80ms)` kullanır.
-
-**Keyboard focus:** ModeCard, BottomItem, ActionButton `FocusableActionDetector` ile keyboard/tab navigasyonu destekler. Focus ring: `kCyan.withValues(alpha: 0.6)`, 2px border. ThemeData `focusColor: kCyan.withValues(alpha: 0.3)`.
-
-**Portrait kilitleme:** `main.dart`'ta `SystemChrome.setPreferredOrientations([portraitUp, portraitDown])` — `kIsWeb` guard ile (web'de serbest).
+- Hover: `MouseRegion` + `_hovered` state. `AnimatedContainer` kullanMAZ — plain `Container` + `AnimatedScale`.
+- **Press:** `AnimatedScale(scale: _pressed ? 0.96 : 1.0, duration: 80ms)` standardi.
+- **Keyboard focus:** `FocusableActionDetector`, focus ring: `kCyan`, 2px border.
+- **Portrait kilitleme:** `kIsWeb` guard ile (web'de serbest).
 
 ### Reduce Motion
 
-`core/utils/motion_utils.dart`: `shouldReduceMotion(BuildContext)` — `MediaQuery.disableAnimations` kontrol eder. `animateOrSkip()` extension `flutter_animate` uzerinde — `reduceMotion: true` ise animasyonlari atlar. Tum ekranlarda `final rm = shouldReduceMotion(context)` ile kullanilir.
+`shouldReduceMotion(BuildContext)` (`motion_utils.dart`). `animateOrSkip()` extension `flutter_animate` uzerinde. Tum ekranlarda kullanilir.
 
-### Nearly-Full Row Highlight
+### Level Sistemi
 
-`syncGridState()`'te `(playable - filled) <= 2` ise `isNearlyFullRow: true`. `GameCellWidget`'ta bos hucreler amber tint (0.08 alpha) + border (0.25 alpha) ile vurgulanir.
-
-### Grid Fill Metrigi
-
-Game Over overlay'de ham yuzde yerine baglamli metin: <20% "Room to Grow", <55% "Well Managed", <80% "Getting Crowded", >=80% "Very Full". 12 dilde lokalize.
-
-### Level Progression
-
-Level 1-10'da `microTask` alani ile ogretim gorevi. Level 51+ prosedural: 4-temali kisitlama dongusu (kisitli renkler, dar grid, buz hucreleri, yuksek hedef). `_themeIndex()` ile secilir, level 200'e kadar uygulanir.
-
-### Ascension/Prestige
-
-Level 50 sonrasi Ascension tier'lari. `getLevel(id, ascension:)` ile hedef skor +%25/tier, hamle siniri -%10/tier (cap -%50). `getAscensionLevel()`/`saveAscensionLevel()` ile persist.
-
-### Collection Odulleri
-
-8 sentez rengi tamamlandiginda +50 Jel Ozu odul (tek seferlik). `isCollectionRewardClaimed()`/`setCollectionRewardClaimed()` ile persist. Collection ekraninda altin banner.
+- Level 1-10: `microTask` ile ogretim. Level 51+: prosedural (4 temali kisitlama dongusu, 200'e kadar).
+- **Ascension:** Level 50 sonrasi tier'lar. Hedef skor +%25/tier, hamle -%10/tier (cap -%50).
+- **Collection Odulleri:** 8 sentez rengi tamamlandiginda +50 Jel Ozu (tek seferlik).
 
 ### Leaderboard Sistemi
 
-LeaderboardScreen 3 tab: Classic, TimeTrial, PvP ELO. Classic/TimeTrial `leaderboard_view` (SECURITY DEFINER) uzerinden — `DISTINCT ON (user_id, mode)` ile kullanici basina en iyi skor. PvP `elo_leaderboard_view` (SECURITY DEFINER) uzerinden — `profiles` RLS (`auth.uid() = id`) bypass eder. `get_user_rank` RPC unique kullanici bazli rank hesaplar, weekly filtre hem kendi skora hem rank'e uygulanir. `_currentMode` `GameMode.classic.name` / `GameMode.timeTrial.name` kullanir (enum case-sensitive). Kullanici satiri cyan vurgu + "YOU" badge ile ayirt edilir. `UserRankBanner` skor gosterir. PvP skorlari `l.eloDisplay(elo)` formatinda (eski "X ELO" → her dil kendi kelime sirasinda: EN "X Power", TR "X Guc", JP "pawa X").
-
-**Username sync:** Settings'te isim degisikliginde `ensureProfile(username:)` ile Supabase `profiles` tablosuna senkronize edilir. Aksi halde leaderboard eski ismi gosterir.
+3 tab: Classic, TimeTrial, PvP ELO. SQL view'lar (SECURITY DEFINER) `profiles` RLS'i bypass eder. `_currentMode` enum case-sensitive. PvP skorlari `l.eloDisplay(elo)` ile lokalize. **Username sync:** Settings'te isim degisikligi `ensureProfile(username:)` ile Supabase'e senkronize edilmeli — aksi halde leaderboard eski ismi gosterir.
 
 ### Notification Service
 
-`lib/services/notification_service.dart`: `NotificationService` abstract interface + `StubNotificationService` (web) + `FirebaseNotificationService` (native). `firebase_messaging` + `flutter_local_notifications` + `timezone` paketleri. 3 senaryo: `streakReminder` (20:00 her gun), `dailyPuzzle` (10:00 her gun), `comeback` (3 gun inaktif). `initialize()` → timezone init + local notification kanal + FCM permission + token fetch. `onTokenChanged` callback ile Supabase `device_tokens` tablosuna token sync. `onTokenRefresh` listener dispose'da cancel edilir. HomeScreen'de `WidgetsBindingObserver` ile lifecycle yonetimi: resumed → comeback iptal, paused → comeback zamanla. Settings'te notification toggle (`cancelAll()` / reschedule). Android: `POST_NOTIFICATIONS` + `RECEIVE_BOOT_COMPLETED` + `WAKE_LOCK`. iOS: `UIBackgroundModes: remote-notification` + `Runner.entitlements` (aps-environment: development, release icin production'a cevirilmeli). **Harici gereksinimler:** APNs sertifikasi (p8 key) Firebase'e yuklenmeli, Firebase Console'da Cloud Messaging aktif edilmeli.
+`NotificationService` abstract + `StubNotificationService` (web) + `FirebaseNotificationService` (native). 3 senaryo: `streakReminder` (20:00), `dailyPuzzle` (10:00), `comeback` (3 gun inaktif). FCM token Supabase `device_tokens`'a sync edilir. **iOS:** `aps-environment: development` — release icin `production`'a cevirilmeli. **Harici:** APNs p8 key Firebase'e yuklenmeli.
 
 ### Ses Paketi Sistemi
 
 `AudioPackage` enum (`audio_constants.dart`): `standard`, `crystalAsmr`, `deepForest`. `AudioPaths.resolveSfxPath(baseName, package)` ile paket-bazli asset path. `AudioManager.setAudioPackage(package)` ile runtime degistirme — SFX cache temizlenir, sonraki play yeni path'ten yukler. Fallback: paket dosyasi yoksa standard path'e doner. `LocalRepository.getAudioPackage()`/`saveAudioPackage()` ile persist. `main.dart`'ta startup'ta yuklenir.
-
-### Viral Pipeline
-
-- `ShareManager.shareScore()/shareDailyResult()/shareComboResult()/shareCollection()`: Tum share metodlari `AppStrings l` parametresi alir, 12 dile lokalize. `_modeName(AppStrings, String)` ile mod isimleri l10n uzerinden cevriliyor.
-- `buildDailyEmojiGrid(grid, score)`: Wordle formatinda emoji grid — GelColor→emoji mapping (🟥🟨🟦⬜🟧🟩🟪💗), yildiz derecesi (1-3 ⭐), max 5 satir + overflow label.
-- `shareCollection(l:, discoveredColors:)`: Kesfedilen sentez renklerini emoji formatinda paylasir (`kAppName Collection: N/8`).
-- `ConfettiEffect`: High score asildiginda 40 particle CustomPaint patlamasi. Oyun basina bir kez tetiklenir (`confettiKey == 0` guard).
-- `BombExplosionEffect`: 100ms freeze-frame delay (`Future.delayed`) animasyon oncesi dramatik etki.
