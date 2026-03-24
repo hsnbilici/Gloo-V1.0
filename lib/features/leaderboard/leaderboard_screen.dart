@@ -12,7 +12,7 @@ import '../../core/layout/rtl_helpers.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../providers/locale_provider.dart';
-import '../../data/remote/friend_repository.dart';
+import '../../providers/friend_provider.dart';
 import '../../providers/pvp_provider.dart';
 import '../../providers/service_providers.dart';
 import 'leaderboard_background.dart';
@@ -67,7 +67,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
     setState(() => _loading = true);
     try {
       if (_isFriendsTab) {
-        final repo = FriendRepository();
+        final repo = ref.read(friendRepositoryProvider);
         final scores = await repo.getFriendsLeaderboard(
             mode: _friendsMode, weekly: _weekly);
         if (!mounted) return;

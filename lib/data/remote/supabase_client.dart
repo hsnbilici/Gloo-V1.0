@@ -54,20 +54,25 @@ class SupabaseConfig {
       await client.auth.signInAnonymously();
       if (kDebugMode) debugPrint('SupabaseConfig: anonymous session created');
 
-      // Yeni anonim kullanici icin profil olustur
+      // Yeni anonim kullanici icin profil olustur (friend_code collision retry)
       final uid = currentUserId;
       if (uid != null) {
-        try {
-          await client.from('profiles').upsert({
-            'id': uid,
-            'username': 'Player_${uid.substring(0, 6)}',
-            'friend_code': _generateFriendCode(),
-          });
-          if (kDebugMode)
-            debugPrint('SupabaseConfig: profile created for $uid');
-        } catch (e) {
-          if (kDebugMode)
-            debugPrint('SupabaseConfig: profile creation failed ($e)');
+        for (int attempt = 0; attempt < 5; attempt++) {
+          try {
+            await client.from('profiles').upsert({
+              'id': uid,
+              'username': 'Player_${uid.substring(0, 6)}',
+              'friend_code': _generateFriendCode(),
+            });
+            if (kDebugMode)
+              debugPrint('SupabaseConfig: profile created for $uid');
+            break;
+          } catch (e) {
+            if (attempt == 4) {
+              if (kDebugMode)
+                debugPrint('SupabaseConfig: profile creation failed after 5 attempts ($e)');
+            }
+          }
         }
       }
     }

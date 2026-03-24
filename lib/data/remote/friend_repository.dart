@@ -104,7 +104,7 @@ class FriendRepository {
       final data = await SupabaseConfig.client
           .from('profiles')
           .select('id, username, friend_code')
-          .ilike('username', '%$query%')
+          .ilike('username', '%${query.replaceAll('%', r'\%').replaceAll('_', r'\_')}%')
           .neq('id', uid ?? '')
           .limit(20);
       return (data as List)

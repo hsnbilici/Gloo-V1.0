@@ -1,9 +1,23 @@
 # Gloo v1.0 — Kalan Gorevler
 
-> Son guncelleme: 2026-03-24
-> **Test:** 2155/2155 PASS | **Yaratici Skor:** 4.1/5.0
+> Son guncelleme: 2026-03-25
+> **Test:** 2188/2188 PASS | **Yaratici Skor:** 4.1/5.0
 
 ---
+
+## Bu Oturumda Tamamlananlar
+
+- [x] CLAUDE.md temizligi + trim (453→405 satir)
+- [x] _dev/ dosya temizligi (tamamlanan spec/plan silindi)
+- [x] DnD polish: haptic feedback, grid-orantili scale, placement fade-in, merkez anchor (3-4lu sekiller)
+- [x] Bug fix: GelCellPainter koyu renk floor (maroon/brown)
+- [x] Bug fix: QuestBar genisletilebilir detay paneli
+- [x] Bug fix: Leaderboard hata yakalama + SQL migration fix
+- [x] Bug fix: Level mod skor reset + level 11-20 cesitlilik
+- [x] Bug fix: Collection ekrani recete ipucu (kilitli kartlarda)
+- [x] CI fix: 2 warning duzeltildi (override, unused variable)
+- [x] Loading screen: "Nefes Alan Logo" animasyonlu splash
+- [x] **CD.28** Adaptif zorluk: 4 eksenli beceri profili + radar chart + kaldıraclar
 
 ## Aktif: Stereo Ses Revizyonu (Kod tamamlandi — ses uretimi bekliyor)
 
@@ -14,7 +28,7 @@
 - [ ] 21 mono SFX kalite yukselt (ElevenLabs) → `assets/audio/sfx/` uzerine yaz
 - [ ] 4 muzik revize (Suno/Udio) → `assets/audio/music/` uzerine yaz
 - [ ] 6 yeni muzik uret (Suno/Udio) → `assets/audio/music/` yeni dosyalar
-- [ ] Simülatörde tam test + boyut kontrolu
+- [ ] Simulatorde tam test + boyut kontrolu
 
 **Post-processing hatirlatma:**
 - SFX: -6 dBFS, plate reverb 200-400ms, `.ogg` Vorbis + `.m4a` AAC-LC
@@ -35,6 +49,9 @@
 - [ ] iOS entitlements aps-environment → production (release oncesi)
 - [ ] `assetlinks.json` → gloogame.com/.well-known/ (Android deep link)
 - [ ] `apple-app-site-association` → gloogame.com/.well-known/ (iOS universal link)
+- [ ] Supabase migration'lari uygula:
+  - `20260325_fix_leaderboard_view_order.sql`
+  - `20260325_fix_elo_leaderboard_filter.sql`
 
 ## BLOCKED
 
@@ -44,4 +61,4 @@
 
 - [ ] **CD.26** Sezonsal icerik dongusu
 - [ ] **CD.27** Sosyal ozellikler
-- [ ] **CD.28** Adaptif zorluk
+- [x] **CD.28** Adaptif zorluk (TAMAMLANDI)
