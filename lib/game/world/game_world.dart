@@ -11,6 +11,7 @@ import '../shapes/gel_shape.dart';
 import '../systems/color_chef_levels.dart';
 import '../systems/color_synthesis.dart';
 import '../systems/combo_detector.dart';
+import '../systems/skill_profile.dart';
 import '../systems/powerup_system.dart';
 import '../systems/score_system.dart';
 import 'grid_manager.dart';
@@ -78,6 +79,10 @@ class GlooGame {
   int _totalSynthesisCount = 0;
   int _maxComboSize = 0;
 
+  // Adaptif zorluk: baskı altında puan takibi
+  int _pressureScore = 0;
+  int _comboMoveCount = 0;
+
   // Sıradaki şekil silueti (stratejik planlama ipucu)
   GelShape? _nextShapeSilhouette;
 
@@ -122,6 +127,23 @@ class GlooGame {
   int get totalLinesCleared => _totalLinesCleared;
   int get totalSynthesisCount => _totalSynthesisCount;
   int get maxComboSize => _maxComboSize;
+  int get pressureScore => _pressureScore;
+  int get comboMoveCount => _comboMoveCount;
+
+  /// Adaptif zorluk için oyun sonu istatistikleri.
+  GameStats buildGameStats() {
+    final total = _gridManager.rows * _gridManager.cols;
+    return GameStats(
+      gridFillRatio: total > 0 ? _gridManager.filledCells / total : 0.0,
+      synthesisCount: _totalSynthesisCount,
+      movesUsed: _movesUsed,
+      maxCombo: _maxComboSize,
+      comboMoveCount: _comboMoveCount,
+      pressureScore: _pressureScore,
+      totalScore: score,
+      playedAt: DateTime.now(),
+    );
+  }
 
   /// Sıradaki elin ilk şekil silueti (renksiz — sadece outline).
   GelShape? get nextShapeSilhouette => _nextShapeSilhouette;
@@ -155,6 +177,8 @@ class GlooGame {
     _totalLinesCleared = 0;
     _totalSynthesisCount = 0;
     _maxComboSize = 0;
+    _pressureScore = 0;
+    _comboMoveCount = 0;
     currencyManager.resetGameStats();
 
     powerUpSystem = PowerUpSystem(currencyManager: currencyManager);
@@ -250,6 +274,7 @@ class GlooGame {
 
     // Yerleştirme puanı: hücre başına 10 puan
     final placementPoints = _scoreSystem.addPlacementScore(cells.length);
+    _trackPressureScore(placementPoints);
     onScoreGained?.call(placementPoints);
 
     // Power-up: Undo için yerleştirme kaydı
@@ -305,6 +330,14 @@ class GlooGame {
           );
 
     return result;
+  }
+
+  /// Grid >%60 doluyken kazanılan puanları adaptif zorluk için takip eder.
+  void _trackPressureScore(int points) {
+    final total = _gridManager.rows * _gridManager.cols;
+    if (total > 0 && _gridManager.filledCells / total > 0.6) {
+      _pressureScore += points;
+    }
   }
 
   void _evaluateBoard() {
@@ -412,6 +445,8 @@ class GlooGame {
       combo: combo,
       colorSynthesisCount: colorSynthesisCount,
     );
+    _trackPressureScore(points);
+    if (combo.size > 0) _comboMoveCount++;
     onScoreGained?.call(points);
     if (combo.tier != ComboTier.none) onCombo?.call(combo);
 
