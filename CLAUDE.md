@@ -167,14 +167,19 @@ Tum 13 ekran + 2 widget dosyasi RTL-safe. Dekoratif arkaplan elementleri (`Posit
 
 ### Theme (Karanlik/Aydinlik Tema)
 
-`providers/theme_provider.dart`: `themeModeProvider` — `ThemeMode.dark` varsayilan. `main.dart`'ta `SharedPreferences`'tan yuklenir (`overrideWith`), ilk frame'den itibaren dogru tema aktif (flash yok). System tema secenegi Settings'te gizli ama fonksiyonel.
+`providers/theme_provider.dart`: `themeModeProvider` — `ThemeMode.dark` varsayilan. `LoadingScreen._runInit()` icinde `SharedPreferences`'tan yuklenir. System tema secenegi Settings'te gizli ama fonksiyonel.
 
 `app.dart`'ta `theme:` (light) + `darkTheme:` (dark) + `themeMode:` yapisi. Settings ekraninda `ThemeSelectorTile` + `ThemeSheet` ile secim yapilir, `LocalRepository.setThemeMode()` ile persist edilir.
 
+### Loading Screen
+
+`lib/features/loading/loading_screen.dart`: Animasyonlu in-app loading — native splash sonrasi, HomeScreen oncesi. 4 jel harf (G=kCyan, L=kGold, O=kPink, O=kCyan) staggered drop-in + nefes animasyonu. `_runInit()` ile servis baslatma (Supabase, Audio, AdManager, PurchaseService, tema/ses paketi yukleme) — `main.dart`'tan tasinmis. Sahte progress: 0→0.8 (2sn) + init bitince 0.8→1.0 (300ms). Min 2sn gosterim. Reduce motion: statik harfler, animasyonsuz. Cikis: `context.go('/')` veya `/onboarding`.
+
 ### Routing
 
-GoRouter (`lib/app/router.dart`). **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
-1. `/game/level/:levelId`
+GoRouter (`lib/app/router.dart`). `initialLocation: '/loading'`. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
+1. `/loading` (loading screen)
+2. `/game/level/:levelId`
 2. `/game/duel`
 3. `/game/:mode` (generic)
 
@@ -252,7 +257,8 @@ Nullable alanlar icin `_Absent` sentinel — `copyWith(matchId: null)` (null yap
 - `MediaQuery.textScalerOf(context).scale(fontSize)` ile dinamik font boyutlama — 9 lokasyonda aktif. Oyun grid cell'leri muaf.
 
 ### Platform Guard'lar
-- `main.dart`: Certificate pinning (`HttpOverrides.global`), Firebase init try-catch sarili. Supabase init try-catch. AdManager + PurchaseService `kIsWeb` guard. iOS `edgeToEdge`, diger `immersiveSticky`.
+- `main.dart`: Certificate pinning, Firebase init, orientation, splash remove. Agir init'ler (Supabase, Audio, AdManager, PurchaseService, tema) `LoadingScreen._runInit()` icine tasindi.
+- `LoadingScreen`: Servis baslatma orchestration — ConsentService, Future.wait paralel init, IAP pending verification, tema/ses paketi yukleme. `kIsWeb` guard'lar mevcut.
 - `AndroidManifest.xml`: AdMob App ID zorunlu — olmadan FATAL EXCEPTION. Simdi test ID aktif.
 - Web uyumsuz paketler: `google_mobile_ads`. `just_audio` web-uyumlu. `ffmpeg_kit_flutter` ve `screen_recorder` kaldirildi.
 
