@@ -103,9 +103,9 @@ void main() {
   // New tests: Route configuration
   // ─────────────────────────────────────────────
   group('Route configuration', () {
-    test('router defines exactly 15 top-level routes', () {
+    test('router defines exactly 16 top-level routes', () {
       final routes = _extractRoutes();
-      expect(routes.length, 15);
+      expect(routes.length, 16);
     });
 
     test('all expected paths are present', () {
@@ -113,6 +113,7 @@ void main() {
       final paths = routes.map((r) => r.path).toSet();
 
       const expectedPaths = <String>{
+        '/loading',
         '/',
         '/onboarding',
         '/levels',
@@ -142,14 +143,14 @@ void main() {
           reason: 'Duplicate route paths found');
     });
 
-    test('initial location is /', () {
+    test('initial location is /loading', () {
       final container = ProviderContainer();
       addTearDown(container.dispose);
       final router = container.read(routerProvider);
       // GoRouter navigates to initialLocation on creation
       expect(
         router.routeInformationProvider.value.uri.path,
-        '/',
+        '/loading',
       );
     });
   });
