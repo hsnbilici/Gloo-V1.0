@@ -214,6 +214,16 @@ Seviye 41-50 hedef skorlari %25-30 dusuruldu ve hamle sinirlari genisletildi (or
 
 Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: count `(1+difficulty*3).clamp(1,4)`, interval `(20-difficulty*8).clamp(12,20)` saniye. `areaSize` parametresi artik kullanilmiyor — tum engeller `applyRandomObstacle` path'ine dusur. Stone hucreler kirilabilir: komsu satir/sutun temizlenince `GridManager.breakAdjacentStones()` ile kirilanir + `onStoneBroken` callback.
 
+### Adaptif Zorluk (CD.28)
+
+`lib/game/systems/skill_profile.dart`: Cok boyutlu beceri profili — 4 eksen (gridEfficiency, synthesisSkill, comboSkill, pressureResilience), son 10 oyun ring buffer, 0.0-1.0 normalize. Ilk 3 oyunda kalibrasyon (0.5 nötr). 7+ gün inaktivitede %20 merkeze soguma.
+
+`lib/game/systems/adaptive_difficulty.dart`: `DifficultyModifiers` — profil → 4 kaldıraç (smallShapeBonus, largeShapeBonus, synthesisFriendly, comboSetup, pressureMercy). 0.3-0.7 nötr bant, uçlarda yumuşak interpolasyon.
+
+`ShapeGenerator.adaptiveModifiers`: Serbest modlarda (Classic, ColorChef, TimeTrial, Zen) aktif. Level/Daily/Duel muaf (seeded/kendi eğrisi). Profil tüm modlardan beslenir. Mevcut merhamet (3 kayıp, 5 hamle) korunur — adaptif üstüne eklenir.
+
+`SkillRadarChart` (`lib/features/shared/`): 4 köşeli radar chart, CharacterScreen'de. kCyan dolgu, 3 halka grid. Semantics + reduce motion uyumlu.
+
 ### Cascade Pacing
 
 `onCascadeStep(int step, int linesCleared)` callback — staggered SFX + artan pitch. Reduce Motion aktifken delay 0.
