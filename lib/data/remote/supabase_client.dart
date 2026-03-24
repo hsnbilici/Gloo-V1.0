@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -60,6 +61,7 @@ class SupabaseConfig {
           await client.from('profiles').upsert({
             'id': uid,
             'username': 'Player_${uid.substring(0, 6)}',
+            'friend_code': _generateFriendCode(),
           });
           if (kDebugMode)
             debugPrint('SupabaseConfig: profile created for $uid');
@@ -75,5 +77,12 @@ class SupabaseConfig {
   static String? get currentUserId {
     if (!isConfigured || !_initialized) return null;
     return client.auth.currentUser?.id;
+  }
+
+  static String _generateFriendCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no I/O/0/1 confusion
+    final rng = Random();
+    final code = List.generate(4, (_) => chars[rng.nextInt(chars.length)]).join();
+    return 'GLO-$code';
   }
 }
