@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../audio/audio_manager.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
 import '../../data/remote/supabase_client.dart';
 import '../../providers/theme_provider.dart';
@@ -230,6 +231,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final rm = shouldReduceMotion(context);
+
     return Semantics(
       label: 'GLOO loading',
       child: Scaffold(
@@ -241,33 +244,37 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
               Positioned(
                 top: -130,
                 left: -80,
-                child: FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: _orbFadeCtrl,
-                    curve: Curves.easeOut,
-                  ),
-                  child: const GlowOrb(
-                    size: 280,
-                    color: kCyan,
-                    opacity: 0.07,
-                  ),
-                ),
+                child: rm
+                    ? const GlowOrb(size: 280, color: kCyan, opacity: 0.07)
+                    : FadeTransition(
+                        opacity: CurvedAnimation(
+                          parent: _orbFadeCtrl,
+                          curve: Curves.easeOut,
+                        ),
+                        child: const GlowOrb(
+                          size: 280,
+                          color: kCyan,
+                          opacity: 0.07,
+                        ),
+                      ),
               ),
               // GlowOrb — bottom-right
               Positioned(
                 bottom: -80,
                 right: -60,
-                child: FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: _orbFadeCtrl,
-                    curve: Curves.easeOut,
-                  ),
-                  child: const GlowOrb(
-                    size: 280,
-                    color: kPink,
-                    opacity: 0.05,
-                  ),
-                ),
+                child: rm
+                    ? const GlowOrb(size: 280, color: kPink, opacity: 0.05)
+                    : FadeTransition(
+                        opacity: CurvedAnimation(
+                          parent: _orbFadeCtrl,
+                          curve: Curves.easeOut,
+                        ),
+                        child: const GlowOrb(
+                          size: 280,
+                          color: kPink,
+                          opacity: 0.05,
+                        ),
+                      ),
               ),
               // Center content
               Center(
@@ -275,53 +282,82 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // GLOO letters
-                    AnimatedBuilder(
-                      animation: Listenable.merge([_dropCtrl, _breathCtrl]),
-                      builder: (_, __) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            for (int i = 0; i < _letters.length; i++) ...[
-                              if (i > 0) const SizedBox(width: 12),
-                              _buildDropLetter(i),
-                            ],
+                    if (rm)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (int i = 0; i < _letters.length; i++) ...[
+                            if (i > 0) const SizedBox(width: 12),
+                            BreathingLetter(
+                              letter: _letters[i].$1,
+                              color: _letters[i].$2,
+                              phase: _letters[i].$3,
+                              animate: false,
+                            ),
                           ],
-                        );
-                      },
-                    ),
+                        ],
+                      )
+                    else
+                      AnimatedBuilder(
+                        animation: Listenable.merge([_dropCtrl, _breathCtrl]),
+                        builder: (_, __) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              for (int i = 0; i < _letters.length; i++) ...[
+                                if (i > 0) const SizedBox(width: 12),
+                                _buildDropLetter(i),
+                              ],
+                            ],
+                          );
+                        },
+                      ),
                     // Decorative line — 20dp below letters
                     const SizedBox(height: 20),
-                    FadeTransition(
-                      opacity: CurvedAnimation(
-                        parent: _lineFadeCtrl,
-                        curve: Curves.easeOut,
-                      ),
-                      child: Container(
+                    if (rm)
+                      Container(
                         width: 80,
                         height: 1.5,
                         decoration: BoxDecoration(
                           color: kGold.withValues(alpha: 0.20),
                           borderRadius: BorderRadius.circular(1),
                         ),
+                      )
+                    else
+                      FadeTransition(
+                        opacity: CurvedAnimation(
+                          parent: _lineFadeCtrl,
+                          curve: Curves.easeOut,
+                        ),
+                        child: Container(
+                          width: 80,
+                          height: 1.5,
+                          decoration: BoxDecoration(
+                            color: kGold.withValues(alpha: 0.20),
+                            borderRadius: BorderRadius.circular(1),
+                          ),
+                        ),
                       ),
-                    ),
                     // Progress bar — 28dp below line
                     const SizedBox(height: 28),
-                    FadeTransition(
-                      opacity: CurvedAnimation(
-                        parent: _lineFadeCtrl,
-                        curve: Curves.easeOut,
+                    if (rm)
+                      const LoadingProgressBar(progress: 1.0)
+                    else
+                      FadeTransition(
+                        opacity: CurvedAnimation(
+                          parent: _lineFadeCtrl,
+                          curve: Curves.easeOut,
+                        ),
+                        child: AnimatedBuilder(
+                          animation:
+                              Listenable.merge([_progressCtrl, _finishCtrl]),
+                          builder: (_, __) {
+                            return LoadingProgressBar(
+                              progress: _currentProgress,
+                            );
+                          },
+                        ),
                       ),
-                      child: AnimatedBuilder(
-                        animation:
-                            Listenable.merge([_progressCtrl, _finishCtrl]),
-                        builder: (_, __) {
-                          return LoadingProgressBar(
-                            progress: _currentProgress,
-                          );
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
