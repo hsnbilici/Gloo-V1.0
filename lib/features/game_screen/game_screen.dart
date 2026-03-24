@@ -17,7 +17,9 @@ import '../../game/meta/character_state.dart';
 import '../../game/meta/island_state.dart';
 import '../../game/meta/season_pass.dart';
 import '../../game/shapes/gel_shape.dart';
+import '../../game/systems/adaptive_difficulty.dart';
 import '../../game/systems/combo_detector.dart';
+import '../../game/systems/skill_profile.dart';
 import '../../game/systems/powerup_system.dart';
 import '../../game/world/cell_type.dart';
 import '../../game/world/game_world.dart';
@@ -171,6 +173,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
   @override
   Timer? waveClearTimer;
 
+  // ─── Adaptif zorluk beceri profili ─────────────────────────────────
+  SkillProfile? _skillProfile;
+
   // ─── Mod rengi ─────────────────────────────────────────────────────
   Color get _modeColor => kModeColors[widget.mode]!;
 
@@ -233,16 +238,33 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
     // Kalici verileri yukle
     ref.read(localRepositoryProvider.future).then((repo) async {
+      _cachedRepo = repo;
       final saved = await repo.getHighScore(widget.mode.name);
       game.setInitialHighScore(saved);
       game.setGamesPlayed(repo.getTotalGamesPlayed());
       game.setCurrencyBalance(await repo.getGelOzu());
       final lifetime = await repo.getLifetimeEarnings();
       game.currencyManager.setLifetimeEarnings(lifetime);
+
+      // Adaptif zorluk: profil yükle + kaldıraç hesapla
+      _skillProfile = repo.getSkillProfile().applyCooldown();
+      skillProfileForCallbacks = _skillProfile;
+      final isAdaptiveMode = widget.mode != GameMode.level &&
+          widget.mode != GameMode.daily &&
+          widget.mode != GameMode.duel;
+      if (isAdaptiveMode) {
+        game.shapeGenerator.adaptiveModifiers =
+            AdaptiveDifficulty.calculate(_skillProfile!);
+      }
     });
 
     game.startGame();
     refillHand();
+    // Level geçişinde provider state'ini sıfırla — aynı GameMode.level key'i
+    // paylaşıldığı için önceki seviyenin skoru kalıyordu.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(gameProvider(widget.mode).notifier).reset();
+    });
     ref.read(analyticsServiceProvider).logGameStart(mode: widget.mode.name);
 
     setupCallbacks();

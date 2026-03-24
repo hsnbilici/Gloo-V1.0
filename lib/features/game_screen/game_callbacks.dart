@@ -61,6 +61,9 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
   /// Callback'lerde tekrarlanan `localRepositoryProvider.future.then()` yerine kullanilir.
   LocalRepository? _cachedRepo;
 
+  /// Adaptif zorluk beceri profili — game_screen.dart'tan set edilir.
+  SkillProfile? skillProfileForCallbacks;
+
   /// GelOzu ses debounce — onBalanceChanged her deger degisiminde tetiklenir,
   /// tek hamlede 2-3 kez ust uste calmayi onler.
   Timer? _gelOzuSfxDebounce;
@@ -570,6 +573,13 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
       ref
           .read(analyticsServiceProvider)
           .logGameOver(mode: widget.mode.name, score: score);
+
+      // Adaptif zorluk: beceri profili güncelle (tüm modlardan beslenir)
+      if (skillProfileForCallbacks != null && repo != null) {
+        final stats = game.buildGameStats();
+        skillProfileForCallbacks = skillProfileForCallbacks!.addGame(stats);
+        repo.saveSkillProfile(skillProfileForCallbacks!);
+      }
 
       // Season Pass XP: score / 100, Gloo+ subscribers get 2x
       var xp = max(10, score ~/ 100);

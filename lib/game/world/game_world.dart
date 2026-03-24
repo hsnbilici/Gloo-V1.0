@@ -33,6 +33,7 @@ class GlooGame {
   final GameMode mode;
   final LevelData? levelData;
   final ShapeGenerator _shapeGenerator;
+  ShapeGenerator get shapeGenerator => _shapeGenerator;
 
   /// Talent bonusları (saf değerler — CharacterState import edilmez).
   final double betterHandBonus;
