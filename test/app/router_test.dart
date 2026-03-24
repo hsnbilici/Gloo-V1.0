@@ -103,9 +103,9 @@ void main() {
   // New tests: Route configuration
   // ─────────────────────────────────────────────
   group('Route configuration', () {
-    test('router defines exactly 16 top-level routes', () {
+    test('router defines exactly 18 top-level routes', () {
       final routes = _extractRoutes();
-      expect(routes.length, 16);
+      expect(routes.length, 18);
     });
 
     test('all expected paths are present', () {
@@ -129,6 +129,8 @@ void main() {
         '/island',
         '/character',
         '/season-pass',
+        '/friends',
+        '/friend/:code',
       };
 
       for (final path in expectedPaths) {

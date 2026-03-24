@@ -55,6 +55,11 @@ class DeepLinkHandler {
 
     final segments = uri.pathSegments;
 
+    // /friend/<code> → arkadaş ekleme
+    if (segments.isNotEmpty && segments[0] == 'friend' && segments.length >= 2) {
+      return '/friend/${segments[1]}';
+    }
+
     // /share/<type>[?params]
     if (segments.isNotEmpty && segments[0] == 'share') {
       if (segments.length >= 2) {

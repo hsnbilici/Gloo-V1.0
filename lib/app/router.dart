@@ -10,6 +10,7 @@ import '../features/onboarding/onboarding_screen.dart';
 import '../game/levels/level_progression.dart';
 import '../core/models/game_mode.dart';
 import '../features/character/character_screen.dart';
+import '../features/friends/friends_screen.dart';
 import '../features/collection/collection_screen.dart';
 import '../features/island/island_screen.dart';
 import '../features/leaderboard/leaderboard_screen.dart';
@@ -152,6 +153,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/season-pass',
         builder: (context, state) => const SeasonPassScreen(),
+      ),
+      // CD.27: Arkadaş sistemi
+      GoRoute(
+        path: '/friends',
+        builder: (context, state) => const FriendsScreen(),
+      ),
+      GoRoute(
+        path: '/friend/:code',
+        builder: (context, state) {
+          final code = state.pathParameters['code'] ?? '';
+          return FriendsScreen(initialCode: code);
+        },
       ),
     ],
   );
