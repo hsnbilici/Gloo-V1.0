@@ -354,8 +354,10 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
 
   /// Sürükleme sırasında pointer → anchor dönüşümü.
   /// Feedback widget parmağa merkezli olduğu için, şeklin merkezini
-  /// pointer konumuna hizalar (1-2'li şekillerde fark yok, 3-4'lülerde kritik).
+  /// pointer konumuna hizalar. 1-2 hücreli şekillerde offset ihmal
+  /// edilebilir düzeyde — sadece 3+ hücrede uygulanır.
   (int, int) _dragAnchor(GelShape shape, int row, int col) {
+    if (shape.cellCount <= 2) return clampAnchor(shape, row, col);
     final centeredRow = row - shape.rowCount ~/ 2;
     final centeredCol = col - shape.colCount ~/ 2;
     return clampAnchor(shape, centeredRow, centeredCol);
