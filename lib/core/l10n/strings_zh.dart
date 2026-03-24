@@ -734,4 +734,16 @@ class StringsZh extends AppStrings {
   // CD.34: ELO interpolation
   @override
   String eloDisplay(int elo) => '$elo 战力';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => '技能档案';
+  @override
+  String get skillGridEfficiency => '网格';
+  @override
+  String get skillSynthesis => '合成';
+  @override
+  String get skillCombo => '连击';
+  @override
+  String get skillPressure => '压力';
 }

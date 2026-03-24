@@ -748,4 +748,16 @@ class StringsDe extends AppStrings {
   // CD.34: ELO interpolation
   @override
   String eloDisplay(int elo) => '$elo Kraft';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => 'Fähigkeitsprofil';
+  @override
+  String get skillGridEfficiency => 'Raster';
+  @override
+  String get skillSynthesis => 'Synthese';
+  @override
+  String get skillCombo => 'Kombo';
+  @override
+  String get skillPressure => 'Druck';
 }

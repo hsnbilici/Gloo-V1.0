@@ -743,4 +743,16 @@ class StringsTr extends AppStrings {
   // CD.34: ELO interpolation
   @override
   String eloDisplay(int elo) => '$elo Güç';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => 'Beceri Profili';
+  @override
+  String get skillGridEfficiency => 'Alan';
+  @override
+  String get skillSynthesis => 'Sentez';
+  @override
+  String get skillCombo => 'Kombo';
+  @override
+  String get skillPressure => 'Baskı';
 }

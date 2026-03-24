@@ -738,4 +738,16 @@ class StringsKo extends AppStrings {
   // CD.34: ELO interpolation (label before value in Korean)
   @override
   String eloDisplay(int elo) => '파워 $elo';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => '스킬 프로필';
+  @override
+  String get skillGridEfficiency => '그리드';
+  @override
+  String get skillSynthesis => '합성';
+  @override
+  String get skillCombo => '콤보';
+  @override
+  String get skillPressure => '압박';
 }

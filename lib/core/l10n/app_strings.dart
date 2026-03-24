@@ -499,6 +499,13 @@ abstract class AppStrings {
         _ => null,
       };
 
+  // Skill Profile
+  String get skillProfileTitle;
+  String get skillGridEfficiency;
+  String get skillSynthesis;
+  String get skillCombo;
+  String get skillPressure;
+
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {
     return switch (locale.languageCode) {

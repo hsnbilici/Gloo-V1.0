@@ -737,4 +737,16 @@ class StringsJa extends AppStrings {
   // CD.34: ELO interpolation (label before value in Japanese)
   @override
   String eloDisplay(int elo) => 'パワー $elo';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => 'スキルプロフィール';
+  @override
+  String get skillGridEfficiency => 'グリッド';
+  @override
+  String get skillSynthesis => '合成';
+  @override
+  String get skillCombo => 'コンボ';
+  @override
+  String get skillPressure => 'プレッシャー';
 }

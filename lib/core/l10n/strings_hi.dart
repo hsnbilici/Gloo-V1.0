@@ -743,4 +743,16 @@ class StringsHi extends AppStrings {
   // CD.34: ELO interpolation
   @override
   String eloDisplay(int elo) => '$elo शक्ति';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => 'कौशल प्रोफ़ाइल';
+  @override
+  String get skillGridEfficiency => 'ग्रिड';
+  @override
+  String get skillSynthesis => 'संश्लेषण';
+  @override
+  String get skillCombo => 'कॉम्बो';
+  @override
+  String get skillPressure => 'दबाव';
 }

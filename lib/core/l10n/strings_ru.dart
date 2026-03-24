@@ -749,4 +749,16 @@ class StringsRu extends AppStrings {
   // CD.34: ELO interpolation
   @override
   String eloDisplay(int elo) => '$elo Сила';
+
+  // Skill Profile
+  @override
+  String get skillProfileTitle => 'Профиль навыков';
+  @override
+  String get skillGridEfficiency => 'Сетка';
+  @override
+  String get skillSynthesis => 'Синтез';
+  @override
+  String get skillCombo => 'Комбо';
+  @override
+  String get skillPressure => 'Давление';
 }
