@@ -45,12 +45,14 @@ class Cell {
   /// Hücre boş mu (yerleştirmeye müsait)?
   bool get isEmpty {
     if (type == CellType.stone) return false;
+    if (type == CellType.ice && iceLayer > 0) return false;
     return color == null;
   }
 
   /// Hücre yerleştirilebilir mi (renk kontrolü dahil)?
   bool canAccept(GelColor placingColor) {
     if (type == CellType.stone) return false;
+    if (type == CellType.ice && iceLayer > 0) return false;
     if (color != null) return false;
     if (type == CellType.locked && lockedColor != null) {
       return placingColor == lockedColor;

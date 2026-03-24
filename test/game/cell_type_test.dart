@@ -55,8 +55,13 @@ void main() {
       expect(cell.canAccept(GelColor.blue), isFalse);
     });
 
-    test('ice cell accepts any color when empty', () {
+    test('ice cell with iceLayer > 0 rejects placement', () {
       final cell = Cell(type: CellType.ice, iceLayer: 1);
+      expect(cell.canAccept(GelColor.red), isFalse);
+    });
+
+    test('ice cell with iceLayer 0 accepts placement (cracked)', () {
+      final cell = Cell(type: CellType.ice, iceLayer: 0);
       expect(cell.canAccept(GelColor.red), isTrue);
     });
 

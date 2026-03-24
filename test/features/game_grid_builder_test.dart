@@ -186,7 +186,7 @@ void main() {
     test('Cell with CellType.ice has iceLayer > 0', () {
       final cell = Cell(type: CellType.ice, iceLayer: 2);
       expect(cell.iceLayer, equals(2));
-      expect(cell.isEmpty, isTrue); // ice cell with no color is empty
+      expect(cell.isEmpty, isFalse); // ice cell blocks placement
     });
 
     test('Cell with CellType.ice cracks down on crackIce()', () {

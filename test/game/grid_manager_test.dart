@@ -105,9 +105,15 @@ void main() {
       expect(gm.canPlace([(1, 1)], GelColor.red), isFalse);
     });
 
-    test('ice cell accepts any color', () {
+    test('ice cell with iceLayer > 0 rejects placement', () {
       final gm = GridManager(rows: 4, cols: 4);
       gm.setCellType(1, 1, CellType.ice, iceLayer: 2);
+      expect(gm.canPlace([(1, 1)], GelColor.green), isFalse);
+    });
+
+    test('cracked ice cell (iceLayer 0) accepts placement', () {
+      final gm = GridManager(rows: 4, cols: 4);
+      gm.setCellType(1, 1, CellType.ice, iceLayer: 0);
       expect(gm.canPlace([(1, 1)], GelColor.green), isTrue);
     });
 
