@@ -3,6 +3,7 @@ import 'dart:math';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/models/game_mode.dart';
+import '../systems/adaptive_difficulty.dart';
 import '../world/grid_manager.dart';
 
 /// Tek bir oyun parçasını tanımlar: hücre koordinatları ve görünen ad.
@@ -108,6 +109,9 @@ class ShapeGenerator {
   /// Talent bonusu: küçük şekil olasılığına eklenir (0.0–0.3).
   final double betterHandBonus;
 
+  /// Adaptif zorluk kaldıraçları. `null` → nötr (mevcut davranış).
+  DifficultyModifiers? adaptiveModifiers;
+
   // ─── Merhamet Mekanizması durumu ──────────────────────────────────────────
   int _consecutiveLosses = 0;
   int _movesSinceLastClear = 0;
@@ -172,6 +176,19 @@ class ShapeGenerator {
             _weightedRandomShape(effectiveDifficulty, gamesPlayed, mode);
         final color = _weightedRandomColor(grid, availableColors);
         candidates.add((shape, color));
+      }
+    }
+
+    // Adaptif zorluk: pressureMercy — grid >%60'da ilk 2 şekli küçük yap
+    if (adaptiveModifiers?.pressureMercy == true) {
+      final total = gridManager.rows * gridManager.cols;
+      if (total > 0 && gridManager.filledCells / total > 0.6) {
+        for (int i = 0; i < min(2, candidates.length); i++) {
+          candidates[i] = (
+            kSmallShapes[_rng.nextInt(kSmallShapes.length)],
+            candidates[i].$2,
+          );
+        }
       }
     }
 
@@ -242,6 +259,14 @@ class ShapeGenerator {
       // mediumW sabit kalır, büyük otomatik olarak azalır
     }
 
+    // Adaptif zorluk: şekil boyutu bonusları
+    if (adaptiveModifiers != null) {
+      smallW += adaptiveModifiers!.smallShapeBonus;
+      // largeShapeBonus: mediumW'den çal (büyük ağırlık artırma)
+      mediumW = (mediumW - adaptiveModifiers!.largeShapeBonus)
+          .clamp(0.05, 1.0);
+    }
+
     late final List<GelShape> pool;
     if (roll < smallW) {
       pool = kSmallShapes;
@@ -277,13 +302,24 @@ class ShapeGenerator {
       return colors[_rng.nextInt(colors.length)];
     }
 
+    // Adaptif: synthesisFriendly false → düz rastgele (ters ağırlık kapalı)
+    if (adaptiveModifiers != null && !adaptiveModifiers!.synthesisFriendly) {
+      return colors[_rng.nextInt(colors.length)];
+    }
+
     // Ters ağırlıklandırma: az bulunan renklere daha yüksek şans
     final weights = <GelColor, double>{};
     for (final entry in colorCounts.entries) {
       final ratio = entry.value / totalColors;
       // 1 - ratio → az olan renk yüksek ağırlık alır
       // 0.3 base → tamamen yok olmayı engeller
-      weights[entry.key] = 0.3 + (1.0 - ratio) * 0.7;
+      final baseWeight = 0.3 + (1.0 - ratio) * 0.7;
+      // Adaptif: synthesisFriendly true → sentez yapabilecek renklere +%30
+      final synthBonus = (adaptiveModifiers?.synthesisFriendly == true &&
+              _canSynthesizeWith(entry.key, grid))
+          ? 0.30
+          : 0.0;
+      weights[entry.key] = baseWeight + synthBonus;
     }
 
     // Ağırlıklı rastgele seçim
@@ -295,6 +331,21 @@ class ShapeGenerator {
     }
 
     return colors.last;
+  }
+
+  /// Bu renk grid'deki mevcut renklerden biriyle sentez yapabilir mi?
+  bool _canSynthesizeWith(GelColor color, Grid grid) {
+    for (final row in grid) {
+      for (final cell in row) {
+        if (cell != null && cell != color) {
+          if (kColorMixingTable.containsKey((color, cell)) ||
+              kColorMixingTable.containsKey((cell, color))) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   /// Eldeki şekillerden herhangi biri ızgaraya yerleştirilebilir mi?
