@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/audio_constants.dart';
+import '../../game/systems/skill_profile.dart';
 import 'data_models.dart';
 import 'economy_repository.dart';
 import 'game_data_repository.dart';
@@ -384,7 +385,6 @@ class LocalRepository {
 
   // ─── Tema Modu ───────────────────────────────────────────────────────────
 
-  @override
   ThemeMode getThemeMode() => settings.getThemeMode();
 
   Future<void> setThemeMode(ThemeMode mode) => settings.setThemeMode(mode);
@@ -395,4 +395,19 @@ class LocalRepository {
 
   Future<void> saveAudioPackage(AudioPackage package) =>
       settings.saveAudioPackage(package);
+
+  // ─── Beceri Profili ───────────────────────────────────────────────────
+
+  SkillProfile getSkillProfile() {
+    final json = settings.getSkillProfileJson();
+    if (json == null) return SkillProfile.empty();
+    try {
+      return SkillProfile.fromJson(json);
+    } catch (_) {
+      return SkillProfile.empty();
+    }
+  }
+
+  Future<void> saveSkillProfile(SkillProfile profile) =>
+      settings.saveSkillProfileJson(profile.toJson());
 }

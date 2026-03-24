@@ -83,4 +83,11 @@ class SettingsRepository {
   Future<void> saveAudioPackage(AudioPackage package) async {
     await _prefs.setString('audio_package', package.name);
   }
+
+  // ─── Beceri Profili ───────────────────────────────────────────────────
+
+  String? getSkillProfileJson() => _prefs.getString('skill_profile');
+
+  Future<void> saveSkillProfileJson(String json) =>
+      _prefs.setString('skill_profile', json);
 }
