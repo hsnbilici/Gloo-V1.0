@@ -755,4 +755,32 @@ class StringsHi extends AppStrings {
   String get skillCombo => 'कॉम्बो';
   @override
   String get skillPressure => 'दबाव';
+
+  // Friends
+  @override
+  String get friendsTitle => 'दोस्त';
+  @override
+  String get friendCode => 'तुम्हारा कोड';
+  @override
+  String get friendCodeCopied => 'कोड कॉपी हुआ';
+  @override
+  String get friendAddByCode => 'कोड से जोड़ें';
+  @override
+  String get friendSearch => 'खोजें';
+  @override
+  String get friendFollow => 'फ़ॉलो';
+  @override
+  String get friendUnfollow => 'अनफ़ॉलो';
+  @override
+  String get friendMutual => 'दोस्त';
+  @override
+  String get friendFollowers => 'फ़ॉलोअर्स';
+  @override
+  String get friendFollowing => 'फ़ॉलोइंग';
+  @override
+  String get weeklyRivalTitle => 'इस हफ़्ते';
+  @override
+  String get leaderboardTabFriends => 'दोस्त';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name $diff अंक से आगे है';
 }

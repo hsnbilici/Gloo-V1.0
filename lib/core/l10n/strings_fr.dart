@@ -758,4 +758,32 @@ class StringsFr extends AppStrings {
   String get skillCombo => 'Combo';
   @override
   String get skillPressure => 'Pression';
+
+  // Friends
+  @override
+  String get friendsTitle => 'Amis';
+  @override
+  String get friendCode => 'Ton Code';
+  @override
+  String get friendCodeCopied => 'Code copié';
+  @override
+  String get friendAddByCode => 'Ajouter par Code';
+  @override
+  String get friendSearch => 'Rechercher';
+  @override
+  String get friendFollow => 'Suivre';
+  @override
+  String get friendUnfollow => 'Ne plus suivre';
+  @override
+  String get friendMutual => 'Ami';
+  @override
+  String get friendFollowers => 'Abonnés';
+  @override
+  String get friendFollowing => 'Abonnements';
+  @override
+  String get weeklyRivalTitle => 'Cette semaine';
+  @override
+  String get leaderboardTabFriends => 'Amis';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name te devance de $diff points';
 }

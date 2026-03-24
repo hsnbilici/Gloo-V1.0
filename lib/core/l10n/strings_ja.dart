@@ -749,4 +749,32 @@ class StringsJa extends AppStrings {
   String get skillCombo => 'コンボ';
   @override
   String get skillPressure => 'プレッシャー';
+
+  // Friends
+  @override
+  String get friendsTitle => 'フレンド';
+  @override
+  String get friendCode => 'あなたのコード';
+  @override
+  String get friendCodeCopied => 'コードをコピー';
+  @override
+  String get friendAddByCode => 'コードで追加';
+  @override
+  String get friendSearch => '検索';
+  @override
+  String get friendFollow => 'フォロー';
+  @override
+  String get friendUnfollow => 'フォロー解除';
+  @override
+  String get friendMutual => 'フレンド';
+  @override
+  String get friendFollowers => 'フォロワー';
+  @override
+  String get friendFollowing => 'フォロー中';
+  @override
+  String get weeklyRivalTitle => '今週';
+  @override
+  String get leaderboardTabFriends => 'フレンド';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$nameが$diffポイント先行';
 }

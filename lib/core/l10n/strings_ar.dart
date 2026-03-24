@@ -759,4 +759,32 @@ class StringsAr extends AppStrings {
   String get skillCombo => 'كومبو';
   @override
   String get skillPressure => 'ضغط';
+
+  // Friends
+  @override
+  String get friendsTitle => 'أصدقاء';
+  @override
+  String get friendCode => 'رمزك';
+  @override
+  String get friendCodeCopied => 'تم نسخ الرمز';
+  @override
+  String get friendAddByCode => 'إضافة بالرمز';
+  @override
+  String get friendSearch => 'بحث';
+  @override
+  String get friendFollow => 'متابعة';
+  @override
+  String get friendUnfollow => 'إلغاء المتابعة';
+  @override
+  String get friendMutual => 'صديق';
+  @override
+  String get friendFollowers => 'متابعون';
+  @override
+  String get friendFollowing => 'أتابعهم';
+  @override
+  String get weeklyRivalTitle => 'هذا الأسبوع';
+  @override
+  String get leaderboardTabFriends => 'أصدقاء';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name يتقدم عليك بـ$diff نقطة';
 }

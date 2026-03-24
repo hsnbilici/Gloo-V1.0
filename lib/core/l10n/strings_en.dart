@@ -756,4 +756,32 @@ class StringsEn extends AppStrings {
   String get skillCombo => 'Combo';
   @override
   String get skillPressure => 'Pressure';
+
+  // Friends
+  @override
+  String get friendsTitle => 'Friends';
+  @override
+  String get friendCode => 'Your Code';
+  @override
+  String get friendCodeCopied => 'Code copied';
+  @override
+  String get friendAddByCode => 'Add by Code';
+  @override
+  String get friendSearch => 'Search';
+  @override
+  String get friendFollow => 'Follow';
+  @override
+  String get friendUnfollow => 'Unfollow';
+  @override
+  String get friendMutual => 'Friend';
+  @override
+  String get friendFollowers => 'Followers';
+  @override
+  String get friendFollowing => 'Following';
+  @override
+  String get weeklyRivalTitle => 'This week';
+  @override
+  String get leaderboardTabFriends => 'Friends';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name is ahead by $diff points';
 }

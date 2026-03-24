@@ -761,4 +761,32 @@ class StringsRu extends AppStrings {
   String get skillCombo => 'Комбо';
   @override
   String get skillPressure => 'Давление';
+
+  // Friends
+  @override
+  String get friendsTitle => 'Друзья';
+  @override
+  String get friendCode => 'Ваш код';
+  @override
+  String get friendCodeCopied => 'Код скопирован';
+  @override
+  String get friendAddByCode => 'Добавить по коду';
+  @override
+  String get friendSearch => 'Поиск';
+  @override
+  String get friendFollow => 'Подписаться';
+  @override
+  String get friendUnfollow => 'Отписаться';
+  @override
+  String get friendMutual => 'Друг';
+  @override
+  String get friendFollowers => 'Подписчики';
+  @override
+  String get friendFollowing => 'Подписки';
+  @override
+  String get weeklyRivalTitle => 'На этой неделе';
+  @override
+  String get leaderboardTabFriends => 'Друзья';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name впереди на $diff очков';
 }

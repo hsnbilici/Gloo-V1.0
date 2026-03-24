@@ -755,4 +755,32 @@ class StringsTr extends AppStrings {
   String get skillCombo => 'Kombo';
   @override
   String get skillPressure => 'Baskı';
+
+  // Friends
+  @override
+  String get friendsTitle => 'Arkadaşlar';
+  @override
+  String get friendCode => 'Senin Kodun';
+  @override
+  String get friendCodeCopied => 'Kod kopyalandı';
+  @override
+  String get friendAddByCode => 'Kod ile Ekle';
+  @override
+  String get friendSearch => 'Ara';
+  @override
+  String get friendFollow => 'Takip Et';
+  @override
+  String get friendUnfollow => 'Takibi Bırak';
+  @override
+  String get friendMutual => 'Arkadaş';
+  @override
+  String get friendFollowers => 'Takipçiler';
+  @override
+  String get friendFollowing => 'Takip Edilenler';
+  @override
+  String get weeklyRivalTitle => 'Bu hafta';
+  @override
+  String get leaderboardTabFriends => 'Arkadaşlar';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name seni $diff puan ile geçiyor';
 }

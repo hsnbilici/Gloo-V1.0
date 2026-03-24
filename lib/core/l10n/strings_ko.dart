@@ -750,4 +750,32 @@ class StringsKo extends AppStrings {
   String get skillCombo => '콤보';
   @override
   String get skillPressure => '압박';
+
+  // Friends
+  @override
+  String get friendsTitle => '친구';
+  @override
+  String get friendCode => '내 코드';
+  @override
+  String get friendCodeCopied => '코드 복사됨';
+  @override
+  String get friendAddByCode => '코드로 추가';
+  @override
+  String get friendSearch => '검색';
+  @override
+  String get friendFollow => '팔로우';
+  @override
+  String get friendUnfollow => '언팔로우';
+  @override
+  String get friendMutual => '친구';
+  @override
+  String get friendFollowers => '팔로워';
+  @override
+  String get friendFollowing => '팔로잉';
+  @override
+  String get weeklyRivalTitle => '이번 주';
+  @override
+  String get leaderboardTabFriends => '친구';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name이(가) $diff점 앞서고 있어요';
 }

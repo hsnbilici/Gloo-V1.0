@@ -506,6 +506,21 @@ abstract class AppStrings {
   String get skillCombo;
   String get skillPressure;
 
+  // Friends
+  String get friendsTitle;
+  String get friendCode;
+  String get friendCodeCopied;
+  String get friendAddByCode;
+  String get friendSearch;
+  String get friendFollow;
+  String get friendUnfollow;
+  String get friendMutual;
+  String get friendFollowers;
+  String get friendFollowing;
+  String get weeklyRivalTitle;
+  String get leaderboardTabFriends;
+  String weeklyRivalAhead(String name, int diff);
+
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {
     return switch (locale.languageCode) {

@@ -760,4 +760,32 @@ class StringsDe extends AppStrings {
   String get skillCombo => 'Kombo';
   @override
   String get skillPressure => 'Druck';
+
+  // Friends
+  @override
+  String get friendsTitle => 'Freunde';
+  @override
+  String get friendCode => 'Dein Code';
+  @override
+  String get friendCodeCopied => 'Code kopiert';
+  @override
+  String get friendAddByCode => 'Per Code hinzufügen';
+  @override
+  String get friendSearch => 'Suchen';
+  @override
+  String get friendFollow => 'Folgen';
+  @override
+  String get friendUnfollow => 'Entfolgen';
+  @override
+  String get friendMutual => 'Freund';
+  @override
+  String get friendFollowers => 'Follower';
+  @override
+  String get friendFollowing => 'Folge ich';
+  @override
+  String get weeklyRivalTitle => 'Diese Woche';
+  @override
+  String get leaderboardTabFriends => 'Freunde';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name liegt $diff Punkte vorne';
 }

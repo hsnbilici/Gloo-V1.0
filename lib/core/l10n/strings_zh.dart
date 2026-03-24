@@ -746,4 +746,32 @@ class StringsZh extends AppStrings {
   String get skillCombo => '连击';
   @override
   String get skillPressure => '压力';
+
+  // Friends
+  @override
+  String get friendsTitle => '好友';
+  @override
+  String get friendCode => '你的代码';
+  @override
+  String get friendCodeCopied => '代码已复制';
+  @override
+  String get friendAddByCode => '用代码添加';
+  @override
+  String get friendSearch => '搜索';
+  @override
+  String get friendFollow => '关注';
+  @override
+  String get friendUnfollow => '取消关注';
+  @override
+  String get friendMutual => '好友';
+  @override
+  String get friendFollowers => '粉丝';
+  @override
+  String get friendFollowing => '关注中';
+  @override
+  String get weeklyRivalTitle => '本周';
+  @override
+  String get leaderboardTabFriends => '好友';
+  @override
+  String weeklyRivalAhead(String name, int diff) => '$name领先你$diff分';
 }
