@@ -14,6 +14,7 @@ import '../../game/meta/resource_manager.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../providers/user_provider.dart';
+import '../shared/skill_radar_chart.dart';
 import 'character_background.dart';
 import 'character_widgets.dart';
 
@@ -22,6 +23,48 @@ class CharacterScreen extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<CharacterScreen> createState() => _CharacterScreenState();
+}
+
+/// Beceri profili radar chart bölümü.
+class _SkillProfileSection extends ConsumerWidget {
+  const _SkillProfileSection({required this.textColor});
+
+  final Color textColor;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = ref.watch(stringsProvider);
+    final repoAsync = ref.watch(localRepositoryProvider);
+    final repo = repoAsync.valueOrNull;
+    if (repo == null) return const SizedBox.shrink();
+
+    final profile = repo.getSkillProfile().applyCooldown();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l.skillProfileTitle,
+          style: AppTextStyles.subheading.copyWith(color: textColor),
+        ),
+        const SizedBox(height: Spacing.md),
+        Center(
+          child: SkillRadarChart(
+            gridEfficiency: profile.gridEfficiency,
+            synthesisSkill: profile.synthesisSkill,
+            comboSkill: profile.comboSkill,
+            pressureResilience: profile.pressureResilience,
+            labels: [
+              l.skillGridEfficiency,
+              l.skillSynthesis,
+              l.skillCombo,
+              l.skillPressure,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 /// Keşfedilen sentez renklerinin kişilik arketiplerini listeler.
@@ -339,6 +382,12 @@ class _CharacterScreenState extends ConsumerState<CharacterScreen> {
                                   textSecondary: textSecondary,
                                   surfaceColor: surfaceColor,
                                   borderColor: borderColor,
+                                ),
+                                const SizedBox(height: 24),
+                                _SkillProfileSection(
+                                  textColor: resolveColor(brightness,
+                                      dark: Colors.white,
+                                      light: kTextPrimaryLight),
                                 ),
                                 const SizedBox(height: 16),
                               ],
