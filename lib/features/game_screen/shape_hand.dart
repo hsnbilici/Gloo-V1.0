@@ -15,6 +15,7 @@ class ShapeHand extends StatelessWidget {
     this.onDragStarted,
     this.onDragEnd,
     this.nextShapeSilhouette,
+    this.gridCellSize,
   });
 
   final List<(GelShape, GelColor)?> hand;
@@ -25,6 +26,9 @@ class ShapeHand extends StatelessWidget {
 
   /// Sıradaki elin ilk şekil silueti (renksiz ipucu).
   final GelShape? nextShapeSilhouette;
+
+  /// Grid hücre boyutu — feedback widget'ını grid oranında scale etmek için.
+  final double? gridCellSize;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +108,10 @@ class ShapeHand extends StatelessWidget {
                   child: FractionalTranslation(
                     translation: const Offset(-0.5, -0.5),
                     child: Transform.scale(
-                      scale: 1.8,
+                      // Grid hücre boyutuna oranla scale — yoksa 1.8x fallback
+                      scale: gridCellSize != null
+                          ? (gridCellSize! / ShapePreview.cellSize).clamp(1.2, 3.0)
+                          : 1.8,
                       child: ShapePreview(shape: shape, color: color),
                     ),
                   ),

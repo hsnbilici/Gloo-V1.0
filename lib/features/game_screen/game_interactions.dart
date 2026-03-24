@@ -269,6 +269,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   // ─── Drag-and-drop handler'ları ────────────────────────────────────────
 
   void onDragStarted(int index) {
+    soundBank.onDragStart();
     setState(() {
       if (activePowerUpMode != null) activePowerUpMode = null;
       selectedSlot = index;
@@ -283,7 +284,12 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   }
 
   void onDragOver(int row, int col) {
+    final prevAnchor = previewAnchor;
     onCellHover(row, col);
+    // Haptic snap when anchor position changes during drag
+    if (previewAnchor != null && previewAnchor != prevAnchor) {
+      soundBank.onDragSnap();
+    }
   }
 
   void onDragDrop(int row, int col) {
@@ -297,6 +303,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
     final canPlace = game.gridManager.canPlace(cells, color);
 
     if (!canPlace) {
+      soundBank.onDragInvalid();
       setState(() {
         previewCells = {};
         previewValid = false;
@@ -317,6 +324,7 @@ mixin _GameInteractionsMixin on ConsumerState<GameScreen> {
   }
 
   void onDragCancelled(int index) {
+    soundBank.onDragInvalid();
     setState(() {
       selectedSlot = null;
       previewCells = {};

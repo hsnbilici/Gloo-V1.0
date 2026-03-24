@@ -10,7 +10,8 @@ class ShapePreview extends StatelessWidget {
   final GelShape shape;
   final GelColor color;
 
-  static const double _cellSize = 13.0;
+  static const double cellSize = 13.0;
+  static const double _cellSize = cellSize;
   static const double _gap = 2.0;
 
   @override

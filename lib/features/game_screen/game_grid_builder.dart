@@ -383,6 +383,7 @@ mixin _GameGridBuilderMixin on ConsumerState<GameScreen> {
               nextShapeSilhouette: game.powerUpSystem.peekedShapes == null
                   ? game.nextShapeSilhouette
                   : null,
+              gridCellSize: cell,
             ),
             const SizedBox(height: 16),
           ],

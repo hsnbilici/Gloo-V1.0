@@ -10,8 +10,8 @@ void main() {
   // In test environment we mock the platform channel to capture calls.
 
   group('HapticProfile enum', () {
-    test('has exactly 14 profiles', () {
-      expect(HapticProfile.values.length, 14);
+    test('has exactly 17 profiles', () {
+      expect(HapticProfile.values.length, 17);
     });
 
     test('contains all expected base profiles', () {

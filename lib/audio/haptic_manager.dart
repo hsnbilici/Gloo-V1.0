@@ -17,6 +17,11 @@ enum HapticProfile {
   bombExplosion,
   pvpObstacleReceived,
   pvpObstacleSent,
+
+  // Drag-and-drop profilleri
+  dragStart,
+  dragSnap,
+  dragInvalid,
 }
 
 class HapticManager {
@@ -135,6 +140,21 @@ class HapticManager {
         _fireAndForget(() async {
           await HapticFeedback.lightImpact();
           await Future.delayed(const Duration(milliseconds: 120));
+          await HapticFeedback.mediumImpact();
+        });
+
+      // ─── Drag-and-drop profilleri ─────────────────────────────────────────
+
+      case HapticProfile.dragStart:
+        await HapticFeedback.selectionClick();
+
+      case HapticProfile.dragSnap:
+        await HapticFeedback.lightImpact();
+
+      case HapticProfile.dragInvalid:
+        _fireAndForget(() async {
+          await HapticFeedback.mediumImpact();
+          await Future.delayed(const Duration(milliseconds: 60));
           await HapticFeedback.mediumImpact();
         });
     }

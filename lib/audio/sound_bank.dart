@@ -161,6 +161,21 @@ class SoundBank {
     await _haptic.trigger(HapticProfile.pvpObstacleSent);
   }
 
+  // ─── Drag-and-drop ──────────────────────────────────────────────────
+
+  Future<void> onDragStart() async {
+    await _haptic.trigger(HapticProfile.dragStart);
+  }
+
+  Future<void> onDragSnap() async {
+    await _haptic.trigger(HapticProfile.dragSnap);
+  }
+
+  Future<void> onDragInvalid() async {
+    await _audio.playSfx(AudioPaths.nearMissTension, volume: 0.3);
+    await _haptic.trigger(HapticProfile.dragInvalid);
+  }
+
   Future<void> onPvpObstacleReceived() async {
     await _audio.playSfx(AudioPaths.pvpObstacleReceived);
     await _haptic.trigger(HapticProfile.pvpObstacleReceived);

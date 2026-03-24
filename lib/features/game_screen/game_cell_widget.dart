@@ -162,6 +162,14 @@ class GameCellWidget extends ConsumerWidget {
         ),
       );
 
+      // Protokol 2: Preview → placement opacity fade-in
+      if (data.isRecentlyPlaced) {
+        cellContent = _PlacementFadeIn(
+          key: ValueKey(('fade', row, col, waveKey)),
+          child: cellContent,
+        );
+      }
+
       // Protokol 2: Squash & Stretch yerlestirme animasyonu
       cellContent = SquashStretchCell(
         key: ValueKey(('ss', row, col)),
@@ -471,6 +479,44 @@ class _WaveRippleState extends State<WaveRipple>
           scale: scale,
           child: widget.child,
         );
+      },
+    );
+  }
+}
+
+// ─── Preview → Placement fade-in ────────────────────────────────────────────
+
+/// Preview alpha'dan (0.50) tam opaklığa yumuşak geçiş.
+class _PlacementFadeIn extends StatefulWidget {
+  const _PlacementFadeIn({super.key, required this.child});
+  final Widget child;
+
+  @override
+  State<_PlacementFadeIn> createState() => _PlacementFadeInState();
+}
+
+class _PlacementFadeInState extends State<_PlacementFadeIn>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 180),
+  )..forward();
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (shouldReduceMotion(context)) return widget.child;
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (_, __) {
+        // 0.50 → 1.0 opacity (preview alpha → full)
+        final opacity = 0.50 + 0.50 * Curves.easeOut.transform(_ctrl.value);
+        return Opacity(opacity: opacity, child: widget.child);
       },
     );
   }
