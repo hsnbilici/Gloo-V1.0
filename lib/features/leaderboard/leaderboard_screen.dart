@@ -12,6 +12,7 @@ import '../../core/layout/rtl_helpers.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/remote/dto/leaderboard_entry.dart';
 import '../../providers/locale_provider.dart';
+import '../../data/remote/friend_repository.dart';
 import '../../providers/pvp_provider.dart';
 import '../../providers/service_providers.dart';
 import 'leaderboard_background.dart';
@@ -37,7 +38,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) _fetchData();
     });
@@ -51,16 +52,33 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   }
 
   bool get _isPvpTab => _tabController.index == 2;
+  bool get _isFriendsTab => _tabController.index == 3;
 
   String get _currentMode => switch (_tabController.index) {
         0 => GameMode.classic.name,
         1 => GameMode.timeTrial.name,
-        _ => 'pvp',
+        2 => 'pvp',
+        _ => GameMode.classic.name, // friends tab default mode
       };
+
+  String _friendsMode = GameMode.classic.name;
 
   Future<void> _fetchData() async {
     setState(() => _loading = true);
     try {
+      if (_isFriendsTab) {
+        final repo = FriendRepository();
+        final scores = await repo.getFriendsLeaderboard(
+            mode: _friendsMode, weekly: _weekly);
+        if (!mounted) return;
+        setState(() {
+          _scores = scores;
+          _userRank = null;
+          _userScore = null;
+          _loading = false;
+        });
+        return;
+      }
       if (_isPvpTab) {
         final scores =
             await ref.read(remoteRepositoryProvider).getEloLeaderboard();
@@ -182,6 +200,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                   classicLabel: l.leaderboardTabClassic,
                   timeTrialLabel: l.leaderboardTabTimeTrial,
                   pvpLabel: l.leaderboardTabPvp,
+                  friendsLabel: l.leaderboardTabFriends,
                 ),
               ),
               const SizedBox(height: 12),
