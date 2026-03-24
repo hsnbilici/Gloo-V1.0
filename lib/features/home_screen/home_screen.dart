@@ -31,6 +31,7 @@ import 'widgets/dialogs.dart';
 import 'widgets/gel_logo.dart';
 import 'widgets/mode_card.dart';
 import 'widgets/quest_bar.dart';
+import 'widgets/weekly_rival_card.dart';
 import 'widgets/streak_badge.dart';
 import 'widgets/meta_game_bar.dart';
 import 'widgets/streak_reward_dialog.dart';
@@ -333,6 +334,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             children: [
                               QuestBar(brightness: brightness)
                                   .animateOrSkip(reduceMotion: rm, delay: 70.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.08,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 8),
+                              WeeklyRivalCard(brightness: brightness)
+                                  .animateOrSkip(reduceMotion: rm, delay: 75.ms)
                                   .fadeIn(duration: 350.ms)
                                   .slideY(
                                     begin: 0.08,
