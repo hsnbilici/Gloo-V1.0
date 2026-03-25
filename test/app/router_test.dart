@@ -103,9 +103,9 @@ void main() {
   // New tests: Route configuration
   // ─────────────────────────────────────────────
   group('Route configuration', () {
-    test('router defines exactly 20 top-level routes', () {
+    test('router defines exactly 23 top-level routes', () {
       final routes = _extractRoutes();
-      expect(routes.length, 20);
+      expect(routes.length, 23);
     });
 
     test('all expected paths are present', () {

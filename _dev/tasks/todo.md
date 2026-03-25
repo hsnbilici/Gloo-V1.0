@@ -1,65 +1,52 @@
 # Gloo v1.0 — Kalan Gorevler
 
-> Son guncelleme: 2026-03-25
-> **Test:** 2243/2243 PASS | **Analyze:** 0 warning
+> Son guncelleme: 2026-03-26
+> **Test:** 2272/2272 PASS | **Analyze:** 0 warning
 
 ---
 
 ## Bu Oturumda Tamamlananlar
 
-- [x] CLAUDE.md temizligi + trim (453→427 satir)
+- [x] CLAUDE.md temizligi + trim
 - [x] _dev/ dosya temizligi (tamamlanan spec/plan silindi)
-- [x] DnD polish: haptic feedback, grid-orantili scale, placement fade-in, merkez anchor
-- [x] DnD fix: 1-2 hucre cellCount guard + 53 anchor testi
-- [x] Bug fix: GelCellPainter koyu renk floor (maroon/brown)
-- [x] Bug fix: Ice hucreleri yerlestirme engelliyor (iceLayer > 0)
-- [x] Bug fix: QuestBar genisletilebilir detay paneli
-- [x] Bug fix: Leaderboard hata yakalama + SQL migration fix
-- [x] Bug fix: Level mod skor reset + level 11-20 cesitlilik
-- [x] Bug fix: Collection ekrani recete ipucu (kilitli kartlarda)
-- [x] CI fix: 2 warning duzeltildi (override, unused variable)
+- [x] DnD polish: haptic, grid-orantili scale, fade-in, merkez anchor, 53 test
+- [x] Bug fix: GelCellPainter koyu renk floor, ice yerlestirme engeli, QuestBar detay, leaderboard hata, level skor reset, level 11-20 cesitlilik, collection recete ipucu
+- [x] CI fix: 2 warning
 - [x] Loading screen: "Nefes Alan Logo" animasyonlu splash
 - [x] **CD.28** Adaptif zorluk: 4 eksenli beceri profili + radar chart + kaldıraclar
 - [x] **CD.27a** Arkadas sistemi: follow/arkadas modeli + friends screen + leaderboard tab + WeeklyRivalCard
-- [x] l10n: hardcoded English strings lokalize edildi
-
-## Aktif: Stereo Ses Revizyonu (Kod tamamlandi — ses uretimi bekliyor)
-
-**Kod (TAMAMLANDI):** AudioPaths + musicForMode, mod-bazli muzik, grid crossfade, sessizlik gap'leri.
-
-**Ses Uretimi (SENi BEKLiYOR):**
-- [ ] 11 stereo SFX uret (ElevenLabs) → `assets/audio/sfx/` uzerine yaz
-- [ ] 21 mono SFX kalite yukselt (ElevenLabs) → `assets/audio/sfx/` uzerine yaz
-- [ ] 4 muzik revize (Suno/Udio) → `assets/audio/music/` uzerine yaz
-- [ ] 6 yeni muzik uret (Suno/Udio) → `assets/audio/music/` yeni dosyalar
-- [ ] Simulatorde tam test + boyut kontrolu
-
-**Post-processing hatirlatma:**
-- SFX: -6 dBFS, plate reverb 200-400ms, `.ogg` Vorbis + `.m4a` AAC-LC
-- Muzik: -14 LUFS, 800Hz-2kHz notch, seamless loop, `.mp3` 192kbps
+- [x] **CD.27b** Profil sayfasi: MyProfileScreen + ProfileScreen + get_user_profile RPC
+- [x] Supabase migration'lari uygulandi (7 migration + 1 RLS fix)
+- [x] 3x code review + tum bulgular fixlendi
+- [x] l10n: 40+ yeni string, 12 dil
+- [x] Gereksiz dosya temizligi (483MB worktree artigi silindi)
+- [x] **CD.27c** Challenge/Invite sistemi Phase 1: migration, models, 6 EF, repository, provider, l10n 12 dil, UI (tabs, cards, sheet, reveal overlay, banner), GameScreen entegrasyonu, 4 integration point, notification
 
 ---
 
-## Harici Sanatci/Tasarimci Bekleniyor
+## Seni Bekleyen (Manuel/Harici)
 
-- [ ] 8 GelPersonality karakter ilustrasyonu (brief: `_dev/briefs/character_design_brief.md`)
-- [ ] 5 bina + ada arka plan ilustrasyonu (brief: `_dev/briefs/island_design_brief.md`)
-- [ ] Season Pass gorsel odulleri (tablo: `_dev/briefs/season_pass_tiers.md`)
+### Ses Uretimi
+- [ ] 11 stereo SFX uret (ElevenLabs) → `assets/audio/sfx/`
+- [ ] 21 mono SFX kalite yukselt (ElevenLabs) → `assets/audio/sfx/`
+- [ ] 4 muzik revize (Suno/Udio) → `assets/audio/music/`
+- [ ] 6 yeni muzik uret (Suno/Udio) → `assets/audio/music/`
+- [ ] Simulatorde tam test + boyut kontrolu
+- Post-processing: SFX -6dBFS, `.ogg`+`.m4a` | Muzik -14LUFS, `.mp3` 192kbps
 
-## Manuel / Harici Isler (Store Submission Oncesi)
+### Harici Sanatci/Tasarimci
+- [ ] 8 GelPersonality karakter ilustrasyonu
+- [ ] 5 bina + ada arka plan ilustrasyonu
+- [ ] Season Pass gorsel odulleri
 
+### Store Submission
 - [ ] Play Console service account + PLAY_SERVICE_ACCOUNT_JSON
 - [ ] Play Store metadata (screenshots, feature graphic)
-- [ ] iOS entitlements aps-environment → production (release oncesi)
-- [ ] `assetlinks.json` → gloogame.com/.well-known/ (Android deep link)
-- [ ] `apple-app-site-association` → gloogame.com/.well-known/ (iOS universal link)
-- [ ] Supabase migration'lari uygula:
-  - `20260325_fix_leaderboard_view_order.sql`
-  - `20260325_fix_elo_leaderboard_filter.sql`
-  - `20260325_add_friend_code.sql`
-  - `20260325_create_follows.sql`
-  - `20260325_friends_leaderboard_view.sql`
-  - `20260325_get_friends_rank.sql`
+- [ ] iOS entitlements aps-environment → production
+- [ ] `assetlinks.json` → gloogame.com/.well-known/
+- [ ] `apple-app-site-association` → gloogame.com/.well-known/
+
+---
 
 ## Kod Acik Maddeler (Dusuk Oncelik)
 
@@ -68,7 +55,6 @@
 - [ ] Deep link auto-follow (su an sadece pre-fill)
 - [ ] Follow notification (push bildirim)
 - [ ] Adaptif zorluk comboSetup kaldiraci (Phase 2)
-- [ ] profiles_select_search RLS kisitlama (SELECT tum kolonlari aciyor)
 
 ## BLOCKED
 
@@ -77,7 +63,7 @@
 ## Vizyon Genisletme (Uzun Vade)
 
 - [ ] **CD.26** Sezonsal icerik dongusu
+- [x] **CD.27c** Davet/challenge sistemi — Phase 1 (async Score Battle) TAMAMLANDI
 - [x] **CD.27a** Arkadas sistemi (TAMAMLANDI)
-- [ ] **CD.27b** Profil sayfasi
-- [ ] **CD.27c** Davet/challenge sistemi
+- [x] **CD.27b** Profil sayfasi (TAMAMLANDI)
 - [x] **CD.28** Adaptif zorluk (TAMAMLANDI)
