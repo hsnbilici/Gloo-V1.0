@@ -101,22 +101,34 @@ class ShapeHand extends StatelessWidget {
               dragAnchorStrategy: pointerDragAnchorStrategy,
               onDragStarted: () => onDragStarted?.call(i),
               onDragEnd: (details) => onDragEnd?.call(i, details.wasAccepted),
-              feedback: Material(
-                color: Colors.transparent,
-                child: Opacity(
-                  opacity: 0.75,
-                  child: FractionalTranslation(
-                    translation: const Offset(-0.5, -0.5),
-                    child: Transform.scale(
-                      // Grid hücre boyutuna oranla scale — yoksa 1.8x fallback
-                      scale: gridCellSize != null
-                          ? (gridCellSize! / ShapePreview.cellSize).clamp(1.2, 3.0)
-                          : 1.8,
-                      child: ShapePreview(shape: shape, color: color),
+              feedback: Builder(builder: (context) {
+                final scale = gridCellSize != null
+                    ? (gridCellSize! / ShapePreview.cellSize).clamp(1.2, 3.0)
+                    : 1.8;
+                // Parmağı _dragAnchor'ın hesapladığı hücre merkezine hizala.
+                // _dragAnchor grid'de (rowCount~/2, colCount~/2) offset uygular.
+                // Feedback widget'ta aynı hücrenin merkez pikselini parmağa koymalıyız.
+                const pc = ShapePreview.cellSize;
+                const pg = 2.0;
+                final aR = shape.cellCount <= 2 ? 0 : shape.rowCount ~/ 2;
+                final aC = shape.cellCount <= 2 ? 0 : shape.colCount ~/ 2;
+                final ox = (aC * (pc + pg) + pc / 2) * scale;
+                final oy = (aR * (pc + pg) + pc / 2) * scale;
+                return Material(
+                  color: Colors.transparent,
+                  child: Opacity(
+                    opacity: 0.75,
+                    child: Transform.translate(
+                      offset: Offset(-ox, -oy),
+                      child: Transform.scale(
+                        scale: scale,
+                        alignment: Alignment.topLeft,
+                        child: ShapePreview(shape: shape, color: color),
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
               childWhenDragging: Container(
                 width: 90,
                 height: 90,
