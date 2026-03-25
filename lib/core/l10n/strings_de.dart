@@ -830,4 +830,68 @@ class StringsDe extends AppStrings {
   String get leaderboardTabFriends => 'Freunde';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name liegt $diff Punkte vorne';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'Herausforderungen';
+  @override
+  String get challengeNoActive => 'Keine aktiven Herausforderungen';
+  @override
+  String get challengeSend => 'Herausforderung senden';
+  @override
+  String get challengeModePick => 'Modus wählen';
+  @override
+  String get challengeWagerPick => 'Einsatz (optional)';
+  @override
+  String get challengePlayAndSend => 'Spielen & Senden';
+  @override
+  String get challengeSendWait => 'Senden & Warten';
+  @override
+  String challengeReceivedFrom(String name) => '\$name hat dich herausgefordert!';
+  @override
+  String get challengeAccept => 'Annehmen';
+  @override
+  String get challengeDecline => 'Ablehnen';
+  @override
+  String get challengeWagerConfirm => 'Einsatz annehmen?';
+  @override
+  String get challengePending => 'Ausstehend';
+  @override
+  String get challengeActive => 'Aktiv';
+  @override
+  String get challengeCompleted => 'Abgeschlossen';
+  @override
+  String get challengeExpired => 'Abgelaufen';
+  @override
+  String get challengeDeclinedStatus => 'Abgelehnt';
+  @override
+  String get challengeCancelled => 'Abgebrochen';
+  @override
+  String get challengeYouWon => 'Du hast gewonnen!';
+  @override
+  String get challengeYouLost => 'Du hast verloren';
+  @override
+  String get challengeDraw => 'Unentschieden!';
+  @override
+  String get challengeRevealScore => 'Ergebnis wird enthüllt…';
+  @override
+  String get challengeRematch => 'Revanche';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name fordert dich in \$mode heraus!';
+  @override
+  String challengeBannerMultiple(int count) => '\$count ausstehende Herausforderungen';
+  @override
+  String get challengeDailyLimitReached => 'Tageslimit erreicht';
+  @override
+  String get challengeDailyLimitGlooPlus => 'Upgrade auf Gloo+ für mehr!';
+  @override
+  String get challengeClaimSuccess => 'Herausforderung angenommen!';
+  @override
+  String get challengeClaimExpired => 'Diese Herausforderung ist abgelaufen';
+  @override
+  String get challengeClaimAlreadyClaimed => 'Bereits beansprucht';
+  @override
+  String challengeShareCaption(String name) => '\$name fordert dich in Gloo heraus!';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m verbleibend';
 }

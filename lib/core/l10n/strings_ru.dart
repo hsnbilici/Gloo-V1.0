@@ -831,4 +831,68 @@ class StringsRu extends AppStrings {
   String get leaderboardTabFriends => 'Друзья';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name впереди на $diff очков';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'Вызовы';
+  @override
+  String get challengeNoActive => 'Нет активных вызовов';
+  @override
+  String get challengeSend => 'Бросить вызов';
+  @override
+  String get challengeModePick => 'Выбрать режим';
+  @override
+  String get challengeWagerPick => 'Ставка (необязательно)';
+  @override
+  String get challengePlayAndSend => 'Играть и отправить';
+  @override
+  String get challengeSendWait => 'Отправить и ждать';
+  @override
+  String challengeReceivedFrom(String name) => '\$name бросает тебе вызов!';
+  @override
+  String get challengeAccept => 'Принять';
+  @override
+  String get challengeDecline => 'Отклонить';
+  @override
+  String get challengeWagerConfirm => 'Принять ставку?';
+  @override
+  String get challengePending => 'Ожидание';
+  @override
+  String get challengeActive => 'Активный';
+  @override
+  String get challengeCompleted => 'Завершён';
+  @override
+  String get challengeExpired => 'Истёк';
+  @override
+  String get challengeDeclinedStatus => 'Отклонён';
+  @override
+  String get challengeCancelled => 'Отменён';
+  @override
+  String get challengeYouWon => 'Ты победил!';
+  @override
+  String get challengeYouLost => 'Ты проиграл';
+  @override
+  String get challengeDraw => 'Ничья!';
+  @override
+  String get challengeRevealScore => 'Раскрытие счёта…';
+  @override
+  String get challengeRematch => 'Реванш';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name вызывает тебя в \$mode!';
+  @override
+  String challengeBannerMultiple(int count) => '\$count ожидающих вызовов';
+  @override
+  String get challengeDailyLimitReached => 'Дневной лимит исчерпан';
+  @override
+  String get challengeDailyLimitGlooPlus => 'Перейди на Gloo+ для большего!';
+  @override
+  String get challengeClaimSuccess => 'Вызов принят!';
+  @override
+  String get challengeClaimExpired => 'Этот вызов истёк';
+  @override
+  String get challengeClaimAlreadyClaimed => 'Уже принято';
+  @override
+  String challengeShareCaption(String name) => '\$name бросает тебе вызов в Gloo!';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}ч \${minutes}м осталось';
 }

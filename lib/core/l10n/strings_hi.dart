@@ -825,4 +825,68 @@ class StringsHi extends AppStrings {
   String get leaderboardTabFriends => 'दोस्त';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name $diff अंक से आगे है';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'चुनौतियाँ';
+  @override
+  String get challengeNoActive => 'कोई सक्रिय चुनौती नहीं';
+  @override
+  String get challengeSend => 'चुनौती भेजें';
+  @override
+  String get challengeModePick => 'मोड चुनें';
+  @override
+  String get challengeWagerPick => 'दाँव (वैकल्पिक)';
+  @override
+  String get challengePlayAndSend => 'खेलें और भेजें';
+  @override
+  String get challengeSendWait => 'भेजें और प्रतीक्षा करें';
+  @override
+  String challengeReceivedFrom(String name) => '\$name ने आपको चुनौती दी!';
+  @override
+  String get challengeAccept => 'स्वीकार';
+  @override
+  String get challengeDecline => 'अस्वीकार';
+  @override
+  String get challengeWagerConfirm => 'दाँव स्वीकार करें?';
+  @override
+  String get challengePending => 'लंबित';
+  @override
+  String get challengeActive => 'सक्रिय';
+  @override
+  String get challengeCompleted => 'पूर्ण';
+  @override
+  String get challengeExpired => 'समाप्त';
+  @override
+  String get challengeDeclinedStatus => 'अस्वीकृत';
+  @override
+  String get challengeCancelled => 'रद्द';
+  @override
+  String get challengeYouWon => 'आप जीते!';
+  @override
+  String get challengeYouLost => 'आप हारे';
+  @override
+  String get challengeDraw => 'बराबरी!';
+  @override
+  String get challengeRevealScore => 'स्कोर प्रकट हो रहा है…';
+  @override
+  String get challengeRematch => 'रीमैच';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name ने \$mode में आपको चुनौती दी!';
+  @override
+  String challengeBannerMultiple(int count) => '\$count लंबित चुनौतियाँ';
+  @override
+  String get challengeDailyLimitReached => 'दैनिक सीमा पूरी हुई';
+  @override
+  String get challengeDailyLimitGlooPlus => 'अधिक के लिए Gloo+ में अपग्रेड करें!';
+  @override
+  String get challengeClaimSuccess => 'चुनौती स्वीकार की गई!';
+  @override
+  String get challengeClaimExpired => 'यह चुनौती समाप्त हो गई है';
+  @override
+  String get challengeClaimAlreadyClaimed => 'पहले से दावा किया';
+  @override
+  String challengeShareCaption(String name) => '\$name आपको Gloo में चुनौती देता है!';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}घंटे \${minutes}मिनट शेष';
 }

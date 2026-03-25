@@ -545,6 +545,39 @@ abstract class AppStrings {
   String timeDaysAgo(int n);
   String timeWeeksAgo(int n);
 
+  // Challenge system
+  String get challengeTab;
+  String get challengeNoActive;
+  String get challengeSend;
+  String get challengeModePick;
+  String get challengeWagerPick;
+  String get challengePlayAndSend;
+  String get challengeSendWait;
+  String challengeReceivedFrom(String name);
+  String get challengeAccept;
+  String get challengeDecline;
+  String get challengeWagerConfirm;
+  String get challengePending;
+  String get challengeActive;
+  String get challengeCompleted;
+  String get challengeExpired;
+  String get challengeDeclinedStatus;
+  String get challengeCancelled;
+  String get challengeYouWon;
+  String get challengeYouLost;
+  String get challengeDraw;
+  String get challengeRevealScore;
+  String get challengeRematch;
+  String challengeBannerSingle(String name, String mode);
+  String challengeBannerMultiple(int count);
+  String get challengeDailyLimitReached;
+  String get challengeDailyLimitGlooPlus;
+  String get challengeClaimSuccess;
+  String get challengeClaimExpired;
+  String get challengeClaimAlreadyClaimed;
+  String challengeShareCaption(String name);
+  String challengeTimeRemaining(int hours, int minutes);
+
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {
     return switch (locale.languageCode) {

@@ -825,4 +825,68 @@ class StringsTr extends AppStrings {
   String get leaderboardTabFriends => 'Arkadaşlar';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name seni $diff puan ile geçiyor';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'Meydan Okumalar';
+  @override
+  String get challengeNoActive => 'Aktif meydan okuma yok';
+  @override
+  String get challengeSend => 'Meydan Oku';
+  @override
+  String get challengeModePick => 'Mod Se\u00e7';
+  @override
+  String get challengeWagerPick => 'Bahis (iste\u011fe ba\u011fl\u0131)';
+  @override
+  String get challengePlayAndSend => 'Oyna ve G\u00f6nder';
+  @override
+  String get challengeSendWait => 'G\u00f6nder ve Bekle';
+  @override
+  String challengeReceivedFrom(String name) => '\$name seni meydan okudu!';
+  @override
+  String get challengeAccept => 'Kabul Et';
+  @override
+  String get challengeDecline => 'Reddet';
+  @override
+  String get challengeWagerConfirm => 'Bahsi kabul et?';
+  @override
+  String get challengePending => 'Bekliyor';
+  @override
+  String get challengeActive => 'Aktif';
+  @override
+  String get challengeCompleted => 'Tamamland\u0131';
+  @override
+  String get challengeExpired => 'S\u00fcresi Doldu';
+  @override
+  String get challengeDeclinedStatus => 'Reddedildi';
+  @override
+  String get challengeCancelled => '\u0130ptal Edildi';
+  @override
+  String get challengeYouWon => 'Kazand\u0131n!';
+  @override
+  String get challengeYouLost => 'Kaybettin';
+  @override
+  String get challengeDraw => 'Berabere!';
+  @override
+  String get challengeRevealScore => 'Skor A\u00e7\u0131klan\u0131yor...';
+  @override
+  String get challengeRematch => 'R\u00f6van\u015f';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name seni \$mode modunda meydan okudu!';
+  @override
+  String challengeBannerMultiple(int count) => '\$count bekleyen meydan okuma';
+  @override
+  String get challengeDailyLimitReached => 'G\u00fcnl\u00fck limit doldu';
+  @override
+  String get challengeDailyLimitGlooPlus => 'Daha fazlas\u0131 i\u00e7in Gloo+\'a ge\u00e7!';
+  @override
+  String get challengeClaimSuccess => 'Meydan okuma kabul edildi!';
+  @override
+  String get challengeClaimExpired => 'Bu meydan okuman\u0131n s\u00fcresi doldu';
+  @override
+  String get challengeClaimAlreadyClaimed => 'Zaten al\u0131nm\u0131\u015f';
+  @override
+  String challengeShareCaption(String name) => '\$name seni Gloo\'da meydan okuyor!';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}s \${minutes}dk kald\u0131';
 }

@@ -829,4 +829,68 @@ class StringsAr extends AppStrings {
   String get leaderboardTabFriends => 'أصدقاء';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name يتقدم عليك بـ$diff نقطة';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'التحديات';
+  @override
+  String get challengeNoActive => 'لا توجد تحديات نشطة';
+  @override
+  String get challengeSend => 'إرسال تحدٍ';
+  @override
+  String get challengeModePick => 'اختر الوضع';
+  @override
+  String get challengeWagerPick => 'رهان (اختياري)';
+  @override
+  String get challengePlayAndSend => 'العب وأرسل';
+  @override
+  String get challengeSendWait => 'أرسل وانتظر';
+  @override
+  String challengeReceivedFrom(String name) => '\$name تحداك!';
+  @override
+  String get challengeAccept => 'قبول';
+  @override
+  String get challengeDecline => 'رفض';
+  @override
+  String get challengeWagerConfirm => 'قبول الرهان؟';
+  @override
+  String get challengePending => 'قيد الانتظار';
+  @override
+  String get challengeActive => 'نشط';
+  @override
+  String get challengeCompleted => 'مكتمل';
+  @override
+  String get challengeExpired => 'منتهي';
+  @override
+  String get challengeDeclinedStatus => 'مرفوض';
+  @override
+  String get challengeCancelled => 'ملغى';
+  @override
+  String get challengeYouWon => 'فزت!';
+  @override
+  String get challengeYouLost => 'خسرت';
+  @override
+  String get challengeDraw => 'تعادل!';
+  @override
+  String get challengeRevealScore => 'جارٍ كشف النتيجة…';
+  @override
+  String get challengeRematch => 'إعادة المباراة';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name تحداك في \$mode!';
+  @override
+  String challengeBannerMultiple(int count) => '\$count تحديات معلقة';
+  @override
+  String get challengeDailyLimitReached => 'تم بلوغ الحد اليومي';
+  @override
+  String get challengeDailyLimitGlooPlus => 'ترقَّ إلى Gloo+ للمزيد!';
+  @override
+  String get challengeClaimSuccess => 'تم قبول التحدي!';
+  @override
+  String get challengeClaimExpired => 'انتهت صلاحية هذا التحدي';
+  @override
+  String get challengeClaimAlreadyClaimed => 'تم المطالبة بالفعل';
+  @override
+  String challengeShareCaption(String name) => '\$name يتحداك في Gloo!';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}س \${minutes}د متبقية';
 }

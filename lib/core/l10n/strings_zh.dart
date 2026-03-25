@@ -816,4 +816,68 @@ class StringsZh extends AppStrings {
   String get leaderboardTabFriends => '好友';
   @override
   String weeklyRivalAhead(String name, int diff) => '$name领先你$diff分';
+
+  // Challenge system
+  @override
+  String get challengeTab => '挑战';
+  @override
+  String get challengeNoActive => '暂无进行中的挑战';
+  @override
+  String get challengeSend => '发起挑战';
+  @override
+  String get challengeModePick => '选择模式';
+  @override
+  String get challengeWagerPick => '赌注（可选）';
+  @override
+  String get challengePlayAndSend => '开玩并发送';
+  @override
+  String get challengeSendWait => '发送并等待';
+  @override
+  String challengeReceivedFrom(String name) => '\$name向你发起了挑战！';
+  @override
+  String get challengeAccept => '接受';
+  @override
+  String get challengeDecline => '拒绝';
+  @override
+  String get challengeWagerConfirm => '接受赌注？';
+  @override
+  String get challengePending => '等待中';
+  @override
+  String get challengeActive => '进行中';
+  @override
+  String get challengeCompleted => '已完成';
+  @override
+  String get challengeExpired => '已过期';
+  @override
+  String get challengeDeclinedStatus => '已拒绝';
+  @override
+  String get challengeCancelled => '已取消';
+  @override
+  String get challengeYouWon => '你赢了！';
+  @override
+  String get challengeYouLost => '你输了';
+  @override
+  String get challengeDraw => '平局！';
+  @override
+  String get challengeRevealScore => '揭晓分数…';
+  @override
+  String get challengeRematch => '再来一局';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$name在\$mode中向你发起了挑战！';
+  @override
+  String challengeBannerMultiple(int count) => '\$count个待处理的挑战';
+  @override
+  String get challengeDailyLimitReached => '已达每日上限';
+  @override
+  String get challengeDailyLimitGlooPlus => '升级Gloo+获取更多！';
+  @override
+  String get challengeClaimSuccess => '挑战已接受！';
+  @override
+  String get challengeClaimExpired => '该挑战已过期';
+  @override
+  String get challengeClaimAlreadyClaimed => '已领取';
+  @override
+  String challengeShareCaption(String name) => '\$name在Gloo中向你发起挑战！';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '\${hours}时\${minutes}分剩余';
 }

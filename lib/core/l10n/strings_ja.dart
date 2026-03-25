@@ -819,4 +819,68 @@ class StringsJa extends AppStrings {
   String get leaderboardTabFriends => 'フレンド';
   @override
   String weeklyRivalAhead(String name, int diff) => '$nameが$diffポイント先行';
+
+  // Challenge system
+  @override
+  String get challengeTab => 'チャレンジ';
+  @override
+  String get challengeNoActive => 'アクティブなチャレンジはありません';
+  @override
+  String get challengeSend => 'チャレンジを送る';
+  @override
+  String get challengeModePick => 'モードを選択';
+  @override
+  String get challengeWagerPick => '賭け（任意）';
+  @override
+  String get challengePlayAndSend => 'プレイして送信';
+  @override
+  String get challengeSendWait => '送信して待つ';
+  @override
+  String challengeReceivedFrom(String name) => '\$nameがあなたに挑戦しました！';
+  @override
+  String get challengeAccept => '受ける';
+  @override
+  String get challengeDecline => '断る';
+  @override
+  String get challengeWagerConfirm => '賭けを受ける？';
+  @override
+  String get challengePending => '保留中';
+  @override
+  String get challengeActive => '進行中';
+  @override
+  String get challengeCompleted => '完了';
+  @override
+  String get challengeExpired => '期限切れ';
+  @override
+  String get challengeDeclinedStatus => '辞退済み';
+  @override
+  String get challengeCancelled => 'キャンセル';
+  @override
+  String get challengeYouWon => '勝利！';
+  @override
+  String get challengeYouLost => '敗北';
+  @override
+  String get challengeDraw => '引き分け！';
+  @override
+  String get challengeRevealScore => 'スコアを公開中…';
+  @override
+  String get challengeRematch => 'リマッチ';
+  @override
+  String challengeBannerSingle(String name, String mode) => '\$nameが\$modeであなたに挑戦！';
+  @override
+  String challengeBannerMultiple(int count) => '\$count件の保留中チャレンジ';
+  @override
+  String get challengeDailyLimitReached => '1日の上限に達しました';
+  @override
+  String get challengeDailyLimitGlooPlus => 'Gloo+にアップグレードしてもっと！';
+  @override
+  String get challengeClaimSuccess => 'チャレンジを受けました！';
+  @override
+  String get challengeClaimExpired => 'このチャレンジは期限切れです';
+  @override
+  String get challengeClaimAlreadyClaimed => '受領済み';
+  @override
+  String challengeShareCaption(String name) => '\$nameがGlooであなたに挑戦！';
+  @override
+  String challengeTimeRemaining(int hours, int minutes) => '残り\${hours}時間\${minutes}分';
 }
