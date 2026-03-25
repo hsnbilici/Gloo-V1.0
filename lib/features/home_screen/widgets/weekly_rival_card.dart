@@ -26,23 +26,22 @@ class WeeklyRivalCard extends ConsumerStatefulWidget {
 class _WeeklyRivalCardState extends ConsumerState<WeeklyRivalCard> {
   Future<FriendsRankData?>? _rankFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadRank();
-  }
-
-  void _loadRank() {
-    final repo = ref.read(localRepositoryProvider).valueOrNull;
-    final modeStr = repo?.getLastPlayedMode() ?? 'classic';
-    _rankFuture = ref.read(friendRepositoryProvider).getFriendsRank(
-          mode: modeStr,
-          weekly: true,
-        );
-  }
+  bool _loaded = false;
 
   @override
   Widget build(BuildContext context) {
+    // Provider'dan sonra yükle — initState'te valueOrNull null olabilir
+    if (!_loaded) {
+      final repo = ref.read(localRepositoryProvider).valueOrNull;
+      if (repo != null) {
+        _loaded = true;
+        final modeStr = repo.getLastPlayedMode() ?? 'classic';
+        _rankFuture = ref.read(friendRepositoryProvider).getFriendsRank(
+              mode: modeStr,
+              weekly: true,
+            );
+      }
+    }
     if (_rankFuture == null) return const SizedBox.shrink();
 
     return FutureBuilder<FriendsRankData?>(

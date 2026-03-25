@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import '../remote/supabase_client.dart';
 import 'dto/leaderboard_entry.dart';
@@ -121,7 +123,7 @@ class FriendRepository {
     if (!isConfigured) return null;
     try {
       final data = await SupabaseConfig.client
-          .from('profiles')
+          .from('profiles_search_view')
           .select('id, username, friend_code')
           .eq('friend_code', code.toUpperCase())
           .maybeSingle();
@@ -140,7 +142,7 @@ class FriendRepository {
     final uid = _userId;
     try {
       final data = await SupabaseConfig.client
-          .from('profiles')
+          .from('profiles_search_view')
           .select('id, username, friend_code')
           .ilike('username', '%${query.replaceAll('%', r'\%').replaceAll('_', r'\_')}%')
           .neq('id', uid ?? '')
@@ -353,7 +355,7 @@ class FriendRepository {
     if (uid == null) return;
     try {
       await SupabaseConfig.client.from('profiles').update({
-        'skill_profile_json': profileJson.toString(),
+        'skill_profile_json': jsonEncode(profileJson),
       }).eq('id', uid);
     } catch (e) {
       if (kDebugMode) debugPrint('FriendRepository.syncSkillProfile error: $e');

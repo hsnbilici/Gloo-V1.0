@@ -87,7 +87,7 @@ class SupabaseConfig {
   static String _generateFriendCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no I/O/0/1 confusion
     final rng = Random();
-    final code = List.generate(4, (_) => chars[rng.nextInt(chars.length)]).join();
+    final code = List.generate(6, (_) => chars[rng.nextInt(chars.length)]).join();
     return 'GLO-$code';
   }
 }
