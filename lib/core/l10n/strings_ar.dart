@@ -846,7 +846,7 @@ class StringsAr extends AppStrings {
   @override
   String get challengeSendWait => 'أرسل وانتظر';
   @override
-  String challengeReceivedFrom(String name) => '\$name تحداك!';
+  String challengeReceivedFrom(String name) => '$name تحداك!';
   @override
   String get challengeAccept => 'قبول';
   @override
@@ -876,9 +876,9 @@ class StringsAr extends AppStrings {
   @override
   String get challengeRematch => 'إعادة المباراة';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$name تحداك في \$mode!';
+  String challengeBannerSingle(String name, String mode) => '$name تحداك في $mode!';
   @override
-  String challengeBannerMultiple(int count) => '\$count تحديات معلقة';
+  String challengeBannerMultiple(int count) => '$count تحديات معلقة';
   @override
   String get challengeDailyLimitReached => 'تم بلوغ الحد اليومي';
   @override
@@ -890,13 +890,25 @@ class StringsAr extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => 'تم المطالبة بالفعل';
   @override
-  String challengeShareCaption(String name) => '\$name يتحداك في Gloo!';
+  String challengeShareCaption(String name) => '$name يتحداك في Gloo!';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}س \${minutes}د متبقية';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}س ${minutes}د متبقية';
   @override
   String get challengeReceivedSection => 'المستلمة';
   @override
   String get challengeSentSection => 'المرسلة';
+  @override
+  String get challengeYou => 'أنت';
+  @override
+  String get challengeClose => 'إغلاق';
+  @override
+  String get challengeScoreBattle => 'معركة النقاط';
+  @override
+  String get challengeLiveDuel => 'مبارزة مباشرة';
+  @override
+  String get challengeComingSoon => 'قريبًا';
+  @override
+  String get challengeNoWager => 'بدون';
   @override
   String get friendTabCodeSearch => 'الرمز والبحث';
   @override

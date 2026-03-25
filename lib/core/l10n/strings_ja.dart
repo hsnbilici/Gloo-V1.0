@@ -836,7 +836,7 @@ class StringsJa extends AppStrings {
   @override
   String get challengeSendWait => '送信して待つ';
   @override
-  String challengeReceivedFrom(String name) => '\$nameがあなたに挑戦しました！';
+  String challengeReceivedFrom(String name) => '$nameがあなたに挑戦しました！';
   @override
   String get challengeAccept => '受ける';
   @override
@@ -866,9 +866,9 @@ class StringsJa extends AppStrings {
   @override
   String get challengeRematch => 'リマッチ';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$nameが\$modeであなたに挑戦！';
+  String challengeBannerSingle(String name, String mode) => '$nameが$modeであなたに挑戦！';
   @override
-  String challengeBannerMultiple(int count) => '\$count件の保留中チャレンジ';
+  String challengeBannerMultiple(int count) => '$count件の保留中チャレンジ';
   @override
   String get challengeDailyLimitReached => '1日の上限に達しました';
   @override
@@ -880,13 +880,25 @@ class StringsJa extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => '受領済み';
   @override
-  String challengeShareCaption(String name) => '\$nameがGlooであなたに挑戦！';
+  String challengeShareCaption(String name) => '$nameがGlooであなたに挑戦！';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '残り\${hours}時間\${minutes}分';
+  String challengeTimeRemaining(int hours, int minutes) => '残り${hours}時間${minutes}分';
   @override
   String get challengeReceivedSection => '受信';
   @override
   String get challengeSentSection => '送信済み';
+  @override
+  String get challengeYou => 'あなた';
+  @override
+  String get challengeClose => '閉じる';
+  @override
+  String get challengeScoreBattle => 'スコアバトル';
+  @override
+  String get challengeLiveDuel => 'ライブデュエル';
+  @override
+  String get challengeComingSoon => '近日公開';
+  @override
+  String get challengeNoWager => 'なし';
   @override
   String get friendTabCodeSearch => 'コードと検索';
   @override

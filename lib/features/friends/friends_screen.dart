@@ -19,9 +19,16 @@ import 'challenge_tab.dart';
 import 'friends_widgets.dart';
 
 class FriendsScreen extends ConsumerStatefulWidget {
-  const FriendsScreen({super.key, this.initialCode});
+  const FriendsScreen({
+    super.key,
+    this.initialCode,
+    this.initialChallengeId,
+    this.initialTab,
+  });
 
   final String? initialCode;
+  final String? initialChallengeId;
+  final int? initialTab;
 
   @override
   ConsumerState<FriendsScreen> createState() => _FriendsScreenState();
@@ -36,7 +43,11 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: widget.initialTab?.clamp(0, 2) ?? 0,
+    );
     _tabController.addListener(_onTabChanged);
   }
 

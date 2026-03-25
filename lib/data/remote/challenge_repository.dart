@@ -130,7 +130,7 @@ class ChallengeRepository {
           'submit-challenge-score',
           body: {
             'challengeId': challengeId,
-            'score': score,
+            'recipientScore': score,
           },
         ),
       );
@@ -175,7 +175,7 @@ class ChallengeRepository {
           .from('challenges_safe')
           .select()
           .eq('recipient_id', uid)
-          .eq('status', 'pending')
+          .inFilter('status', ['pending', 'active'])
           .order('created_at', ascending: false);
       return (data as List)
           .map((e) => Challenge.fromMap(Map<String, dynamic>.from(e as Map)))

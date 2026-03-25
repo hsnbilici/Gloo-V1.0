@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 import '../../core/models/challenge.dart';
 import '../../core/utils/motion_utils.dart';
 
@@ -13,12 +14,14 @@ class ChallengeRevealOverlay extends StatefulWidget {
     super.key,
     required this.result,
     required this.opponentUsername,
+    required this.l,
     required this.onRematch,
     required this.onClose,
   });
 
   final ChallengeResult result;
   final String opponentUsername;
+  final AppStrings l;
   final VoidCallback onRematch;
   final VoidCallback onClose;
 
@@ -27,6 +30,7 @@ class ChallengeRevealOverlay extends StatefulWidget {
     BuildContext context, {
     required ChallengeResult result,
     required String opponentUsername,
+    required AppStrings l,
     required VoidCallback onRematch,
     required VoidCallback onClose,
   }) {
@@ -39,6 +43,7 @@ class ChallengeRevealOverlay extends StatefulWidget {
       pageBuilder: (_, __, ___) => ChallengeRevealOverlay(
         result: result,
         opponentUsername: opponentUsername,
+        l: l,
         onRematch: onRematch,
         onClose: onClose,
       ),
@@ -70,9 +75,9 @@ class _ChallengeRevealOverlayState extends State<ChallengeRevealOverlay>
       };
 
   String get _outcomeLabel => switch (widget.result.outcome) {
-        ChallengeOutcome.win => 'You Won!',
-        ChallengeOutcome.loss => 'You Lost',
-        ChallengeOutcome.draw => 'Draw!',
+        ChallengeOutcome.win => widget.l.challengeYouWon,
+        ChallengeOutcome.loss => widget.l.challengeYouLost,
+        ChallengeOutcome.draw => widget.l.challengeDraw,
       };
 
   @override
@@ -188,7 +193,7 @@ class _ChallengeRevealOverlayState extends State<ChallengeRevealOverlay>
             children: [
               // ── Revealing Score... label
               Text(
-                'Revealing Score...',
+                widget.l.challengeRevealScore,
                 style: AppTextStyles.label.copyWith(
                   color: kMuted,
                   letterSpacing: 3,
@@ -200,7 +205,7 @@ class _ChallengeRevealOverlayState extends State<ChallengeRevealOverlay>
 
               // ── Score rows
               _ScoreRow(
-                label: 'You',
+                label: widget.l.challengeYou,
                 animation: _recipientScore,
                 controller: _recipientCtrl,
                 finalScore: widget.result.recipientScore,
@@ -271,7 +276,7 @@ class _ChallengeRevealOverlayState extends State<ChallengeRevealOverlay>
               // ── Action buttons
               if (_showOutcome) ...[
                 _ChallengeActionButton(
-                  label: 'Rematch',
+                  label: widget.l.challengeRematch,
                   icon: Icons.replay_rounded,
                   accentColor: kChallengePrimary,
                   filled: true,
@@ -287,7 +292,7 @@ class _ChallengeRevealOverlayState extends State<ChallengeRevealOverlay>
                     ),
                 const SizedBox(height: Spacing.md),
                 _ChallengeActionButton(
-                  label: 'Close',
+                  label: widget.l.challengeClose,
                   icon: Icons.close_rounded,
                   accentColor: kMuted,
                   filled: false,

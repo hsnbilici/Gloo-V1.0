@@ -224,11 +224,11 @@ class _SendChallengeSheetState extends ConsumerState<SendChallengeSheet> {
           Row(
             children: [
               Semantics(
-                label: 'Score Battle',
+                label: l.challengeScoreBattle,
                 button: true,
                 selected: true,
                 child: ChoiceChip(
-                  label: const Text('Score Battle'),
+                  label: Text(l.challengeScoreBattle),
                   selected: true,
                   selectedColor: challengeAccent,
                   labelStyle: AppTextStyles.body.copyWith(
@@ -245,14 +245,14 @@ class _SendChallengeSheetState extends ConsumerState<SendChallengeSheet> {
               ),
               const SizedBox(width: Spacing.sm),
               Semantics(
-                label: 'Live Duel — Coming Soon',
+                label: '${l.challengeLiveDuel} — ${l.challengeComingSoon}',
                 button: true,
                 enabled: false,
                 child: ChoiceChip(
                   label: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('Live Duel'),
+                      Text(l.challengeLiveDuel),
                       const SizedBox(width: Spacing.xs),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -266,7 +266,7 @@ class _SendChallengeSheetState extends ConsumerState<SendChallengeSheet> {
                           ),
                         ),
                         child: Text(
-                          'Soon',
+                          l.challengeComingSoon,
                           style: AppTextStyles.micro.copyWith(
                             color: secondaryText,
                           ),
@@ -313,7 +313,7 @@ class _SendChallengeSheetState extends ConsumerState<SendChallengeSheet> {
               final selected = _selectedWager == amount;
               final isNone = amount == 0;
               return Semantics(
-                label: isNone ? 'None' : '$amount Jel Ozu',
+                label: isNone ? l.challengeNoWager : '$amount Jel Ozu',
                 button: true,
                 selected: selected,
                 child: ChoiceChip(

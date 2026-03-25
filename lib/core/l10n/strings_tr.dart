@@ -842,7 +842,7 @@ class StringsTr extends AppStrings {
   @override
   String get challengeSendWait => 'G\u00f6nder ve Bekle';
   @override
-  String challengeReceivedFrom(String name) => '\$name seni meydan okudu!';
+  String challengeReceivedFrom(String name) => '$name seni meydan okudu!';
   @override
   String get challengeAccept => 'Kabul Et';
   @override
@@ -872,9 +872,9 @@ class StringsTr extends AppStrings {
   @override
   String get challengeRematch => 'R\u00f6van\u015f';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$name seni \$mode modunda meydan okudu!';
+  String challengeBannerSingle(String name, String mode) => '$name seni $mode modunda meydan okudu!';
   @override
-  String challengeBannerMultiple(int count) => '\$count bekleyen meydan okuma';
+  String challengeBannerMultiple(int count) => '$count bekleyen meydan okuma';
   @override
   String get challengeDailyLimitReached => 'G\u00fcnl\u00fck limit doldu';
   @override
@@ -886,13 +886,25 @@ class StringsTr extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => 'Zaten al\u0131nm\u0131\u015f';
   @override
-  String challengeShareCaption(String name) => '\$name seni Gloo\'da meydan okuyor!';
+  String challengeShareCaption(String name) => '$name seni Gloo\'da meydan okuyor!';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}s \${minutes}dk kald\u0131';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}s ${minutes}dk kald\u0131';
   @override
   String get challengeReceivedSection => 'Gelen';
   @override
   String get challengeSentSection => 'G\u00f6nderilen';
+  @override
+  String get challengeYou => 'Sen';
+  @override
+  String get challengeClose => 'Kapat';
+  @override
+  String get challengeScoreBattle => 'Skor Sava\u015f\u0131';
+  @override
+  String get challengeLiveDuel => 'Canl\u0131 D\u00fcello';
+  @override
+  String get challengeComingSoon => 'Yak\u0131nda';
+  @override
+  String get challengeNoWager => 'Yok';
   @override
   String get friendTabCodeSearch => 'Kod & Arama';
   @override

@@ -849,7 +849,7 @@ class StringsEs extends AppStrings {
   @override
   String get challengeSendWait => 'Enviar y esperar';
   @override
-  String challengeReceivedFrom(String name) => '¡\$name te desafió!';
+  String challengeReceivedFrom(String name) => '¡$name te desafió!';
   @override
   String get challengeAccept => 'Aceptar';
   @override
@@ -879,9 +879,9 @@ class StringsEs extends AppStrings {
   @override
   String get challengeRematch => 'Revancha';
   @override
-  String challengeBannerSingle(String name, String mode) => '¡\$name te desafió en \$mode!';
+  String challengeBannerSingle(String name, String mode) => '¡$name te desafió en $mode!';
   @override
-  String challengeBannerMultiple(int count) => '\$count desafíos pendientes';
+  String challengeBannerMultiple(int count) => '$count desafíos pendientes';
   @override
   String get challengeDailyLimitReached => 'Límite diario alcanzado';
   @override
@@ -893,13 +893,25 @@ class StringsEs extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => 'Ya reclamado';
   @override
-  String challengeShareCaption(String name) => '¡\$name te desafía en Gloo!';
+  String challengeShareCaption(String name) => '¡$name te desafía en Gloo!';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m restantes';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}h ${minutes}m restantes';
   @override
   String get challengeReceivedSection => 'Recibidos';
   @override
   String get challengeSentSection => 'Enviados';
+  @override
+  String get challengeYou => 'T\u00fa';
+  @override
+  String get challengeClose => 'Cerrar';
+  @override
+  String get challengeScoreBattle => 'Batalla de puntos';
+  @override
+  String get challengeLiveDuel => 'Duelo en vivo';
+  @override
+  String get challengeComingSoon => 'Pronto';
+  @override
+  String get challengeNoWager => 'Ninguno';
   @override
   String get friendTabCodeSearch => 'C\u00f3digo y Buscar';
   @override

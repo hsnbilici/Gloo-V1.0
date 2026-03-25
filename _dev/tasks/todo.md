@@ -21,6 +21,7 @@
 - [x] l10n: 40+ yeni string, 12 dil
 - [x] Gereksiz dosya temizligi (483MB worktree artigi silindi)
 - [x] **CD.27c** Challenge/Invite sistemi Phase 1: migration, models, 6 EF, repository, provider, l10n 12 dil, UI (tabs, cards, sheet, reveal overlay, banner), GameScreen entegrasyonu, 4 integration point, notification
+- [x] **CD.27c** Code review fix: C1 l10n interpolation (12 dosya), C2 recipientScore param, C3 accept navigation, I1 overlay l10n, I2 pending+active filter, I3 dark-only bg fix, I4 sheet l10n, I5 deep link challengeId, I6 deduct_balance cleanup, I7 /challenges tab
 
 ---
 

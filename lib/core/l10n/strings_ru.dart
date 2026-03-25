@@ -848,7 +848,7 @@ class StringsRu extends AppStrings {
   @override
   String get challengeSendWait => 'Отправить и ждать';
   @override
-  String challengeReceivedFrom(String name) => '\$name бросает тебе вызов!';
+  String challengeReceivedFrom(String name) => '$name бросает тебе вызов!';
   @override
   String get challengeAccept => 'Принять';
   @override
@@ -878,9 +878,9 @@ class StringsRu extends AppStrings {
   @override
   String get challengeRematch => 'Реванш';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$name вызывает тебя в \$mode!';
+  String challengeBannerSingle(String name, String mode) => '$name вызывает тебя в $mode!';
   @override
-  String challengeBannerMultiple(int count) => '\$count ожидающих вызовов';
+  String challengeBannerMultiple(int count) => '$count ожидающих вызовов';
   @override
   String get challengeDailyLimitReached => 'Дневной лимит исчерпан';
   @override
@@ -892,13 +892,25 @@ class StringsRu extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => 'Уже принято';
   @override
-  String challengeShareCaption(String name) => '\$name бросает тебе вызов в Gloo!';
+  String challengeShareCaption(String name) => '$name бросает тебе вызов в Gloo!';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}ч \${minutes}м осталось';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}ч ${minutes}м осталось';
   @override
   String get challengeReceivedSection => 'Полученные';
   @override
   String get challengeSentSection => 'Отправленные';
+  @override
+  String get challengeYou => 'Ты';
+  @override
+  String get challengeClose => 'Закрыть';
+  @override
+  String get challengeScoreBattle => 'Битва очков';
+  @override
+  String get challengeLiveDuel => 'Живая дуэль';
+  @override
+  String get challengeComingSoon => 'Скоро';
+  @override
+  String get challengeNoWager => 'Нет';
   @override
   String get friendTabCodeSearch => 'Код и поиск';
   @override

@@ -847,7 +847,7 @@ class StringsDe extends AppStrings {
   @override
   String get challengeSendWait => 'Senden & Warten';
   @override
-  String challengeReceivedFrom(String name) => '\$name hat dich herausgefordert!';
+  String challengeReceivedFrom(String name) => '$name hat dich herausgefordert!';
   @override
   String get challengeAccept => 'Annehmen';
   @override
@@ -877,9 +877,9 @@ class StringsDe extends AppStrings {
   @override
   String get challengeRematch => 'Revanche';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$name fordert dich in \$mode heraus!';
+  String challengeBannerSingle(String name, String mode) => '$name fordert dich in $mode heraus!';
   @override
-  String challengeBannerMultiple(int count) => '\$count ausstehende Herausforderungen';
+  String challengeBannerMultiple(int count) => '$count ausstehende Herausforderungen';
   @override
   String get challengeDailyLimitReached => 'Tageslimit erreicht';
   @override
@@ -891,13 +891,25 @@ class StringsDe extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => 'Bereits beansprucht';
   @override
-  String challengeShareCaption(String name) => '\$name fordert dich in Gloo heraus!';
+  String challengeShareCaption(String name) => '$name fordert dich in Gloo heraus!';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m verbleibend';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}h ${minutes}m verbleibend';
   @override
   String get challengeReceivedSection => 'Empfangen';
   @override
   String get challengeSentSection => 'Gesendet';
+  @override
+  String get challengeYou => 'Du';
+  @override
+  String get challengeClose => 'Schlie\u00dfen';
+  @override
+  String get challengeScoreBattle => 'Punkte-Duell';
+  @override
+  String get challengeLiveDuel => 'Live-Duell';
+  @override
+  String get challengeComingSoon => 'Bald';
+  @override
+  String get challengeNoWager => 'Keins';
   @override
   String get friendTabCodeSearch => 'Code & Suche';
   @override

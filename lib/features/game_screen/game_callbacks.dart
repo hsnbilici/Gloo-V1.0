@@ -113,6 +113,7 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
             context,
             result: result,
             opponentUsername: '', // sender username not available here
+            l: ref.read(stringsProvider),
             onRematch: () {
               Navigator.of(context).pop();
               context.go('/friends');

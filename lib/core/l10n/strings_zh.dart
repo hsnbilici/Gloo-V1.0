@@ -833,7 +833,7 @@ class StringsZh extends AppStrings {
   @override
   String get challengeSendWait => '发送并等待';
   @override
-  String challengeReceivedFrom(String name) => '\$name向你发起了挑战！';
+  String challengeReceivedFrom(String name) => '$name向你发起了挑战！';
   @override
   String get challengeAccept => '接受';
   @override
@@ -863,9 +863,9 @@ class StringsZh extends AppStrings {
   @override
   String get challengeRematch => '再来一局';
   @override
-  String challengeBannerSingle(String name, String mode) => '\$name在\$mode中向你发起了挑战！';
+  String challengeBannerSingle(String name, String mode) => '$name在$mode中向你发起了挑战！';
   @override
-  String challengeBannerMultiple(int count) => '\$count个待处理的挑战';
+  String challengeBannerMultiple(int count) => '$count个待处理的挑战';
   @override
   String get challengeDailyLimitReached => '已达每日上限';
   @override
@@ -877,13 +877,25 @@ class StringsZh extends AppStrings {
   @override
   String get challengeClaimAlreadyClaimed => '已领取';
   @override
-  String challengeShareCaption(String name) => '\$name在Gloo中向你发起挑战！';
+  String challengeShareCaption(String name) => '$name在Gloo中向你发起挑战！';
   @override
-  String challengeTimeRemaining(int hours, int minutes) => '\${hours}时\${minutes}分剩余';
+  String challengeTimeRemaining(int hours, int minutes) => '${hours}时${minutes}分剩余';
   @override
   String get challengeReceivedSection => '收到的';
   @override
   String get challengeSentSection => '已发送';
+  @override
+  String get challengeYou => '你';
+  @override
+  String get challengeClose => '关闭';
+  @override
+  String get challengeScoreBattle => '分数对决';
+  @override
+  String get challengeLiveDuel => '实时对决';
+  @override
+  String get challengeComingSoon => '即将推出';
+  @override
+  String get challengeNoWager => '无';
   @override
   String get friendTabCodeSearch => '代码和搜索';
   @override

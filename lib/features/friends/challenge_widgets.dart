@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
@@ -146,9 +147,23 @@ class ChallengeCard extends ConsumerWidget {
                       label: l.challengeAccept,
                       button: true,
                       child: GestureDetector(
-                        onTap: () => ref
-                            .read(challengeProvider.notifier)
-                            .acceptChallenge(challenge.id),
+                        onTap: () async {
+                          final result = await ref
+                              .read(challengeProvider.notifier)
+                              .acceptChallenge(challenge.id);
+                          if (result != null && context.mounted) {
+                            final ch = result['challenge']
+                                as Map<String, dynamic>?;
+                            if (ch != null) {
+                              context.push(
+                                '/game/challenge'
+                                '?challengeId=${challenge.id}'
+                                '&mode=${ch['mode']}'
+                                '&seed=${ch['seed']}',
+                              );
+                            }
+                          }
+                        },
                         child: Container(
                           height: 36,
                           decoration: BoxDecoration(
@@ -375,7 +390,11 @@ class _ScoreComparison extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
+        color: resolveColor(
+          brightness,
+          dark: Colors.white.withValues(alpha: 0.04),
+          light: Colors.black.withValues(alpha: 0.04),
+        ),
         borderRadius: BorderRadius.circular(UIConstants.radiusXs),
       ),
       child: Row(

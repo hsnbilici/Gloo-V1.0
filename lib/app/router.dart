@@ -188,13 +188,16 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/challenge/:challengeId',
         builder: (context, state) {
-          // Will pass initialChallengeId to FriendsScreen in Task 9
-          return const FriendsScreen();
+          final challengeId = state.pathParameters['challengeId'] ?? '';
+          return FriendsScreen(
+            initialChallengeId: challengeId.isNotEmpty ? challengeId : null,
+            initialTab: 2,
+          );
         },
       ),
       GoRoute(
         path: '/challenges',
-        builder: (context, state) => const FriendsScreen(),
+        builder: (context, state) => const FriendsScreen(initialTab: 2),
       ),
       // CD.27b: Profil ekranları
       GoRoute(

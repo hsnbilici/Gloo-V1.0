@@ -579,6 +579,12 @@ abstract class AppStrings {
   String challengeTimeRemaining(int hours, int minutes);
   String get challengeReceivedSection;
   String get challengeSentSection;
+  String get challengeYou;
+  String get challengeClose;
+  String get challengeScoreBattle;
+  String get challengeLiveDuel;
+  String get challengeComingSoon;
+  String get challengeNoWager;
   String get friendTabCodeSearch;
   String get friendTabFriends;
 

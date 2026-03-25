@@ -108,7 +108,7 @@ serve(async (req: Request) => {
       }
 
       // Deduct via RPC (atomic)
-      const { data: deductResult, error: deductError } = await supabase.rpc('deduct_balance', {
+      const { error: deductError } = await supabase.rpc('deduct_balance', {
         p_user_id: userId,
         p_amount: wagerAmount,
       })
@@ -116,8 +116,6 @@ serve(async (req: Request) => {
       if (deductError) {
         return errorResponse('Failed to deduct wager: ' + deductError.message)
       }
-
-      newBalance = deductResult
     }
 
     // ── Generate seed server-side ────────────────────────────────────────────
