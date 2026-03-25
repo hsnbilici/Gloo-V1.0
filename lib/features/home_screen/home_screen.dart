@@ -12,6 +12,7 @@ import '../../core/constants/ui_constants.dart';
 import '../../core/l10n/app_strings.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
+import '../../core/models/challenge.dart';
 import '../../core/models/game_mode.dart';
 import '../../core/utils/motion_utils.dart';
 import '../../data/local/local_repository.dart';
@@ -24,6 +25,7 @@ import '../../providers/audio_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/service_providers.dart';
 import '../../services/notification_service.dart';
+import '../../providers/challenge_provider.dart';
 import '../../providers/user_provider.dart';
 import 'widgets/bottom_bar.dart';
 import 'widgets/deep_background.dart';
@@ -77,6 +79,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (!kIsWeb) {
       _initNotifications();
     }
+    // Load pending challenges for banner
+    ref.read(challengeProvider.notifier).loadChallenges();
   }
 
   Future<void> _initNotifications() async {
@@ -344,6 +348,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               const SizedBox(height: 8),
                               WeeklyRivalCard(brightness: brightness)
                                   .animateOrSkip(reduceMotion: rm, delay: 75.ms)
+                                  .fadeIn(duration: 350.ms)
+                                  .slideY(
+                                    begin: 0.08,
+                                    end: 0,
+                                    duration: 350.ms,
+                                    curve: Curves.easeOutCubic,
+                                  ),
+                              const SizedBox(height: 8),
+                              _ActiveChallengeBanner(brightness: brightness)
+                                  .animateOrSkip(reduceMotion: rm, delay: 78.ms)
                                   .fadeIn(duration: 350.ms)
                                   .slideY(
                                     begin: 0.08,
@@ -892,6 +906,126 @@ class _QuickPlayBanner extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+              Icon(
+                directionalChevronIcon(Directionality.of(context)),
+                color: accentColor.withValues(alpha: 0.7),
+                size: 18,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Active Challenge Banner ──────────────────────────────────────────────────
+
+class _ActiveChallengeBanner extends ConsumerWidget {
+  const _ActiveChallengeBanner({required this.brightness});
+
+  final Brightness brightness;
+
+  String _modeName(AppStrings l, GameMode mode) => switch (mode) {
+        GameMode.classic => l.modeClassicName,
+        GameMode.colorChef => l.modeColorChefName,
+        GameMode.timeTrial => l.modeTimeTrialName,
+        GameMode.zen => l.modeZenName,
+        GameMode.daily => l.dailyTitle,
+        GameMode.level => l.modeLevelName,
+        GameMode.duel => l.modeDuelName,
+      };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(challengeProvider);
+    final pending = state.received
+        .where((c) => c.status == ChallengeStatus.pending)
+        .toList();
+    if (pending.isEmpty) return const SizedBox.shrink();
+
+    final l = ref.watch(stringsProvider);
+    final count = pending.length;
+    final first = pending.first;
+
+    final accentColor = resolveColor(
+      brightness,
+      dark: kChallengePrimary,
+      light: kChallengePrimaryLight,
+    );
+    final surfaceColor = resolveColor(
+      brightness,
+      dark: kChallengePrimary.withValues(alpha: 0.08),
+      light: kChallengePrimaryLight.withValues(alpha: 0.06),
+    );
+    final borderColor = resolveColor(
+      brightness,
+      dark: kChallengePrimary.withValues(alpha: 0.25),
+      light: kChallengePrimaryLight.withValues(alpha: 0.20),
+    );
+
+    final String label;
+    final String semanticsLabel;
+    if (count == 1) {
+      label = l.challengeBannerSingle(
+        first.senderUsername,
+        _modeName(l, first.mode),
+      );
+      semanticsLabel = label;
+    } else {
+      label = l.challengeBannerMultiple(count);
+      semanticsLabel = label;
+    }
+
+    return Semantics(
+      label: semanticsLabel,
+      button: true,
+      child: GestureDetector(
+        onTap: () => context.go('/challenges'),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            color: surfaceColor,
+            borderRadius: BorderRadius.circular(UIConstants.radiusMd),
+            border: Border.all(color: borderColor),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.local_fire_department_rounded,
+                  color: accentColor, size: 16),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: accentColor,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (first.hasWager) ...[
+                const SizedBox(width: 6),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: kAmber.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '${first.wager}',
+                    style: const TextStyle(
+                      color: kAmber,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(width: 4),
               Icon(
                 directionalChevronIcon(Directionality.of(context)),
                 color: accentColor.withValues(alpha: 0.7),
