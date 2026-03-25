@@ -510,6 +510,10 @@ abstract class AppStrings {
   String get friendsTitle;
   String get friendCode;
   String get friendCodeCopied;
+  String get friendUserNotFound;
+  String get friendCopyCode;
+  String get friendShareCode;
+  String friendShareText(String code);
   String get friendAddByCode;
   String get friendSearch;
   String get friendFollow;

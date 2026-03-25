@@ -49,9 +49,8 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
   }
 
   void _shareCode(String code) {
-    Share.share(
-      'Join me on Gloo! My friend code: $code\nhttps://gloogame.com/friend/$code',
-    );
+    final l = ref.read(stringsProvider);
+    Share.share(l.friendShareText(code));
   }
 
   Future<bool> _followByCode(String code) async {
@@ -60,7 +59,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
     if (info == null) {
       if (!mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User not found')),
+        SnackBar(content: Text(ref.read(stringsProvider).friendUserNotFound)),
       );
       return false;
     }

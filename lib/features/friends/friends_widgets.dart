@@ -65,14 +65,14 @@ class FriendCodeCard extends StatelessWidget {
           ),
           _IconBtn(
             icon: Icons.copy_rounded,
-            semanticsLabel: 'Copy code',
+            semanticsLabel: strings.friendCopyCode,
             onTap: onCopy,
             textColor: textColor,
           ),
           const SizedBox(width: Spacing.sm),
           _IconBtn(
             icon: Icons.share_rounded,
-            semanticsLabel: 'Share code',
+            semanticsLabel: strings.friendShareCode,
             onTap: onShare,
             textColor: textColor,
           ),
