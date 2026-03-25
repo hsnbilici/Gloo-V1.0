@@ -758,6 +758,14 @@ class StringsJa extends AppStrings {
   @override
   String get friendCodeCopied => 'コードをコピー';
   @override
+  String get friendUserNotFound => 'ユーザーが見つかりません';
+  @override
+  String get friendCopyCode => 'コードをコピー';
+  @override
+  String get friendShareCode => 'コードを共有';
+  @override
+  String friendShareText(String code) => 'GLOOで見つけてね！コード：$code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'コードで追加';
   @override
   String get friendSearch => '検索';

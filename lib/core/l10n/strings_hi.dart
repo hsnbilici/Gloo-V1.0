@@ -764,6 +764,14 @@ class StringsHi extends AppStrings {
   @override
   String get friendCodeCopied => 'कोड कॉपी हुआ';
   @override
+  String get friendUserNotFound => 'उपयोगकर्ता नहीं मिला';
+  @override
+  String get friendCopyCode => 'कोड कॉपी करें';
+  @override
+  String get friendShareCode => 'कोड शेयर करें';
+  @override
+  String friendShareText(String code) => 'GLOO पर मुझे ढूंढो! कोड: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'कोड से जोड़ें';
   @override
   String get friendSearch => 'खोजें';

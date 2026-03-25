@@ -771,6 +771,14 @@ class StringsEs extends AppStrings {
   @override
   String get friendCodeCopied => 'Código copiado';
   @override
+  String get friendUserNotFound => 'Usuario no encontrado';
+  @override
+  String get friendCopyCode => 'Copiar código';
+  @override
+  String get friendShareCode => 'Compartir código';
+  @override
+  String friendShareText(String code) => '¡Búscame en GLOO! Código: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Añadir por Código';
   @override
   String get friendSearch => 'Buscar';

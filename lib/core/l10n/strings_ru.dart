@@ -770,6 +770,14 @@ class StringsRu extends AppStrings {
   @override
   String get friendCodeCopied => 'Код скопирован';
   @override
+  String get friendUserNotFound => 'Пользователь не найден';
+  @override
+  String get friendCopyCode => 'Копировать код';
+  @override
+  String get friendShareCode => 'Поделиться кодом';
+  @override
+  String friendShareText(String code) => 'Найди меня в GLOO! Код: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Добавить по коду';
   @override
   String get friendSearch => 'Поиск';

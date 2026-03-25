@@ -764,6 +764,14 @@ class StringsTr extends AppStrings {
   @override
   String get friendCodeCopied => 'Kod kopyalandı';
   @override
+  String get friendUserNotFound => 'Kullanıcı bulunamadı';
+  @override
+  String get friendCopyCode => 'Kodu kopyala';
+  @override
+  String get friendShareCode => 'Kodu paylaş';
+  @override
+  String friendShareText(String code) => 'GLOO\'da beni bul! Kod: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Kod ile Ekle';
   @override
   String get friendSearch => 'Ara';

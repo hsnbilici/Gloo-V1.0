@@ -755,6 +755,14 @@ class StringsZh extends AppStrings {
   @override
   String get friendCodeCopied => '代码已复制';
   @override
+  String get friendUserNotFound => '未找到用户';
+  @override
+  String get friendCopyCode => '复制代码';
+  @override
+  String get friendShareCode => '分享代码';
+  @override
+  String friendShareText(String code) => '在GLOO找我！代码：$code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => '用代码添加';
   @override
   String get friendSearch => '搜索';

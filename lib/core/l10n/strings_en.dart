@@ -765,6 +765,14 @@ class StringsEn extends AppStrings {
   @override
   String get friendCodeCopied => 'Code copied';
   @override
+  String get friendUserNotFound => 'User not found';
+  @override
+  String get friendCopyCode => 'Copy code';
+  @override
+  String get friendShareCode => 'Share code';
+  @override
+  String friendShareText(String code) => 'Join me on GLOO! Code: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Add by Code';
   @override
   String get friendSearch => 'Search';

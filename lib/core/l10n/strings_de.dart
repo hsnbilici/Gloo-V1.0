@@ -769,6 +769,14 @@ class StringsDe extends AppStrings {
   @override
   String get friendCodeCopied => 'Code kopiert';
   @override
+  String get friendUserNotFound => 'Benutzer nicht gefunden';
+  @override
+  String get friendCopyCode => 'Code kopieren';
+  @override
+  String get friendShareCode => 'Code teilen';
+  @override
+  String friendShareText(String code) => 'Finde mich auf GLOO! Code: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Per Code hinzufügen';
   @override
   String get friendSearch => 'Suchen';

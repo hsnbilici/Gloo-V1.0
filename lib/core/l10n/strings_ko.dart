@@ -759,6 +759,14 @@ class StringsKo extends AppStrings {
   @override
   String get friendCodeCopied => '코드 복사됨';
   @override
+  String get friendUserNotFound => '사용자를 찾을 수 없습니다';
+  @override
+  String get friendCopyCode => '코드 복사';
+  @override
+  String get friendShareCode => '코드 공유';
+  @override
+  String friendShareText(String code) => 'GLOO에서 만나요! 코드: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => '코드로 추가';
   @override
   String get friendSearch => '검색';

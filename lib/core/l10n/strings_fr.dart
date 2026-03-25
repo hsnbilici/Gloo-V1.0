@@ -767,6 +767,14 @@ class StringsFr extends AppStrings {
   @override
   String get friendCodeCopied => 'Code copié';
   @override
+  String get friendUserNotFound => 'Utilisateur introuvable';
+  @override
+  String get friendCopyCode => 'Copier le code';
+  @override
+  String get friendShareCode => 'Partager le code';
+  @override
+  String friendShareText(String code) => 'Retrouve-moi sur GLOO ! Code : $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'Ajouter par Code';
   @override
   String get friendSearch => 'Rechercher';

@@ -768,6 +768,14 @@ class StringsAr extends AppStrings {
   @override
   String get friendCodeCopied => 'تم نسخ الرمز';
   @override
+  String get friendUserNotFound => 'المستخدم غير موجود';
+  @override
+  String get friendCopyCode => 'نسخ الرمز';
+  @override
+  String get friendShareCode => 'مشاركة الرمز';
+  @override
+  String friendShareText(String code) => 'ابحث عني في GLOO! الرمز: $code\nhttps://gloogame.com/friend/$code';
+  @override
   String get friendAddByCode => 'إضافة بالرمز';
   @override
   String get friendSearch => 'بحث';
