@@ -260,6 +260,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
                                     entry.userId == userId,
                                 isPvp: _isPvpTab,
                                 strings: l,
+                                onTap: entry.userId.isNotEmpty
+                                    ? () => context
+                                        .push('/profile/${entry.userId}')
+                                    : null,
                               )
                                   .animateOrSkip(
                                       reduceMotion: shouldReduceMotion(context),

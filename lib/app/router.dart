@@ -11,6 +11,8 @@ import '../game/levels/level_progression.dart';
 import '../core/models/game_mode.dart';
 import '../features/character/character_screen.dart';
 import '../features/friends/friends_screen.dart';
+import '../features/profile/my_profile_screen.dart';
+import '../features/profile/profile_screen.dart';
 import '../features/collection/collection_screen.dart';
 import '../features/island/island_screen.dart';
 import '../features/leaderboard/leaderboard_screen.dart';
@@ -164,6 +166,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final code = state.pathParameters['code'] ?? '';
           return FriendsScreen(initialCode: code);
+        },
+      ),
+      // CD.27b: Profil ekranları
+      GoRoute(
+        path: '/my-profile',
+        builder: (context, state) => const MyProfileScreen(),
+      ),
+      GoRoute(
+        path: '/profile/:userId',
+        builder: (context, state) {
+          final userId = state.pathParameters['userId'] ?? '';
+          return ProfileScreen(userId: userId);
         },
       ),
     ],

@@ -259,6 +259,7 @@ class ScoreRow extends StatelessWidget {
     this.isCurrentUser = false,
     this.isPvp = false,
     this.strings,
+    this.onTap,
   });
 
   final int rank;
@@ -267,6 +268,7 @@ class ScoreRow extends StatelessWidget {
   final bool isCurrentUser;
   final bool isPvp;
   final AppStrings? strings;
+  final VoidCallback? onTap;
 
   Color get _rankColor {
     if (rank == 1) return kGold;
@@ -314,9 +316,11 @@ class ScoreRow extends StatelessWidget {
         ? (strings?.eloDisplay(score) ?? '$score ELO')
         : _formatScore(score);
 
-    return Semantics(
-      label: '#$rank $username $scoreText',
-      child: Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Semantics(
+        label: '#$rank $username $scoreText',
+        child: Container(
         margin: const EdgeInsets.only(bottom: 6),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         decoration: BoxDecoration(
@@ -399,6 +403,7 @@ class ScoreRow extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }
