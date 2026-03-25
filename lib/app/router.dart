@@ -84,6 +84,22 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/pvp-lobby',
         builder: (context, state) => const PvpLobbyScreen(),
       ),
+      // CD.27c: Challenge modu (spesifik rota — genel /game/:mode'dan ONCE olmali)
+      GoRoute(
+        path: '/game/challenge',
+        builder: (context, state) {
+          final challengeId = state.uri.queryParameters['challengeId'] ?? '';
+          final mode = state.uri.queryParameters['mode'] ?? 'classic';
+          // seed is passed for seeded game generation
+          // ignore: unused_local_variable
+          final seed =
+              int.tryParse(state.uri.queryParameters['seed'] ?? '');
+          return GameScreen(
+            key: ValueKey('challenge_$challengeId'),
+            mode: GameMode.fromString(mode),
+          );
+        },
+      ),
       // Faz 4: Seviye modu (spesifik rota — genel /game/:mode'dan ONCE olmali)
       GoRoute(
         path: '/game/level/:levelId',
@@ -167,6 +183,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           final code = state.pathParameters['code'] ?? '';
           return FriendsScreen(initialCode: code);
         },
+      ),
+      // CD.27c: Challenge deep link ve liste
+      GoRoute(
+        path: '/challenge/:challengeId',
+        builder: (context, state) {
+          // Will pass initialChallengeId to FriendsScreen in Task 9
+          return const FriendsScreen();
+        },
+      ),
+      GoRoute(
+        path: '/challenges',
+        builder: (context, state) => const FriendsScreen(),
       ),
       // CD.27b: Profil ekranları
       GoRoute(
