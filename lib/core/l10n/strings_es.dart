@@ -896,4 +896,12 @@ class StringsEs extends AppStrings {
   String challengeShareCaption(String name) => '¡\$name te desafía en Gloo!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m restantes';
+  @override
+  String get challengeReceivedSection => 'Recibidos';
+  @override
+  String get challengeSentSection => 'Enviados';
+  @override
+  String get friendTabCodeSearch => 'C\u00f3digo y Buscar';
+  @override
+  String get friendTabFriends => 'Amigos';
 }

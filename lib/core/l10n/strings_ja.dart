@@ -883,4 +883,12 @@ class StringsJa extends AppStrings {
   String challengeShareCaption(String name) => '\$nameがGlooであなたに挑戦！';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '残り\${hours}時間\${minutes}分';
+  @override
+  String get challengeReceivedSection => '受信';
+  @override
+  String get challengeSentSection => '送信済み';
+  @override
+  String get friendTabCodeSearch => 'コードと検索';
+  @override
+  String get friendTabFriends => 'フレンド';
 }

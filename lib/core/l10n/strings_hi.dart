@@ -889,4 +889,12 @@ class StringsHi extends AppStrings {
   String challengeShareCaption(String name) => '\$name आपको Gloo में चुनौती देता है!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}घंटे \${minutes}मिनट शेष';
+  @override
+  String get challengeReceivedSection => 'प्राप्त';
+  @override
+  String get challengeSentSection => 'भेजे गए';
+  @override
+  String get friendTabCodeSearch => 'कोड और खोज';
+  @override
+  String get friendTabFriends => 'दोस्त';
 }

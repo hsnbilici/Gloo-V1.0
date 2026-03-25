@@ -895,4 +895,12 @@ class StringsRu extends AppStrings {
   String challengeShareCaption(String name) => '\$name бросает тебе вызов в Gloo!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}ч \${minutes}м осталось';
+  @override
+  String get challengeReceivedSection => 'Полученные';
+  @override
+  String get challengeSentSection => 'Отправленные';
+  @override
+  String get friendTabCodeSearch => 'Код и поиск';
+  @override
+  String get friendTabFriends => 'Друзья';
 }

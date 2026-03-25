@@ -12,8 +12,10 @@ import '../../core/constants/ui_constants.dart';
 import '../../core/layout/responsive.dart';
 import '../../core/layout/rtl_helpers.dart';
 import '../../data/remote/friend_repository.dart';
+import '../../providers/challenge_provider.dart';
 import '../../providers/friend_provider.dart';
 import '../../providers/locale_provider.dart';
+import 'challenge_tab.dart';
 import 'friends_widgets.dart';
 
 class FriendsScreen extends ConsumerStatefulWidget {
@@ -25,14 +27,32 @@ class FriendsScreen extends ConsumerStatefulWidget {
   ConsumerState<FriendsScreen> createState() => _FriendsScreenState();
 }
 
-class _FriendsScreenState extends ConsumerState<FriendsScreen> {
+class _FriendsScreenState extends ConsumerState<FriendsScreen>
+    with SingleTickerProviderStateMixin {
   List<FriendInfo> _searchResults = [];
   Timer? _debounce;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabChanged);
+    _tabController.dispose();
     _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onTabChanged() {
+    // Trigger rebuild for indicator color change
+    if (!_tabController.indexIsChanging) {
+      setState(() {});
+    }
   }
 
   // ─── Actions ──────────────────────────────────────────────────────────────
@@ -102,8 +122,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
   Widget build(BuildContext context) {
     final l = ref.watch(stringsProvider);
     final friendsAsync = ref.watch(friendsProvider);
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final hPadding = responsiveHPadding(screenWidth);
+    final pendingCount = ref.watch(pendingChallengeCountProvider);
     final dir = Directionality.of(context);
     final brightness = Theme.of(context).brightness;
 
@@ -123,6 +142,10 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
       dark: Colors.white.withValues(alpha: 0.1),
       light: kCardBorderLight,
     );
+
+    final indicatorColor = _tabController.index == 2
+        ? kChallengePrimary
+        : kCyan;
 
     return ResponsiveScaffold(
       backgroundColor: bgColor,
@@ -162,6 +185,47 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
             letterSpacing: 0.3,
           ),
         ),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: indicatorColor,
+          indicatorWeight: 2.5,
+          labelColor: textColor,
+          unselectedLabelColor: kMuted,
+          labelStyle: AppTextStyles.label.copyWith(fontWeight: FontWeight.w700),
+          unselectedLabelStyle: AppTextStyles.label,
+          tabs: [
+            Tab(text: l.friendTabCodeSearch),
+            Tab(text: l.friendTabFriends),
+            Tab(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(l.challengeTab),
+                  if (pendingCount > 0) ...[
+                    const SizedBox(width: Spacing.xs),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: kChallengePrimary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        '$pendingCount',
+                        style: AppTextStyles.micro.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       body: friendsAsync.when(
         loading: () => const Center(
@@ -173,106 +237,214 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
             style: TextStyle(color: kMuted, fontSize: 14),
           ),
         ),
-        data: (state) => ListView(
-          padding: EdgeInsets.symmetric(
-            horizontal: hPadding,
-            vertical: Spacing.lg,
-          ),
+        data: (state) => TabBarView(
+          controller: _tabController,
           children: [
-            // Friend code card
-            FriendCodeCard(
-              code: state.myCode,
-              strings: l,
-              surfaceColor: surfaceColor,
-              borderColor: borderColor,
-              textColor: textColor,
-              onCopy: () => _copyCode(state.myCode),
-              onShare: () => _shareCode(state.myCode),
-            ),
-            const SizedBox(height: Spacing.xl),
-
-            // Add friend section
-            AddFriendSection(
+            // Tab 1: Code & Search
+            _CodeSearchTab(
+              state: state,
               strings: l,
               surfaceColor: surfaceColor,
               borderColor: borderColor,
               textColor: textColor,
               brightness: brightness,
+              initialCode: widget.initialCode,
+              onCopyCode: () => _copyCode(state.myCode),
+              onShareCode: () => _shareCode(state.myCode),
               onFollowByCode: _followByCode,
               onSearch: _onSearch,
               searchResults: _searchResults,
               onFollowUser: _followUser,
-              initialCode: widget.initialCode,
             ),
-
-            // Mutual friends
-            if (state.mutualFriends.isNotEmpty) ...[
-              FriendSectionHeader(
-                title: l.friendMutual,
-                count: state.mutualFriends.length,
-                textColor: textColor,
-              ),
-              ...state.mutualFriends.map(
-                (f) => FriendTile(
-                  info: f,
-                  strings: l,
-                  surfaceColor: surfaceColor,
-                  borderColor: borderColor,
-                  textColor: textColor,
-                  actionLabel: l.friendUnfollow,
-                  actionColor: kMuted,
-                  onAction: () => _unfollowUser(f.userId),
-                ),
-              ),
-            ],
-
-            // Following (one-way)
-            if (state.onlyFollowing.isNotEmpty) ...[
-              FriendSectionHeader(
-                title: l.friendFollowing,
-                count: state.onlyFollowing.length,
-                textColor: textColor,
-              ),
-              ...state.onlyFollowing.map(
-                (f) => FriendTile(
-                  info: f,
-                  strings: l,
-                  surfaceColor: surfaceColor,
-                  borderColor: borderColor,
-                  textColor: textColor,
-                  actionLabel: l.friendUnfollow,
-                  actionColor: kMuted,
-                  onAction: () => _unfollowUser(f.userId),
-                ),
-              ),
-            ],
-
-            // Followers (not followed back)
-            if (state.onlyFollowers.isNotEmpty) ...[
-              FriendSectionHeader(
-                title: l.friendFollowers,
-                count: state.onlyFollowers.length,
-                textColor: textColor,
-              ),
-              ...state.onlyFollowers.map(
-                (f) => FriendTile(
-                  info: f,
-                  strings: l,
-                  surfaceColor: surfaceColor,
-                  borderColor: borderColor,
-                  textColor: textColor,
-                  showFollowBack: true,
-                  actionLabel: l.friendFollow,
-                  actionColor: kCyan,
-                  onAction: () => _followUser(f.userId),
-                ),
-              ),
-            ],
-
-            const SizedBox(height: Spacing.xxxl),
+            // Tab 2: Friends
+            _FriendsTab(
+              state: state,
+              strings: l,
+              surfaceColor: surfaceColor,
+              borderColor: borderColor,
+              textColor: textColor,
+              onFollowUser: _followUser,
+              onUnfollowUser: _unfollowUser,
+            ),
+            // Tab 3: Challenges
+            const ChallengeTab(),
           ],
         ),
       ),
+    );
+  }
+}
+
+// ─── Tab 1: Code & Search ──────────────────────────────────────────────────
+
+class _CodeSearchTab extends StatelessWidget {
+  const _CodeSearchTab({
+    required this.state,
+    required this.strings,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.textColor,
+    required this.brightness,
+    required this.onCopyCode,
+    required this.onShareCode,
+    required this.onFollowByCode,
+    required this.onSearch,
+    required this.searchResults,
+    required this.onFollowUser,
+    this.initialCode,
+  });
+
+  final FriendsState state;
+  final dynamic strings;
+  final Color surfaceColor;
+  final Color borderColor;
+  final Color textColor;
+  final Brightness brightness;
+  final VoidCallback onCopyCode;
+  final VoidCallback onShareCode;
+  final Future<bool> Function(String code) onFollowByCode;
+  final ValueChanged<String> onSearch;
+  final List<FriendInfo> searchResults;
+  final ValueChanged<String> onFollowUser;
+  final String? initialCode;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        horizontal: hPadding,
+        vertical: Spacing.lg,
+      ),
+      children: [
+        FriendCodeCard(
+          code: state.myCode,
+          strings: strings,
+          surfaceColor: surfaceColor,
+          borderColor: borderColor,
+          textColor: textColor,
+          onCopy: onCopyCode,
+          onShare: onShareCode,
+        ),
+        const SizedBox(height: Spacing.xl),
+        AddFriendSection(
+          strings: strings,
+          surfaceColor: surfaceColor,
+          borderColor: borderColor,
+          textColor: textColor,
+          brightness: brightness,
+          onFollowByCode: onFollowByCode,
+          onSearch: onSearch,
+          searchResults: searchResults,
+          onFollowUser: onFollowUser,
+          initialCode: initialCode,
+        ),
+        const SizedBox(height: Spacing.xxxl),
+      ],
+    );
+  }
+}
+
+// ─── Tab 2: Friends ────────────────────────────────────────────────────────
+
+class _FriendsTab extends StatelessWidget {
+  const _FriendsTab({
+    required this.state,
+    required this.strings,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.textColor,
+    required this.onFollowUser,
+    required this.onUnfollowUser,
+  });
+
+  final FriendsState state;
+  final dynamic strings;
+  final Color surfaceColor;
+  final Color borderColor;
+  final Color textColor;
+  final ValueChanged<String> onFollowUser;
+  final ValueChanged<String> onUnfollowUser;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPadding = responsiveHPadding(screenWidth);
+
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        horizontal: hPadding,
+        vertical: Spacing.lg,
+      ),
+      children: [
+        // Mutual friends
+        if (state.mutualFriends.isNotEmpty) ...[
+          FriendSectionHeader(
+            title: strings.friendMutual,
+            count: state.mutualFriends.length,
+            textColor: textColor,
+          ),
+          ...state.mutualFriends.map(
+            (f) => FriendTile(
+              info: f,
+              strings: strings,
+              surfaceColor: surfaceColor,
+              borderColor: borderColor,
+              textColor: textColor,
+              actionLabel: strings.friendUnfollow,
+              actionColor: kMuted,
+              onAction: () => onUnfollowUser(f.userId),
+            ),
+          ),
+        ],
+
+        // Following (one-way)
+        if (state.onlyFollowing.isNotEmpty) ...[
+          FriendSectionHeader(
+            title: strings.friendFollowing,
+            count: state.onlyFollowing.length,
+            textColor: textColor,
+          ),
+          ...state.onlyFollowing.map(
+            (f) => FriendTile(
+              info: f,
+              strings: strings,
+              surfaceColor: surfaceColor,
+              borderColor: borderColor,
+              textColor: textColor,
+              actionLabel: strings.friendUnfollow,
+              actionColor: kMuted,
+              onAction: () => onUnfollowUser(f.userId),
+            ),
+          ),
+        ],
+
+        // Followers (not followed back)
+        if (state.onlyFollowers.isNotEmpty) ...[
+          FriendSectionHeader(
+            title: strings.friendFollowers,
+            count: state.onlyFollowers.length,
+            textColor: textColor,
+          ),
+          ...state.onlyFollowers.map(
+            (f) => FriendTile(
+              info: f,
+              strings: strings,
+              surfaceColor: surfaceColor,
+              borderColor: borderColor,
+              textColor: textColor,
+              showFollowBack: true,
+              actionLabel: strings.friendFollow,
+              actionColor: kCyan,
+              onAction: () => onFollowUser(f.userId),
+            ),
+          ),
+        ],
+
+        const SizedBox(height: Spacing.xxxl),
+      ],
     );
   }
 }

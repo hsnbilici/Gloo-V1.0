@@ -889,4 +889,12 @@ class StringsTr extends AppStrings {
   String challengeShareCaption(String name) => '\$name seni Gloo\'da meydan okuyor!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}s \${minutes}dk kald\u0131';
+  @override
+  String get challengeReceivedSection => 'Gelen';
+  @override
+  String get challengeSentSection => 'G\u00f6nderilen';
+  @override
+  String get friendTabCodeSearch => 'Kod & Arama';
+  @override
+  String get friendTabFriends => 'Arkada\u015flar';
 }

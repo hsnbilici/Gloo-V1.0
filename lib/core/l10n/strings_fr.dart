@@ -892,4 +892,12 @@ class StringsFr extends AppStrings {
   String challengeShareCaption(String name) => '\$name vous défie sur Gloo !';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m restantes';
+  @override
+  String get challengeReceivedSection => 'Re\u00e7us';
+  @override
+  String get challengeSentSection => 'Envoy\u00e9s';
+  @override
+  String get friendTabCodeSearch => 'Code & Recherche';
+  @override
+  String get friendTabFriends => 'Amis';
 }

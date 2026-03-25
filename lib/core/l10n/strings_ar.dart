@@ -893,4 +893,12 @@ class StringsAr extends AppStrings {
   String challengeShareCaption(String name) => '\$name يتحداك في Gloo!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}س \${minutes}د متبقية';
+  @override
+  String get challengeReceivedSection => 'المستلمة';
+  @override
+  String get challengeSentSection => 'المرسلة';
+  @override
+  String get friendTabCodeSearch => 'الرمز والبحث';
+  @override
+  String get friendTabFriends => 'الأصدقاء';
 }

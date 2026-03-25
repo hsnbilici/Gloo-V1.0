@@ -884,4 +884,12 @@ class StringsKo extends AppStrings {
   String challengeShareCaption(String name) => '\$name님이 Gloo에서 도전합니다!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}시간 \${minutes}분 남음';
+  @override
+  String get challengeReceivedSection => '받은 도전';
+  @override
+  String get challengeSentSection => '보낸 도전';
+  @override
+  String get friendTabCodeSearch => '코드 & 검색';
+  @override
+  String get friendTabFriends => '친구';
 }

@@ -577,6 +577,10 @@ abstract class AppStrings {
   String get challengeClaimAlreadyClaimed;
   String challengeShareCaption(String name);
   String challengeTimeRemaining(int hours, int minutes);
+  String get challengeReceivedSection;
+  String get challengeSentSection;
+  String get friendTabCodeSearch;
+  String get friendTabFriends;
 
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {

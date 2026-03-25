@@ -880,4 +880,12 @@ class StringsZh extends AppStrings {
   String challengeShareCaption(String name) => '\$name在Gloo中向你发起挑战！';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}时\${minutes}分剩余';
+  @override
+  String get challengeReceivedSection => '收到的';
+  @override
+  String get challengeSentSection => '已发送';
+  @override
+  String get friendTabCodeSearch => '代码和搜索';
+  @override
+  String get friendTabFriends => '好友';
 }

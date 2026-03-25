@@ -890,4 +890,12 @@ class StringsEn extends AppStrings {
   String challengeShareCaption(String name) => '\$name challenges you in Gloo!';
   @override
   String challengeTimeRemaining(int hours, int minutes) => '\${hours}h \${minutes}m remaining';
+  @override
+  String get challengeReceivedSection => 'Received';
+  @override
+  String get challengeSentSection => 'Sent';
+  @override
+  String get friendTabCodeSearch => 'Code & Search';
+  @override
+  String get friendTabFriends => 'Friends';
 }
