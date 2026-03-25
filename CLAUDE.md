@@ -412,13 +412,13 @@ Onboarding 5 sayfa (3 tanitim + 1 lore + 1 tercihler) → HomeScreen. GDPR: cons
 
 `lib/data/remote/friend_repository.dart`: `FriendRepository` — follow/unfollow, searchByCode/Username, getFollowing/Followers, getFriendsLeaderboard, getFriendsRank. `lib/providers/friend_provider.dart`: `FriendsState` (following, followers, myCode, mutualFriends).
 
-Hibrit model: tek yonlu follow + karsilikli olunca "arkadas". `follows` tablosu (follower_id, following_id). Max 100 follow (Supabase trigger). Friend code: `GLO-XXXX` (profiles.friend_code UNIQUE). Username arama: `ilike`, min 3 karakter, debounce 300ms.
+Hibrit model: tek yonlu follow + karsilikli olunca "arkadas". `follows` tablosu (follower_id, following_id). Max 100 follow (Supabase trigger). Friend code: `GLO-XXXXXX` (6 karakter, 32^6 ~1B kod, profiles.friend_code UNIQUE, collision retry 5x). Username arama: `profiles_search_view` uzerinden `ilike` (LIKE wildcard escape'li), min 3 karakter, debounce 300ms.
 
 `FriendsScreen` (`/friends`): kod paylasma + kod/username arama + arkadas/takip/takipci listeleri. Deep link: `/friend/:code`. `WeeklyRivalCard`: HomeScreen'de haftalik rank + en yakin rakip. Leaderboard 4. tab: Friends.
 
 ### Profil Ekranlari (CD.27b)
 
-`MyProfileScreen` (`/my-profile`): Kendi profil — username duzenleme, istatistik kartlari, radar chart, koleksiyon, son aktivite. `ProfileScreen` (`/profile/:userId`): Baskasinin profili — `get_user_profile` RPC, follow/unfollow, salt okunur. Erisim: Leaderboard ScoreRow tiklama, FriendTile, WeeklyRivalCard, Settings. `profiles.skill_profile_json` ile beceri profili remote sync.
+`MyProfileScreen` (`/my-profile`): Kendi profil — username duzenleme, istatistik kartlari, radar chart, koleksiyon, son aktivite. `ProfileScreen` (`/profile/:userId`): Baskasinin profili — `get_user_profile` RPC, follow/unfollow, salt okunur. Erisim: Leaderboard ScoreRow tiklama, FriendTile, WeeklyRivalCard, Settings. `profiles.skill_profile_json` ile beceri profili remote sync (`jsonEncode` — `toString()` degil). `ProfileBackButton` paylasilan widget (`profile_widgets.dart`).
 
 ### Leaderboard Sistemi
 
