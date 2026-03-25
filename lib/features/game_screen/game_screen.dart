@@ -25,6 +25,7 @@ import '../../game/world/cell_type.dart';
 import '../../game/world/game_world.dart';
 import '../../game/meta/quests.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/friend_provider.dart';
 import '../../providers/game_provider.dart';
 import '../../providers/grid_state_provider.dart';
 import '../../providers/locale_provider.dart';

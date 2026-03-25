@@ -2,6 +2,44 @@ import 'package:flutter/foundation.dart';
 import '../remote/supabase_client.dart';
 import 'dto/leaderboard_entry.dart';
 
+class RecentScore {
+  const RecentScore({required this.mode, required this.score, this.playedAt});
+
+  final String mode;
+  final int score;
+  final DateTime? playedAt;
+}
+
+class UserProfileData {
+  const UserProfileData({
+    required this.username,
+    required this.friendCode,
+    required this.elo,
+    required this.pvpWins,
+    required this.pvpLosses,
+    required this.classicHighScore,
+    required this.timeTrialHighScore,
+    required this.totalGames,
+    required this.recentScores,
+    this.skillProfile,
+    required this.isFollowing,
+    required this.isMutual,
+  });
+
+  final String username;
+  final String friendCode;
+  final int elo;
+  final int pvpWins;
+  final int pvpLosses;
+  final int classicHighScore;
+  final int timeTrialHighScore;
+  final int totalGames;
+  final List<RecentScore> recentScores;
+  final Map<String, double>? skillProfile; // 4 axes or null
+  final bool isFollowing;
+  final bool isMutual;
+}
+
 class FriendInfo {
   const FriendInfo({
     required this.userId,
@@ -258,6 +296,67 @@ class FriendRepository {
       return data != null;
     } catch (_) {
       return false;
+    }
+  }
+
+  /// Fetch another user's full profile via RPC.
+  Future<UserProfileData?> getUserProfile(String userId) async {
+    if (!isConfigured) return null;
+    try {
+      final result = await SupabaseConfig.client.rpc('get_user_profile', params: {
+        'p_user_id': userId,
+      });
+      if (result == null) return null;
+      final map = result as Map<String, dynamic>;
+      // Parse recentScores
+      final recentRaw = (map['recentScores'] as List?) ?? [];
+      final recent = recentRaw.map((e) => RecentScore(
+        mode: e['mode'] as String? ?? '',
+        score: e['score'] as int? ?? 0,
+        playedAt: e['playedAt'] != null ? DateTime.tryParse(e['playedAt'] as String) : null,
+      )).toList();
+      // Parse skillProfile
+      Map<String, double>? skill;
+      if (map['skillProfile'] is Map) {
+        final sp = map['skillProfile'] as Map<String, dynamic>;
+        skill = {
+          'gridEfficiency': (sp['gridEfficiency'] as num?)?.toDouble() ?? 0.5,
+          'synthesisSkill': (sp['synthesisSkill'] as num?)?.toDouble() ?? 0.5,
+          'comboSkill': (sp['comboSkill'] as num?)?.toDouble() ?? 0.5,
+          'pressureResilience': (sp['pressureResilience'] as num?)?.toDouble() ?? 0.5,
+        };
+      }
+      return UserProfileData(
+        username: map['username'] as String? ?? 'Player',
+        friendCode: map['friendCode'] as String? ?? '',
+        elo: map['elo'] as int? ?? 0,
+        pvpWins: map['pvpWins'] as int? ?? 0,
+        pvpLosses: map['pvpLosses'] as int? ?? 0,
+        classicHighScore: map['classicHighScore'] as int? ?? 0,
+        timeTrialHighScore: map['timeTrialHighScore'] as int? ?? 0,
+        totalGames: map['totalGames'] as int? ?? 0,
+        recentScores: recent,
+        skillProfile: skill,
+        isFollowing: map['isFollowing'] as bool? ?? false,
+        isMutual: map['isMutual'] as bool? ?? false,
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('FriendRepository.getUserProfile error: $e');
+      return null;
+    }
+  }
+
+  /// Sync local skill profile to remote (called on game over).
+  Future<void> syncSkillProfile(Map<String, dynamic> profileJson) async {
+    if (!isConfigured) return;
+    final uid = _userId;
+    if (uid == null) return;
+    try {
+      await SupabaseConfig.client.from('profiles').update({
+        'skill_profile_json': profileJson.toString(),
+      }).eq('id', uid);
+    } catch (e) {
+      if (kDebugMode) debugPrint('FriendRepository.syncSkillProfile error: $e');
     }
   }
 }

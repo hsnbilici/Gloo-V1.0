@@ -579,6 +579,10 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
         final stats = game.buildGameStats();
         skillProfileForCallbacks = skillProfileForCallbacks!.addGame(stats);
         repo.saveSkillProfile(skillProfileForCallbacks!);
+        // Remote sync skill profile for other players' profile view
+        ref.read(friendRepositoryProvider).syncSkillProfile(
+          skillProfileForCallbacks!.toMap(),
+        );
       }
 
       // Season Pass XP: score / 100, Gloo+ subscribers get 2x
