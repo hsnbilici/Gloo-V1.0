@@ -1,16 +1,18 @@
 # Gloo v1.0 — Kalan Gorevler
 
 > Son guncelleme: 2026-03-25
-> **Test:** 2188/2188 PASS | **Yaratici Skor:** 4.1/5.0
+> **Test:** 2243/2243 PASS | **Analyze:** 0 warning
 
 ---
 
 ## Bu Oturumda Tamamlananlar
 
-- [x] CLAUDE.md temizligi + trim (453→405 satir)
+- [x] CLAUDE.md temizligi + trim (453→427 satir)
 - [x] _dev/ dosya temizligi (tamamlanan spec/plan silindi)
-- [x] DnD polish: haptic feedback, grid-orantili scale, placement fade-in, merkez anchor (3-4lu sekiller)
+- [x] DnD polish: haptic feedback, grid-orantili scale, placement fade-in, merkez anchor
+- [x] DnD fix: 1-2 hucre cellCount guard + 53 anchor testi
 - [x] Bug fix: GelCellPainter koyu renk floor (maroon/brown)
+- [x] Bug fix: Ice hucreleri yerlestirme engelliyor (iceLayer > 0)
 - [x] Bug fix: QuestBar genisletilebilir detay paneli
 - [x] Bug fix: Leaderboard hata yakalama + SQL migration fix
 - [x] Bug fix: Level mod skor reset + level 11-20 cesitlilik
@@ -18,6 +20,8 @@
 - [x] CI fix: 2 warning duzeltildi (override, unused variable)
 - [x] Loading screen: "Nefes Alan Logo" animasyonlu splash
 - [x] **CD.28** Adaptif zorluk: 4 eksenli beceri profili + radar chart + kaldıraclar
+- [x] **CD.27a** Arkadas sistemi: follow/arkadas modeli + friends screen + leaderboard tab + WeeklyRivalCard
+- [x] l10n: hardcoded English strings lokalize edildi
 
 ## Aktif: Stereo Ses Revizyonu (Kod tamamlandi — ses uretimi bekliyor)
 
@@ -52,6 +56,19 @@
 - [ ] Supabase migration'lari uygula:
   - `20260325_fix_leaderboard_view_order.sql`
   - `20260325_fix_elo_leaderboard_filter.sql`
+  - `20260325_add_friend_code.sql`
+  - `20260325_create_follows.sql`
+  - `20260325_friends_leaderboard_view.sql`
+  - `20260325_get_friends_rank.sql`
+
+## Kod Acik Maddeler (Dusuk Oncelik)
+
+- [ ] FriendRepository test dosyasi (mock-based)
+- [ ] Friends tab mode filtresi (chip toggle — su an sadece Classic)
+- [ ] Deep link auto-follow (su an sadece pre-fill)
+- [ ] Follow notification (push bildirim)
+- [ ] Adaptif zorluk comboSetup kaldiraci (Phase 2)
+- [ ] profiles_select_search RLS kisitlama (SELECT tum kolonlari aciyor)
 
 ## BLOCKED
 
@@ -60,5 +77,7 @@
 ## Vizyon Genisletme (Uzun Vade)
 
 - [ ] **CD.26** Sezonsal icerik dongusu
-- [ ] **CD.27** Sosyal ozellikler
+- [x] **CD.27a** Arkadas sistemi (TAMAMLANDI)
+- [ ] **CD.27b** Profil sayfasi
+- [ ] **CD.27c** Davet/challenge sistemi
 - [x] **CD.28** Adaptif zorluk (TAMAMLANDI)

@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 flutter pub get                                # bagimliliklari indir
 flutter analyze                                # lint (0 error/warning olmali)
-flutter test                                   # tum testler (2155 test)
+flutter test                                   # tum testler (2243 test)
 flutter test --exclude-tags=golden             # CI'da (golden platform-bagimli)
 flutter test test/game/grid_manager_test.dart   # tek test dosyasi
 flutter test --name "ComboDetector"             # isimle filtrele
@@ -125,7 +125,7 @@ GameScreen._onCellTap()
 
 Izgara `List<List<Cell>>` — varsayilan 8x10, Level modunda dinamik (6x6 → 10x12).
 
-**CellType:** `normal`, `ice` (1-2 katman), `locked` (belirli renk), `stone` (engel — komsusundaki satir temizlenince kirilanir), `gravity` (duser), `rainbow` (joker)
+**CellType:** `normal`, `ice` (1-2 katman — iceLayer > 0 iken yerlestirme ENGELLENIR, satir temizleme ile kirilir), `locked` (belirli renk), `stone` (engel — komsusundaki satir temizlenince kirilanir), `gravity` (duser), `rainbow` (joker)
 
 ### Renk Sistemi
 
@@ -177,9 +177,11 @@ Tum 13 ekran + 2 widget dosyasi RTL-safe. Dekoratif arkaplan elementleri (`Posit
 
 ### Routing
 
-GoRouter (`lib/app/router.dart`). `initialLocation: '/loading'`. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
+GoRouter (`lib/app/router.dart`). `initialLocation: '/loading'`. 18 rota. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
 1. `/loading` (loading screen)
-2. `/game/level/:levelId`
+2. `/friends` (arkadas ekrani)
+3. `/friend/:code` (deep link ile arkadas ekleme)
+4. `/game/level/:levelId`
 2. `/game/duel`
 3. `/game/:mode` (generic)
 
@@ -238,7 +240,7 @@ Epic kombo engeli 4-5 rastgele buz gonderir. Bot engelleri difficulty'ye bagli: 
 
 ### Drag-and-Drop Projeksiyon
 
-`shape_hand.dart` + `game_grid_builder.dart` + `clampAnchor()` (`game_interactions.dart`). Sekil nereden tutulursa tutulsun iz dusum dogru olusur. Feedback widget grid hucre boyutuna oranli scale (`gridCellSize / ShapePreview.cellSize`, clamp 1.2-3.0x). Drag lifecycle haptic'leri: `dragStart` (selectionClick), `dragSnap` (lightImpact — anchor degisiminde), `dragInvalid` (double mediumImpact + nearMissTension SFX — gecersiz birakma/iptal). `_PlacementFadeIn`: preview alpha'dan (0.50) tam opakliga 180ms fade-in gecisi (`game_cell_widget.dart`).
+`shape_hand.dart` + `game_grid_builder.dart` + `clampAnchor()` (`game_interactions.dart`). Sekil nereden tutulursa tutulsun iz dusum dogru olusur. Feedback widget grid hucre boyutuna oranli scale (`gridCellSize / ShapePreview.cellSize`, clamp 1.2-3.0x). `_dragAnchor`: 3+ hucre merkezli offset (parmak-preview hizalama), 1-2 hucre tap ile ayni (`clampAnchor`). 53 test tum sekilleri (rotated dahil) dogruluyor. Drag lifecycle haptic'leri: `dragStart`, `dragSnap`, `dragInvalid`. `_PlacementFadeIn`: 180ms fade-in gecisi.
 
 ### DuelState.copyWith Sentinel Deseni
 
