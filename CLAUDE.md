@@ -177,7 +177,7 @@ Tum 13 ekran + 2 widget dosyasi RTL-safe. Dekoratif arkaplan elementleri (`Posit
 
 ### Routing
 
-GoRouter (`lib/app/router.dart`). `initialLocation: '/loading'`. 18 rota. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
+GoRouter (`lib/app/router.dart`). `initialLocation: '/loading'`. 20 rota. **ONEMLI:** Spesifik rotalar genel `/game/:mode`'dan ONCE tanimlanmali:
 1. `/loading` (loading screen)
 2. `/friends` (arkadas ekrani)
 3. `/friend/:code` (deep link ile arkadas ekleme)
@@ -415,6 +415,10 @@ Onboarding 5 sayfa (3 tanitim + 1 lore + 1 tercihler) → HomeScreen. GDPR: cons
 Hibrit model: tek yonlu follow + karsilikli olunca "arkadas". `follows` tablosu (follower_id, following_id). Max 100 follow (Supabase trigger). Friend code: `GLO-XXXX` (profiles.friend_code UNIQUE). Username arama: `ilike`, min 3 karakter, debounce 300ms.
 
 `FriendsScreen` (`/friends`): kod paylasma + kod/username arama + arkadas/takip/takipci listeleri. Deep link: `/friend/:code`. `WeeklyRivalCard`: HomeScreen'de haftalik rank + en yakin rakip. Leaderboard 4. tab: Friends.
+
+### Profil Ekranlari (CD.27b)
+
+`MyProfileScreen` (`/my-profile`): Kendi profil — username duzenleme, istatistik kartlari, radar chart, koleksiyon, son aktivite. `ProfileScreen` (`/profile/:userId`): Baskasinin profili — `get_user_profile` RPC, follow/unfollow, salt okunur. Erisim: Leaderboard ScoreRow tiklama, FriendTile, WeeklyRivalCard, Settings. `profiles.skill_profile_json` ile beceri profili remote sync.
 
 ### Leaderboard Sistemi
 
