@@ -788,6 +788,22 @@ class StringsPt extends AppStrings {
   @override
   String get friendFollowing => 'Seguindo';
   @override
+  String get profileTitle => 'Perfil';
+  @override
+  String get profileEditUsername => 'Editar Nome';
+  @override
+  String get profileHighScore => 'Melhor';
+  @override
+  String get profileTotalGames => 'Total de Jogos';
+  @override
+  String get profileTotalLines => 'Linhas Limpas';
+  @override
+  String get profileTotalSyntheses => 'Sínteses';
+  @override
+  String get profileRecentActivity => 'Atividade Recente';
+  @override
+  String get profileNoActivity => 'Sem atividade ainda';
+  @override
   String get weeklyRivalTitle => 'Esta semana';
   @override
   String get leaderboardTabFriends => 'Amigos';

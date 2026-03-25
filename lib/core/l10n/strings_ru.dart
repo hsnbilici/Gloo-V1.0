@@ -792,6 +792,22 @@ class StringsRu extends AppStrings {
   @override
   String get friendFollowing => 'Подписки';
   @override
+  String get profileTitle => 'Профиль';
+  @override
+  String get profileEditUsername => 'Изменить имя';
+  @override
+  String get profileHighScore => 'Лучший';
+  @override
+  String get profileTotalGames => 'Всего игр';
+  @override
+  String get profileTotalLines => 'Линий очищено';
+  @override
+  String get profileTotalSyntheses => 'Синтезов';
+  @override
+  String get profileRecentActivity => 'Недавняя активность';
+  @override
+  String get profileNoActivity => 'Нет активности';
+  @override
   String get weeklyRivalTitle => 'На этой неделе';
   @override
   String get leaderboardTabFriends => 'Друзья';

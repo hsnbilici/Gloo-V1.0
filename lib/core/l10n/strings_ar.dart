@@ -790,6 +790,22 @@ class StringsAr extends AppStrings {
   @override
   String get friendFollowing => 'أتابعهم';
   @override
+  String get profileTitle => 'الملف الشخصي';
+  @override
+  String get profileEditUsername => 'تعديل الاسم';
+  @override
+  String get profileHighScore => 'الأفضل';
+  @override
+  String get profileTotalGames => 'إجمالي الألعاب';
+  @override
+  String get profileTotalLines => 'خطوط محذوفة';
+  @override
+  String get profileTotalSyntheses => 'تركيبات';
+  @override
+  String get profileRecentActivity => 'النشاط الأخير';
+  @override
+  String get profileNoActivity => 'لا نشاط بعد';
+  @override
   String get weeklyRivalTitle => 'هذا الأسبوع';
   @override
   String get leaderboardTabFriends => 'أصدقاء';

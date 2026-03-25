@@ -786,6 +786,22 @@ class StringsTr extends AppStrings {
   @override
   String get friendFollowing => 'Takip Edilenler';
   @override
+  String get profileTitle => 'Profil';
+  @override
+  String get profileEditUsername => 'İsmi Düzenle';
+  @override
+  String get profileHighScore => 'En Yüksek';
+  @override
+  String get profileTotalGames => 'Toplam Oyun';
+  @override
+  String get profileTotalLines => 'Satır Temizleme';
+  @override
+  String get profileTotalSyntheses => 'Sentez';
+  @override
+  String get profileRecentActivity => 'Son Aktivite';
+  @override
+  String get profileNoActivity => 'Henüz aktivite yok';
+  @override
   String get weeklyRivalTitle => 'Bu hafta';
   @override
   String get leaderboardTabFriends => 'Arkadaşlar';

@@ -522,6 +522,16 @@ abstract class AppStrings {
   String get friendFollowers;
   String get friendFollowing;
   String get weeklyRivalTitle;
+
+  // Profile
+  String get profileTitle;
+  String get profileEditUsername;
+  String get profileHighScore;
+  String get profileTotalGames;
+  String get profileTotalLines;
+  String get profileTotalSyntheses;
+  String get profileRecentActivity;
+  String get profileNoActivity;
   String get leaderboardTabFriends;
   String weeklyRivalAhead(String name, int diff);
 

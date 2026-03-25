@@ -781,6 +781,22 @@ class StringsKo extends AppStrings {
   @override
   String get friendFollowing => '팔로잉';
   @override
+  String get profileTitle => '프로필';
+  @override
+  String get profileEditUsername => '이름 변경';
+  @override
+  String get profileHighScore => '최고';
+  @override
+  String get profileTotalGames => '총 게임';
+  @override
+  String get profileTotalLines => '라인 클리어';
+  @override
+  String get profileTotalSyntheses => '합성';
+  @override
+  String get profileRecentActivity => '최근 활동';
+  @override
+  String get profileNoActivity => '아직 활동 없음';
+  @override
   String get weeklyRivalTitle => '이번 주';
   @override
   String get leaderboardTabFriends => '친구';

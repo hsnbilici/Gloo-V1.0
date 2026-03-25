@@ -777,6 +777,22 @@ class StringsZh extends AppStrings {
   @override
   String get friendFollowing => '关注中';
   @override
+  String get profileTitle => '个人资料';
+  @override
+  String get profileEditUsername => '修改名称';
+  @override
+  String get profileHighScore => '最高分';
+  @override
+  String get profileTotalGames => '总局数';
+  @override
+  String get profileTotalLines => '消除行数';
+  @override
+  String get profileTotalSyntheses => '合成次数';
+  @override
+  String get profileRecentActivity => '最近活动';
+  @override
+  String get profileNoActivity => '暂无活动';
+  @override
   String get weeklyRivalTitle => '本周';
   @override
   String get leaderboardTabFriends => '好友';

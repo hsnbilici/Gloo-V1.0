@@ -780,6 +780,22 @@ class StringsJa extends AppStrings {
   @override
   String get friendFollowing => 'フォロー中';
   @override
+  String get profileTitle => 'プロフィール';
+  @override
+  String get profileEditUsername => '名前を変更';
+  @override
+  String get profileHighScore => 'ベスト';
+  @override
+  String get profileTotalGames => '合計ゲーム';
+  @override
+  String get profileTotalLines => 'ライン消去';
+  @override
+  String get profileTotalSyntheses => '合成';
+  @override
+  String get profileRecentActivity => '最近のアクティビティ';
+  @override
+  String get profileNoActivity => 'アクティビティなし';
+  @override
   String get weeklyRivalTitle => '今週';
   @override
   String get leaderboardTabFriends => 'フレンド';

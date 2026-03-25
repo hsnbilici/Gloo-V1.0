@@ -793,6 +793,22 @@ class StringsEs extends AppStrings {
   @override
   String get friendFollowing => 'Siguiendo';
   @override
+  String get profileTitle => 'Perfil';
+  @override
+  String get profileEditUsername => 'Editar Nombre';
+  @override
+  String get profileHighScore => 'Mejor';
+  @override
+  String get profileTotalGames => 'Total Partidas';
+  @override
+  String get profileTotalLines => 'Líneas limpiadas';
+  @override
+  String get profileTotalSyntheses => 'Síntesis';
+  @override
+  String get profileRecentActivity => 'Actividad Reciente';
+  @override
+  String get profileNoActivity => 'Sin actividad';
+  @override
   String get weeklyRivalTitle => 'Esta semana';
   @override
   String get leaderboardTabFriends => 'Amigos';

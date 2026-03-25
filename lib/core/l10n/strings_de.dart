@@ -791,6 +791,22 @@ class StringsDe extends AppStrings {
   @override
   String get friendFollowing => 'Folge ich';
   @override
+  String get profileTitle => 'Profil';
+  @override
+  String get profileEditUsername => 'Name ändern';
+  @override
+  String get profileHighScore => 'Bestleistung';
+  @override
+  String get profileTotalGames => 'Spiele gesamt';
+  @override
+  String get profileTotalLines => 'Zeilen gelöscht';
+  @override
+  String get profileTotalSyntheses => 'Synthesen';
+  @override
+  String get profileRecentActivity => 'Letzte Aktivität';
+  @override
+  String get profileNoActivity => 'Noch keine Aktivität';
+  @override
   String get weeklyRivalTitle => 'Diese Woche';
   @override
   String get leaderboardTabFriends => 'Freunde';

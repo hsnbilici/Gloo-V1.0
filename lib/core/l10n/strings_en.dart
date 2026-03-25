@@ -787,6 +787,22 @@ class StringsEn extends AppStrings {
   @override
   String get friendFollowing => 'Following';
   @override
+  String get profileTitle => 'Profile';
+  @override
+  String get profileEditUsername => 'Edit Name';
+  @override
+  String get profileHighScore => 'Best';
+  @override
+  String get profileTotalGames => 'Total Games';
+  @override
+  String get profileTotalLines => 'Lines Cleared';
+  @override
+  String get profileTotalSyntheses => 'Syntheses';
+  @override
+  String get profileRecentActivity => 'Recent Activity';
+  @override
+  String get profileNoActivity => 'No activity yet';
+  @override
   String get weeklyRivalTitle => 'This week';
   @override
   String get leaderboardTabFriends => 'Friends';

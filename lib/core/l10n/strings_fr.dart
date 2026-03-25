@@ -789,6 +789,22 @@ class StringsFr extends AppStrings {
   @override
   String get friendFollowing => 'Abonnements';
   @override
+  String get profileTitle => 'Profil';
+  @override
+  String get profileEditUsername => 'Modifier le nom';
+  @override
+  String get profileHighScore => 'Meilleur';
+  @override
+  String get profileTotalGames => 'Total Parties';
+  @override
+  String get profileTotalLines => 'Lignes effacées';
+  @override
+  String get profileTotalSyntheses => 'Synthèses';
+  @override
+  String get profileRecentActivity => 'Activité Récente';
+  @override
+  String get profileNoActivity => 'Pas encore d\'activité';
+  @override
   String get weeklyRivalTitle => 'Cette semaine';
   @override
   String get leaderboardTabFriends => 'Amis';

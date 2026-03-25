@@ -786,6 +786,22 @@ class StringsHi extends AppStrings {
   @override
   String get friendFollowing => 'फ़ॉलोइंग';
   @override
+  String get profileTitle => 'प्रोफ़ाइल';
+  @override
+  String get profileEditUsername => 'नाम बदलें';
+  @override
+  String get profileHighScore => 'सर्वश्रेष्ठ';
+  @override
+  String get profileTotalGames => 'कुल गेम';
+  @override
+  String get profileTotalLines => 'लाइन क्लियर';
+  @override
+  String get profileTotalSyntheses => 'संश्लेषण';
+  @override
+  String get profileRecentActivity => 'हाल की गतिविधि';
+  @override
+  String get profileNoActivity => 'अभी कोई गतिविधि नहीं';
+  @override
   String get weeklyRivalTitle => 'इस हफ़्ते';
   @override
   String get leaderboardTabFriends => 'दोस्त';
