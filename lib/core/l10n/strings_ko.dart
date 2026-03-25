@@ -797,7 +797,25 @@ class StringsKo extends AppStrings {
   @override
   String get profileNoActivity => '아직 활동 없음';
   @override
+  String get profileNotFound => '프로필을 찾을 수 없습니다';
+  @override
+  String get profileCollection => '컬렉션';
+  @override
+  String get profileMutual => '맞팔로우';
+  @override
   String get weeklyRivalTitle => '이번 주';
+
+  // Relative time
+  @override
+  String get timeNow => '방금';
+  @override
+  String timeMinutesAgo(int n) => '$n분 전';
+  @override
+  String timeHoursAgo(int n) => '$n시간 전';
+  @override
+  String timeDaysAgo(int n) => '$n일 전';
+  @override
+  String timeWeeksAgo(int n) => '$n주 전';
   @override
   String get leaderboardTabFriends => '친구';
   @override

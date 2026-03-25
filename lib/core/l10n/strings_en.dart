@@ -803,7 +803,25 @@ class StringsEn extends AppStrings {
   @override
   String get profileNoActivity => 'No activity yet';
   @override
+  String get profileNotFound => 'Profile not found';
+  @override
+  String get profileCollection => 'COLLECTION';
+  @override
+  String get profileMutual => 'Mutual';
+  @override
   String get weeklyRivalTitle => 'This week';
+
+  // Relative time
+  @override
+  String get timeNow => 'now';
+  @override
+  String timeMinutesAgo(int n) => '${n}m ago';
+  @override
+  String timeHoursAgo(int n) => '${n}h ago';
+  @override
+  String timeDaysAgo(int n) => '${n}d ago';
+  @override
+  String timeWeeksAgo(int n) => '${n}w ago';
   @override
   String get leaderboardTabFriends => 'Friends';
   @override

@@ -802,7 +802,25 @@ class StringsHi extends AppStrings {
   @override
   String get profileNoActivity => 'अभी कोई गतिविधि नहीं';
   @override
+  String get profileNotFound => 'प्रोफ़ाइल नहीं मिली';
+  @override
+  String get profileCollection => 'संग्रह';
+  @override
+  String get profileMutual => 'परस्पर';
+  @override
   String get weeklyRivalTitle => 'इस हफ़्ते';
+
+  // Relative time
+  @override
+  String get timeNow => 'अभी';
+  @override
+  String timeMinutesAgo(int n) => '$nमि पहले';
+  @override
+  String timeHoursAgo(int n) => '$nघं पहले';
+  @override
+  String timeDaysAgo(int n) => '$nदि पहले';
+  @override
+  String timeWeeksAgo(int n) => '$nहफ़ पहले';
   @override
   String get leaderboardTabFriends => 'दोस्त';
   @override

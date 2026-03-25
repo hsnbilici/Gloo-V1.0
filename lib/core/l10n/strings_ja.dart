@@ -796,7 +796,25 @@ class StringsJa extends AppStrings {
   @override
   String get profileNoActivity => 'アクティビティなし';
   @override
+  String get profileNotFound => 'プロフィールが見つかりません';
+  @override
+  String get profileCollection => 'コレクション';
+  @override
+  String get profileMutual => '相互フォロー';
+  @override
   String get weeklyRivalTitle => '今週';
+
+  // Relative time
+  @override
+  String get timeNow => 'たった今';
+  @override
+  String timeMinutesAgo(int n) => '$n分前';
+  @override
+  String timeHoursAgo(int n) => '$n時間前';
+  @override
+  String timeDaysAgo(int n) => '$n日前';
+  @override
+  String timeWeeksAgo(int n) => '$n週間前';
   @override
   String get leaderboardTabFriends => 'フレンド';
   @override

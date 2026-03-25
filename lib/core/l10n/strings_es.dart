@@ -809,7 +809,25 @@ class StringsEs extends AppStrings {
   @override
   String get profileNoActivity => 'Sin actividad';
   @override
+  String get profileNotFound => 'Perfil no encontrado';
+  @override
+  String get profileCollection => 'COLECCIÓN';
+  @override
+  String get profileMutual => 'Mutuo';
+  @override
   String get weeklyRivalTitle => 'Esta semana';
+
+  // Relative time
+  @override
+  String get timeNow => 'ahora';
+  @override
+  String timeMinutesAgo(int n) => 'hace ${n}min';
+  @override
+  String timeHoursAgo(int n) => 'hace ${n}h';
+  @override
+  String timeDaysAgo(int n) => 'hace ${n}d';
+  @override
+  String timeWeeksAgo(int n) => 'hace ${n}sem';
   @override
   String get leaderboardTabFriends => 'Amigos';
   @override

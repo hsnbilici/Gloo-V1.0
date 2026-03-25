@@ -793,7 +793,25 @@ class StringsZh extends AppStrings {
   @override
   String get profileNoActivity => '暂无活动';
   @override
+  String get profileNotFound => '未找到用户';
+  @override
+  String get profileCollection => '收藏';
+  @override
+  String get profileMutual => '互相关注';
+  @override
   String get weeklyRivalTitle => '本周';
+
+  // Relative time
+  @override
+  String get timeNow => '刚刚';
+  @override
+  String timeMinutesAgo(int n) => '$n分钟前';
+  @override
+  String timeHoursAgo(int n) => '$n小时前';
+  @override
+  String timeDaysAgo(int n) => '$n天前';
+  @override
+  String timeWeeksAgo(int n) => '$n周前';
   @override
   String get leaderboardTabFriends => '好友';
   @override

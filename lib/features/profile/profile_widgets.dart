@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/color_constants_light.dart';
 import '../../core/constants/ui_constants.dart';
+import '../../core/l10n/app_strings.dart';
 
 // ─── Synthesis colors (8 non-primary GelColor values) ────────────────────────
 
@@ -60,6 +61,7 @@ class ProfileHeader extends StatelessWidget {
     this.onEditTap,
     this.followButton,
     this.isMutual = false,
+    this.mutualLabel = 'Mutual',
   });
 
   final String username;
@@ -73,6 +75,9 @@ class ProfileHeader extends StatelessWidget {
   final Widget? followButton;
 
   final bool isMutual;
+
+  /// Localized label shown in the mutual badge.
+  final String mutualLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -136,9 +141,9 @@ class ProfileHeader extends StatelessWidget {
                   color: kGreen.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(UIConstants.radiusSm),
                 ),
-                child: const Text(
-                  'Mutual',
-                  style: TextStyle(
+                child: Text(
+                  mutualLabel,
+                  style: const TextStyle(
                     color: kGreen,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
@@ -347,11 +352,13 @@ class ActivityList extends StatelessWidget {
     required this.scores,
     required this.emptyText,
     required this.brightness,
+    required this.strings,
   });
 
   final List<ActivityItem> scores;
   final String emptyText;
   final Brightness brightness;
+  final AppStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -393,7 +400,7 @@ class ActivityList extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  _relativeTime(item.playedAt),
+                  _relativeTime(item.playedAt, strings),
                   style: TextStyle(color: mutedColor, fontSize: 11),
                 ),
               ],
@@ -403,14 +410,14 @@ class ActivityList extends StatelessWidget {
     );
   }
 
-  static String _relativeTime(DateTime? dt) {
+  static String _relativeTime(DateTime? dt, AppStrings l) {
     if (dt == null) return '';
     final diff = DateTime.now().difference(dt);
-    if (diff.inMinutes < 1) return 'now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
-    return '${(diff.inDays / 7).floor()}w ago';
+    if (diff.inMinutes < 1) return l.timeNow;
+    if (diff.inMinutes < 60) return l.timeMinutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l.timeHoursAgo(diff.inHours);
+    if (diff.inDays < 7) return l.timeDaysAgo(diff.inDays);
+    return l.timeWeeksAgo((diff.inDays / 7).floor());
   }
 }
 
@@ -419,4 +426,48 @@ class ActivityItem {
   final String mode;
   final int score;
   final DateTime? playedAt;
+}
+
+// ─── ProfileBackButton ────────────────────────────────────────────────────────
+
+class ProfileBackButton extends StatelessWidget {
+  const ProfileBackButton({
+    super.key,
+    required this.icon,
+    required this.iconColor,
+    required this.surfaceColor,
+    required this.borderColor,
+    required this.semanticsLabel,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final Color surfaceColor;
+  final Color borderColor;
+  final String semanticsLabel;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Semantics(
+        label: semanticsLabel,
+        button: true,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: surfaceColor,
+              borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+              border: Border.all(color: borderColor),
+            ),
+            child: Icon(icon, color: iconColor, size: 18),
+          ),
+        ),
+      ),
+    );
+  }
 }

@@ -805,7 +805,25 @@ class StringsFr extends AppStrings {
   @override
   String get profileNoActivity => 'Pas encore d\'activité';
   @override
+  String get profileNotFound => 'Profil introuvable';
+  @override
+  String get profileCollection => 'COLLECTION';
+  @override
+  String get profileMutual => 'Mutuel';
+  @override
   String get weeklyRivalTitle => 'Cette semaine';
+
+  // Relative time
+  @override
+  String get timeNow => 'maintenant';
+  @override
+  String timeMinutesAgo(int n) => 'il y a ${n}min';
+  @override
+  String timeHoursAgo(int n) => 'il y a ${n}h';
+  @override
+  String timeDaysAgo(int n) => 'il y a ${n}j';
+  @override
+  String timeWeeksAgo(int n) => 'il y a ${n}sem';
   @override
   String get leaderboardTabFriends => 'Amis';
   @override

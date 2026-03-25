@@ -802,7 +802,25 @@ class StringsTr extends AppStrings {
   @override
   String get profileNoActivity => 'Henüz aktivite yok';
   @override
+  String get profileNotFound => 'Profil bulunamadı';
+  @override
+  String get profileCollection => 'KOLEKSİYON';
+  @override
+  String get profileMutual => 'Karşılıklı';
+  @override
   String get weeklyRivalTitle => 'Bu hafta';
+
+  // Relative time
+  @override
+  String get timeNow => 'şimdi';
+  @override
+  String timeMinutesAgo(int n) => '${n}dk önce';
+  @override
+  String timeHoursAgo(int n) => '${n}sa önce';
+  @override
+  String timeDaysAgo(int n) => '${n}g önce';
+  @override
+  String timeWeeksAgo(int n) => '${n}hf önce';
   @override
   String get leaderboardTabFriends => 'Arkadaşlar';
   @override

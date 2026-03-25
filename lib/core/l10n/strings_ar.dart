@@ -806,7 +806,25 @@ class StringsAr extends AppStrings {
   @override
   String get profileNoActivity => 'لا نشاط بعد';
   @override
+  String get profileNotFound => 'الملف الشخصي غير موجود';
+  @override
+  String get profileCollection => 'المجموعة';
+  @override
+  String get profileMutual => 'متبادل';
+  @override
   String get weeklyRivalTitle => 'هذا الأسبوع';
+
+  // Relative time
+  @override
+  String get timeNow => 'الآن';
+  @override
+  String timeMinutesAgo(int n) => 'منذ $nد';
+  @override
+  String timeHoursAgo(int n) => 'منذ $nس';
+  @override
+  String timeDaysAgo(int n) => 'منذ $nي';
+  @override
+  String timeWeeksAgo(int n) => 'منذ $nأ';
   @override
   String get leaderboardTabFriends => 'أصدقاء';
   @override

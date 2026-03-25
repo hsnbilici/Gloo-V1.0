@@ -808,7 +808,25 @@ class StringsRu extends AppStrings {
   @override
   String get profileNoActivity => 'Нет активности';
   @override
+  String get profileNotFound => 'Профиль не найден';
+  @override
+  String get profileCollection => 'КОЛЛЕКЦИЯ';
+  @override
+  String get profileMutual => 'Взаимно';
+  @override
   String get weeklyRivalTitle => 'На этой неделе';
+
+  // Relative time
+  @override
+  String get timeNow => 'сейчас';
+  @override
+  String timeMinutesAgo(int n) => '$nмин назад';
+  @override
+  String timeHoursAgo(int n) => '$nч назад';
+  @override
+  String timeDaysAgo(int n) => '$nд назад';
+  @override
+  String timeWeeksAgo(int n) => '$nнед назад';
   @override
   String get leaderboardTabFriends => 'Друзья';
   @override

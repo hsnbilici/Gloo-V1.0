@@ -804,7 +804,25 @@ class StringsPt extends AppStrings {
   @override
   String get profileNoActivity => 'Sem atividade ainda';
   @override
+  String get profileNotFound => 'Perfil não encontrado';
+  @override
+  String get profileCollection => 'COLEÇÃO';
+  @override
+  String get profileMutual => 'Mútuo';
+  @override
   String get weeklyRivalTitle => 'Esta semana';
+
+  // Relative time
+  @override
+  String get timeNow => 'agora';
+  @override
+  String timeMinutesAgo(int n) => '${n}min atrás';
+  @override
+  String timeHoursAgo(int n) => '${n}h atrás';
+  @override
+  String timeDaysAgo(int n) => '${n}d atrás';
+  @override
+  String timeWeeksAgo(int n) => '${n}sem atrás';
   @override
   String get leaderboardTabFriends => 'Amigos';
   @override

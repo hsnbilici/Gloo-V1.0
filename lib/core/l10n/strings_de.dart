@@ -807,7 +807,25 @@ class StringsDe extends AppStrings {
   @override
   String get profileNoActivity => 'Noch keine Aktivität';
   @override
+  String get profileNotFound => 'Profil nicht gefunden';
+  @override
+  String get profileCollection => 'SAMMLUNG';
+  @override
+  String get profileMutual => 'Gegenseitig';
+  @override
   String get weeklyRivalTitle => 'Diese Woche';
+
+  // Relative time
+  @override
+  String get timeNow => 'jetzt';
+  @override
+  String timeMinutesAgo(int n) => 'vor ${n}min';
+  @override
+  String timeHoursAgo(int n) => 'vor ${n}h';
+  @override
+  String timeDaysAgo(int n) => 'vor ${n}T';
+  @override
+  String timeWeeksAgo(int n) => 'vor ${n}W';
   @override
   String get leaderboardTabFriends => 'Freunde';
   @override

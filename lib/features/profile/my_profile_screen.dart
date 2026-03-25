@@ -48,11 +48,12 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: _BackButton(
+        leading: ProfileBackButton(
           icon: directionalBackIcon(dir),
           iconColor: textColor,
           surfaceColor: surfaceColor,
           borderColor: borderColor,
+          semanticsLabel: l.backLabel,
           onTap: () => context.pop(),
         ),
         title: Text(
@@ -150,8 +151,8 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
               ],
 
               // Collection
-              const SectionHeader(
-                title: 'COLLECTION',
+              SectionHeader(
+                title: l.profileCollection,
                 color: kGold,
               ),
               const SizedBox(height: Spacing.sm),
@@ -169,6 +170,7 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
                 scores: const [],
                 emptyText: l.profileNoActivity,
                 brightness: brightness,
+                strings: l,
               ),
               const SizedBox(height: Spacing.xl),
             ],
@@ -250,46 +252,5 @@ class _MyProfileScreenState extends ConsumerState<MyProfileScreen> {
       ref.invalidate(userProfileProvider);
       ref.read(remoteRepositoryProvider).ensureProfile(username: result);
     }
-  }
-}
-
-// ─── Simple back button ──────────────────────────────────────────────────────
-
-class _BackButton extends StatelessWidget {
-  const _BackButton({
-    required this.icon,
-    required this.iconColor,
-    required this.surfaceColor,
-    required this.borderColor,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final Color iconColor;
-  final Color surfaceColor;
-  final Color borderColor;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Semantics(
-        label: 'Back',
-        button: true,
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: surfaceColor,
-              borderRadius: BorderRadius.circular(UIConstants.radiusSm),
-              border: Border.all(color: borderColor),
-            ),
-            child: Icon(icon, color: iconColor, size: 18),
-          ),
-        ),
-      ),
-    );
   }
 }

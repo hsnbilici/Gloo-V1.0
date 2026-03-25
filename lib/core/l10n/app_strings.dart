@@ -532,8 +532,18 @@ abstract class AppStrings {
   String get profileTotalSyntheses;
   String get profileRecentActivity;
   String get profileNoActivity;
+  String get profileNotFound;
+  String get profileCollection;
+  String get profileMutual;
   String get leaderboardTabFriends;
   String weeklyRivalAhead(String name, int diff);
+
+  // Relative time
+  String get timeNow;
+  String timeMinutesAgo(int n);
+  String timeHoursAgo(int n);
+  String timeDaysAgo(int n);
+  String timeWeeksAgo(int n);
 
   // Factory: sistem diline göre doğru implementasyonu döner
   static AppStrings forLocale(Locale locale) {
