@@ -170,3 +170,8 @@ const Color kCellEmptyLightThemeDark = Color(0xFFD8D8E0);
 // ─── Kart/tile arka planlari ────────────────────────────────────────────────
 const Color kCardBgLight = Color(0xFFFFFFFF);
 const Color kCardBorderLight = Color(0xFFE0E0E8);
+
+// ─── Challenge renkleri ─────────────────────────────────────────────────────
+const Color kChallengePrimaryLight = Color(0xFFD35400); // WCAG AA on white (4.6:1)
+const Color kChallengeWinLight = Color(0xFF1B8A3E);     // WCAG AA on white
+const Color kChallengeLoseLight = Color(0xFF6B6B7B);    // muted light

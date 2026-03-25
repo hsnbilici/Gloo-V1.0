@@ -333,6 +333,9 @@ const Color kColorChef = Color(0xFF00FF9D);
 const Color kColorTimeTrial = Color(0xFFFFD60A);
 const Color kColorZen = Color(0xFF9D5CFF);
 const Color kColorDuel = kCoral;
+const Color kChallengePrimary = Color(0xFFE67E22); // warm orange — challenge accent
+const Color kChallengeWin = kGreen;
+const Color kChallengeLose = kMuted;
 
 // ─── Oyun modu → aksan renk eşlemesi ────────────────────────────────────────
 const Map<GameMode, Color> kModeColors = {
