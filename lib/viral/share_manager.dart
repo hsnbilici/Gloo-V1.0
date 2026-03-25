@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import '../core/constants/app_constants.dart';
 import '../core/constants/color_constants.dart';
 import '../core/l10n/app_strings.dart';
+import '../core/models/challenge.dart';
 import '../services/analytics_service.dart';
 
 class ShareManager {
@@ -77,6 +78,14 @@ class ShareManager {
         '${l.shareComboCaption(comboLabel, modeName, _formatScore(score))} '
         '$_appUrl\n\n$_hashtags';
     _analytics.logShare(mode: 'combo');
+    await Share.share(text);
+  }
+
+  Future<void> shareChallenge(Challenge challenge, AppStrings l) async {
+    final text = '${l.challengeShareCaption(challenge.senderUsername)}\n'
+        'https://gloogame.com/challenge/${challenge.id}\n\n'
+        '#GlooChallenge #Gloo #puzzle';
+    _analytics.logShare(mode: 'challenge');
     await Share.share(text);
   }
 

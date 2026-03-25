@@ -461,6 +461,7 @@ class FriendTile extends StatelessWidget {
     this.onAction,
     required this.actionLabel,
     required this.actionColor,
+    this.onChallenge,
   });
 
   final FriendInfo info;
@@ -472,6 +473,7 @@ class FriendTile extends StatelessWidget {
   final VoidCallback? onAction;
   final String actionLabel;
   final Color actionColor;
+  final VoidCallback? onChallenge;
 
   @override
   Widget build(BuildContext context) {
@@ -499,6 +501,31 @@ class FriendTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            if (info.isMutual && onChallenge != null)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 6),
+                child: Semantics(
+                  label: strings.challengeSend,
+                  button: true,
+                  child: GestureDetector(
+                    onTap: onChallenge,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: kChallengePrimary.withValues(alpha: 0.12),
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusXs),
+                      ),
+                      child: const Icon(
+                        Icons.sports_kabaddi_rounded,
+                        color: kChallengePrimary,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             if (info.isMutual)
               Container(
                 margin: const EdgeInsetsDirectional.only(end: 8),

@@ -10,6 +10,7 @@ import '../../core/layout/rtl_helpers.dart';
 import '../../data/remote/friend_repository.dart';
 import '../../providers/friend_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../friends/send_challenge_sheet.dart';
 import '../shared/section_header.dart';
 import '../shared/skill_radar_chart.dart';
 import 'profile_widgets.dart';
@@ -136,6 +137,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             onTap: _toggleFollow,
           );
 
+          final challengeBtn = _isMutual
+              ? _ChallengeButton(
+                  label: l.challengeSend,
+                  onTap: () => SendChallengeSheet.show(
+                    context,
+                    recipientId: widget.userId,
+                    recipientUsername: data.username,
+                    onPlayAndSend: (mode, wager) {
+                      context.push(
+                        '/game/challenge?mode=${mode.name}&wager=$wager'
+                        '&recipientId=${widget.userId}',
+                      );
+                    },
+                  ),
+                )
+              : null;
+
           final recentScores = data.recentScores
               .take(5)
               .map((s) => ActivityItem(
@@ -158,6 +176,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 isMutual: _isMutual,
                 mutualLabel: l.profileMutual,
               ),
+              if (challengeBtn != null) ...[
+                const SizedBox(height: Spacing.sm),
+                Center(child: challengeBtn),
+              ],
               const SizedBox(height: Spacing.xl),
 
               SectionHeader(
@@ -281,6 +303,58 @@ class _FollowButton extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Challenge Button ─────────────────────────────────────────────────────────
+
+class _ChallengeButton extends StatelessWidget {
+  const _ChallengeButton({
+    required this.label,
+    required this.onTap,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(
+            color: kChallengePrimary.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(UIConstants.radiusSm),
+            border: Border.all(
+              color: kChallengePrimary.withValues(alpha: 0.3),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.sports_kabaddi_rounded,
+                color: kChallengePrimary,
+                size: 14,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: kChallengePrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

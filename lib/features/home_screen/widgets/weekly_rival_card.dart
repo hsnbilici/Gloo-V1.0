@@ -9,6 +9,7 @@ import '../../../data/remote/friend_repository.dart';
 import '../../../providers/friend_provider.dart';
 import '../../../providers/locale_provider.dart';
 import '../../../providers/user_provider.dart';
+import '../../friends/send_challenge_sheet.dart';
 
 /// Compact weekly rival comparison card shown on HomeScreen below QuestBar.
 ///
@@ -123,6 +124,32 @@ class _WeeklyRivalCardState extends ConsumerState<WeeklyRivalCard> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (data.rivalId != null) ...[
+                      const SizedBox(width: 6),
+                      Semantics(
+                        label: l.challengeSend,
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () => SendChallengeSheet.show(
+                            context,
+                            recipientId: data.rivalId!,
+                            recipientUsername: data.rivalName!,
+                            onPlayAndSend: (mode, wager) {
+                              context.push(
+                                '/game/challenge?mode=${mode.name}'
+                                '&wager=$wager'
+                                '&recipientId=${data.rivalId}',
+                              );
+                            },
+                          ),
+                          child: const Icon(
+                            Icons.sports_kabaddi_rounded,
+                            color: kChallengePrimary,
+                            size: 14,
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ],
               ),

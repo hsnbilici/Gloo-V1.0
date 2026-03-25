@@ -70,6 +70,7 @@ class FriendsRankData {
     required this.rank,
     required this.total,
     required this.myScore,
+    this.rivalId,
     this.rivalName,
     this.rivalScore,
   });
@@ -77,6 +78,7 @@ class FriendsRankData {
   final int rank;
   final int total;
   final int myScore;
+  final String? rivalId;
   final String? rivalName;
   final int? rivalScore;
 }
@@ -258,6 +260,7 @@ class FriendRepository {
         rank: map['rank'] as int? ?? 0,
         total: map['total'] as int? ?? 0,
         myScore: map['myScore'] as int? ?? 0,
+        rivalId: map['rivalId'] as String?,
         rivalName: map['rivalName'] as String?,
         rivalScore: map['rivalScore'] as int?,
       );
