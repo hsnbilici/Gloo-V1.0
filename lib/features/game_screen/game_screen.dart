@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/color_constants.dart';
 import '../../core/constants/game_constants.dart';
@@ -25,6 +26,8 @@ import '../../game/world/cell_type.dart';
 import '../../game/world/game_world.dart';
 import '../../game/meta/quests.dart';
 import '../../providers/audio_provider.dart';
+import '../../providers/challenge_provider.dart';
+import '../shared/challenge_reveal_overlay.dart';
 import '../../providers/friend_provider.dart';
 import '../../providers/game_provider.dart';
 import '../../providers/grid_state_provider.dart';
@@ -66,6 +69,8 @@ class GameScreen extends ConsumerStatefulWidget {
     this.duelSeed,
     this.duelIsBot = false,
     this.duelOpponentElo,
+    this.challengeId,
+    this.challengeSeed,
   });
 
   final GameMode mode;
@@ -76,6 +81,10 @@ class GameScreen extends ConsumerStatefulWidget {
   final int? duelSeed;
   final bool duelIsBot;
   final int? duelOpponentElo;
+
+  /// Challenge parametreleri (challenge kabul edilince router'dan gelir).
+  final String? challengeId;
+  final int? challengeSeed;
 
   @override
   ConsumerState<GameScreen> createState() => _GameScreenState();
@@ -502,6 +511,12 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
       if (!mounted) return;
       final l = ref.read(stringsProvider);
+      // Challenge butonu: gamesPlayed >= 3, challenge/duel modunda gösterme
+      final gamesPlayed = repo.getTotalGamesPlayed();
+      final showChallengeBtn = gamesPlayed >= 3 &&
+          widget.challengeId == null &&
+          widget.mode != GameMode.duel;
+
       showGameOver(
         context: context,
         score: game.score,
@@ -540,6 +555,9 @@ class _GameScreenState extends ConsumerState<GameScreen>
                   },
                 );
               }
+            : null,
+        onChallenge: showChallengeBtn
+            ? () => context.go('/friends')
             : null,
         onReplay: () {
           setState(() {

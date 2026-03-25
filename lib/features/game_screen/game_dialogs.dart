@@ -59,6 +59,7 @@ void showGameOver({
   int synthesisCount = 0,
   int maxCombo = 0,
   VoidCallback? onWatchAdBomb,
+  VoidCallback? onChallenge,
 }) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     if (!context.mounted) return;
@@ -82,6 +83,12 @@ void showGameOver({
         synthesisCount: synthesisCount,
         maxCombo: maxCombo,
         onWatchAdBomb: onWatchAdBomb,
+        onChallenge: onChallenge != null
+            ? () {
+                Navigator.of(ctx).pop();
+                onChallenge();
+              }
+            : null,
         onReplay: () {
           Navigator.of(ctx).pop();
           onReplay();

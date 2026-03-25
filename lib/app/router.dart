@@ -90,13 +90,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final challengeId = state.uri.queryParameters['challengeId'] ?? '';
           final mode = state.uri.queryParameters['mode'] ?? 'classic';
-          // seed is passed for seeded game generation
-          // ignore: unused_local_variable
           final seed =
               int.tryParse(state.uri.queryParameters['seed'] ?? '');
           return GameScreen(
             key: ValueKey('challenge_$challengeId'),
             mode: GameMode.fromString(mode),
+            challengeId: challengeId.isNotEmpty ? challengeId : null,
+            challengeSeed: seed,
           );
         },
       ),

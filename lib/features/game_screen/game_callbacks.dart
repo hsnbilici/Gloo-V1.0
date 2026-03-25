@@ -97,6 +97,52 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
     );
   }
 
+  /// Submit challenge score and show reveal overlay on success.
+  /// On failure, persist to SharedPreferences for retry on next launch.
+  void _submitChallengeScore(String challengeId, int score) {
+    final challengeRepo = ref.read(challengeRepositoryProvider);
+    challengeRepo
+        .submitRecipientScore(challengeId: challengeId, score: score)
+        .then((result) {
+      if (!mounted) return;
+      if (result != null) {
+        // Show the reveal overlay after a short delay for game over to settle
+        Future.delayed(const Duration(milliseconds: 600), () {
+          if (!mounted) return;
+          ChallengeRevealOverlay.show(
+            context,
+            result: result,
+            opponentUsername: '', // sender username not available here
+            onRematch: () {
+              Navigator.of(context).pop();
+              context.go('/friends');
+            },
+            onClose: () => Navigator.of(context).pop(),
+          );
+        });
+      } else {
+        // Network failure — persist for retry on next launch
+        _persistPendingChallengeScore(challengeId, score);
+      }
+    }).catchError((Object e) {
+      _persistPendingChallengeScore(challengeId, score);
+      if (kDebugMode) {
+        debugPrint('GameCallbacks: challenge score submit error: $e');
+      }
+    });
+  }
+
+  void _persistPendingChallengeScore(String challengeId, int score) {
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString('pending_challenge_score_$challengeId', '$score');
+      if (kDebugMode) {
+        debugPrint(
+          'GameCallbacks: challenge score saved for retry: $challengeId',
+        );
+      }
+    });
+  }
+
   void setupCallbacks() {
     // Repo'yu bir kez resolve et — callback'lerde tekrar future.then() gerekmez
     ref.read(localRepositoryProvider.future).then((repo) {
@@ -628,6 +674,11 @@ mixin _GameCallbacksMixin on ConsumerState<GameScreen> {
             });
           }
         }
+      }
+
+      // Challenge: skor gönder ve sonucu göster
+      if (widget.challengeId != null) {
+        _submitChallengeScore(widget.challengeId!, score);
       }
 
       handleGameOverDialog();

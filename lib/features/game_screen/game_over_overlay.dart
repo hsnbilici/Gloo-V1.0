@@ -38,6 +38,7 @@ class GameOverOverlay extends ConsumerStatefulWidget {
     this.synthesisCount = 0,
     this.maxCombo = 0,
     this.onWatchAdBomb,
+    this.onChallenge,
   });
 
   final int score;
@@ -54,6 +55,7 @@ class GameOverOverlay extends ConsumerStatefulWidget {
   final int synthesisCount;
   final int maxCombo;
   final VoidCallback? onWatchAdBomb;
+  final VoidCallback? onChallenge;
 
   @override
   ConsumerState<GameOverOverlay> createState() => _GameOverOverlayState();
@@ -556,6 +558,24 @@ class _GameOverOverlayState extends ConsumerState<GameOverOverlay> {
                             duration: 320.ms,
                             curve: Curves.easeOutCubic,
                           ),
+                      if (widget.onChallenge != null) ...[
+                        const SizedBox(height: 12),
+                        ActionButton(
+                          label: l.challengeSend,
+                          icon: Icons.sports_kabaddi_rounded,
+                          accentColor: kChallengePrimary,
+                          filled: false,
+                          onTap: widget.onChallenge!,
+                        )
+                            .animateOrSkip(reduceMotion: rm, delay: 680.ms)
+                            .fadeIn(duration: 320.ms)
+                            .slideY(
+                              begin: 0.18,
+                              end: 0,
+                              duration: 320.ms,
+                              curve: Curves.easeOutCubic,
+                            ),
+                      ],
                     ],
                   ),
                 ),
