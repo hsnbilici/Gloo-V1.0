@@ -24,7 +24,23 @@ enum NotificationType {
 
   /// Geri dönüş teşviki (3+ gün inaktif).
   comeback,
+
+  /// Yeni meydan okuma alındı.
+  challengeReceived,
+
+  /// Meydan okuma süresi dolmak üzere.
+  challengeExpiring,
+
+  /// Eşzamanlı düello daveti.
+  syncDuelInvite,
 }
+
+/// Challenge bildirimleri için benzersiz ID üretir.
+///
+/// Her challenge'ın eşzamanlı birden fazla bildirimi olabilir.
+/// `+1000` offset mevcut enum-index ID'leriyle (0-5) çakışmayı önler.
+int challengeNotifId(String challengeId) =>
+    challengeId.hashCode.abs() % 1000000 + 1000;
 
 /// Push notification servisi interface'i.
 ///
