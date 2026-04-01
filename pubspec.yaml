@@ -41,7 +41,7 @@ dependencies:
   audio_session: ^0.1.16          # iOS audio session yönetimi
 
   # Monetizasyon — Faz 3
-  google_mobile_ads: ^5.3.0       # AdMob (web uyumsuz — platform guard)
+  google_mobile_ads: ^7.0.0       # AdMob (web uyumsuz — platform guard)
   in_app_purchase: ^3.2.0         # IAP & abonelik
 
   # Backend — Faz 3
